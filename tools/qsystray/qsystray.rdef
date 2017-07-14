@@ -1,0 +1,13 @@
+resource app_signature "application/x-vnd.QtSystrayManager";
+
+resource app_flags B_MULTIPLE_LAUNCH | B_BACKGROUND_APP;
+
+resource app_version {
+	major  = 0,
+	middle = 2,
+	minor  = 0,
+	variety = 0,
+	internal = 0,
+	short_info = "QtSystrayManager",
+	long_info  = "QtSystrayManager"
+};
