@@ -1,0 +1,136 @@
+/****************************************************************************
+**
+** Copyright (C) 2017 The Qt Company Ltd.
+** Copyright (C) 2015-2017 Gerasim Troeglazov,
+** Contact: 3dEyes@gmail.com
+**
+** This file is part of the plugins of the Qt Toolkit.
+**
+** $QT_BEGIN_LICENSE:LGPL$
+** Commercial License Usage
+** Licensees holding valid commercial Qt licenses may use this file in
+** accordance with the commercial license agreement provided with the
+** Software or, alternatively, in accordance with the terms contained in
+** a written agreement between you and The Qt Company. For licensing terms
+** and conditions see https://www.qt.io/terms-conditions. For further
+** information use the contact form at https://www.qt.io/contact-us.
+**
+** GNU Lesser General Public License Usage
+** Alternatively, this file may be used under the terms of the GNU Lesser
+** General Public License version 3 as published by the Free Software
+** Foundation and appearing in the file LICENSE.LGPL3 included in the
+** packaging of this file. Please review the following information to
+** ensure the GNU Lesser General Public License version 3 requirements
+** will be met: https://www.gnu.org/licenses/lgpl-3.0.html.
+**
+** GNU General Public License Usage
+** Alternatively, this file may be used under the terms of the GNU
+** General Public License version 2.0 or (at your option) the GNU General
+** Public license version 3 or any later version approved by the KDE Free
+** Qt Foundation. The licenses are as published by the Free Software
+** Foundation and appearing in the file LICENSE.GPL2 and LICENSE.GPL3
+** included in the packaging of this file. Please review the following
+** information to ensure the GNU General Public License requirements will
+** be met: https://www.gnu.org/licenses/gpl-2.0.html and
+** https://www.gnu.org/licenses/gpl-3.0.html.
+**
+** $QT_END_LICENSE$
+**
+****************************************************************************/
+
+#ifndef QHAIKUWINDOW_H
+#define QHAIKUWINDOW_H
+
+#include <qpa/qplatformbackingstore.h>
+#include <qpa/qplatformwindow.h>
+
+#include <Window.h>
+#include <Rect.h>
+#include <View.h>
+
+#if !defined(QT_NO_OPENGL)
+#include <GLView.h>
+#endif
+
+#include <qhash.h>
+
+#include "qhaikuview.h"
+
+QT_BEGIN_NAMESPACE
+
+class QHaikuWindow;
+
+
+class QtHaikuWindow : public BWindow
+{
+public:
+	QtHaikuWindow(QHaikuWindow *qwindow, BRect frame, const char *title, window_look look, window_feel feel, uint32 flags);
+	~QtHaikuWindow();
+
+	void FrameResized(float width, float height);
+	void FrameMoved(BPoint point);
+	void MessageReceived(BMessage* msg);
+	virtual void DispatchMessage(BMessage *, BHandler *);	
+	virtual void WindowActivated(bool active);
+	virtual bool QuitRequested();
+	
+	virtual void Zoom(BPoint origin, float w, float h);
+	
+	QHaikuSurfaceView *View(void);
+
+	QHaikuSurfaceView *fView;
+#if !defined(QT_NO_OPENGL)
+	BGLView *fGLView;
+#endif
+	QHaikuWindow *fQWindow;
+};
+
+class QHaikuWindow : public QPlatformWindow
+{
+public:
+    QHaikuWindow(QWindow *window);
+    ~QHaikuWindow();
+
+    void setGeometry(const QRect &rect);
+    void setWindowTitle(const QString &title);
+    void setWindowState(Qt::WindowState state);
+    void setWindowFlags(Qt::WindowFlags flags);
+
+    QMargins frameMargins() const;
+
+    void setVisible(bool visible);
+    void requestActivateWindow();
+    
+    bool setKeyboardGrabEnabled(bool) Q_DECL_OVERRIDE { return false; }
+    bool setMouseGrabEnabled(bool) Q_DECL_OVERRIDE { return false; }
+    void propagateSizeHints();
+    
+    void FrameResized(float w, float h);
+    void FrameMoved(BPoint point);
+
+    WId winId() const;
+    
+    void raise();
+    void lower();
+
+    static QHaikuWindow *windowForWinId(WId id);
+
+    QtHaikuWindow *m_window;
+
+private:
+    void setFrameMarginsEnabled(bool enabled);
+    void setGeometryImpl(const QRect &rect);
+
+    QRect m_normalGeometry;
+    QMargins m_margins;
+    bool m_positionIncludesFrame;
+    bool m_visible;
+    bool m_pendingGeometryChangeOnShow;
+    WId m_winId;
+
+    static QHash<WId, QHaikuWindow *> m_windowForWinIdHash;
+};
+
+QT_END_NAMESPACE
+
+#endif
