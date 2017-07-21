@@ -97,23 +97,21 @@ QSystemTrayIconLooper::MessageReceived(BMessage* theMessage)
 } 
 
 QHaikuSystemTrayIcon::QHaikuSystemTrayIcon()
-	: looper(0), pulse(0), ReplicantId(-1), qystrayExist(false)
+	: looper(0), pulse(0), replicantId(-1), qystrayExist(false)
 {
-	qystrayExist = FindTrayExecutable();
+	qystrayExist = findTrayExecutable();
 }
 
 void
 QHaikuSystemTrayIcon::init()
 {
 	looper = new QSystemTrayIconLooper();
-	looper->Run();		
-	
+	looper->Run();
+
 	connect((QSystemTrayIconLooper*)looper, SIGNAL(sendHaikuMessage(BMessage *)),
-		this, SLOT(HaikuEvent(BMessage *)), Qt::QueuedConnection);
+		this, SLOT(haikuEvents(BMessage *)), Qt::QueuedConnection);
 
 	pulse = new BMessageRunner(BMessenger(looper), new BMessage('PULS'), 1000000);
-
-	InstallIcon();
 }
 
 void
@@ -133,8 +131,10 @@ QHaikuSystemTrayIcon::cleanup()
 	}
 
 	BDeskbar deskbar;
-	if (ReplicantId > 0)
-		deskbar.RemoveItem(ReplicantId);
+	if (replicantId > 0) {
+		deskbar.RemoveItem(replicantId);
+		replicantId = -1;
+	}
 }
 
 void
@@ -142,28 +142,33 @@ QHaikuSystemTrayIcon::updateIcon(const QIcon &qicon)
 {
     if (qicon.isNull())
         return;
-        
+
     currentIcon = qicon;
 
     QSize size = qicon.actualSize(QSize(16, 16));
-    QPixmap pm = qicon.pixmap(size);
-    if (pm.isNull())
+    QPixmap pixmap = qicon.pixmap(size);
+    if (pixmap.isNull())
         return;
-    QImage img = pm.toImage();
-    if(img.isNull())
+    QImage image = pixmap.toImage();
+    if(image.isNull())
     	return;
     	
 	BBitmap *icon = new BBitmap(BRect(0, 0, size.width()-1, size.height()-1), B_RGBA32);
-	icon->SetBits((const void*)img.bits(), img.byteCount(), 0, B_RGBA32); 
 	if(icon) {
-		BMessage	bits(B_ARCHIVED_OBJECT);
-		icon->Archive(&bits);	
-		BMessage *mes = new BMessage('BITS');
-		mes->AddMessage("icon",&bits);
+		icon->SetBits((const void*)image.bits(), image.byteCount(), 0, B_RGBA32);
+
+		installIcon();
+
+		BMessage bits(B_ARCHIVED_OBJECT);
+		icon->Archive(&bits);
+		BMessage *message = new BMessage('BITS');
+		message->AddMessage("icon", &bits);
 		bits.MakeEmpty();
-		SendMessageToReplicant(mes);
+
+		sendMessageToReplicant(message);
+
 		delete icon;
-	}	
+	}
 	updateToolTip(currentToolTip);
 }
 
@@ -173,17 +178,17 @@ QHaikuSystemTrayIcon::updateToolTip(const QString &tip)
 	currentToolTip = tip;
 
     BString tipStr("");
-    
+
     if (!currentToolTip.isNull()) {
     	currentToolTip.remove(QRegExp("<[^>]*>"));
     	currentToolTip.replace("&nbsp;", " ");
     	const char *str = (const char *)(currentToolTip.toUtf8());
     	tipStr.SetTo(str);
     }
-	
-	BMessage *mes = new BMessage('TTIP');		
-	mes->AddString("tooltip",tipStr.String());	
-	SendMessageToReplicant(mes);	
+
+	BMessage *message = new BMessage('TTIP');
+	message->AddString("tooltip",tipStr.String());
+	sendMessageToReplicant(message);
 }
 
 void
@@ -207,7 +212,6 @@ QHaikuSystemTrayIcon::geometry() const
 	return shelfRect;
 }
 
-
 void
 QHaikuSystemTrayIcon::showMessage(const QString &title, const QString &msg,
 	const QIcon& icon, MessageIcon iconType, int secs)
@@ -230,18 +234,18 @@ QHaikuSystemTrayIcon::showMessage(const QString &title, const QString &msg,
 	notification.SetTitle(stitle);
 	notification.SetMessageID(smessageId);
 	notification.SetContent(smessage);
-	
+
 	if (icon.isNull()) {
 		if (nodeInfo.GetTrackerIcon(&bitmap, B_LARGE_ICON) == B_NO_ERROR)
 			notification.SetIcon(&bitmap);
 	} else {
 		QPixmap pixmap = icon.pixmap(B_LARGE_ICON);
-		QImage image = pixmap.toImage();
+		QImage image = pixmap.toImage().scaled(B_LARGE_ICON, B_LARGE_ICON);
 		memcpy(bitmap.Bits(), image.bits(), image.byteCount());
 		notification.SetIcon(&bitmap);
 	}
 
-	notification.Send(secs * 1000);	
+	notification.Send(secs * 1000);
 }
 
 bool
@@ -257,40 +261,39 @@ QHaikuSystemTrayIcon::supportsMessages() const
 }
 
 void
-QHaikuSystemTrayIcon::HaikuEvent(BMessage *m)
-{	
-	if(m->what == 'PULS') {
-		LiveFactor--;
-		if(LiveFactor < -5) {		//Reinstallation time
-			LiveFactor = 0;
-			ReplicantId = 0;
-			InstallIcon();
-			LiveFactor = 0;
+QHaikuSystemTrayIcon::haikuEvents(BMessage *message)
+{
+	if(message->what == 'PULS') {
+		liveFactor--;
+		if(liveFactor < -5) {		//Reinstallation time
+			liveFactor = 0;
+			replicantId = -1;
+			installIcon();
+			liveFactor = 0;
 			updateIcon(currentIcon);
 			updateToolTip(currentToolTip);
 		}
 	}
-	if(m->what == 'LIVE') {
-		LiveFactor++;		
+	if(message->what == 'LIVE') {
+		liveFactor++;
 		BRect rect;
-		if(m->FindRect("rect",&rect)==B_OK) {
+		if(message->FindRect("rect", &rect)==B_OK)
 			shelfRect.setRect(rect.left, rect.top, rect.Width(), rect.Height());
-		}		
 	}
-	if(m->what == 'TRAY') {
+	if(message->what == 'TRAY') {
 		int32 event = 0;
-		BPoint point(0,0);
+		BPoint point(0, 0);
 		int32 buttons = 0,
 			  clicks = 0;
 	
-		m->FindInt32("event",&event);
-		m->FindPoint("point",&point);
-		m->FindInt32("buttons",&buttons);
-		m->FindInt32("clicks",&clicks);
+		message->FindInt32("event", &event);
+		message->FindPoint("point", &point);
+		message->FindInt32("buttons", &buttons);
+		message->FindInt32("clicks", &clicks);
 		
 		switch(event) {
 			case TRAY_MOUSEUP:
-				{				                
+				{
 					if (buttons == B_PRIMARY_MOUSE_BUTTON) {
 					if (ignoreNextMouseRelease)
 	                    ignoreNextMouseRelease = false;
@@ -307,12 +310,12 @@ QHaikuSystemTrayIcon::HaikuEvent(BMessage *m)
 		                if (currentMenu)
 		                	currentMenu->showPopup(NULL, shelfRect, NULL);
 		                emit activated(QPlatformSystemTrayIcon::Context);		
-		             	break;   			
+						break;
 					}
 				}
 				break;
 			case TRAY_MOUSEDOWN:
-				{				
+				{
 					if (buttons == B_PRIMARY_MOUSE_BUTTON && clicks == 2) {
 						ignoreNextMouseRelease = true;
 						emit activated(QPlatformSystemTrayIcon::DoubleClick);
@@ -327,7 +330,7 @@ QHaikuSystemTrayIcon::HaikuEvent(BMessage *m)
 }
 
 bool
-QHaikuSystemTrayIcon::FindTrayExecutable(void)
+QHaikuSystemTrayIcon::findTrayExecutable(void)
 {
 	sysTrayExecutable.setFile("/bin/qsystray");
 	if (sysTrayExecutable.exists() && sysTrayExecutable.isFile())
@@ -336,73 +339,75 @@ QHaikuSystemTrayIcon::FindTrayExecutable(void)
 }
 
 status_t 
-QHaikuSystemTrayIcon::SendMessageToReplicant(BMessage *msg)
+QHaikuSystemTrayIcon::sendMessageToReplicant(BMessage *message)
 {
-	if(ReplicantId<=0)
+	if(replicantId <= 0)
 		return B_ERROR;
-		
+
 	BMessage aReply;
 	status_t aErr = B_OK;
-	
-	msg->AddInt32( "what2", msg->what );
-	msg->what = B_SET_PROPERTY;
 
-	BMessage	uid_specifier(B_ID_SPECIFIER);
-	
-	msg->AddSpecifier("View");
-	uid_specifier.AddInt32("id", ReplicantId);
+	message->AddInt32("what2", message->what);
+	message->what = B_SET_PROPERTY;
+
+	BMessage uid_specifier(B_ID_SPECIFIER);
+
+	message->AddSpecifier("View");
+	uid_specifier.AddInt32("id", replicantId);
 	uid_specifier.AddString("property", "Replicant");
-	msg->AddSpecifier(&uid_specifier);
-		
-	aErr = GetShelfMessenger().SendMessage( msg, (BHandler*)NULL, 500000 );
+	message->AddSpecifier(&uid_specifier);
+
+	aErr = getShelfMessenger().SendMessage(message, (BHandler*)NULL, 500000);
 	return aErr;
 }
 
 void
-QHaikuSystemTrayIcon::InstallIcon(void)
+QHaikuSystemTrayIcon::installIcon(void)
 {
-	ReplicantId = DeskBarLoadIcon();
+	if (replicantId <= 0)
+		replicantId = deskBarLoadIcon();
 
 	QString appName = QFileInfo(QCoreApplication::applicationFilePath()).fileName();
 	BString app_name((const char *)(appName.toUtf8()));
 
-	BMessage mes('MSGR');
-	QHaikuSystemTrayIcon *sys = this;
-	mes.AddMessenger("messenger", BMessenger(NULL, looper));
-	mes.AddData("qtrayobject", B_ANY_TYPE, &sys, sizeof(void*));
-	mes.AddString( "application_name", app_name);
+	BMessage message('MSGR');
+	QHaikuSystemTrayIcon *sysTray = this;
+	message.AddMessenger("messenger", BMessenger(NULL, looper));
+	message.AddData("qtrayobject", B_ANY_TYPE, &sysTray, sizeof(void*));
+	message.AddString("application_name", app_name);
 
-	SendMessageToReplicant(&mes);
+	sendMessageToReplicant(&message);
 }
 
 BMessenger 
-QHaikuSystemTrayIcon::GetShelfMessenger(void)
+QHaikuSystemTrayIcon::getShelfMessenger(void)
 {
 	BMessenger aResult;
 	status_t aErr = B_OK;
 	BMessenger aDeskbar(DBAR_SIGNATURE, -1, &aErr);
-	if (aErr != B_OK)return aResult;
+	if (aErr != B_OK)
+		return aResult;
 
-	BMessage aMessage(B_GET_PROPERTY);
-	
-	aMessage.AddSpecifier("Messenger");
-	aMessage.AddSpecifier("Shelf");
-	aMessage.AddSpecifier("View", "Status");
-	aMessage.AddSpecifier("Window", "Deskbar");
-	
+	BMessage message(B_GET_PROPERTY);
+
+	message.AddSpecifier("Messenger");
+	message.AddSpecifier("Shelf");
+	message.AddSpecifier("View", "Status");
+	message.AddSpecifier("Window", "Deskbar");
+
 	BMessage aReply;
 
-	if (aDeskbar.SendMessage(&aMessage, &aReply, 500000, 500000) == B_OK)
+	if (aDeskbar.SendMessage(&message, &aReply, 500000, 500000) == B_OK)
 		aReply.FindMessenger("result", &aResult);
 	return aResult;
 }
 
 int32	
-QHaikuSystemTrayIcon::ExecuteCommand(const char *command)
+QHaikuSystemTrayIcon::executeCommand(const char *command)
 {
    FILE *fpipe;
    char line[256];
-   if ( !(fpipe = (FILE*)popen(command,"r")) )
+   if ( !(fpipe = (FILE*)popen(command, "r")) )
    		return -1;
 
    fgets( line, sizeof line, fpipe);
@@ -414,16 +419,16 @@ QHaikuSystemTrayIcon::ExecuteCommand(const char *command)
 
 
 int32 
-QHaikuSystemTrayIcon::DeskBarLoadIcon(team_id tid)
+QHaikuSystemTrayIcon::deskBarLoadIcon(team_id tid)
 {
 	BString cmd((const char *)(sysTrayExecutable.absoluteFilePath().toUtf8()));
 	cmd << " " << (int)tid;
-	int32 id = ExecuteCommand(cmd.String());
+	int32 id = executeCommand(cmd.String());
 	return id;
 }
 
 int32 
-QHaikuSystemTrayIcon::DeskBarLoadIcon(void)
+QHaikuSystemTrayIcon::deskBarLoadIcon(void)
 {
 	thread_info threadInfo;
 	status_t error = get_thread_info(find_thread(NULL), &threadInfo);
@@ -433,7 +438,7 @@ QHaikuSystemTrayIcon::DeskBarLoadIcon(void)
 	}
 	team_id sTeam = threadInfo.team;
 	
-	return DeskBarLoadIcon(sTeam);
+	return deskBarLoadIcon(sTeam);
 }
 
 QT_END_NAMESPACE

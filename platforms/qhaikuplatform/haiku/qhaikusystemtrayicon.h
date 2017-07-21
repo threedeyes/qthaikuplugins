@@ -91,9 +91,9 @@ public:
     virtual bool isSystemTrayAvailable() const;
     virtual bool supportsMessages() const;
 
-    bool 	FindTrayExecutable(void);
-    status_t SendMessageToReplicant(BMessage *msg);
-    
+    bool 	findTrayExecutable(void);
+    status_t sendMessageToReplicant(BMessage *msg);
+
 	QSystemTrayIconLooper* looper;
 
 	QRect	shelfRect;
@@ -105,22 +105,22 @@ public:
 	QPlatformMenu *currentMenu;
 
 public slots:
-    void	HaikuEvent(BMessage *m);
-    
-private:
-	BMessenger GetShelfMessenger(void);	
-	int32	ExecuteCommand(const char *command);
-	int32 	DeskBarLoadIcon(team_id tid);
-	int32 	DeskBarLoadIcon(void);	
-	void 	InstallIcon(void);
+    void	haikuEvents(BMessage *m);
 
-	int32	ReplicantId;
-	int32	LiveFactor;
+private:
+	BMessenger getShelfMessenger(void);
+	int32	executeCommand(const char *command);
+	int32 	deskBarLoadIcon(team_id tid);
+	int32 	deskBarLoadIcon(void);
+	void 	installIcon(void);
+
+	int32	replicantId;
+	int32	liveFactor;
 	
 	bool 	ignoreNextMouseRelease;
 	bool	qystrayExist;
-	
-	BMessageRunner *pulse;	
+
+	BMessageRunner *pulse;
 };
 
 QT_END_NAMESPACE
