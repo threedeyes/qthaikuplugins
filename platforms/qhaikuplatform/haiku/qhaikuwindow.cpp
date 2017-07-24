@@ -382,7 +382,6 @@ bool QtHaikuWindow::QuitRequested()
 	return false;
 }
 
-
 QHaikuWindow::QHaikuWindow(QWindow *wnd)
     : QPlatformWindow(wnd)
     , m_positionIncludesFrame(false)
@@ -580,11 +579,19 @@ void QHaikuWindow::setVisible(bool visible)
     } else {
         QWindowSystemInterface::handleExposeEvent(window(), QRegion());
     }
-    
-    if (visible)
-    	m_window->Show();
-    else
-    	m_window->Hide();
+
+	m_window->Lock();
+	if (visible) {
+		if (window()->type() == Qt::Popup) {
+			m_window->SetWorkspaces(B_CURRENT_WORKSPACE);
+			m_window->Show();
+			m_window->Activate();
+	    } else
+			m_window->Show();
+    } else
+		m_window->Hide();
+
+    m_window->Unlock();
 
     m_visible = visible;
 }
