@@ -60,11 +60,12 @@ QT_BEGIN_NAMESPACE
 
 class QHaikuWindow;
 
-
-class QtHaikuWindow : public BWindow
+class QtHaikuWindow : public QObject, public BWindow
 {
+	Q_OBJECT
 public:
-	QtHaikuWindow(QHaikuWindow *qwindow, BRect frame, const char *title, window_look look, window_feel feel, uint32 flags);
+	QtHaikuWindow(QHaikuWindow *qwindow, BRect frame,
+		const char *title, window_look look, window_feel feel, uint32 flags);
 	~QtHaikuWindow();
 
 	void FrameResized(float width, float height);
@@ -73,9 +74,8 @@ public:
 	virtual void DispatchMessage(BMessage *, BHandler *);	
 	virtual void WindowActivated(bool active);
 	virtual bool QuitRequested();
-	
 	virtual void Zoom(BPoint origin, float w, float h);
-	
+
 	QHaikuSurfaceView *View(void);
 
 	QHaikuSurfaceView *fView;
@@ -83,10 +83,17 @@ public:
 	BGLView *fGLView;
 #endif
 	QHaikuWindow *fQWindow;
+Q_SIGNALS:
+    void windowMoved(const QPoint &pos);
+    void windowResized(const QSize &size);
+    void windowActivated(bool activated);
+    void windowZoomed();
+    void quitRequested();
 };
 
-class QHaikuWindow : public QPlatformWindow
+class QHaikuWindow : public QObject, public QPlatformWindow
 {
+	Q_OBJECT
 public:
     QHaikuWindow(QWindow *window);
     ~QHaikuWindow();
@@ -104,9 +111,6 @@ public:
     bool setKeyboardGrabEnabled(bool) Q_DECL_OVERRIDE { return false; }
     bool setMouseGrabEnabled(bool) Q_DECL_OVERRIDE { return false; }
     void propagateSizeHints();
-    
-    void FrameResized(float w, float h);
-    void FrameMoved(BPoint point);
 
     WId winId() const;
     
@@ -129,6 +133,13 @@ private:
     WId m_winId;
 
     static QHash<WId, QHaikuWindow *> m_windowForWinIdHash;
+
+private Q_SLOTS:
+	void platformWindowQuitRequested();
+    void platformWindowMoved(const QPoint &pos);
+    void platformWindowResized(const QSize &size);
+    void platformWindowActivated(bool activated);
+    void platformWindowZoomed();
 };
 
 QT_END_NAMESPACE

@@ -44,6 +44,7 @@
 #include <qpa/qplatformscreen.h>
 #include <qpa/qwindowsysteminterface.h>
 
+#include <qapplication.h>
 #include <qguiapplication.h>
 #include <qstatusbar.h>
 
@@ -53,7 +54,7 @@
 
 QT_BEGIN_NAMESPACE
 
- static uint32 ScanCodes[] = {
+static uint32 ScanCodes[] = {
         Qt::Key_Escape,		0x01,
         Qt::Key_F1,			0x02,
         Qt::Key_F2,			0x03,
@@ -177,7 +178,7 @@ static uint32 translateKeyCode(uint32 key)
 {
 	uint32 code = 0;
 	uint32 i = 0;
-	if(modifiers()&&B_NUM_LOCK) {
+	if (modifiers()&&B_NUM_LOCK) {
 	    while (ScanCodes_Numlock[i]) {
 	      		if ( key == ScanCodes_Numlock[i + 1]) {
 	            code = ScanCodes_Numlock[i];
@@ -207,7 +208,7 @@ QtHaikuWindow::QtHaikuWindow(QHaikuWindow *qwindow,
 		window_look look,
 		window_feel feel,
 		uint32 flags)
-		:BWindow(frame, title, look, feel, flags)
+		: QObject(), BWindow(frame, title, look, feel, flags)
 {
 	fQWindow = qwindow;
 	fView = new QHaikuSurfaceView(Bounds());
@@ -215,6 +216,7 @@ QtHaikuWindow::QtHaikuWindow(QHaikuWindow *qwindow,
 	fGLView = NULL;
 #endif	
  	AddChild(fView);
+	RemoveShortcut('W', B_COMMAND_KEY);
 }
 
 QtHaikuWindow::~QtHaikuWindow()
@@ -222,8 +224,7 @@ QtHaikuWindow::~QtHaikuWindow()
 }
 
 
-QHaikuSurfaceView *
-QtHaikuWindow::View(void)
+QHaikuSurfaceView* QtHaikuWindow::View(void)
 {
 	return fView;
 }
@@ -307,7 +308,7 @@ QtHaikuWindow::DispatchMessage(BMessage *msg, BHandler *handler)
 void QtHaikuWindow::MessageReceived(BMessage* msg)
 {
 	switch(msg->what) {
-	case B_MOUSE_WHEEL_CHANGED:
+		case B_MOUSE_WHEEL_CHANGED:
 		{
 			 float shift_x=0;
 			 float shift_y=0;
@@ -332,54 +333,34 @@ void QtHaikuWindow::MessageReceived(BMessage* msg)
 }
 
 
-void
-QtHaikuWindow::Zoom(BPoint origin, float w, float h)
+void QtHaikuWindow::Zoom(BPoint origin, float w, float h)
 {	
-	if (fQWindow->window()->windowState() & Qt::WindowMaximized) {
-		fQWindow->setWindowState(Qt::WindowNoState);
-	} else {
-		fQWindow->setWindowState(Qt::WindowMaximized);
-	}
+	Q_EMIT windowZoomed();
 }
 
 
-void
-QtHaikuWindow::FrameResized(float width, float height)
+void QtHaikuWindow::FrameResized(float width, float height)
 {
-	if (fQWindow->window()->windowState() & Qt::WindowMaximized) {
-		QWindowSystemInterface::handleWindowStateChanged(fQWindow->window(), Qt::WindowNoState);
-	}
-	fQWindow->FrameResized(width, height);
+	Q_EMIT windowResized(QSize(static_cast<int>(width), static_cast<int>(height)));
 }
 
 
-void
-QtHaikuWindow::FrameMoved(BPoint point)
+void QtHaikuWindow::FrameMoved(BPoint point)
 {
-	fQWindow->FrameMoved(point);
+	Q_EMIT windowMoved(QPoint(point.x, point.y));
 }
 
 
-void
-QtHaikuWindow::WindowActivated(bool active)
+void QtHaikuWindow::WindowActivated(bool active)
 {
-	if (!active) {
-		QWindowSystemInterface::handleWindowActivated(Q_NULLPTR, Qt::OtherFocusReason);		
-		QWindowSystemInterface::handleApplicationStateChanged(Qt::ApplicationInactive);
-		return;
-	}
-
-	QWindowSystemInterface::handleWindowActivated(fQWindow->window());	
-	QWindowSystemInterface::handleApplicationStateChanged(Qt::ApplicationActive);
-
-	fQWindow->requestActivateWindow();
+	Q_EMIT windowActivated(active);
 }
 
 
 bool QtHaikuWindow::QuitRequested()
 {
-	QWindowSystemInterface::handleCloseEvent(fQWindow->window());
-	return false;
+	Q_EMIT quitRequested();
+    return false;
 }
 
 QHaikuWindow::QHaikuWindow(QWindow *wnd)
@@ -387,23 +368,28 @@ QHaikuWindow::QHaikuWindow(QWindow *wnd)
     , m_positionIncludesFrame(false)
     , m_visible(false)
     , m_pendingGeometryChangeOnShow(true)
-{	
-//	qDebug() << "window()->surfaceType() " << window()->surfaceType() << window()->type();
-	
+{
 	m_window = new QtHaikuWindow(this, BRect(wnd->geometry().left(),
     				wnd->geometry().top(),
     				wnd->geometry().right(),
     				wnd->geometry().bottom()),
     				wnd->title().toUtf8(),
     				B_NO_BORDER_WINDOW_LOOK, B_NORMAL_WINDOW_FEEL, 0);
-    
+
+	connect(m_window, SIGNAL(quitRequested()), SLOT(platformWindowQuitRequested()), Qt::BlockingQueuedConnection);
+	connect(m_window, SIGNAL(windowMoved(QPoint)), SLOT(platformWindowMoved(QPoint)));
+	connect(m_window, SIGNAL(windowResized(QSize)), SLOT(platformWindowResized(QSize)));
+	connect(m_window, SIGNAL(windowActivated(bool)), SLOT(platformWindowActivated(bool)));
+	connect(m_window, SIGNAL(windowZoomed()), SLOT(platformWindowZoomed()));
+
     setWindowFlags(wnd->flags());
     setWindowState(wnd->windowState());
-    handleContentOrientationChange(wnd->contentOrientation());	 	
+    handleContentOrientationChange(wnd->contentOrientation());
+
     setGeometry(wnd->geometry());
 
     QWindowSystemInterface::flushWindowSystemEvents();
-    
+
     m_winId = (WId)this;
 }
 
@@ -415,16 +401,16 @@ QHaikuWindow::~QHaikuWindow()
 }
 
 
-void
-QHaikuWindow::setWindowFlags(Qt::WindowFlags flags)
+void QHaikuWindow::setWindowFlags(Qt::WindowFlags flags)
 {
 	Qt::WindowType type =  static_cast<Qt::WindowType>(int(flags & Qt::WindowType_Mask)) ;
     
 	bool popup = (type == Qt::Popup);
 	bool splash = (type == Qt::SplashScreen);
-	bool dialog = (type == Qt::Dialog
-                   || type == Qt::Sheet
-                   || (flags & Qt::MSWindowsFixedSizeDialogHint));
+	//bool dialog = (type == Qt::Dialog
+    //               || type == Qt::Sheet
+    //               || (flags & Qt::MSWindowsFixedSizeDialogHint));
+    bool dialog = ((type == Qt::Dialog) || (type == Qt::Sheet) || (type == Qt::MSWindowsFixedSizeDialogHint));
 	bool tool = (type == Qt::Tool || type == Qt::Drawer);
 	bool tooltip = (type == Qt::ToolTip);
 
@@ -469,8 +455,8 @@ QHaikuWindow::setWindowFlags(Qt::WindowFlags flags)
 			wflag |= B_NOT_CLOSABLE;
 	}
 
-	if (flags & Qt::WindowStaysOnTopHint)
-		wfeel = B_FLOATING_ALL_WINDOW_FEEL;
+    if (flags & Qt::WindowStaysOnTopHint)
+        wfeel = B_FLOATING_ALL_WINDOW_FEEL;
 
 	m_window->SetLook(wlook);
 	m_window->SetFeel(wfeel);
@@ -478,8 +464,7 @@ QHaikuWindow::setWindowFlags(Qt::WindowFlags flags)
 }
 
 
-void
-QHaikuWindow::setWindowTitle(const QString &title)
+void QHaikuWindow::setWindowTitle(const QString &title)
 {
 	m_window->SetTitle(title.toUtf8());
 }
@@ -501,28 +486,22 @@ void QHaikuWindow::setGeometry(const QRect &rect)
 void QHaikuWindow::propagateSizeHints()
 {
 	QWindow *win = window();
-	
+
     QSize minimumSize = win->minimumSize();
     QSize maximumSize = win->maximumSize();
-//    QSize baseSize = win->baseSize();
-//    QSize sizeIncrement = win->sizeIncrement();
-    
+
     float minW, maxW, minH, maxH;
     m_window->GetSizeLimits(&minW, &maxW, &minH, &maxH);
-    
-//    qDebug() << "G: " << minW << maxW << minH << maxH;
-    
+
     if (minimumSize.width() > 0)
-    	minW = minimumSize.width();
+		minW = minimumSize.width();
     if (minimumSize.height() > 0)
-    	minH = minimumSize.height();    	
+		minH = minimumSize.height();
     if (maximumSize.width() < QWINDOWSIZE_MAX)
     	maxW = maximumSize.width();
     if (maximumSize.height() < QWINDOWSIZE_MAX)
     	maxH = maximumSize.height();
-    	
-//    qDebug() << "S: " << minW << maxW << minH << maxH;
-   
+
 	m_window->SetSizeLimits(minW, maxW, minH, maxH);
 }
 
@@ -588,6 +567,13 @@ void QHaikuWindow::setVisible(bool visible)
 			m_window->Activate();
 	    } else
 			m_window->Show();
+
+        if (window()->modality() == Qt::WindowModal) {
+			m_window->SetFeel(B_MODAL_SUBSET_WINDOW_FEEL);
+        } else if (window()->modality() == Qt::ApplicationModal) {
+			m_window->SetFeel(B_MODAL_APP_WINDOW_FEEL);
+        }
+
     } else
 		m_window->Hide();
 
@@ -692,15 +678,40 @@ QHaikuWindow *QHaikuWindow::windowForWinId(WId id)
 }
 
 
-void 
-QHaikuWindow::FrameResized(float w, float h)
+void QHaikuWindow::platformWindowQuitRequested()
+{
+    QWindowSystemInterface::handleCloseEvent(window());
+}
+
+
+void QHaikuWindow::platformWindowMoved(const QPoint &pos)
 {
 	QRect adjusted = geometry();
-	adjusted.setWidth(w + 1);
-	adjusted.setHeight(h + 1);
+	adjusted.moveTopLeft(pos);
 	
     QPlatformWindow::setGeometry(adjusted);
     
+    if (window()->isTopLevel() && window()->type() != Qt::Popup) {
+		while (QApplication::activePopupWidget())
+			QApplication::activePopupWidget()->close();
+    }
+
+    if (m_visible) {
+        QWindowSystemInterface::handleGeometryChange(window(), adjusted);
+        QWindowSystemInterface::handleExposeEvent(window(), QRect(QPoint(), adjusted.size()));
+    } else {
+        m_pendingGeometryChangeOnShow = true;
+    }
+}
+
+void QHaikuWindow::platformWindowResized(const QSize &size)
+{
+	QRect adjusted = geometry();
+	adjusted.setWidth(size.width() + 1);
+	adjusted.setHeight(size.height() + 1);
+	
+    QPlatformWindow::setGeometry(adjusted);
+
     if (m_visible) {
         QWindowSystemInterface::handleGeometryChange(window(), adjusted);
         QWindowSystemInterface::handleExposeEvent(window(), QRect(QPoint(), adjusted.size()));
@@ -710,20 +721,31 @@ QHaikuWindow::FrameResized(float w, float h)
 }
 
 
-void 
-QHaikuWindow::FrameMoved(BPoint point)
+void QHaikuWindow::platformWindowActivated(bool activated)
 {
-	QRect adjusted = geometry();
-	adjusted.moveTopLeft(QPoint(point.x, point.y));
-	
-    QPlatformWindow::setGeometry(adjusted);
-        
-    if (m_visible) {
-        QWindowSystemInterface::handleGeometryChange(window(), adjusted);
-        QWindowSystemInterface::handleExposeEvent(window(), QRect(QPoint(), adjusted.size()));
-    } else {
-        m_pendingGeometryChangeOnShow = true;
-    }
+#if 0
+	if (!activated) {
+		QWindowSystemInterface::handleWindowActivated(Q_NULLPTR, Qt::OtherFocusReason);
+		QWindowSystemInterface::handleApplicationStateChanged(Qt::ApplicationInactive);
+		return;
+	}
+
+	QWindowSystemInterface::handleWindowActivated(window());
+	QWindowSystemInterface::handleApplicationStateChanged(Qt::ApplicationActive);
+
+	requestActivateWindow();
+#endif
+	QWindowSystemInterface::handleWindowActivated(activated ? window() : Q_NULLPTR);
+}
+
+
+void QHaikuWindow::platformWindowZoomed()
+{
+	if (window()->windowState() & Qt::WindowMaximized) {
+		setWindowState(Qt::WindowNoState);
+	} else {
+		setWindowState(Qt::WindowMaximized);
+	}
 }
 
 QT_END_NAMESPACE
