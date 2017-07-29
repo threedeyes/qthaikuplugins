@@ -40,18 +40,28 @@
 
 #include <stdio.h>
 
-#include <qpa/qwindowsysteminterface.h>
-#include <qpa/qplatformwindow.h>
-#include <qdebug.h>
-
 #include "qhaikuwindow.h"
 #include "qhaikuview.h"
 
+QT_BEGIN_NAMESPACE
 
-QHaikuSurfaceView::QHaikuSurfaceView(BRect rect) : 
-	BView(rect, "QHaikuSurfaceView", B_FOLLOW_ALL, B_WILL_DRAW),
+Q_DECLARE_METATYPE(QEvent::Type)
+Q_DECLARE_METATYPE(Qt::MouseButtons)
+Q_DECLARE_METATYPE(Qt::MouseEventSource)
+Q_DECLARE_METATYPE(Qt::KeyboardModifiers)
+Q_DECLARE_METATYPE(Qt::Orientation)
+
+QHaikuSurfaceView::QHaikuSurfaceView(BRect rect)
+	: QObject()
+	, BView(rect, "QHaikuSurfaceView", B_FOLLOW_ALL, B_WILL_DRAW),
 	viewBitmap(0)
 {
+    qRegisterMetaType<QEvent::Type>();
+    qRegisterMetaType<Qt::MouseButtons>();
+    qRegisterMetaType<Qt::MouseEventSource>();
+    qRegisterMetaType<Qt::KeyboardModifiers>();
+    qRegisterMetaType<Qt::Orientation>();
+
 	SetDrawingMode(B_OP_COPY);
 	lastMouseMoveTime = system_time();
 	//SetViewColor(B_TRANSPARENT_32_BIT);
@@ -71,7 +81,7 @@ QHaikuSurfaceView::Draw(BRect rect)
 }
 
 Qt::MouseButtons 
-QHaikuSurfaceView::hostToQtButtons(uint32 buttons)
+QHaikuSurfaceView::hostToQtButtons(uint32 buttons) const
 {
 	Qt::MouseButtons qtButtons = Qt::NoButton;
     
@@ -85,6 +95,20 @@ QHaikuSurfaceView::hostToQtButtons(uint32 buttons)
     return qtButtons;
 }
 
+Qt::KeyboardModifiers
+QHaikuSurfaceView::hostToQtModifiers(uint32 keyState) const
+{
+    Qt::KeyboardModifiers modifiers(Qt::NoModifier);
+
+    if (keyState & B_SHIFT_KEY)
+        modifiers |= Qt::ShiftModifier;
+    if (keyState & B_CONTROL_KEY)
+        modifiers |= Qt::AltModifier;
+    if (keyState & B_COMMAND_KEY)
+        modifiers |= Qt::ControlModifier;
+
+    return modifiers;
+}
 
 void 
 QHaikuSurfaceView::MouseDown(BPoint point)
@@ -105,7 +129,8 @@ QHaikuSurfaceView::MouseDown(BPoint point)
 		Window()->Activate();
 	}
 	
-	QWindowSystemInterface::handleMouseEvent( wnd->window(), localPoint, globalPoint, lastButtons);
+	Q_EMIT mouseEvent(localPoint, globalPoint, hostToQtButtons(buttons),
+		hostToQtModifiers(modifiers()), Qt::MouseEventNotSynthesized);
 }
 
 void 
@@ -114,25 +139,35 @@ QHaikuSurfaceView::MouseUp(BPoint point)
 	BPoint s_point = ConvertToScreen(point);
 	QPoint localPoint(point.x, point.y);
 	QPoint globalPoint(s_point.x, s_point.y);
-	
-	QHaikuWindow *wnd = ((QtHaikuWindow*)Window())->fQWindow;
 
 	BPoint pointer;
 	uint32 buttons;
 	GetMouse(&pointer, &buttons);
 
-	QWindowSystemInterface::handleMouseEvent( wnd->window(), localPoint, globalPoint, hostToQtButtons(buttons));
+	Q_EMIT mouseEvent(localPoint, globalPoint, hostToQtButtons(buttons),
+		hostToQtModifiers(modifiers()), Qt::MouseEventNotSynthesized);
 }
 
 void 
 QHaikuSurfaceView::MouseMoved(BPoint point, uint32 transit, const BMessage *msg)
 {
+	switch (transit) {
+		case B_INSIDE_VIEW:
+			break;
+		case B_ENTERED_VIEW:
+			Q_EMIT enteredView();
+			break;
+		case B_EXITED_VIEW:
+			Q_EMIT exitedView();
+			break;
+    }
+
 	BPoint s_point = ConvertToScreen(point);
 	QPoint localPoint(point.x, point.y);
 	QPoint globalPoint(s_point.x, s_point.y);
-	
+
 	bigtime_t timeNow = system_time();
-	
+
 	if (timeNow - lastMouseMoveTime > 10000) {
 		BPoint pointer;
 		uint32 buttons;
@@ -140,12 +175,13 @@ QHaikuSurfaceView::MouseMoved(BPoint point, uint32 transit, const BMessage *msg)
 
 		lastLocalMousePoint = localPoint;
 		lastGlobalMousePoint = globalPoint;
-	
-		QHaikuWindow *wnd = ((QtHaikuWindow*)Window())->fQWindow;
 
-		QWindowSystemInterface::handleMouseEvent( wnd->window(), localPoint, globalPoint, hostToQtButtons(buttons));
+		Q_EMIT mouseEvent(localPoint, globalPoint, hostToQtButtons(buttons),
+			hostToQtModifiers(modifiers()), Qt::MouseEventNotSynthesized);
+
 		lastMouseMoveTime = timeNow;
 	}
+	//BView::MouseMoved(point, transit, msg);
 }
 
 void

@@ -40,6 +40,10 @@
 
 #include "qhaikuwindow.h"
 #include "qhaikucommon.h"
+#include "qhaikukeymap.h"
+
+#include <private/qguiapplication_p.h>
+#include <private/qwindow_p.h>
 
 #include <qpa/qplatformscreen.h>
 #include <qpa/qwindowsysteminterface.h>
@@ -48,159 +52,49 @@
 #include <qguiapplication.h>
 #include <qstatusbar.h>
 
+#include <QMimeData>
+#include <QDragMoveEvent>
+
 #include <private/qwindow_p.h>
 
 #include <qdebug.h>
 
 QT_BEGIN_NAMESPACE
 
-static uint32 ScanCodes[] = {
-        Qt::Key_Escape,		0x01,
-        Qt::Key_F1,			0x02,
-        Qt::Key_F2,			0x03,
-        Qt::Key_F3,			0x04,
-        Qt::Key_F4,			0x05,
-        Qt::Key_F5,			0x06,
-        Qt::Key_F6,			0x07,
-        Qt::Key_F7,			0x08,
-        Qt::Key_F8,			0x09,
-        Qt::Key_F9,			0x0A,
-        Qt::Key_F10,		0x0B,
-        Qt::Key_F11,		0x0C,
-        Qt::Key_F12,		0x0D,
-        Qt::Key_Print,		0x0E,
-//      Qt::Key_ScrollLock = 0x0F,  //modificator
-        Qt::Key_Pause,		0x22,
-
-		Qt::Key_AsciiTilde, 0x11,
-        Qt::Key_1,			0x12,
-        Qt::Key_2,			0x13,
-        Qt::Key_3,			0x14,
-        Qt::Key_4,			0x15,
-        Qt::Key_5,			0x16,
-        Qt::Key_6,			0x17,
-        Qt::Key_7,			0x18,
-        Qt::Key_8,			0x19,
-        Qt::Key_9,			0x1A,
-        Qt::Key_0,			0x1B,
-        Qt::Key_Minus,		0x1C,
-        Qt::Key_Plus,		0x1D,
-        Qt::Key_Backspace,	0x1E,
-        Qt::Key_Insert,		0x1F,
-        Qt::Key_Home,		0x20,
-        Qt::Key_PageUp,		0x21,
-//		Qt::Key_NumLock,	0x22,   //modificator    
-		Qt::Key_Slash,		0x23,
-		Qt::Key_Asterisk,	0x24,
-		Qt::Key_Minus,		0x25,		
-		                
-        Qt::Key_Tab,		0x26,        
-        Qt::Key_Q,			0x27,
-        Qt::Key_W,			0x28,
-        Qt::Key_E,			0x29,
-        Qt::Key_R,			0x2A,
-        Qt::Key_T,			0x2B,
-        Qt::Key_Y,			0x2C,
-        Qt::Key_U,			0x2D,
-        Qt::Key_I,			0x2E,
-        Qt::Key_O,			0x2F,
-        Qt::Key_P,			0x30,      
-        Qt::Key_BracketLeft,0x31,
-        Qt::Key_BracketRight,0x32,
-		Qt::Key_Backslash,	0x33,
-        Qt::Key_Delete,		0x34,
-        Qt::Key_End,		0x35,
-        Qt::Key_PageDown,	0x36, 
-		Qt::Key_Home,		0x37, //numpad		      
-        Qt::Key_Up,			0x38, //numpad
-        Qt::Key_PageUp,		0x39, //numpad
-        Qt::Key_Plus,		0x3A, //numpad
-
-//		Qt::Key_CapsLock,	0x3B, //modificator
-        Qt::Key_A,			0x3C,
-        Qt::Key_S,			0x3D,
-        Qt::Key_D,			0x3E,
-        Qt::Key_F,			0x3F,
-        Qt::Key_G,			0x40,
-        Qt::Key_H,			0x41,
-        Qt::Key_J,			0x42,
-        Qt::Key_K,			0x43,
-        Qt::Key_L,			0x44,
-        Qt::Key_Colon,		0x45,
-        Qt::Key_QuoteDbl,	0x46,
-        Qt::Key_Return,		0x47,              
-        Qt::Key_Left,		0x48, //numpad
-		Qt::Key_5,			0x49, //numpad ???
-        Qt::Key_Right,		0x4A, //numpad
-
-        Qt::Key_Z,			0x4C,
-        Qt::Key_X,			0x4D,
-        Qt::Key_C,			0x4E,
-        Qt::Key_V,			0x4F,
-        Qt::Key_B,			0x50,
-        Qt::Key_N,			0x51,
-        Qt::Key_M,			0x51,
-        Qt::Key_Less,		0x52,
-        Qt::Key_Greater,	0x54,
-        Qt::Key_Question,	0x55,
-        Qt::Key_Up,			0x57,	//cursor
-        Qt::Key_End,		0x58,	//numpad
-        Qt::Key_Down,		0x59,   //numpad
-        Qt::Key_PageDown,	0x5A,   //numpad
-		Qt::Key_Enter,		0x5B,   //numpad
-
-		Qt::Key_Space,		0x5E,
-		Qt::Key_Left,		0x61,   //cursor
-		Qt::Key_Down,		0x62,   //cursor
-		Qt::Key_Right,		0x63,   //cursor
-		Qt::Key_Insert,		0x64,   //cursor
-		Qt::Key_Delete,		0x65,   //numpad
-		0,					0x00
-	};
-
-static uint32 ScanCodes_Numlock[] = {
-		Qt::Key_7,			0x37,
-        Qt::Key_8,			0x38,
-        Qt::Key_9,			0x39,
-        Qt::Key_Plus,		0x3A,
-        Qt::Key_4,			0x48,
-		Qt::Key_5,			0x49,
-        Qt::Key_6,			0x4A,
-        Qt::Key_1,			0x58,
-        Qt::Key_2,			0x59,
-        Qt::Key_3,			0x5A,
-		Qt::Key_Enter,		0x5B,
-		Qt::Key_Comma,		0x65,
-		0,					0x00
-	};
-
 static uint32 translateKeyCode(uint32 key)
 {
 	uint32 code = 0;
 	uint32 i = 0;
 	if (modifiers()&&B_NUM_LOCK) {
-	    while (ScanCodes_Numlock[i]) {
-	      		if ( key == ScanCodes_Numlock[i + 1]) {
-	            code = ScanCodes_Numlock[i];
-	      		    break;
-	        	}
-	       	i += 2;
-	  	}	
+	    while (platformHaikuScanCodes_Numlock[i]) {
+			if ( key == platformHaikuScanCodes_Numlock[i + 1]) {
+				code = platformHaikuScanCodes_Numlock[i];
+				break;
+			}
+			i += 2;
+		}
 		if(code>0)
-			return code;   
+			return code;
 	}
-	
+
 	i = 0;
-    while (ScanCodes[i]) {
-      		if ( key == ScanCodes[i + 1]) {
-            code = ScanCodes[i];
-      		    break;
-        	}
-       	i += 2;
-  	}	
-	return code;   
+    while (platformHaikuScanCodes[i]) {
+		if ( key == platformHaikuScanCodes[i + 1]) {
+			code = platformHaikuScanCodes[i];
+			break;
+		}
+		i += 2;
+	}
+	return code;
 }
 
+static bool activeWindowChangeQueued(const QWindow *window)
+{
+    QWindowSystemInterfacePrivate::ActivatedWindowEvent *systemEvent =
+        static_cast<QWindowSystemInterfacePrivate::ActivatedWindowEvent *>
+        (QWindowSystemInterfacePrivate::peekWindowSystemEvent(QWindowSystemInterfacePrivate::ActivatedWindow));
+    return systemEvent && systemEvent->activated != window;
+}
 
 QtHaikuWindow::QtHaikuWindow(QHaikuWindow *qwindow,
 		BRect frame,
@@ -208,7 +102,8 @@ QtHaikuWindow::QtHaikuWindow(QHaikuWindow *qwindow,
 		window_look look,
 		window_feel feel,
 		uint32 flags)
-		: QObject(), BWindow(frame, title, look, feel, flags)
+		: QObject()
+		, BWindow(frame, title, look, feel, flags)
 {
 	fQWindow = qwindow;
 	fView = new QHaikuSurfaceView(Bounds());
@@ -230,8 +125,7 @@ QHaikuSurfaceView* QtHaikuWindow::View(void)
 }
 
 
-void
-QtHaikuWindow::DispatchMessage(BMessage *msg, BHandler *handler)
+void QtHaikuWindow::DispatchMessage(BMessage *msg, BHandler *handler)
 {
 	switch(msg->what) {
 		case B_UNMAPPED_KEY_DOWN:
@@ -239,32 +133,11 @@ QtHaikuWindow::DispatchMessage(BMessage *msg, BHandler *handler)
 			{
 				uint32 modifier = msg->FindInt32("modifiers");
 				uint32 key = msg->FindInt32("key");
-				
 				QString text;
-				
-				const char* bytes;;
+				const char* bytes;
 				if(msg->FindString("bytes", &bytes) == B_OK)
 					text = QString::fromUtf8(bytes);
-				
-				Qt::KeyboardModifiers modifiers;
-		        if (modifier & B_SHIFT_KEY)
-		            modifiers |= Qt::ShiftModifier;
-		
-		        if (modifier & B_CONTROL_KEY)
-		            modifiers |= Qt::AltModifier;
-		
-		        if (modifier & B_COMMAND_KEY)
-		            modifiers |= Qt::ControlModifier;
-		
-				QWindowSystemInterface::handleWindowActivated(fQWindow->window());
-		
-		        QWindowSystemInterface::handleKeyEvent(0,
-                                        QEvent::KeyPress,
-                                        translateKeyCode(key),
-                                        modifiers,
-                                        text,
-                                        false);
-
+				Q_EMIT keyEvent(QEvent::KeyPress, translateKeyCode(key), fView->hostToQtModifiers(modifiers()), text);
 				break;	
 			}
 		case B_UNMAPPED_KEY_UP:
@@ -272,60 +145,44 @@ QtHaikuWindow::DispatchMessage(BMessage *msg, BHandler *handler)
 			{
 				uint32 modifier = msg->FindInt32("modifiers");
 				uint32 key = msg->FindInt32("key");
-				
 				QString text;
-				
-				const char* bytes;;
+				const char* bytes;
 				if(msg->FindString("bytes", &bytes) == B_OK)
 					text = QString::fromUtf8(bytes);
-				
-				Qt::KeyboardModifiers modifiers;
-		        if (modifier & B_SHIFT_KEY)
-		            modifiers |= Qt::ShiftModifier;
-		
-		        if (modifier & B_CONTROL_KEY)
-		            modifiers |= Qt::AltModifier;
-		
-		        if (modifier & B_COMMAND_KEY)
-		            modifiers |= Qt::ControlModifier;
-		
-		        QWindowSystemInterface::handleKeyEvent(0,
-                                        QEvent::KeyRelease,
-                                        translateKeyCode(key),
-                                        modifiers,
-                                        text,
-                                        false);
-				
+				Q_EMIT keyEvent(QEvent::KeyRelease, translateKeyCode(key), fView->hostToQtModifiers(modifiers()), text);
 				break;
-			}	
+			}
 	default:
 		break;
-	}			
+	}
 	BWindow::DispatchMessage(msg, handler);
 }
 
 
 void QtHaikuWindow::MessageReceived(BMessage* msg)
 {
+	if (msg->WasDropped()) {
+		Q_EMIT dropAction(new BMessage(*msg));
+		return;
+	}
 	switch(msg->what) {
 		case B_MOUSE_WHEEL_CHANGED:
 		{
 			 float shift_x=0;
 			 float shift_y=0;
-			 if(msg->FindFloat("be:wheel_delta_x",&shift_x)!=B_OK)
+			 if (msg->FindFloat("be:wheel_delta_x", &shift_x) != B_OK)
 			 	shift_x = 0;
-			 if(msg->FindFloat("be:wheel_delta_y",&shift_y)!=B_OK)			 	
+			 if (msg->FindFloat("be:wheel_delta_y", &shift_y) != B_OK)
 			 	shift_y = 0;
-			 
-			 if(shift_y !=0) {
-			 	QWindowSystemInterface::handleWheelEvent(fQWindow->window(), fView->lastLocalMousePoint, fView->lastGlobalMousePoint, -shift_y * 96, Qt::Vertical);
-			 }
-			 if(shift_x !=0) {
-			 	QWindowSystemInterface::handleWheelEvent(fQWindow->window(), fView->lastLocalMousePoint, fView->lastGlobalMousePoint, shift_x * 96, Qt::Horizontal);
-			 }
 
+			 if (shift_y != 0)
+				Q_EMIT wheelEvent(fView->lastLocalMousePoint, fView->lastGlobalMousePoint,
+					-shift_y * 120, Qt::Vertical, fView->hostToQtModifiers(modifiers()));
+			 if (shift_x != 0)
+				Q_EMIT wheelEvent(fView->lastLocalMousePoint, fView->lastGlobalMousePoint,
+					-shift_x * 120, Qt::Horizontal, fView->hostToQtModifiers(modifiers()));
 			 break;
-		}		
+		}
 	default:
 		BWindow::MessageReceived(msg);
 		break;
@@ -377,10 +234,20 @@ QHaikuWindow::QHaikuWindow(QWindow *wnd)
     				B_NO_BORDER_WINDOW_LOOK, B_NORMAL_WINDOW_FEEL, 0);
 
 	connect(m_window, SIGNAL(quitRequested()), SLOT(platformWindowQuitRequested()), Qt::BlockingQueuedConnection);
-	connect(m_window, SIGNAL(windowMoved(QPoint)), SLOT(platformWindowMoved(QPoint)));
+    connect(m_window, SIGNAL(windowMoved(QPoint)), SLOT(platformWindowMoved(QPoint)));
 	connect(m_window, SIGNAL(windowResized(QSize)), SLOT(platformWindowResized(QSize)));
-	connect(m_window, SIGNAL(windowActivated(bool)), SLOT(platformWindowActivated(bool)));
-	connect(m_window, SIGNAL(windowZoomed()), SLOT(platformWindowZoomed()));
+    connect(m_window, SIGNAL(windowActivated(bool)), SLOT(platformWindowActivated(bool)));
+    connect(m_window, SIGNAL(windowZoomed()), SLOT(platformWindowZoomed()));
+    connect(m_window, SIGNAL(dropAction(BMessage*)), SLOT(platformDropAction(BMessage*)));
+	connect(m_window, SIGNAL(wheelEvent(QPoint, QPoint, int, Qt::Orientation, Qt::KeyboardModifiers)),
+		this, SLOT(platformWheelEvent(QPoint, QPoint, int, Qt::Orientation, Qt::KeyboardModifiers)));
+	connect(m_window, SIGNAL(keyEvent(QEvent::Type, int, Qt::KeyboardModifiers, QString)),
+		this, SLOT(platformKeyEvent(QEvent::Type, int, Qt::KeyboardModifiers, QString)));
+
+	connect(m_window->View(), SIGNAL(enteredView()), this, SLOT(platformEnteredView()));
+	connect(m_window->View(), SIGNAL(exitedView()), this, SLOT(platformExitedView()));
+	connect(m_window->View(), SIGNAL(mouseEvent(QPoint, QPoint, Qt::MouseButtons, Qt::KeyboardModifiers, Qt::MouseEventSource)),
+		this, SLOT(platformMouseEvent(QPoint, QPoint, Qt::MouseButtons, Qt::KeyboardModifiers, Qt::MouseEventSource)));
 
     setWindowFlags(wnd->flags());
     setWindowState(wnd->windowState());
@@ -407,9 +274,6 @@ void QHaikuWindow::setWindowFlags(Qt::WindowFlags flags)
     
 	bool popup = (type == Qt::Popup);
 	bool splash = (type == Qt::SplashScreen);
-	//bool dialog = (type == Qt::Dialog
-    //               || type == Qt::Sheet
-    //               || (flags & Qt::MSWindowsFixedSizeDialogHint));
     bool dialog = ((type == Qt::Dialog) || (type == Qt::Sheet) || (type == Qt::MSWindowsFixedSizeDialogHint));
 	bool tool = (type == Qt::Tool || type == Qt::Drawer);
 	bool tooltip = (type == Qt::ToolTip);
@@ -498,9 +362,9 @@ void QHaikuWindow::propagateSizeHints()
     if (minimumSize.height() > 0)
 		minH = minimumSize.height();
     if (maximumSize.width() < QWINDOWSIZE_MAX)
-    	maxW = maximumSize.width();
+		maxW = maximumSize.width();
     if (maximumSize.height() < QWINDOWSIZE_MAX)
-    	maxH = maximumSize.height();
+		maxH = maximumSize.height();
 
 	m_window->SetSizeLimits(minW, maxW, minH, maxH);
 }
@@ -585,17 +449,8 @@ void QHaikuWindow::setVisible(bool visible)
 
 void QHaikuWindow::requestActivateWindow()
 {
-    QHaikuWindow *focusWindow = 0;
-    if (QGuiApplication::focusWindow())
-        focusWindow = static_cast<QHaikuWindow*>(QGuiApplication::focusWindow()->handle());
-
-    if (focusWindow == this)
-        return;
-
     if (window()->type() != Qt::Desktop)
 		m_window->Activate(true);
-    
-    QWindowSystemInterface::handleWindowActivated(window());
     QWindowSystemInterface::handleExposeEvent(window(), window()->geometry());
 }
 
@@ -690,8 +545,8 @@ void QHaikuWindow::platformWindowMoved(const QPoint &pos)
 	adjusted.moveTopLeft(pos);
 	
     QPlatformWindow::setGeometry(adjusted);
-    
-    if (window()->isTopLevel() && window()->type() != Qt::Popup) {
+
+	if (window()->isTopLevel() && window()->type() != Qt::Popup) {
 		while (QApplication::activePopupWidget())
 			QApplication::activePopupWidget()->close();
     }
@@ -709,9 +564,9 @@ void QHaikuWindow::platformWindowResized(const QSize &size)
 	QRect adjusted = geometry();
 	adjusted.setWidth(size.width() + 1);
 	adjusted.setHeight(size.height() + 1);
-	
-    QPlatformWindow::setGeometry(adjusted);
 
+    QPlatformWindow::setGeometry(adjusted);
+    
     if (m_visible) {
         QWindowSystemInterface::handleGeometryChange(window(), adjusted);
         QWindowSystemInterface::handleExposeEvent(window(), QRect(QPoint(), adjusted.size()));
@@ -720,22 +575,21 @@ void QHaikuWindow::platformWindowResized(const QSize &size)
     }
 }
 
-
 void QHaikuWindow::platformWindowActivated(bool activated)
 {
-#if 0
 	if (!activated) {
-		QWindowSystemInterface::handleWindowActivated(Q_NULLPTR, Qt::OtherFocusReason);
-		QWindowSystemInterface::handleApplicationStateChanged(Qt::ApplicationInactive);
+	    if (window()->isTopLevel() && window()->type() != Qt::Popup) {
+			while (QApplication::activePopupWidget())
+				QApplication::activePopupWidget()->close();
+	    }
+		if (window() == QGuiApplication::focusWindow()
+            && !activeWindowChangeQueued(window())) {
+            QWindowSystemInterface::handleWindowActivated(Q_NULLPTR);
+		}
 		return;
 	}
-
 	QWindowSystemInterface::handleWindowActivated(window());
 	QWindowSystemInterface::handleApplicationStateChanged(Qt::ApplicationActive);
-
-	requestActivateWindow();
-#endif
-	QWindowSystemInterface::handleWindowActivated(activated ? window() : Q_NULLPTR);
 }
 
 
@@ -746,6 +600,102 @@ void QHaikuWindow::platformWindowZoomed()
 	} else {
 		setWindowState(Qt::WindowMaximized);
 	}
+}
+
+void QHaikuWindow::platformDropAction(BMessage *msg)
+{
+	BPoint dropOffset;
+	BPoint dropPoint = msg->DropPoint(&dropOffset);
+	m_window->ConvertFromScreen(&dropPoint);
+	m_window->ConvertFromScreen(&dropOffset);
+
+	QPoint m_lastPoint = QPoint(dropPoint.x, dropPoint.y);
+
+	QMimeData *dragData = new QMimeData();
+
+	QList<QUrl> urls;
+
+	entry_ref aRef;
+
+	for (int i = 0; msg->FindRef("refs", i, &aRef) == B_OK; i++) {
+		BEntry entry(&aRef);
+		BPath path;
+		entry.GetPath(&path);
+		QUrl url = QUrl::fromLocalFile(path.Path());
+		urls.append(url);
+	}
+
+	if (urls.count() > 0)
+		dragData->setUrls(urls);
+
+	ssize_t dataLength = 0;
+	const char* text = NULL;
+	if (msg->FindData("text/plain", B_MIME_TYPE, (const void**)&text, &dataLength) == B_OK) {
+		if (dataLength > 0) {
+			dragData->setText(QString::fromUtf8(text, dataLength));
+		} else
+			return;
+	}
+
+	BPoint pointer;
+	uint32 buttons;
+	if (m_window->View()->LockLooper()) {
+		m_window->View()->GetMouse(&pointer, &buttons);
+		m_window->View()->UnlockLooper();
+	}
+
+	QDragMoveEvent dmEvent(m_lastPoint,
+                    Qt::CopyAction | Qt::MoveAction | Qt::LinkAction,
+                    dragData,
+                    m_window->View()->hostToQtButtons(buttons),
+                    m_window->View()->hostToQtModifiers(modifiers()));
+
+    dmEvent.setDropAction(Qt::CopyAction);
+    dmEvent.accept();
+
+    QGuiApplication::sendEvent(window(), &dmEvent);
+
+	const QPlatformDropQtResponse response =
+		QWindowSystemInterface::handleDrop(window(), dragData, m_lastPoint,
+			Qt::CopyAction | Qt::MoveAction | Qt::LinkAction);
+
+	if (response.isAccepted()) {
+		const Qt::DropAction action = response.acceptedAction();
+		qDebug() << "DropAction action = " << action;
+	}
+}
+
+void QHaikuWindow::platformEnteredView()
+{
+    QWindowSystemInterface::handleEnterEvent(window());
+}
+
+void QHaikuWindow::platformExitedView()
+{
+    QWindowSystemInterface::handleLeaveEvent(window());
+}
+
+void QHaikuWindow::platformMouseEvent(const QPoint &localPosition,
+	const QPoint &globalPosition,
+	Qt::MouseButtons buttons,
+	Qt::KeyboardModifiers modifiers,
+	Qt::MouseEventSource source)
+{
+    QWindowSystemInterface::handleMouseEvent(window(), localPosition, globalPosition, buttons, modifiers, source);
+}
+
+void QHaikuWindow::platformWheelEvent(const QPoint &localPosition,
+	const QPoint &globalPosition,
+	int delta,
+	Qt::Orientation orientation,
+	Qt::KeyboardModifiers modifiers)
+{
+    QWindowSystemInterface::handleWheelEvent(window(), localPosition, globalPosition, delta, orientation, modifiers);
+}
+
+void QHaikuWindow::platformKeyEvent(QEvent::Type type, int key, Qt::KeyboardModifiers modifiers, const QString &text)
+{
+    QWindowSystemInterface::handleKeyEvent(window(), type, key, modifiers, text);
 }
 
 QT_END_NAMESPACE

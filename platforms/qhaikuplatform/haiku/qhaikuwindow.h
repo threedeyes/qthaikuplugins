@@ -47,6 +47,8 @@
 #include <Window.h>
 #include <Rect.h>
 #include <View.h>
+#include <Entry.h>
+#include <Path.h>
 
 #if !defined(QT_NO_OPENGL)
 #include <GLView.h>
@@ -74,6 +76,7 @@ public:
 	virtual void DispatchMessage(BMessage *, BHandler *);	
 	virtual void WindowActivated(bool active);
 	virtual bool QuitRequested();
+
 	virtual void Zoom(BPoint origin, float w, float h);
 
 	QHaikuSurfaceView *View(void);
@@ -89,6 +92,16 @@ Q_SIGNALS:
     void windowActivated(bool activated);
     void windowZoomed();
     void quitRequested();
+    void dropAction(BMessage *message);
+	void wheelEvent(const QPoint &localPosition,
+		const QPoint &globalPosition,
+		int delta,
+		Qt::Orientation orientation,
+		Qt::KeyboardModifiers modifiers);
+	void keyEvent(QEvent::Type type,
+		int key,
+		Qt::KeyboardModifiers modifiers,
+		const QString &text);
 };
 
 class QHaikuWindow : public QObject, public QPlatformWindow
@@ -130,9 +143,8 @@ private:
     bool m_positionIncludesFrame;
     bool m_visible;
     bool m_pendingGeometryChangeOnShow;
-    WId m_winId;
 
-    static QHash<WId, QHaikuWindow *> m_windowForWinIdHash;
+    WId m_winId;
 
 private Q_SLOTS:
 	void platformWindowQuitRequested();
@@ -140,6 +152,23 @@ private Q_SLOTS:
     void platformWindowResized(const QSize &size);
     void platformWindowActivated(bool activated);
     void platformWindowZoomed();
+    void platformDropAction(BMessage *message);
+    void platformEnteredView();
+    void platformExitedView();
+    void platformMouseEvent(const QPoint &localPosition,
+		const QPoint &globalPosition,
+		Qt::MouseButtons buttons,
+		Qt::KeyboardModifiers modifiers,
+		Qt::MouseEventSource source);
+    void platformWheelEvent(const QPoint &localPosition,
+		const QPoint &globalPosition,
+		int delta,
+		Qt::Orientation orientation,
+		Qt::KeyboardModifiers modifiers);
+	void platformKeyEvent(QEvent::Type type,
+		int key,
+		Qt::KeyboardModifiers modifiers,
+		const QString &text);
 };
 
 QT_END_NAMESPACE

@@ -41,14 +41,20 @@
 #ifndef _H_HAIKUSURFACEVIEW_
 #define _H_HAIKUSURFACEVIEW_
 
+#include <qpa/qwindowsysteminterface.h>
+#include <qpa/qplatformwindow.h>
+#include <qpa/qplatformdrag.h>
+#include <qdebug.h>
+
 #include <SupportDefs.h>
 #include <Bitmap.h>
 #include <View.h>
 #include <Point.h>
 #include <Rect.h>
 
-class QHaikuSurfaceView : public BView 
+class QHaikuSurfaceView : public QObject, public BView
 {
+		Q_OBJECT
  public:
 		QHaikuSurfaceView(BRect rect);
 		~QHaikuSurfaceView();
@@ -57,18 +63,26 @@ class QHaikuSurfaceView : public BView
 		virtual void MouseDown(BPoint p);
 		virtual void MouseUp(BPoint p);
 		virtual void MouseMoved(BPoint point, uint32 transit, const BMessage *msg);
-		
 		void SetViewBitmap(BBitmap *bmp);
+
+		Qt::MouseButtons hostToQtButtons(uint32 buttons) const;
+		Qt::KeyboardModifiers hostToQtModifiers(uint32 keyState) const;
 		
 		QPoint	lastLocalMousePoint;
 		QPoint 	lastGlobalMousePoint;
 		
  private:
- 		Qt::MouseButtons hostToQtButtons(uint32 buttons);
- 		
  		bigtime_t lastMouseMoveTime;
 		BBitmap *viewBitmap;
 		Qt::MouseButtons lastButtons;
+ Q_SIGNALS:
+		void mouseEvent(const QPoint &localPosition,
+			const QPoint &globalPosition,
+			Qt::MouseButtons buttons,
+			Qt::KeyboardModifiers modifiers,
+			Qt::MouseEventSource source);
+	    void enteredView();
+		void exitedView();
 };
 
 #endif
