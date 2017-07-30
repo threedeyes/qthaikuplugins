@@ -424,6 +424,10 @@ void QHaikuWindow::setVisible(bool visible)
     }
 
 	m_window->Lock();
+	if (window()->modality() == Qt::WindowModal ||
+		window()->modality() == Qt::ApplicationModal) {
+		m_window->SetFeel(B_MODAL_APP_WINDOW_FEEL);
+	}
 	if (visible) {
 		if (window()->type() == Qt::Popup) {
 			m_window->SetWorkspaces(B_CURRENT_WORKSPACE);
@@ -431,13 +435,6 @@ void QHaikuWindow::setVisible(bool visible)
 			m_window->Activate();
 	    } else
 			m_window->Show();
-
-        if (window()->modality() == Qt::WindowModal) {
-			m_window->SetFeel(B_MODAL_SUBSET_WINDOW_FEEL);
-        } else if (window()->modality() == Qt::ApplicationModal) {
-			m_window->SetFeel(B_MODAL_APP_WINDOW_FEEL);
-        }
-
     } else
 		m_window->Hide();
 

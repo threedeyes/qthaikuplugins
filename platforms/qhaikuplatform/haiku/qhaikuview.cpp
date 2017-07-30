@@ -128,9 +128,11 @@ QHaikuSurfaceView::MouseDown(BPoint point)
 	if (wnd->window()->flags() & Qt::FramelessWindowHint) {
 		Window()->Activate();
 	}
-	
+
 	Q_EMIT mouseEvent(localPoint, globalPoint, hostToQtButtons(buttons),
 		hostToQtModifiers(modifiers()), Qt::MouseEventNotSynthesized);
+
+	BView::MouseDown(point);
 }
 
 void 
@@ -146,6 +148,8 @@ QHaikuSurfaceView::MouseUp(BPoint point)
 
 	Q_EMIT mouseEvent(localPoint, globalPoint, hostToQtButtons(buttons),
 		hostToQtModifiers(modifiers()), Qt::MouseEventNotSynthesized);
+
+	BView::MouseUp(point);
 }
 
 void 
@@ -168,7 +172,7 @@ QHaikuSurfaceView::MouseMoved(BPoint point, uint32 transit, const BMessage *msg)
 
 	bigtime_t timeNow = system_time();
 
-	if (timeNow - lastMouseMoveTime > 10000) {
+	if (timeNow - lastMouseMoveTime > 1000) {
 		BPoint pointer;
 		uint32 buttons;
 		GetMouse(&pointer, &buttons);
@@ -181,7 +185,7 @@ QHaikuSurfaceView::MouseMoved(BPoint point, uint32 transit, const BMessage *msg)
 
 		lastMouseMoveTime = timeNow;
 	}
-	//BView::MouseMoved(point, transit, msg);
+	BView::MouseMoved(point, transit, msg);
 }
 
 void
