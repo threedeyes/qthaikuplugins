@@ -48,6 +48,8 @@
 #include <Application.h>
 #include <kernel/OS.h>
 #include <Application.h>
+#include <File.h>
+#include <AppFileInfo.h>
 #include <Path.h>
 #include <Entry.h>
 #include <String.h>
@@ -61,7 +63,6 @@ public:
 	~HQApplication();
 
 	virtual void MessageReceived(BMessage *message);
-	void	ArgvReceived(int32 argc, char **argv);
 	void	RefsReceived(BMessage *pmsg);
 	virtual bool QuitRequested();
 	bool	RefHandled;
@@ -78,8 +79,7 @@ static HQApplication* haikuApplication = NULL;
 HQApplication::HQApplication(const char* signature)
 		: BApplication(signature)
 {
-	RefHandled = false;	
-	qDebug() << "HQApplication";
+	RefHandled = false;
 }
 
 HQApplication::~HQApplication()
@@ -117,10 +117,6 @@ HQApplication::RefsReceived(BMessage *pmsg)
    	}
 }
 
-void
-HQApplication::ArgvReceived(int32 argc, char **argv)
-{
-}
 
 bool HQApplication::QuitRequested()
 {
@@ -156,8 +152,30 @@ int32 AppThread(void *data)
 
 QHaikuIntegration *QHaikuIntegration::createHaikuIntegration(const QStringList& parameters, int &argc, char **argv)
 {
-	thread_id my_thread;
-	QString appSignature = QLatin1String("application/x-vnd.qt5-") + QCoreApplication::applicationName().remove("_x86");
+	QString appSignature;
+
+	char signature[B_MIME_TYPE_LENGTH];
+	signature[0] = '\0';
+
+	QString appPath = QCoreApplication::applicationFilePath();
+
+	BFile appFile(appPath.toUtf8(), B_READ_ONLY);
+	if (appFile.InitCheck() == B_OK) {
+		BAppFileInfo info(&appFile);
+		if (info.InitCheck() == B_OK) {
+			if (info.GetSignature(signature) != B_OK)
+				signature[0] = '\0';
+		}
+	}
+
+	if (signature[0] != '\0')
+		appSignature = QLatin1String(signature);
+	else
+		appSignature = QLatin1String("application/x-vnd.qt5-") +
+			QCoreApplication::applicationName().remove("_x86");
+
+	thread_id my_thread;	
+
 	haikuApplication = new HQApplication(appSignature.toUtf8());
 	be_app = haikuApplication;
 
