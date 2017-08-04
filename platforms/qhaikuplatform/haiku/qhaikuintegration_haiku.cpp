@@ -41,6 +41,9 @@
 #include "qhaikuintegration.h"
 
 #include <QtWidgets/qapplication.h>
+#include <QProcess>
+#include <QString>
+#include <QStringList>
 #include <private/qguiapplication_p.h>
 #include <qevent.h>
 #include <qdebug.h>
@@ -181,9 +184,9 @@ QHaikuIntegration *QHaikuIntegration::createHaikuIntegration(const QStringList& 
 
 	my_thread = spawn_thread(AppThread, "BApplication_thread", B_NORMAL_PRIORITY, (void*)haikuApplication);
 	resume_thread(my_thread);
-		
+
 	haikuApplication->UnlockLooper();
-	
+
 	if (argc == 1) {
 		for (int i = 0; i < 100; i++) {
 			if (haikuApplication->RefHandled) {
@@ -196,6 +199,28 @@ QHaikuIntegration *QHaikuIntegration::createHaikuIntegration(const QStringList& 
 			snooze(1000);
 		}
 	}
-	
+
+	// Dirty hack for environment initialisation
+	QProcess proc;
+	QStringList env = QProcess::systemEnvironment();
+
+	if (env.count() == 0) {
+		proc.start("/bin/sh", QStringList() << "-c" <<"source /boot/system/boot/SetupEnvironment; env ");
+		proc.waitForFinished();
+		QString resultSystemEnv(proc.readAllStandardOutput());
+		env += resultSystemEnv.split("\n");
+
+		proc.start("/bin/sh", QStringList() << "-c" <<"source /boot/home/config/settings/boot/UserSetupEnvironment; env ");
+		proc.waitForFinished();
+		QString resultUserEnv(proc.readAllStandardOutput());
+		env += resultUserEnv.split("\n");
+
+		foreach (const QString &line, env) {
+			putenv(line.toUtf8());
+		}
+	}
+	// Enable software rendering for QML
+	putenv("QMLSCENE_DEVICE=softwarecontext");
+
     return new QHaikuIntegration(parameters, argc, argv);
 }
