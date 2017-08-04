@@ -41,6 +41,7 @@
 #include "qhaikuintegration.h"
 
 #include <QtWidgets/qapplication.h>
+#include <private/qguiapplication_p.h>
 #include <qevent.h>
 #include <qdebug.h>
 
@@ -62,7 +63,7 @@ public:
 	virtual void MessageReceived(BMessage *message);
 	void	ArgvReceived(int32 argc, char **argv);
 	void	RefsReceived(BMessage *pmsg);
-	virtual	bool QuitRequested();
+	virtual bool QuitRequested();
 	bool	RefHandled;
 	entry_ref Ref;
 private:
@@ -78,6 +79,7 @@ HQApplication::HQApplication(const char* signature)
 		: BApplication(signature)
 {
 	RefHandled = false;	
+	qDebug() << "HQApplication";
 }
 
 HQApplication::~HQApplication()
@@ -120,11 +122,29 @@ HQApplication::ArgvReceived(int32 argc, char **argv)
 {
 }
 
-bool 
-HQApplication::QuitRequested() {
-    QCoreApplication::postEvent(qApp, new QEvent(QEvent::Quit));
-	return false;
+bool HQApplication::QuitRequested()
+{
+	bool quit = true;
+
+	if (!QGuiApplicationPrivate::instance()->modalWindowList.isEmpty()) {
+		int visible = 0;
+		const QWindowList windows = QGuiApplication::topLevelWindows();
+		for (int i = 0; i < windows.size(); ++i) {
+			if (windows.at(i)->isVisible())
+				++visible;
+		}
+		quit = (visible <= 1);
+	}
+
+	if (quit) {
+		QCloseEvent event;
+		QGuiApplication::sendEvent(QCoreApplication::instance(), &event);
+		if (event.isAccepted())
+			return true;
+	}
+    return false;
 }
+
 
 int32 AppThread(void *data)
 {
