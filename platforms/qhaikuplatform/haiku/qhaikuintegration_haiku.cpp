@@ -147,7 +147,7 @@ bool HQApplication::QuitRequested()
 
 int32 AppThread(void *data)
 {
-	HQApplication *app = (HQApplication*)data;
+	HQApplication *app = static_cast<HQApplication*>(data);
 	app->LockLooper();
 	app->Run();	
 }
