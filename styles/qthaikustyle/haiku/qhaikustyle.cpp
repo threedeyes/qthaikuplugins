@@ -1831,6 +1831,8 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
             				bRect1.right++;
             			if(!previousSelected || selected)
             				bRect1.left--;
+						if(!selected)
+							bRect1.bottom++;
     	            	break;
 	                case QTabBar::TriangularSouth:
                 	case QTabBar::RoundedSouth:
@@ -1843,7 +1845,9 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
             				bRect1.right++;
             			if(!previousSelected || selected)
             				bRect1.left--;
-    	            	break;                		
+						if(!selected)
+							bRect1.top--;
+						break;
  					case QTabBar::TriangularWest:
                 	case QTabBar::RoundedWest:
                 		side = BControlLook::B_LEFT_BORDER;                		
@@ -1855,6 +1859,8 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
             				bRect1.bottom++;
             			if(!previousSelected || selected)
             				bRect1.top--;
+						if(!selected)
+							bRect1.right++;
 	                	break;
     	            case QTabBar::TriangularEast:
 	                case QTabBar::RoundedEast:
@@ -1866,7 +1872,9 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
             			if (lastTab || selected)
             				bRect1.bottom++;
             			if(!previousSelected || selected)
-            				bRect1.top--;
+							bRect1.top--;
+						if(!selected)
+							bRect1.left--;
 						break;
 				}
 
@@ -1876,23 +1884,6 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
 					be_control_look->DrawInactiveTab(surface.view(), bRect1, bRect, base, flags, borders, side);
 
 				painter->drawImage(r, surface.image());
-				if (!selected) {
-   	        		painter->setPen(QPen(frameColor));
-   	        		switch(side) {
-   	        			case BControlLook::B_TOP_BORDER:
-   	        				painter->drawLine(rect.bottomLeft(), rect.bottomRight());
-   	        				break;
-   	        			case BControlLook::B_BOTTOM_BORDER:
-   	        				painter->drawLine(rect.topLeft(), rect.topRight());
-   	        				break;
-   	        			case BControlLook::B_LEFT_BORDER:
-   	        				painter->drawLine(rect.topRight(), rect.bottomRight());
-   	        				break;
-   	        			case BControlLook::B_RIGHT_BORDER:
-   	        				painter->drawLine(rect.topLeft(), rect.bottomLeft());
-   	        				break;
-   	        		}            		
-				}
 			}
 		}
         painter->restore();
