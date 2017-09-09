@@ -1822,6 +1822,7 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
 				switch (tab->shape) {
 					case QTabBar::TriangularNorth:
             		case QTabBar::RoundedNorth:
+						bRect1.bottom++;
             			side = BControlLook::B_TOP_BORDER;
             			borders = (lastTab?BControlLook::B_RIGHT_BORDER:0) |
             					  (previousSelected?0:BControlLook::B_LEFT_BORDER) |
@@ -1831,11 +1832,10 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
             				bRect1.right++;
             			if(!previousSelected || selected)
             				bRect1.left--;
-						if(!selected)
-							bRect1.bottom++;
     	            	break;
 	                case QTabBar::TriangularSouth:
                 	case QTabBar::RoundedSouth:
+						bRect1.top--;
                 		side = BControlLook::B_BOTTOM_BORDER;
             			borders = (lastTab?BControlLook::B_RIGHT_BORDER:0) |
             					  (previousSelected?0:BControlLook::B_LEFT_BORDER) |
@@ -1845,11 +1845,10 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
             				bRect1.right++;
             			if(!previousSelected || selected)
             				bRect1.left--;
-						if(!selected)
-							bRect1.top--;
 						break;
  					case QTabBar::TriangularWest:
                 	case QTabBar::RoundedWest:
+						bRect1.right++;
                 		side = BControlLook::B_LEFT_BORDER;                		
             			borders = (lastTab?BControlLook::B_BOTTOM_BORDER:0) |
             					  (previousSelected?0:BControlLook::B_TOP_BORDER) |
@@ -1859,11 +1858,10 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
             				bRect1.bottom++;
             			if(!previousSelected || selected)
             				bRect1.top--;
-						if(!selected)
-							bRect1.right++;
 	                	break;
     	            case QTabBar::TriangularEast:
 	                case QTabBar::RoundedEast:
+						bRect1.left--;
 	                	side = BControlLook::B_RIGHT_BORDER;
             			borders = (lastTab?BControlLook::B_BOTTOM_BORDER:0) |
             					  (previousSelected?0:BControlLook::B_TOP_BORDER) |
@@ -1873,8 +1871,6 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
             				bRect1.bottom++;
             			if(!previousSelected || selected)
 							bRect1.top--;
-						if(!selected)
-							bRect1.left--;
 						break;
 				}
 
