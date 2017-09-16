@@ -377,6 +377,7 @@ QHaikuSystemTrayIcon::installIcon(void)
 	message.AddString("application_name", app_name);
 
 	sendMessageToReplicant(&message);
+	liveFactor = 0;
 }
 
 BMessenger 
