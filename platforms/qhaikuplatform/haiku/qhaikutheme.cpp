@@ -98,6 +98,18 @@ QPlatformDialogHelper *QHaikuTheme::createPlatformDialogHelper(DialogType type) 
 QVariant QHaikuTheme::themeHint(ThemeHint hint) const
 {
 	switch (hint) {
+	case QPlatformTheme::SystemIconThemeName:
+		return QVariant(QString(QStringLiteral("breeze")));
+    case QPlatformTheme::SystemIconFallbackThemeName:
+        return QVariant(QString(QStringLiteral("hicolor")));
+    case QPlatformTheme::IconThemeSearchPaths:
+    	{
+    		QStringList paths;
+    		paths << "/system/data/icons";
+        	return paths;
+    	}
+    case QPlatformTheme::DialogButtonBoxButtonsHaveIcons:
+        return QVariant(false);
     case QPlatformTheme::StyleNames:
     	{
     		QStringList styles;
