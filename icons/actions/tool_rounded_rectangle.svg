@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<svg version="1.1" width="64" height="64" color-interpolation="linearRGB"
+     xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg">
+ <g>
+  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:2; stroke-linecap:round; stroke-linejoin:round"
+        d="M29.55 18.31H47.44C51.93 18.31 55.56 21.94 55.56 26.43C55.56 32.81 55.56 39.19 55.56 45.57C55.56 50.05 51.93 53.69 47.44 53.69H29.55C25.06 53.69 21.43 50.05 21.43 45.57V26.43C21.43 21.94 25.06 18.31 29.55 18.31z"
+        transform="matrix(1.5926,0,0,1.536,-27.5662,-22.1262)"
+  />
+  <path style="fill:none; stroke:#005900; stroke-width:2; stroke-linecap:round; stroke-linejoin:round"
+        d="M29.55 18.31H47.44C51.93 18.31 55.56 21.94 55.56 26.43C55.56 32.81 55.56 39.19 55.56 45.57C55.56 50.05 51.93 53.69 47.44 53.69H29.55C25.06 53.69 21.43 50.05 21.43 45.57V26.43C21.43 21.94 25.06 18.31 29.55 18.31z"
+        transform="matrix(1.5926,0,0,1.536,-30.7515,-25.1983)"
+  />
+ </g>
+</svg>

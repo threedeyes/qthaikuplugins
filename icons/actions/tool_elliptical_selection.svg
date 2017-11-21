@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<svg version="1.1" width="64" height="64" color-interpolation="linearRGB"
+     xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg">
+ <g>
+  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:6; stroke-linecap:round; stroke-linejoin:round"
+        d="M5 3H3"
+        transform="matrix(1.4314,-0.2107,0.2641,1.1419,16.7856,11.9221)"
+  />
+  <path style="fill:none; stroke:#545454; stroke-width:6; stroke-linecap:round; stroke-linejoin:round"
+        d="M5 3H3"
+        transform="matrix(1.4314,-0.2107,0.2641,1.1419,13.3944,10.0597)"
+  />
+  <path style="fill:none; stroke:#ffffff; stroke-width:2; stroke-linecap:round; stroke-linejoin:round"
+        d="M5 3H3"
+        transform="matrix(1.4314,-0.2107,0.2641,1.1419,13.3944,10.0597)"
+  />
+  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:6; stroke-linecap:round; stroke-linejoin:round"
+        d="M5 3H3"
+        transform="matrix(1.4334,0.2016,-0.2527,1.1435,39.4123,10.6816)"
+  />
+  <path style="fill:none; stroke:#545454; stroke-width:6; stroke-linecap:round; stroke-linejoin:round"
+        d="M5 3H3"
+        transform="matrix(1.4334,0.2016,-0.2527,1.1435,37.0509,7.9913)"
+  />
+  <path style="fill:none; stroke:#ffffff; stroke-width:2; stroke-linecap:round; stroke-linejoin:round"
+        d="M5 3H3"
+        transform="matrix(1.4334,0.2016,-0.2527,1.1435,37.0509,7.9913)"
+  />
+  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:6; stroke-linecap:round; stroke-linejoin:round"
+        d="M5 3H3"
+        transform="matrix(1.4284,0.2233,-0.2799,1.1395,18.0706,47.483)"
+  />
+  <path style="fill:none; stroke:#545454; stroke-width:6; stroke-linecap:round; stroke-linejoin:round"
+        d="M5 3H3"
+        transform="matrix(1.4284,0.2233,-0.2799,1.1395,15.7737,44.7574)"
+  />
+  <path style="fill:none; stroke:#ffffff; stroke-width:2; stroke-linecap:round; stroke-linejoin:round"
+        d="M5 3H3"
+        transform="matrix(1.4284,0.2233,-0.2799,1.1395,15.7737,44.7574)"
+  />
+  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:6; stroke-linecap:round; stroke-linejoin:round"
+        d="M5 3H3"
+        transform="matrix(1.4474,-0.1225,0.1535,1.1547,38.7455,48.4902)"
+  />
+  <path style="fill:none; stroke:#545454; stroke-width:6; stroke-linecap:round; stroke-linejoin:round"
+        d="M5 3H3"
+        transform="matrix(1.4474,-0.1225,0.1535,1.1547,35.5434,46.4258)"
+  />
+  <path style="fill:none; stroke:#ffffff; stroke-width:2; stroke-linecap:round; stroke-linejoin:round"
+        d="M5 3H3"
+        transform="matrix(1.4474,-0.1225,0.1535,1.1547,35.5434,46.4258)"
+  />
+  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:6; stroke-linecap:round; stroke-linejoin:round"
+        d="M3 5V3"
+        transform="matrix(1.3515,0.4311,-0.5404,1.0781,5.7356,20.6018)"
+  />
+  <path style="fill:none; stroke:#545454; stroke-width:6; stroke-linecap:round; stroke-linejoin:round"
+        d="M3 5V3"
+        transform="matrix(1.3515,0.4311,-0.5404,1.0781,4.1133,17.5832)"
+  />
+  <path style="fill:none; stroke:#ffffff; stroke-width:2; stroke-linecap:round; stroke-linejoin:round"
+        d="M3 5V3"
+        transform="matrix(1.3515,0.4311,-0.5404,1.0781,4.1133,17.5832)"
+  />
+  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:6; stroke-linecap:round; stroke-linejoin:round"
+        d="M3 5V3"
+        transform="matrix(1.401,-0.3149,0.3948,1.1176,3.864,37.558)"
+  />
+  <path style="fill:none; stroke:#545454; stroke-width:6; stroke-linecap:round; stroke-linejoin:round"
+        d="M3 5V3"
+        transform="matrix(1.401,-0.3149,0.3948,1.1176,0.2724,35.9526)"
+  />
+  <path style="fill:none; stroke:#ffffff; stroke-width:2; stroke-linecap:round; stroke-linejoin:round"
+        d="M3 5V3"
+        transform="matrix(1.401,-0.3149,0.3948,1.1176,0.2724,35.9526)"
+  />
+  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:6; stroke-linecap:round; stroke-linejoin:round"
+        d="M3 5V3"
+        transform="matrix(1.3772,-0.3758,0.4711,1.0986,52.9848,22.0044)"
+  />
+  <path style="fill:none; stroke:#545454; stroke-width:6; stroke-linecap:round; stroke-linejoin:round"
+        d="M3 5V3"
+        transform="matrix(1.3772,-0.3758,0.4711,1.0986,49.2881,20.5587)"
+  />
+  <path style="fill:none; stroke:#ffffff; stroke-width:2; stroke-linecap:round; stroke-linejoin:round"
+        d="M3 5V3"
+        transform="matrix(1.3772,-0.3758,0.4711,1.0986,49.2881,20.5587)"
+  />
+  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:6; stroke-linecap:round; stroke-linejoin:round"
+        d="M3 5V3"
+        transform="matrix(1.3726,0.3864,-0.4844,1.0949,54.8277,36.0733)"
+  />
+  <path style="fill:none; stroke:#545454; stroke-width:6; stroke-linecap:round; stroke-linejoin:round"
+        d="M3 5V3"
+        transform="matrix(1.3726,0.3864,-0.4844,1.0949,53.0513,33.1104)"
+  />
+  <path style="fill:none; stroke:#ffffff; stroke-width:2; stroke-linecap:round; stroke-linejoin:round"
+        d="M3 5V3"
+        transform="matrix(1.3726,0.3864,-0.4844,1.0949,53.0513,33.1104)"
+  />
+ </g>
+</svg>
