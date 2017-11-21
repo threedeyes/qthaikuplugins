@@ -155,6 +155,9 @@ QHaikuSurfaceView::MouseUp(BPoint point)
 void 
 QHaikuSurfaceView::MouseMoved(BPoint point, uint32 transit, const BMessage *msg)
 {
+	if (msg != NULL)
+		return;
+
 	switch (transit) {
 		case B_INSIDE_VIEW:
 			break;
