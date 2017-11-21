@@ -99,13 +99,14 @@ QVariant QHaikuTheme::themeHint(ThemeHint hint) const
 {
 	switch (hint) {
 	case QPlatformTheme::SystemIconThemeName:
-		return QVariant(QString(QStringLiteral("breeze")));
+		return QVariant(QString(QStringLiteral("haiku")));
     case QPlatformTheme::SystemIconFallbackThemeName:
-        return QVariant(QString(QStringLiteral("hicolor")));
+        return QVariant(QString(QStringLiteral("breeze")));
     case QPlatformTheme::IconThemeSearchPaths:
     	{
     		QStringList paths;
     		paths << "/system/data/icons";
+    		paths << "/boot/home/config/non-packaged/data/icons";
         	return paths;
     	}
     case QPlatformTheme::DialogButtonBoxButtonsHaveIcons:
@@ -123,7 +124,7 @@ QVariant QHaikuTheme::themeHint(ThemeHint hint) const
         	return QVariant::fromValue(sizes);
     	}
     case QPlatformTheme::ContextMenuOnMouseRelease:
-        return QVariant(true);
+        return QVariant(false);
     default:
         return QPlatformTheme::themeHint(hint);
     }	
