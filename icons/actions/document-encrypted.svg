@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<svg version="1.1" width="64" height="64" color-interpolation="linearRGB"
+     xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg">
+ <g>
+  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:6.2248; stroke-linecap:round; stroke-linejoin:round"
+        d="M14.25 31.99H54.87V59.89H14.25V31.99z"
+        transform="matrix(1.08,0,0,1,-2.6413,0)"
+  />
+  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:12.4497"
+        d="M45.5 25.79V21.14C45.5 15.15 40.59 10.29 34.56 10.29C28.5 10.29 23.62 15.15 23.62 21.14V25.79"
+        transform="matrix(1.08,0,0,1,-2.6413,0)"
+  />
+  <path style="fill:none; stroke:#545454; stroke-width:12.4497; stroke-linecap:square"
+        d="M42.37 22.69V18.04C42.37 12.05 37.46 7.19 31.43 7.19C25.37 7.19 20.5 12.05 20.5 18.04V22.69"
+        transform="matrix(1.08,0,0,1,-2.6413,0)"
+  />
+  <path style="fill:none; stroke:#bf5000; stroke-width:6.2248; stroke-linecap:round; stroke-linejoin:round"
+        d="M11.12 28.89H51.75V56.79H11.12V28.89z"
+        transform="matrix(1.08,0,0,1,-2.6413,0)"
+  />
+  <linearGradient id="gradient0" gradientUnits="userSpaceOnUse" x1="198.62" y1="25.79" x2="198.62" y2="56.79">
+   <stop offset="0" stop-color="#ffff80"/>
+   <stop offset="1" stop-color="#ffd400"/>
+  </linearGradient>
+  <path style="fill:url(#gradient0)"
+        d="M11.12 28.89H51.75V56.79H11.12V28.89z"
+        transform="matrix(1.08,0,0,1,-2.6413,0)"
+  />
+  <radialGradient id="gradient1" gradientUnits="userSpaceOnUse" cx="0" cy="0" r="64" gradientTransform="matrix(0,0.4356,-0.3171,0,28.3125,24.2488)">
+   <stop offset="0.2865" stop-color="#acacac"/>
+   <stop offset="0.583" stop-color="#ffffff"/>
+   <stop offset="0.9185" stop-color="#acacac"/>
+  </radialGradient>
+  <path style="fill:none; stroke:url(#gradient1); stroke-width:6.2248; stroke-linecap:square"
+        d="M42.37 22.69V18.04C42.37 12.05 37.46 7.19 31.43 7.19C25.37 7.19 20.5 12.05 20.5 18.04V22.69"
+        transform="matrix(1.08,0,0,1,-2.6413,0)"
+  />
+ </g>
+</svg>
