@@ -10,8 +10,8 @@ QT += \
 
 LIBS += -lbe -lroot -ltracker
 
-INCLUDEPATH += "/boot/system/develop/headers/freetype2"
-INCLUDEPATH += "/boot/system/develop/headers/freetype2/freetype"
+CONFIG += link_pkgconfig
+PKGCONFIG += freetype2
 
 QMAKE_USE_PRIVATE += freetype
 
