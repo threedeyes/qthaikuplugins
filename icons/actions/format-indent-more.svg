@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<svg version="1.1" width="64" height="64" color-interpolation="linearRGB"
+     xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg">
+ <g>
+  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:4.0092; stroke-linecap:round; stroke-linejoin:round"
+        d="M4.01 4H38.16
+           M42.18 12H20.08
+           M42.18 20H20.08
+           M4.01 16L12.05 20L4.01 24V16z
+           M30.13 36H4.01
+           M42.18 28H20.08"
+        transform="matrix(1.4082,0,0,1.6314,0.9968,1.0029)"
+  />
+  <path style="fill:none; stroke:#000000; stroke-width:4.0092; stroke-linecap:round; stroke-linejoin:round"
+        d="M2.01 2H36.16
+           M40.18 10H18.08
+           M40.18 18H18.08
+           M2.01 14L10.05 18L2.01 22V14z
+           M28.13 34H2.01
+           M40.18 26H18.08"
+        transform="matrix(1.4082,0,0,1.6314,0.9968,1.0029)"
+  />
+ </g>
+</svg>
