@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<svg version="1.1" width="64" height="64" color-interpolation="linearRGB"
+     xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg">
+ <g>
+  <path style="fill:#000000; fill-opacity:0.2745"
+        d="M24 52L22 53H28V59C26 62 22 62 19 62C13 62 8 55 8 48C8 41 13 34 19 34C22 34 26 35 27.72 40.29L26 43L32 39C29 33 23 33 19 33C11 33 4 39 4 48C4 57 11 63 19 63C26 63 32 61 32.02 59L32 53L33 52H24z"
+        transform="matrix(2,0,0,1.9354,-3.9999,-59.9354)"
+  />
+  <linearGradient id="gradient0" gradientUnits="userSpaceOnUse" x1="-64" y1="62" x2="-64" y2="32">
+   <stop offset="0" stop-color="#0033cc"/>
+   <stop offset="0.99" stop-color="#3366ff"/>
+  </linearGradient>
+  <path style="fill:url(#gradient0)"
+        d="M23 51L21 52H27V58C25 61 21 61 18 61C12 61 7 54 7 47C7 40 12 33 18 33C21 33 25 34 26.72 39.29L25 42L31 38C28 32 22 32 18 32C10 32 3 38 3 47C3 56 10 62 18 62C25 62 31 60 31.02 58L31 52L32 51H23z"
+        transform="matrix(2,0,0,1.9354,-3.9999,-59.9354)"
+  />
+ </g>
+</svg>
