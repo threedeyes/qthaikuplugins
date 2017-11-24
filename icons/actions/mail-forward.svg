@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<svg version="1.1" width="64" height="64" color-interpolation="linearRGB"
+     xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg">
+ <g>
+  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:4; stroke-linecap:round; stroke-linejoin:round"
+        d="M4 4H42V32H4V4z"
+        transform="matrix(1.409,0,0,1.4499,1,6)"
+  />
+  <path style="fill:none; stroke:#bf5000; stroke-width:4; stroke-linecap:round; stroke-linejoin:round"
+        d="M2 2H40V30H2V2z"
+        transform="matrix(1.409,0,0,1.4499,1,6)"
+  />
+  <linearGradient id="gradient0" gradientUnits="userSpaceOnUse" x1="128" y1="2" x2="128" y2="30">
+   <stop offset="0" stop-color="#ffff80"/>
+   <stop offset="1" stop-color="#ffd400"/>
+  </linearGradient>
+  <path style="fill:url(#gradient0)"
+        d="M2 2H40V30H2V2z"
+        transform="matrix(1.409,0,0,1.4499,1,6)"
+  />
+  <path style="fill:#bf5000"
+        d="M40 1.98L21 15L2 1.98L21 19L40 1.98z
+           M40 30L28 12L26 14L40 30z
+           M16 14L14 12L2 30L16 14z"
+        transform="matrix(1.409,0,0,1.4499,1,6)"
+  />
+  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:4; stroke-linecap:round; stroke-linejoin:round"
+        d="M26 32C26 35.31 22.4 38 18 38C13.57 38 10 35.31 10 32V17.98H4L14 7.98L24 17.98H18V32H26z"
+        transform="matrix(1.409,0,0,1.4499,1,6)"
+  />
+  <path style="fill:none; stroke:#005900; stroke-width:4; stroke-linecap:round; stroke-linejoin:round"
+        d="M24 30C24 33.31 20.4 36 16 36C11.57 36 8 33.31 8 30V15.98H2L12 5.98L22 15.98H16V30H24z"
+        transform="matrix(1.409,0,0,1.4499,1,6)"
+  />
+  <linearGradient id="gradient1" gradientUnits="userSpaceOnUse" x1="128" y1="6" x2="128" y2="36">
+   <stop offset="0" stop-color="#80ff80"/>
+   <stop offset="1" stop-color="#00b200"/>
+  </linearGradient>
+  <path style="fill:url(#gradient1)"
+        d="M24 30C24 33.31 20.4 36 16 36C11.57 36 8 33.31 8 30V15.98H2L12 5.98L22 15.98H16V30H24z"
+        transform="matrix(1.409,0,0,1.4499,1,6)"
+  />
+ </g>
+</svg>
