@@ -2,42 +2,42 @@
 <svg version="1.1" width="64" height="64" color-interpolation="linearRGB"
      xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg">
  <g>
-  <path style="fill:none; stroke:#010101; stroke-width:4"
-        d="M28 2C13.64 2 2 13.64 2 28C2 42.34 13.64 54 28 54C42.34 54 54 42.34 54 28C54 13.64 42.34 2 28 2z"
-        transform="matrix(1.0531,0,0,1.0755,2.0677,2.0182)"
+  <path style="fill:none; stroke:#010101; stroke-width:4.2574"
+        d="M31.55 4.16C16.43 4.16 4.17 16.68 4.17 32.13C4.17 47.55 16.43 60.09 31.55 60.09C46.65 60.09 58.93 47.55 58.93 32.13C58.93 16.68 46.65 4.16 31.55 4.16z"
+        transform="matrix(0.8727,0,0,0.9007,4.0917,3.1738)"
   />
-  <radialGradient id="gradient0" gradientUnits="userSpaceOnUse" cx="0" cy="0" r="64" gradientTransform="matrix(0.5396,0,0,0.5396,19.5286,19.4461)">
+  <radialGradient id="gradient0" gradientUnits="userSpaceOnUse" cx="0" cy="0" r="64" gradientTransform="matrix(0.5682,0,0,0.5803,22.6332,22.9324)">
    <stop offset="0" stop-color="#d9ecff"/>
    <stop offset="0.7655" stop-color="#007fff"/>
    <stop offset="1" stop-color="#0061bf"/>
   </radialGradient>
   <path style="fill:url(#gradient0)"
-        d="M28 2C13.64 2 2 13.64 2 28C2 42.34 13.64 54 28 54C42.34 54 54 42.34 54 28C54 13.64 42.34 2 28 2z"
-        transform="matrix(1.0531,0,0,1.0755,2.0677,2.0182)"
+        d="M31.55 4.16C16.43 4.16 4.17 16.68 4.17 32.13C4.17 47.55 16.43 60.09 31.55 60.09C46.65 60.09 58.93 47.55 58.93 32.13C58.93 16.68 46.65 4.16 31.55 4.16z"
+        transform="matrix(0.8727,0,0,0.9007,4.0917,3.1738)"
   />
-  <radialGradient id="gradient1" gradientUnits="userSpaceOnUse" cx="0" cy="0" r="64" gradientTransform="matrix(0.4771,0,0,0.4771,28.163,28.0804)">
+  <radialGradient id="gradient1" gradientUnits="userSpaceOnUse" cx="0" cy="0" r="64" gradientTransform="matrix(0.5024,0,0,0.5131,31.7261,32.2186)">
    <stop offset="0.7178" stop-color="#ffffff" stop-opacity="0.7803"/>
    <stop offset="0.9926" stop-color="#ffffff" stop-opacity="0"/>
   </radialGradient>
   <path style="fill:url(#gradient1)"
-        d="M38.95 52.9C49.86 59.43 62.68 39.75 40.02 14.03C17.37 -11.67 6.57 4.32 8.72 8.64C6.42 4.46 17.37 -8.88 38.95 14.97C60.54 38.86 49.81 59.38 38.95 52.9z"
-        transform="matrix(1.0531,0,0,1.0755,2.0677,2.0182)"
+        d="M43.08 58.91C54.57 65.93 68.07 44.76 44.21 17.1C20.36 -10.53 8.98 6.66 11.25 11.31C8.82 6.81 20.36 -7.53 43.08 18.11C65.82 43.81 54.52 65.88 43.08 58.91z"
+        transform="matrix(0.8727,0,0,0.9007,4.0917,3.1738)"
   />
-  <radialGradient id="gradient2" gradientUnits="userSpaceOnUse" cx="0" cy="0" r="64" gradientTransform="matrix(0.4771,0,0,0.4771,28.163,28.0804)">
+  <radialGradient id="gradient2" gradientUnits="userSpaceOnUse" cx="0" cy="0" r="64" gradientTransform="matrix(0.5024,0,0,0.5131,31.7261,32.2186)">
    <stop offset="0.7178" stop-color="#ffffff" stop-opacity="0.7803"/>
    <stop offset="0.9926" stop-color="#ffffff" stop-opacity="0"/>
   </radialGradient>
   <path style="fill:url(#gradient2)"
-        d="M9.81 47.5C3.86 58.36 18.44 52.9 34.63 33.47C50.81 14.03 54.06 -1.05 44.34 6.48C54.13 -1.05 48.52 14.43 33.4 32.52C18.29 50.59 3.94 58.56 9.81 47.5z"
-        transform="matrix(1.0531,0,0,1.0755,2.0677,2.0182)"
+        d="M12.39 53.1C6.13 64.78 21.48 58.91 38.53 38.01C55.57 17.1 58.99 0.88 48.76 8.98C59.07 0.88 53.16 17.53 37.24 36.99C21.32 56.42 6.21 64.99 12.39 53.1z"
+        transform="matrix(0.8727,0,0,0.9007,4.0917,3.1738)"
   />
-  <radialGradient id="gradient3" gradientUnits="userSpaceOnUse" cx="0" cy="0" r="64" gradientTransform="matrix(0.4771,0,0,0.4771,28.163,28.0804)">
+  <radialGradient id="gradient3" gradientUnits="userSpaceOnUse" cx="0" cy="0" r="64" gradientTransform="matrix(0.5024,0,0,0.5131,31.7261,32.2186)">
    <stop offset="0.7178" stop-color="#ffffff" stop-opacity="0.7803"/>
    <stop offset="0.9926" stop-color="#ffffff" stop-opacity="0"/>
   </radialGradient>
   <path style="fill:url(#gradient3)"
-        d="M53.16 18.2C62.7 24.03 61.61 44.27 29.23 48.58C-3.13 52.9 -4.21 33.47 1.17 29.14C-4.21 33.59 -1.24 51.54 29.1 47.22C59.45 42.91 62.43 23.88 53.16 18.2z"
-        transform="matrix(1.0531,0,0,1.0755,2.0677,2.0182)"
+        d="M58.05 21.59C68.09 27.86 66.94 49.63 32.84 54.26C-1.22 58.91 -2.36 38.01 3.29 33.35C-2.36 38.14 0.76 57.44 32.71 52.8C64.67 48.16 67.81 27.7 58.05 21.59z"
+        transform="matrix(0.8727,0,0,0.9007,4.0917,3.1738)"
   />
  </g>
 </svg>

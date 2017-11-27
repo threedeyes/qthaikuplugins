@@ -2,21 +2,21 @@
 <svg version="1.1" width="64" height="64" color-interpolation="linearRGB"
      xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg">
  <g>
-  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:4; stroke-linecap:round; stroke-linejoin:round"
-        d="M42 9L35 4C35 4 27 3 15 15C3 27 4 35 4 35L9 42L17 32L13 28C13 28 14 22 18 18C22 14 28 13 28 13L32 17L42 9z"
-        transform="matrix(1.4094,0,0,1.4094,1.0167,1.0167)"
+  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:5.6375; stroke-linecap:round; stroke-linejoin:round"
+        d="M60.21 13.7L50.34 6.65C50.34 6.65 39.07 5.24 22.15 22.15C5.24 39.07 6.65 50.34 6.65 50.34L13.7 60.21L24.97 46.11L19.33 40.47C19.33 40.47 20.74 32.02 26.38 26.38C32.02 20.74 40.47 19.33 40.47 19.33L46.11 24.97L60.21 13.7z"
+        transform="matrix(0.871,0,0,0.871,4.1272,4.1272)"
   />
-  <path style="fill:none; stroke:#800000; stroke-width:4; stroke-linecap:round; stroke-linejoin:round"
-        d="M40 7L33 2C33 2 25 1 13 13C1 25 2 33 2 33L7 40L15 30L11 26C11 26 12 20 16 16C20 12 26 11 26 11L30 15L40 7z"
-        transform="matrix(1.4094,0,0,1.4094,1.0167,1.0167)"
+  <path style="fill:none; stroke:#800000; stroke-width:5.6375; stroke-linecap:round; stroke-linejoin:round"
+        d="M57.39 10.88L47.52 3.83C47.52 3.83 36.25 2.42 19.33 19.33C2.42 36.25 3.83 47.52 3.83 47.52L10.88 57.39L22.15 43.29L16.52 37.66C16.52 37.66 17.92 29.2 23.56 23.56C29.2 17.92 37.66 16.52 37.66 16.52L43.29 22.15L57.39 10.88z"
+        transform="matrix(0.871,0,0,0.871,4.1272,4.1272)"
   />
-  <linearGradient id="gradient0" gradientUnits="userSpaceOnUse" x1="128" y1="1.99" x2="128" y2="40">
+  <linearGradient id="gradient0" gradientUnits="userSpaceOnUse" x1="181.41" y1="3.82" x2="181.41" y2="57.39">
    <stop offset="0" stop-color="#ffabab"/>
    <stop offset="1" stop-color="#d90000"/>
   </linearGradient>
   <path style="fill:url(#gradient0)"
-        d="M40 7L33 2C33 2 25 1 13 13C1 25 2 33 2 33L7 40L15 30L11 26C11 26 12 20 16 16C20 12 26 11 26 11L30 15L40 7z"
-        transform="matrix(1.4094,0,0,1.4094,1.0167,1.0167)"
+        d="M57.39 10.88L47.52 3.83C47.52 3.83 36.25 2.42 19.33 19.33C2.42 36.25 3.83 47.52 3.83 47.52L10.88 57.39L22.15 43.29L16.52 37.66C16.52 37.66 17.92 29.2 23.56 23.56C29.2 17.92 37.66 16.52 37.66 16.52L43.29 22.15L57.39 10.88z"
+        transform="matrix(0.871,0,0,0.871,4.1272,4.1272)"
   />
  </g>
 </svg>

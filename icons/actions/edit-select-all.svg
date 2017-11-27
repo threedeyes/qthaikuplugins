@@ -2,35 +2,35 @@
 <svg version="1.1" width="64" height="64" color-interpolation="linearRGB"
      xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg">
  <g>
-  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:4; stroke-linecap:round; stroke-linejoin:round"
-        d="M8 3.99H38V42H8V3.99z"
-        transform="matrix(1.5,0,0,1.4089,-1,1.004)"
+  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:5.8206; stroke-linecap:round; stroke-linejoin:round"
+        d="M11 6.62H56V60.17H11V6.62z"
+        transform="matrix(0.8513,0,0,0.8713,4.7565,4.1154)"
   />
-  <path style="fill:none; stroke:#000080; stroke-width:4; stroke-linecap:round; stroke-linejoin:round"
-        d="M6 1.99H36V40H6V1.99z"
-        transform="matrix(1.5,0,0,1.4089,-1,1.004)"
+  <path style="fill:none; stroke:#000080; stroke-width:5.8206; stroke-linecap:round; stroke-linejoin:round"
+        d="M8 3.8H53V57.36H8V3.8z"
+        transform="matrix(0.8513,0,0,0.8713,4.7565,4.1154)"
   />
-  <linearGradient id="gradient0" gradientUnits="userSpaceOnUse" x1="128" y1="1.99" x2="128" y2="40">
+  <linearGradient id="gradient0" gradientUnits="userSpaceOnUse" x1="191" y1="3.8" x2="191" y2="57.36">
    <stop offset="0" stop-color="#ffffff"/>
    <stop offset="1" stop-color="#d9d9ff"/>
   </linearGradient>
   <path style="fill:url(#gradient0)"
-        d="M6 1.99H36V40H6V1.99z"
-        transform="matrix(1.5,0,0,1.4089,-1,1.004)"
+        d="M8 3.8H53V57.36H8V3.8z"
+        transform="matrix(0.8513,0,0,0.8713,4.7565,4.1154)"
   />
-  <path style="fill:none; stroke:#80d3ff; stroke-width:8; stroke-linecap:square"
-        d="M12 8H30
-           M12 16H22
-           M12 24H26
-           M12 32H22"
-        transform="matrix(1.5,0,0,1.4089,-1,1.004)"
+  <path style="fill:none; stroke:#80d3ff; stroke-width:11.6413; stroke-linecap:square"
+        d="M17 12.27H44
+           M17 23.54H32
+           M17 34.81H38
+           M17 46.08H32"
+        transform="matrix(0.8513,0,0,0.8713,4.7565,4.1154)"
   />
-  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:4; stroke-linecap:round; stroke-linejoin:round"
-        d="M12 8H30
-           M12 16H22
-           M12 24H26
-           M12 32H22"
-        transform="matrix(1.5,0,0,1.4089,-1,1.004)"
+  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:5.8206; stroke-linecap:round; stroke-linejoin:round"
+        d="M17 12.27H44
+           M17 23.54H32
+           M17 34.81H38
+           M17 46.08H32"
+        transform="matrix(0.8513,0,0,0.8713,4.7565,4.1154)"
   />
  </g>
 </svg>

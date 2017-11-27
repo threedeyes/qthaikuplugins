@@ -3,36 +3,36 @@
      xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg">
  <g>
   <path style="fill:#000000"
-        d="M17 38C6 38 4 58 17 58C30 58 28 38 17 38z"
-        transform="matrix(2.1509,0,0,2.4768,-4.5653,-90.1191)"
+        d="M32 3.99C8.34 3.99 4.03 53.53 32 53.53C59.96 53.53 55.65 3.99 32 3.99z"
+        transform="matrix(0.8681,0,0,0.8451,4.2197,4.6191)"
   />
-  <path style="fill:none; stroke:#000000; stroke-width:4; stroke-linecap:round"
-        d="M5 50H29
-           M26 42L9 57
-           M8 42L25 57"
-        transform="matrix(2.1509,0,0,2.4768,-4.5653,-90.1191)"
+  <path style="fill:none; stroke:#000000; stroke-width:9.2783; stroke-linecap:round"
+        d="M6.18 33.72H57.81
+           M51.35 13.9L14.79 51.05
+           M12.64 13.9L49.2 51.05"
+        transform="matrix(0.8681,0,0,0.8451,4.2197,4.6191)"
   />
-  <linearGradient id="gradient0" gradientUnits="userSpaceOnUse" x1="91.55" y1="-19.32" x2="104.25" y2="-1.33">
+  <linearGradient id="gradient0" gradientUnits="userSpaceOnUse" x1="192.34" y1="-137.97" x2="219.66" y2="-93.41">
    <stop offset="0" stop-color="#ffdcdc"/>
    <stop offset="1" stop-color="#e80606"/>
   </linearGradient>
   <path style="fill:url(#gradient0)"
-        d="M16 47L10 46C10 46 10 52 12 54C14 56 16 56 16 56V47z
-           M18 47V56C18 56 20 56 22 54C24 52 24 46 24 46L18 47z"
-        transform="matrix(2.1509,0,0,2.4768,-4.5653,-90.1191)"
+        d="M29.84 26.29L16.94 23.81C16.94 23.81 16.94 38.67 21.24 43.62C25.54 48.58 29.84 48.58 29.84 48.58V26.29z
+           M34.15 26.29V48.58C34.15 48.58 38.45 48.58 42.75 43.62C47.05 38.67 47.05 23.81 47.05 23.81L34.15 26.29z"
+        transform="matrix(0.8681,0,0,0.8451,4.2197,4.6191)"
   />
-  <linearGradient id="gradient1" gradientUnits="userSpaceOnUse" x1="41" y1="23.1" x2="45.15" y2="31.82">
+  <linearGradient id="gradient1" gradientUnits="userSpaceOnUse" x1="83.62" y1="-32.9" x2="92.54" y2="-11.3">
    <stop offset="0" stop-color="#c6c6c6"/>
    <stop offset="1" stop-color="#4a4a4a"/>
   </linearGradient>
   <path style="fill:url(#gradient1)"
-        d="M10.75 44.25C10.75 44.25 15 45 17 45C19 45 23.25 44.25 23.25 44.25C23.25 44.25 22 40 17 40C12 40 10.75 44.25 10.75 44.25z"
-        transform="matrix(2.1509,0,0,2.4768,-4.5653,-90.1191)"
+        d="M18.55 19.47C18.55 19.47 27.69 21.33 32 21.33C36.3 21.33 45.44 19.47 45.44 19.47C45.44 19.47 42.75 8.95 32 8.95C21.24 8.95 18.55 19.47 18.55 19.47z"
+        transform="matrix(0.8681,0,0,0.8451,4.2197,4.6191)"
   />
   <path style="fill:#000000"
-        d="M13 47C11 47 11 51 13 51C16 51 16 47 13 47z
-           M21 49C18 49 18 53 21 53C23 53 23 49 21 49z"
-        transform="matrix(2.1509,0,0,2.4768,-4.5653,-90.1191)"
+        d="M23.39 26.29C19.09 26.29 19.09 36.19 23.39 36.19C29.84 36.19 29.84 26.29 23.39 26.29z
+           M40.6 31.24C34.15 31.24 34.15 41.15 40.6 41.15C44.9 41.15 44.9 31.24 40.6 31.24z"
+        transform="matrix(0.8681,0,0,0.8451,4.2197,4.6191)"
   />
  </g>
 </svg>

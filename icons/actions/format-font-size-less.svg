@@ -2,31 +2,31 @@
 <svg version="1.1" width="64" height="64" color-interpolation="linearRGB"
      xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg">
  <g>
-  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:8; stroke-linecap:round; stroke-linejoin:round"
-        d="M5.98 40L19 16L32 40L27 33H11
-           M40 12H28"
-        transform="matrix(1.4099,0,0,1.6318,1.0022,-8.791)"
+  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:12.1991; stroke-linecap:round; stroke-linejoin:round"
+        d="M9.43 56.48L27.79 17.31L46.11 56.48L39.06 45.05H16.51
+           M57.39 10.79H40.47"
+        transform="matrix(0.9047,0,0,0.8528,3.0509,7.2101)"
   />
-  <path style="fill:none; stroke:#545454; stroke-width:8; stroke-linecap:round; stroke-linejoin:round"
-        d="M3.99 38L17 14L30 38L25 31H9
-           M38 10H26"
-        transform="matrix(1.4099,0,0,1.6318,1.0022,-8.791)"
+  <path style="fill:none; stroke:#545454; stroke-width:12.1991; stroke-linecap:round; stroke-linejoin:round"
+        d="M6.62 53.21L24.97 14.05L43.29 53.21L36.24 41.79H13.69
+           M54.57 7.52H37.65"
+        transform="matrix(0.9047,0,0,0.8528,3.0509,7.2101)"
   />
-  <linearGradient id="gradient0" gradientUnits="userSpaceOnUse" x1="128" y1="12" x2="128" y2="40">
+  <linearGradient id="gradient0" gradientUnits="userSpaceOnUse" x1="181.46" y1="10.79" x2="181.46" y2="56.48">
    <stop offset="0" stop-color="#ffffff"/>
    <stop offset="1" stop-color="#e5e5e5"/>
   </linearGradient>
-  <path style="fill:none; stroke:url(#gradient0); stroke-width:4; stroke-linecap:round; stroke-linejoin:round"
-        d="M3.99 38L17 14L30 38L25 31H9"
-        transform="matrix(1.4099,0,0,1.6318,1.0022,-8.791)"
+  <path style="fill:none; stroke:url(#gradient0); stroke-width:6.0995; stroke-linecap:round; stroke-linejoin:round"
+        d="M6.62 53.21L24.97 14.05L43.29 53.21L36.24 41.79H13.69"
+        transform="matrix(0.9047,0,0,0.8528,3.0509,7.2101)"
   />
-  <linearGradient id="gradient1" gradientUnits="userSpaceOnUse" x1="129" y1="8" x2="129" y2="12">
+  <linearGradient id="gradient1" gradientUnits="userSpaceOnUse" x1="182.87" y1="4.26" x2="182.87" y2="10.79">
    <stop offset="0" stop-color="#ffffff"/>
    <stop offset="1" stop-color="#e5e5e5"/>
   </linearGradient>
-  <path style="fill:none; stroke:url(#gradient1); stroke-width:4; stroke-linecap:round; stroke-linejoin:round"
-        d="M38 10H26"
-        transform="matrix(1.4099,0,0,1.6318,1.0022,-8.791)"
+  <path style="fill:none; stroke:url(#gradient1); stroke-width:6.0995; stroke-linecap:round; stroke-linejoin:round"
+        d="M54.57 7.52H37.65"
+        transform="matrix(0.9047,0,0,0.8528,3.0509,7.2101)"
   />
  </g>
 </svg>

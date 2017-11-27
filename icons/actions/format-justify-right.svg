@@ -2,19 +2,19 @@
 <svg version="1.1" width="64" height="64" color-interpolation="linearRGB"
      xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg">
  <g>
-  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:4; stroke-linecap:round; stroke-linejoin:round"
-        d="M42 4H4
-           M18 12H42
-           M12 20H42
-           M4 34H22V38L42 34L22 30V34"
-        transform="matrix(1.41,0,0,1.5505,0.9598,1)"
+  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:5.9276; stroke-linecap:round; stroke-linejoin:round"
+        d="M60.17 7.2H6.59
+           M26.33 19.6H60.17
+           M17.87 32H60.17
+           M6.59 53.71H31.97V59.91L60.17 53.71L31.97 47.51V53.71"
+        transform="matrix(0.8716,0,0,0.8702,4.1047,4.1475)"
   />
-  <path style="fill:none; stroke:#000000; stroke-width:4; stroke-linecap:round; stroke-linejoin:round"
-        d="M40 2H2
-           M16 10H40
-           M10 18H40
-           M2 32H20V36L40 32L20 28V32"
-        transform="matrix(1.41,0,0,1.5505,0.9598,1)"
+  <path style="fill:none; stroke:#000000; stroke-width:5.9276; stroke-linecap:round; stroke-linejoin:round"
+        d="M57.35 4.1H3.77
+           M23.51 16.5H57.35
+           M15.05 28.9H57.35
+           M3.77 50.61H29.15V56.81L57.35 50.61L29.15 44.41V50.61"
+        transform="matrix(0.8716,0,0,0.8702,4.1047,4.1475)"
   />
  </g>
 </svg>
