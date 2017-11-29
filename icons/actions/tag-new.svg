@@ -3,47 +3,42 @@
      xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg">
  <g>
   <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:5.6388; stroke-linecap:round; stroke-linejoin:round"
-        d="M6.61 40.47L34.79 12.27H54.54V32L26.34 60.2L6.61 40.47z"
-        transform="matrix(0.8708,0,0,0.871,4.1377,4.1279)"
+        d="M6.61 40.47L34.8 12.27H54.54V32.01L26.34 60.2L6.61 40.47z"
   />
   <path style="fill:none; stroke:#bf5000; stroke-width:5.6388; stroke-linecap:round; stroke-linejoin:round"
-        d="M3.78 37.65L31.97 9.44H51.72V29.19L23.52 57.38L3.78 37.65z"
-        transform="matrix(0.8708,0,0,0.871,4.1377,4.1279)"
+        d="M3.79 37.65L31.98 9.45H51.72V29.19L23.52 57.38L3.79 37.65z"
   />
-  <linearGradient id="gradient0" gradientUnits="userSpaceOnUse" x1="181.41" y1="6.61" x2="181.41" y2="54.56">
+  <linearGradient id="gradient0" gradientUnits="userSpaceOnUse" x1="181.41" y1="6.62" x2="181.41" y2="54.56">
    <stop offset="0" stop-color="#ffff80"/>
    <stop offset="1" stop-color="#ffd400"/>
   </linearGradient>
   <path style="fill:url(#gradient0)"
-        d="M3.78 37.65L31.97 9.44H51.72V29.19L23.52 57.38L3.78 37.65z"
-        transform="matrix(0.8708,0,0,0.871,4.1377,4.1279)"
+        d="M3.79 37.65L31.98 9.45H51.72V29.19L23.52 57.38L3.79 37.65z"
   />
   <path style="fill:none; stroke:#bf5000; stroke-width:2.8194"
-        d="M46.08 12.27C44.5 12.27 43.25 13.52 43.25 15.09C43.25 16.63 44.5 17.9 46.08 17.9C47.61 17.9 48.9 16.63 48.9 15.09C48.9 13.52 47.61 12.27 46.08 12.27z"
-        transform="matrix(0.8708,0,0,0.871,4.1377,4.1279)"
+        d="M46.08 12.27C44.5 12.27 43.26 13.53 43.26 15.09C43.26 16.64 44.5 17.91 46.08 17.91C47.61 17.91 48.9 16.64 48.9 15.09C48.9 13.53 47.61 12.27 46.08 12.27z"
   />
   <path style="fill:none; stroke:#bf5000; stroke-width:2.8194; stroke-linecap:round; stroke-linejoin:round"
-        d="M12.23 37.65L34.79 15.09
-           M20.7 40.47L34.79 26.37
-           M23.52 48.91L43.25 29.19
-           M46.08 15.09C43.25 17.9 30.56 39.06 51.72 39.06C72.86 39.06 51.72 10.85 61.58 2.4"
-        transform="matrix(0.8708,0,0,0.871,4.1377,4.1279)"
+        d="M12.24 37.65L34.8 15.09
+           M20.7 40.47L34.8 26.37
+           M23.52 48.92L43.26 29.19
+           M46.08 15.09C43.26 17.91 30.57 39.06 51.72 39.06C72.86 39.06 51.72 10.86 61.58 2.4"
   />
-  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:2.9098; stroke-linecap:round; stroke-linejoin:round"
-        d="M50.99 34.81H43.49V44.67H32.99V51.72H43.49V61.57H50.99V51.72H61.49V44.67H50.99V34.81z"
-        transform="matrix(0.8708,0,0,0.871,4.1377,4.1279)"
+  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:5.636; stroke-linecap:round; stroke-linejoin:round"
+        d="M40.45 6.63H26.36V26.36H6.63V40.45H26.36V60.17H40.45V40.45H60.17V26.36H40.45V6.63z"
+        transform="matrix(0.5322,0,0,0.4999,29.4677,31.5)"
   />
-  <path style="fill:none; stroke:#005900; stroke-width:2.9098; stroke-linecap:round; stroke-linejoin:round"
-        d="M49.49 33.4H41.99V43.26H31.49V50.31H41.99V60.17H49.49V50.31H59.99V43.26H49.49V33.4z"
-        transform="matrix(0.8708,0,0,0.871,4.1377,4.1279)"
+  <path style="fill:none; stroke:#005900; stroke-width:5.636; stroke-linecap:round; stroke-linejoin:round"
+        d="M37.63 3.81H23.54V23.54H3.81V37.63H23.54V57.36H37.63V37.63H57.36V23.54H37.63V3.81z"
+        transform="matrix(0.5322,0,0,0.4999,29.4677,31.5)"
   />
-  <linearGradient id="gradient1" gradientUnits="userSpaceOnUse" x1="125.98" y1="33.39" x2="125.98" y2="60.17">
+  <linearGradient id="gradient1" gradientUnits="userSpaceOnUse" x1="181.35" y1="3.8" x2="181.35" y2="57.36">
    <stop offset="0" stop-color="#80ff80"/>
    <stop offset="1" stop-color="#00b300"/>
   </linearGradient>
   <path style="fill:url(#gradient1)"
-        d="M49.49 33.4H41.99V43.26H31.49V50.31H41.99V60.17H49.49V50.31H59.99V43.26H49.49V33.4z"
-        transform="matrix(0.8708,0,0,0.871,4.1377,4.1279)"
+        d="M37.63 3.81H23.54V23.54H3.81V37.63H23.54V57.36H37.63V37.63H57.36V23.54H37.63V3.81z"
+        transform="matrix(0.5322,0,0,0.4999,29.4677,31.5)"
   />
  </g>
 </svg>

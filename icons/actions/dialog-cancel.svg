@@ -2,24 +2,24 @@
 <svg version="1.1" width="64" height="64" color-interpolation="linearRGB"
      xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg">
  <g>
-  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:14.09"
-        d="M17.9 48.9L48.9 17.9
-           M33.4 10.86C20.95 10.86 10.86 20.95 10.86 33.4C10.86 45.84 20.95 55.95 33.4 55.95C45.84 55.95 55.95 45.84 55.95 33.4C55.95 20.95 45.84 10.86 33.4 10.86z"
-        transform="matrix(0.8709,0,0,0.8709,4.129,4.129)"
+  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:10"
+        d="M10 32L32 10
+           M21 5C12.16 5 5 12.16 5 21C5 29.83 12.16 37 21 37C29.83 37 37 29.83 37 21C37 12.16 29.83 5 21 5z"
+        transform="matrix(1.409,0,0,1.409,3.8182,3.8182)"
   />
-  <path style="fill:none; stroke:#800000; stroke-width:14.09"
-        d="M15.09 46.08L46.08 15.09
-           M30.58 8.04C18.13 8.04 8.04 18.13 8.04 30.58C8.04 43.03 18.13 53.13 30.58 53.13C43.03 53.13 53.13 43.03 53.13 30.58C53.13 18.13 43.03 8.04 30.58 8.04z"
-        transform="matrix(0.8709,0,0,0.8709,4.129,4.129)"
+  <path style="fill:none; stroke:#800000; stroke-width:10"
+        d="M10 32L32 10
+           M21 5C12.16 5 5 12.16 5 21C5 29.83 12.16 37 21 37C29.83 37 37 29.83 37 21C37 12.16 29.83 5 21 5z"
+        transform="matrix(1.409,0,0,1.409,1,1)"
   />
-  <linearGradient id="gradient0" gradientUnits="userSpaceOnUse" x1="181.35" y1="3.8" x2="181.35" y2="57.36">
+  <linearGradient id="gradient0" gradientUnits="userSpaceOnUse" x1="128" y1="1.99" x2="128" y2="40">
    <stop offset="0" stop-color="#ffabab"/>
    <stop offset="1" stop-color="#d90000"/>
   </linearGradient>
-  <path style="fill:none; stroke:url(#gradient0); stroke-width:8.454"
-        d="M30.58 8.04C18.13 8.04 8.04 18.13 8.04 30.58C8.04 43.03 18.13 53.13 30.58 53.13C43.03 53.13 53.13 43.03 53.13 30.58C53.13 18.13 43.03 8.04 30.58 8.04z
-           M15.09 46.08L46.08 15.09"
-        transform="matrix(0.8709,0,0,0.8709,4.129,4.129)"
+  <path style="fill:none; stroke:url(#gradient0); stroke-width:6"
+        d="M21 5C12.16 5 5 12.16 5 21C5 29.83 12.16 37 21 37C29.83 37 37 29.83 37 21C37 12.16 29.83 5 21 5z
+           M10 32L32 10"
+        transform="matrix(1.409,0,0,1.409,1,1)"
   />
  </g>
 </svg>

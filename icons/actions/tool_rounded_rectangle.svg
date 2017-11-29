@@ -2,13 +2,13 @@
 <svg version="1.1" width="64" height="64" color-interpolation="linearRGB"
      xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg">
  <g>
-  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:3.1291; stroke-linecap:round; stroke-linejoin:round"
-        d="M19.49 5.99H47.98C55.13 5.99 60.91 11.57 60.91 18.47C60.91 28.26 60.91 38.06 60.91 47.86C60.91 54.75 55.13 60.34 47.98 60.34H19.49C12.34 60.34 6.56 54.75 6.56 47.86V18.47C6.56 11.57 12.34 5.99 19.49 5.99z"
-        transform="matrix(0.9011,0,0,0.8843,3.1793,4.1573)"
+  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:2; stroke-linecap:round; stroke-linejoin:round"
+        d="M29.55 18.31H47.44C51.93 18.31 55.56 21.94 55.56 26.43C55.56 32.81 55.56 39.19 55.56 45.57C55.56 50.05 51.93 53.69 47.44 53.69H29.55C25.06 53.69 21.43 50.05 21.43 45.57V26.43C21.43 21.94 25.06 18.31 29.55 18.31z"
+        transform="matrix(1.5926,0,0,1.536,-27.5662,-22.1262)"
   />
-  <path style="fill:none; stroke:#005900; stroke-width:3.1291; stroke-linecap:round; stroke-linejoin:round"
-        d="M16.3 2.92H44.8C51.95 2.92 57.73 8.5 57.73 15.39C57.73 25.19 57.73 34.99 57.73 44.79C57.73 51.67 51.95 57.26 44.8 57.26H16.3C9.15 57.26 3.37 51.67 3.37 44.79V15.39C3.37 8.5 9.15 2.92 16.3 2.92z"
-        transform="matrix(0.9011,0,0,0.8843,3.1793,4.1573)"
+  <path style="fill:none; stroke:#005900; stroke-width:2; stroke-linecap:round; stroke-linejoin:round"
+        d="M29.55 18.31H47.44C51.93 18.31 55.56 21.94 55.56 26.43C55.56 32.81 55.56 39.19 55.56 45.57C55.56 50.05 51.93 53.69 47.44 53.69H29.55C25.06 53.69 21.43 50.05 21.43 45.57V26.43C21.43 21.94 25.06 18.31 29.55 18.31z"
+        transform="matrix(1.5926,0,0,1.536,-30.7515,-25.1983)"
   />
  </g>
 </svg>

@@ -2,41 +2,41 @@
 <svg version="1.1" width="64" height="64" color-interpolation="linearRGB"
      xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg">
  <g>
-  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:11.2792; stroke-linecap:round; stroke-linejoin:round"
-        d="M9.45 57.39L33.4 9.42L57.36 57.39
-           M46.08 43.28H20.72
-           M57.36 34.81H9.45"
-        transform="matrix(0.8709,0,0,0.871,4.1285,4.1242)"
+  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:8; stroke-linecap:round; stroke-linejoin:round"
+        d="M4 38L21 4L38 38
+           M30 28H12
+           M38 22H4"
+        transform="matrix(1.409,0,0,1.4108,3.818,3.7815)"
   />
-  <path style="fill:none; stroke:#545454; stroke-width:11.2792; stroke-linecap:round; stroke-linejoin:round"
-        d="M54.54 31.99H6.63"
-        transform="matrix(0.8709,0,0,0.871,4.1285,4.1242)"
+  <path style="fill:none; stroke:#545454; stroke-width:8; stroke-linecap:round; stroke-linejoin:round"
+        d="M38 22H4"
+        transform="matrix(1.409,0,0,1.4108,0.9998,0.9598)"
   />
-  <path style="fill:none; stroke:#545454; stroke-width:11.2792; stroke-linecap:round; stroke-linejoin:round"
-        d="M6.63 54.57L30.58 6.6L54.54 54.57
-           M43.26 40.46H17.9"
-        transform="matrix(0.8709,0,0,0.871,4.1285,4.1242)"
+  <path style="fill:none; stroke:#545454; stroke-width:8; stroke-linecap:round; stroke-linejoin:round"
+        d="M4 38L21 4L38 38
+           M30 28H12"
+        transform="matrix(1.409,0,0,1.4108,0.9998,0.9598)"
   />
-  <linearGradient id="gradient0" gradientUnits="userSpaceOnUse" x1="181.35" y1="3.76" x2="181.35" y2="57.39">
+  <linearGradient id="gradient0" gradientUnits="userSpaceOnUse" x1="128" y1="1.99" x2="128" y2="40">
    <stop offset="0" stop-color="#ffffff"/>
    <stop offset="1" stop-color="#e5e5e5"/>
   </linearGradient>
-  <path style="fill:none; stroke:url(#gradient0); stroke-width:5.6396; stroke-linecap:round; stroke-linejoin:round"
-        d="M6.63 54.57L30.58 6.6L54.54 54.57
-           M43.26 40.46H17.9"
-        transform="matrix(0.8709,0,0,0.871,4.1285,4.1242)"
+  <path style="fill:none; stroke:url(#gradient0); stroke-width:4; stroke-linecap:round; stroke-linejoin:round"
+        d="M4 38L21 4L38 38
+           M30 28H12"
+        transform="matrix(1.409,0,0,1.4108,0.9998,0.9598)"
   />
-  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:8.5769; stroke-linecap:round; stroke-linejoin:round"
-        d="M49.47 31.99H11.7"
-        transform="matrix(0.8709,0,0,0.871,4.1285,4.1242)"
+  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:4; stroke-linecap:round; stroke-linejoin:round"
+        d="M38 22H4"
+        transform="matrix(1.1109,0,0,2.8216,7.2617,-30.0781)"
   />
-  <linearGradient id="gradient1" gradientUnits="userSpaceOnUse" x1="181.35" y1="3.76" x2="181.35" y2="57.39">
+  <linearGradient id="gradient1" gradientUnits="userSpaceOnUse" x1="128" y1="1.99" x2="128" y2="40">
    <stop offset="0" stop-color="#ffffff"/>
    <stop offset="1" stop-color="#e5e5e5"/>
   </linearGradient>
-  <path style="fill:none; stroke:url(#gradient1); stroke-width:5.6396; stroke-linecap:round; stroke-linejoin:round"
-        d="M54.54 31.99H6.63"
-        transform="matrix(0.8709,0,0,0.871,4.1285,4.1242)"
+  <path style="fill:none; stroke:url(#gradient1); stroke-width:4; stroke-linecap:round; stroke-linejoin:round"
+        d="M38 22H4"
+        transform="matrix(1.409,0,0,1.4108,0.9998,0.9598)"
   />
  </g>
 </svg>

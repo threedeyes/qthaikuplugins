@@ -2,21 +2,21 @@
 <svg version="1.1" width="64" height="64" color-interpolation="linearRGB"
      xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg">
  <g>
-  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:5.636; stroke-linecap:round; stroke-linejoin:round"
-        d="M33.4 6.63C18.61 6.63 6.63 18.61 6.63 33.4C6.63 48.17 18.61 60.17 33.4 60.17C48.17 60.17 60.17 48.17 60.17 33.4C60.17 18.61 48.17 6.63 33.4 6.63z"
-        transform="matrix(0.8709,0,0,0.8709,4.129,4.129)"
+  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:4; stroke-linecap:round; stroke-linejoin:round"
+        d="M23 4C12.5 4 4 12.5 4 23C4 33.48 12.5 42 23 42C33.48 42 42 33.48 42 23C42 12.5 33.48 4 23 4z"
+        transform="matrix(1.409,0,0,1.409,1.0001,1.0001)"
   />
-  <path style="fill:none; stroke:#800000; stroke-width:5.636"
-        d="M30.58 3.81C15.79 3.81 3.81 15.79 3.81 30.58C3.81 45.35 15.79 57.36 30.58 57.36C45.35 57.36 57.36 45.35 57.36 30.58C57.36 15.79 45.35 3.81 30.58 3.81z"
-        transform="matrix(0.8709,0,0,0.8709,4.129,4.129)"
+  <path style="fill:none; stroke:#800000; stroke-width:4"
+        d="M21 2C10.5 2 2 10.5 2 21C2 31.48 10.5 40 21 40C31.48 40 40 31.48 40 21C40 10.5 31.48 2 21 2z"
+        transform="matrix(1.409,0,0,1.409,1.0001,1.0001)"
   />
-  <linearGradient id="gradient0" gradientUnits="userSpaceOnUse" x1="181.35" y1="3.8" x2="181.35" y2="57.36">
+  <linearGradient id="gradient0" gradientUnits="userSpaceOnUse" x1="128" y1="1.99" x2="128" y2="40">
    <stop offset="0" stop-color="#ffabab"/>
    <stop offset="1" stop-color="#d90000"/>
   </linearGradient>
   <path style="fill:url(#gradient0)"
-        d="M30.58 3.81C15.79 3.81 3.81 15.79 3.81 30.58C3.81 45.35 15.79 57.36 30.58 57.36C45.35 57.36 57.36 45.35 57.36 30.58C57.36 15.79 45.35 3.81 30.58 3.81z"
-        transform="matrix(0.8709,0,0,0.8709,4.129,4.129)"
+        d="M21 2C10.5 2 2 10.5 2 21C2 31.48 10.5 40 21 40C31.48 40 40 31.48 40 21C40 10.5 31.48 2 21 2z"
+        transform="matrix(1.409,0,0,1.409,1.0001,1.0001)"
   />
  </g>
 </svg>
