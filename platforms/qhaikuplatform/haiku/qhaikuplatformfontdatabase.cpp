@@ -70,7 +70,7 @@ void QHaikuPlatformFontDatabase::populateFontDatabase()
 	for (int32 i = 0; i < fontPaths.CountStrings(); i++) {
 	    QDir dir(QLatin1String(fontPaths.StringAt(i).String()));
 		QDirIterator qdi(dir.absolutePath(),
-            QStringList() << "*.ttf",
+            QStringList() << "*.ttf" << "*.otf",
             QDir::Files, QDirIterator::Subdirectories);
     	while (qdi.hasNext()) {
 			const QByteArray file = QFile::encodeName(qdi.next());
