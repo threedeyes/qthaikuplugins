@@ -1,7 +1,8 @@
-/***************************************************************************
+/****************************************************************************
 **
-** Copyright (C) 2015 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com, author Tobias Koenig <tobias.koenig@kdab.com>
-** Contact: https://www.qt.io/licensing/
+** Copyright (C) 2017 The Qt Company Ltd.
+** Copyright (C) 2015-2017 Gerasim Troeglazov,
+** Contact: 3dEyes@gmail.com
 **
 ** This file is part of the plugins of the Qt Toolkit.
 **
@@ -40,35 +41,27 @@
 #ifndef QHAIKUCLIPBOARD_H
 #define QHAIKUCLIPBOARD_H
 
+#include <QtCore/qglobal.h>
+
 #if !defined(QT_NO_CLIPBOARD)
-
 #include <qpa/qplatformclipboard.h>
-
-#include <Handler.h>
 
 QT_BEGIN_NAMESPACE
 
-class QHaikuClipboard : public QPlatformClipboard, public BHandler
+class QHaikuClipboard : public QPlatformClipboard
 {
 public:
     QHaikuClipboard();
     ~QHaikuClipboard();
-
-    QMimeData *mimeData(QClipboard::Mode mode = QClipboard::Clipboard) Q_DECL_OVERRIDE;
-    void setMimeData(QMimeData *data, QClipboard::Mode mode = QClipboard::Clipboard) Q_DECL_OVERRIDE;
-    bool supportsMode(QClipboard::Mode mode) const Q_DECL_OVERRIDE;
-    bool ownsMode(QClipboard::Mode mode) const Q_DECL_OVERRIDE;
-
-    // override from BHandler to catch change notifications from Haiku clipboard
-    void MessageReceived(BMessage* message) Q_DECL_OVERRIDE;
+    QMimeData *mimeData(QClipboard::Mode mode = QClipboard::Clipboard);
+    void setMimeData(QMimeData *data, QClipboard::Mode mode = QClipboard::Clipboard);
 
 private:
-    QMimeData *m_systemMimeData;
-    QMimeData *m_userMimeData;
+    class MimeData;
+    MimeData *m_mimeData;
 };
 
 QT_END_NAMESPACE
 
-#endif
-
-#endif
+#endif //QT_NO_CLIPBOARD
+#endif //QHAIKUCLIPBOARD_H
