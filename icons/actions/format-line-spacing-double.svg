@@ -2,37 +2,37 @@
 <svg version="1.1" width="64" height="64" color-interpolation="linearRGB"
      xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg">
  <g>
-  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:6.0272; stroke-linecap:round; stroke-linejoin:round"
-        d="M5.78 11.22H61.12"
-        transform="matrix(0.9688,0,0,1,0.9954,0)"
+  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:5.9339; stroke-linecap:round; stroke-linejoin:round"
+        d="M6.59 11.22H60.2"
+        transform="matrix(0.8717,0,0,0.8743,4.1025,4.6462)"
   />
-  <path style="fill:none; stroke:#000000; stroke-width:6.0272; stroke-linecap:round; stroke-linejoin:round"
-        d="M2.86 8.11H58.21"
-        transform="matrix(0.9688,0,0,1,0.9954,0)"
+  <path style="fill:none; stroke:#000000; stroke-width:5.9339; stroke-linecap:round; stroke-linejoin:round"
+        d="M3.76 8.1H57.38"
+        transform="matrix(0.8717,0,0,0.8743,4.1025,4.6462)"
   />
-  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:6.0272; stroke-linecap:round; stroke-linejoin:round"
-        d="M5.78 26.77H61.12"
-        transform="matrix(0.9688,0,0,1,0.9954,0)"
+  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:5.9339; stroke-linecap:round; stroke-linejoin:round"
+        d="M6.59 26.77H60.2"
+        transform="matrix(0.8717,0,0,0.8743,4.1025,4.6462)"
   />
-  <path style="fill:none; stroke:#000000; stroke-width:6.0272; stroke-linecap:round; stroke-linejoin:round"
-        d="M2.86 23.66H58.21"
-        transform="matrix(0.9688,0,0,1,0.9954,0)"
+  <path style="fill:none; stroke:#000000; stroke-width:5.9339; stroke-linecap:round; stroke-linejoin:round"
+        d="M3.76 23.65H57.38"
+        transform="matrix(0.8717,0,0,0.8743,4.1025,4.6462)"
   />
-  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:6.0272; stroke-linecap:round; stroke-linejoin:round"
-        d="M5.78 42.33H61.12"
-        transform="matrix(0.9688,0,0,1,0.9954,0)"
+  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:5.9339; stroke-linecap:round; stroke-linejoin:round"
+        d="M6.59 42.33H60.2"
+        transform="matrix(0.8717,0,0,0.8743,4.1025,4.6462)"
   />
-  <path style="fill:none; stroke:#000000; stroke-width:6.0272; stroke-linecap:round; stroke-linejoin:round"
-        d="M2.86 39.22H58.21"
-        transform="matrix(0.9688,0,0,1,0.9954,0)"
+  <path style="fill:none; stroke:#000000; stroke-width:5.9339; stroke-linecap:round; stroke-linejoin:round"
+        d="M3.76 39.22H57.38"
+        transform="matrix(0.8717,0,0,0.8743,4.1025,4.6462)"
   />
-  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:6.0272; stroke-linecap:round; stroke-linejoin:round"
-        d="M5.78 57.88H61.12"
-        transform="matrix(0.9688,0,0,1,0.9954,0)"
+  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:5.9339; stroke-linecap:round; stroke-linejoin:round"
+        d="M6.59 57.88H60.2"
+        transform="matrix(0.8717,0,0,0.8743,4.1025,4.6462)"
   />
-  <path style="fill:none; stroke:#000000; stroke-width:6.0272; stroke-linecap:round; stroke-linejoin:round"
-        d="M2.86 54.77H58.21"
-        transform="matrix(0.9688,0,0,1,0.9954,0)"
+  <path style="fill:none; stroke:#000000; stroke-width:5.9339; stroke-linecap:round; stroke-linejoin:round"
+        d="M3.76 54.77H57.38"
+        transform="matrix(0.8717,0,0,0.8743,4.1025,4.6462)"
   />
  </g>
 </svg>

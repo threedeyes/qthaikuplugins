@@ -2,30 +2,31 @@
 <svg version="1.1" width="64" height="64" color-interpolation="linearRGB"
      xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg">
  <g>
-  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:6.911; stroke-linecap:round; stroke-linejoin:round"
-        d="M7.88 14.93V56.53H59.55V14.93H7.88z"
-        transform="matrix(1,0,0,1.1923,0,-8.5412)"
+  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:7.6045; stroke-linecap:round; stroke-linejoin:round"
+        d="M7.88 9.25V58.85H59.54V9.25H7.88z"
+        transform="matrix(0.8565,0,0,0.8695,5.0896,4.1738)"
   />
-  <path style="fill:none; stroke:#545454; stroke-width:6.911; stroke-linecap:round; stroke-linejoin:round"
-        d="M4.44 11.46V53.06H56.11V11.46H4.44z"
-        transform="matrix(1.0341,0,0,1.2336,-0.0337,-8.8715)"
+  <path style="fill:none; stroke:#545454; stroke-width:7.8663; stroke-linecap:round; stroke-linejoin:round"
+        d="M4.55 5.26V56.58H57.98V5.26H4.55z"
+        transform="matrix(0.8565,0,0,0.8695,5.0896,4.1738)"
   />
-  <linearGradient id="gradient0" gradientUnits="userSpaceOnUse" x1="214.55" y1="11.44" x2="214.55" y2="53.06">
+  <linearGradient id="gradient0" gradientUnits="userSpaceOnUse" x1="221.83" y1="5.24" x2="221.83" y2="56.58">
    <stop offset="0" stop-color="#ffffff"/>
    <stop offset="1" stop-color="#e5e5e5"/>
   </linearGradient>
   <path style="fill:url(#gradient0)"
-        d="M4.44 11.46V53.06H56.11V11.46H4.44z"
-        transform="matrix(1.0341,0,0,1.2336,-0.0337,-8.8715)"
+        d="M4.55 5.26V56.58H57.98V5.26H4.55z"
+        transform="matrix(0.8565,0,0,0.8695,5.0896,4.1738)"
   />
-  <linearGradient id="gradient1" gradientUnits="userSpaceOnUse" x1="214.55" y1="20.09" x2="214.55" y2="40.89">
+  <linearGradient id="gradient1" gradientUnits="userSpaceOnUse" x1="214.55" y1="20.09" x2="214.55" y2="40.88">
    <stop offset="0" stop-color="#ff8080"/>
    <stop offset="1" stop-color="#d90000"/>
   </linearGradient>
   <path style="fill:url(#gradient1)"
-        d="M21.66 14.93C13.05 20.13 19.94 27.06 25.11 30.53C30.27 33.99 35.44 38.55 35.44 40.93C35.44 46.13 31.99 49.59 26.83 49.59C21.66 49.59 11.33 37.46 11.33 30.53C11.33 23.59 11.33 14.93 21.66 14.93z
-           M26.83 20.13C21.66 25.33 31.99 32.26 37.16 27.06C42.33 21.86 31.99 14.93 26.83 20.13z
-           M40.61 33.99C35.44 39.19 45.77 46.13 50.94 40.93C56.11 35.73 45.77 28.79 40.61 33.99z"
+        d="M21.65 14.93C13.05 20.12 19.94 27.05 25.11 30.53C30.27 33.99 35.43 38.54 35.43 40.93C35.43 46.13 31.98 49.59 26.82 49.59C21.65 49.59 11.32 37.45 11.32 30.53C11.32 23.59 11.32 14.93 21.65 14.93z
+           M26.82 20.12C21.65 25.32 31.98 32.25 37.15 27.05C42.33 21.86 31.98 14.93 26.82 20.12z
+           M40.61 33.99C35.43 39.18 45.77 46.13 50.93 40.93C56.11 35.72 45.77 28.79 40.61 33.99z"
+        transform="matrix(0.8565,0,0,0.8695,5.0896,4.1738)"
   />
  </g>
 </svg>

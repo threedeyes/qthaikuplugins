@@ -2,52 +2,52 @@
 <svg version="1.1" width="64" height="64" color-interpolation="linearRGB"
      xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg">
  <g>
-  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:6"
-        d="M10 36L36 10
-           M23 5C13.05 5 5 13.05 5 23C5 32.94 13.05 41 23 41C32.94 41 41 32.94 41 23C41 13.05 32.94 5 23 5z"
-        transform="matrix(1.409,0,0,1.409,1.0001,1.0001)"
+  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:8.454"
+        d="M15.09 51.72L51.72 15.09
+           M33.4 8.04C19.38 8.04 8.04 19.38 8.04 33.4C8.04 47.41 19.38 58.76 33.4 58.76C47.41 58.76 58.76 47.41 58.76 33.4C58.76 19.38 47.41 8.04 33.4 8.04z"
+        transform="matrix(0.8709,0,0,0.8709,4.129,4.129)"
   />
-  <path style="fill:none; stroke:#800000; stroke-width:6"
-        d="M8 34L34 8
-           M21 3C11.05 3 3 11.05 3 21C3 30.94 11.05 39 21 39C30.94 39 39 30.94 39 21C39 11.05 30.94 3 21 3z"
-        transform="matrix(1.409,0,0,1.409,1.0001,1.0001)"
+  <path style="fill:none; stroke:#800000; stroke-width:8.454"
+        d="M12.27 48.9L48.9 12.27
+           M30.58 5.22C16.56 5.22 5.22 16.56 5.22 30.58C5.22 44.59 16.56 55.95 30.58 55.95C44.59 55.95 55.95 44.59 55.95 30.58C55.95 16.56 44.59 5.22 30.58 5.22z"
+        transform="matrix(0.8709,0,0,0.8709,4.129,4.129)"
   />
-  <linearGradient id="gradient0" gradientUnits="userSpaceOnUse" x1="128" y1="1.99" x2="128" y2="40">
+  <linearGradient id="gradient0" gradientUnits="userSpaceOnUse" x1="181.35" y1="3.8" x2="181.35" y2="57.36">
    <stop offset="0" stop-color="#ffabab"/>
    <stop offset="1" stop-color="#d90000"/>
   </linearGradient>
-  <path style="fill:none; stroke:url(#gradient0); stroke-width:2"
-        d="M21 3C11.05 3 3 11.05 3 21C3 30.94 11.05 39 21 39C30.94 39 39 30.94 39 21C39 11.05 30.94 3 21 3z
-           M8 34L34 8"
-        transform="matrix(1.409,0,0,1.409,1.0001,1.0001)"
+  <path style="fill:none; stroke:url(#gradient0); stroke-width:2.818"
+        d="M30.58 5.22C16.56 5.22 5.22 16.56 5.22 30.58C5.22 44.59 16.56 55.95 30.58 55.95C44.59 55.95 55.95 44.59 55.95 30.58C55.95 16.56 44.59 5.22 30.58 5.22z
+           M12.27 48.9L48.9 12.27"
+        transform="matrix(0.8709,0,0,0.8709,4.129,4.129)"
   />
-  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:6; stroke-linecap:round; stroke-linejoin:round"
-        d="M25 27V19L31 27V19
-           M15 19V25C15 26 16 27 17 27H19C20.05 27 21 26 21 25V19
-           M5 25C5 26 6 27 7 27H9C10 27 11 26 11 25V19
-           M35 27V19
-           M41 19L35 23L41 27"
-        transform="matrix(1.409,0,0,1.409,1.0001,1.0001)"
+  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:8.454; stroke-linecap:round; stroke-linejoin:round"
+        d="M36.22 39.04V27.77L44.67 39.04V27.77
+           M22.13 27.77V36.22C22.13 37.63 23.54 39.04 24.95 39.04H27.77C29.25 39.04 30.58 37.63 30.58 36.22V27.77
+           M8.04 36.22C8.04 37.63 9.45 39.04 10.86 39.04H13.68C15.09 39.04 16.49 37.63 16.49 36.22V27.77
+           M50.31 39.04V27.77
+           M58.76 27.77L50.31 33.4L58.76 39.04"
+        transform="matrix(0.8709,0,0,0.8709,4.129,4.129)"
   />
-  <path style="fill:none; stroke:#545454; stroke-width:6; stroke-linecap:round; stroke-linejoin:round"
-        d="M23 25V17L29 25V17
-           M13 17V23C13 24 14 25 15 25H17C18.05 25 19 24 19 23V17
-           M3 23C3 24 4 25 5 25H7C8 25 9 24 9 23V17
-           M39 17L33 21L39 25
-           M33 25V17"
-        transform="matrix(1.409,0,0,1.409,1.0001,1.0001)"
+  <path style="fill:none; stroke:#545454; stroke-width:8.454; stroke-linecap:round; stroke-linejoin:round"
+        d="M33.4 36.22V24.95L41.86 36.22V24.95
+           M19.31 24.95V33.4C19.31 34.81 20.72 36.22 22.13 36.22H24.95C26.43 36.22 27.77 34.81 27.77 33.4V24.95
+           M5.22 33.4C5.22 34.81 6.63 36.22 8.04 36.22H10.86C12.27 36.22 13.68 34.81 13.68 33.4V24.95
+           M55.95 24.95L47.49 30.58L55.95 36.22
+           M47.49 36.22V24.95"
+        transform="matrix(0.8709,0,0,0.8709,4.129,4.129)"
   />
-  <linearGradient id="gradient1" gradientUnits="userSpaceOnUse" x1="124" y1="16" x2="124" y2="26">
+  <linearGradient id="gradient1" gradientUnits="userSpaceOnUse" x1="175.71" y1="23.54" x2="175.71" y2="37.63">
    <stop offset="0" stop-color="#ffffff"/>
    <stop offset="1" stop-color="#e5e5e5"/>
   </linearGradient>
-  <path style="fill:none; stroke:url(#gradient1); stroke-width:2; stroke-linecap:round; stroke-linejoin:round"
-        d="M23 25V17L29 25V17
-           M13 17V23C13 24 14 25 15 25H17C18.05 25 19 24 19 23V17
-           M3 23C3 24 4 25 5 25H7C8 25 9 24 9 23V17
-           M33 25V17
-           M39 17L33 21L39 25"
-        transform="matrix(1.409,0,0,1.409,1.0001,1.0001)"
+  <path style="fill:none; stroke:url(#gradient1); stroke-width:2.818; stroke-linecap:round; stroke-linejoin:round"
+        d="M33.4 36.22V24.95L41.86 36.22V24.95
+           M19.31 24.95V33.4C19.31 34.81 20.72 36.22 22.13 36.22H24.95C26.43 36.22 27.77 34.81 27.77 33.4V24.95
+           M5.22 33.4C5.22 34.81 6.63 36.22 8.04 36.22H10.86C12.27 36.22 13.68 34.81 13.68 33.4V24.95
+           M47.49 36.22V24.95
+           M55.95 24.95L47.49 30.58L55.95 36.22"
+        transform="matrix(0.8709,0,0,0.8709,4.129,4.129)"
   />
  </g>
 </svg>
