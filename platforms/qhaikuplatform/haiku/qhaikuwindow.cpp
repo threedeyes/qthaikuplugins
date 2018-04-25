@@ -497,8 +497,16 @@ void QHaikuWindow::setFrameMarginsEnabled(bool enabled)
         m_margins = QMargins(0, 0, 0, 0);
 }
 
-void QHaikuWindow::setWindowState(Qt::WindowState state)
+void QHaikuWindow::setWindowState(Qt::WindowStates states)
 {
+    Qt::WindowState state = Qt::WindowNoState;
+    if (states & Qt::WindowMinimized)
+        state = Qt::WindowMinimized;
+    else if (states & Qt::WindowFullScreen)
+        state = Qt::WindowFullScreen;
+    else if (states & Qt::WindowMaximized)
+        state = Qt::WindowMaximized;
+
     setFrameMarginsEnabled(state != Qt::WindowFullScreen);
     m_positionIncludesFrame = false;
 
@@ -520,7 +528,7 @@ void QHaikuWindow::setWindowState(Qt::WindowState state)
         break;
     }
 
-    QWindowSystemInterface::handleWindowStateChanged(window(), state);
+    QWindowSystemInterface::handleWindowStateChanged(window(), states);
 }
 
 

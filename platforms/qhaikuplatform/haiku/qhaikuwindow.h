@@ -113,7 +113,7 @@ public:
 
     void setGeometry(const QRect &rect);
     void setWindowTitle(const QString &title);
-    void setWindowState(Qt::WindowState state);
+    void setWindowState(Qt::WindowStates state);
     void setWindowFlags(Qt::WindowFlags flags);
 
     QMargins frameMargins() const;
