@@ -512,16 +512,20 @@ void QHaikuWindow::setWindowState(Qt::WindowStates states)
 
     switch (state) {
     case Qt::WindowFullScreen:
+    	m_window->SetLook(B_NO_BORDER_WINDOW_LOOK);
         setGeometryImpl(screen()->geometry());
         break;
     case Qt::WindowMaximized:
     	m_normalGeometry = geometry();
+		setWindowFlags(window()->flags());
 		setGeometryImpl(screen()->availableGeometry().adjusted(m_margins.left(),
 			m_margins.top(), -m_margins.right(), -m_margins.bottom()));
 		break;
     case Qt::WindowMinimized:
+    	setWindowFlags(window()->flags());
         break;
     case Qt::WindowNoState:
+		setWindowFlags(window()->flags());
         setGeometryImpl(m_normalGeometry);
         break;
     default:
