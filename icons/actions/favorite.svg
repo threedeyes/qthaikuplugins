@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<svg version="1.1" width="64" height="64" color-interpolation="linearRGB"
+     xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg">
+ <g>
+  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:4; stroke-linejoin:round"
+        d="M7 7C3 11 3 19 7 23L23 39V7C19 3 11 3 7 7z
+           M23 7V39L39 23C43 19 43 11 39 7C35 3 27 3 23 7z"
+        transform="matrix(1.4092,0,0,1.5127,0.9968,0.9959)"
+  />
+  <path style="fill:none; stroke:#800000; stroke-width:4; stroke-linecap:round; stroke-linejoin:round"
+        d="M5 5C1 9 1 17 5 21L21 37V5C17 1 9 1 5 5z
+           M21 5V37L37 21C41 17 41 9 37 5C33 1 25 1 21 5z"
+        transform="matrix(1.4092,0,0,1.5127,0.9968,0.9959)"
+  />
+  <linearGradient id="gradient0" gradientUnits="userSpaceOnUse" x1="128" y1="1.99" x2="128" y2="40">
+   <stop offset="0" stop-color="#ffabab"/>
+   <stop offset="1" stop-color="#d90000"/>
+  </linearGradient>
+  <path style="fill:url(#gradient0)"
+        d="M5 5C1 9 1 17 5 21L21 37V5C17 1 9 1 5 5z
+           M21 5V37L37 21C41 17 41 9 37 5C33 1 25 1 21 5z"
+        transform="matrix(1.4092,0,0,1.5127,0.9968,0.9959)"
+  />
+ </g>
+</svg>
