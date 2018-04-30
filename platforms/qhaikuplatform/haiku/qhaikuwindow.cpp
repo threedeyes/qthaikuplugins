@@ -49,6 +49,7 @@
 #include <qpa/qwindowsysteminterface.h>
 
 #include <qapplication.h>
+#include <qfileinfo.h>
 #include <qguiapplication.h>
 #include <qstatusbar.h>
 
@@ -330,7 +331,11 @@ void QHaikuWindow::setWindowFlags(Qt::WindowFlags flags)
 
 void QHaikuWindow::setWindowTitle(const QString &title)
 {
-	m_window->SetTitle(title.toUtf8());
+	QString newTitle = title;
+	if (newTitle == "") {
+		newTitle = QFileInfo(QCoreApplication::applicationFilePath()).fileName().remove("_x86");
+	}
+	m_window->SetTitle(newTitle.toUtf8());
 }
 
 
