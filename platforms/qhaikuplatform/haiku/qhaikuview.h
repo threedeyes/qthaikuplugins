@@ -52,6 +52,9 @@
 #include <Point.h>
 #include <Rect.h>
 
+#define Q_HAIKU_MOUSE_EVENTS_TIME 20000
+#define Q_HAIKU_MOUSE_PREVENT_TIME 300000
+
 class QHaikuSurfaceView : public QObject, public BView
 {
 		Q_OBJECT
@@ -65,6 +68,8 @@ class QHaikuSurfaceView : public QObject, public BView
 		virtual void MouseMoved(BPoint point, uint32 transit, const BMessage *msg);
 		void SetViewBitmap(BBitmap *bmp);
 
+		void PreventMouse(void);
+
 		Qt::MouseButtons hostToQtButtons(uint32 buttons) const;
 		Qt::KeyboardModifiers hostToQtModifiers(uint32 keyState) const;
 		
@@ -73,9 +78,9 @@ class QHaikuSurfaceView : public QObject, public BView
 		
  private:
 		bool isSizeGripperContains(BPoint);
- 		bigtime_t lastMouseMoveTime;
+		bigtime_t lastMouseMoveTime;
+		bigtime_t mousePreventTime;
 		BBitmap *viewBitmap;
-		Qt::MouseButtons lastButtons;
  Q_SIGNALS:
 		void mouseEvent(const QPoint &localPosition,
 			const QPoint &globalPosition,

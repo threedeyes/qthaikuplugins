@@ -204,18 +204,21 @@ void QtHaikuWindow::MessageReceived(BMessage* msg)
 
 void QtHaikuWindow::Zoom(BPoint origin, float w, float h)
 {	
+	fView->PreventMouse();
 	Q_EMIT windowZoomed();
 }
 
 
 void QtHaikuWindow::FrameResized(float width, float height)
 {
+	fView->PreventMouse();
 	Q_EMIT windowResized(QSize(static_cast<int>(width), static_cast<int>(height)));
 }
 
 
 void QtHaikuWindow::FrameMoved(BPoint point)
 {
+	fView->PreventMouse();
 	Q_EMIT windowMoved(QPoint(point.x, point.y));
 }
 

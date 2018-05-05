@@ -64,11 +64,18 @@ QHaikuSurfaceView::QHaikuSurfaceView(BRect rect)
 
 	SetDrawingMode(B_OP_COPY);
 	lastMouseMoveTime = system_time();
+	mousePreventTime = system_time();
 	//SetViewColor(B_TRANSPARENT_32_BIT);
 }
 
 QHaikuSurfaceView::~QHaikuSurfaceView()
 {	
+}
+
+void
+QHaikuSurfaceView::PreventMouse(void)
+{
+	mousePreventTime = system_time();
 }
 
 void
@@ -135,10 +142,11 @@ QHaikuSurfaceView::MouseDown(BPoint point)
 	if (isSizeGripperContains(point))
 		return;
 
+	if (system_time() - mousePreventTime < Q_HAIKU_MOUSE_PREVENT_TIME)
+		return;
+
 	uint32 buttons = Window()->CurrentMessage()->FindInt32("buttons");
-	
-	lastButtons = hostToQtButtons(buttons);
-	
+
 	QHaikuWindow *wnd = ((QtHaikuWindow*)Window())->fQWindow;
 
 	SetMouseEventMask(B_POINTER_EVENTS, B_NO_POINTER_HISTORY);
@@ -163,6 +171,9 @@ QHaikuSurfaceView::MouseUp(BPoint point)
 	if (isSizeGripperContains(point))
 		return;
 
+	if (system_time() - mousePreventTime < Q_HAIKU_MOUSE_PREVENT_TIME)
+		return;
+
 	BPoint pointer;
 	uint32 buttons;
 	GetMouse(&pointer, &buttons);
@@ -177,6 +188,9 @@ void
 QHaikuSurfaceView::MouseMoved(BPoint point, uint32 transit, const BMessage *msg)
 {
 	if (msg != NULL)
+		return;
+
+	if (system_time() - mousePreventTime < Q_HAIKU_MOUSE_PREVENT_TIME)
 		return;
 
 	switch (transit) {
@@ -196,7 +210,7 @@ QHaikuSurfaceView::MouseMoved(BPoint point, uint32 transit, const BMessage *msg)
 
 	bigtime_t timeNow = system_time();
 	// 50 events per sec. limit
-	if (timeNow - lastMouseMoveTime > 20000) {
+	if (timeNow - lastMouseMoveTime > Q_HAIKU_MOUSE_EVENTS_TIME) {
 		BPoint pointer;
 		uint32 buttons;
 		GetMouse(&pointer, &buttons);
