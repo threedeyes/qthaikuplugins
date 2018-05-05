@@ -75,6 +75,8 @@ QHaikuSurfaceView::~QHaikuSurfaceView()
 void
 QHaikuSurfaceView::PreventMouse(void)
 {
+	if (Window()->Look() == B_NO_BORDER_WINDOW_LOOK)
+		return;
 	mousePreventTime = system_time();
 }
 
