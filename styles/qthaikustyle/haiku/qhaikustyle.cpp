@@ -49,6 +49,7 @@
 #include <qstyleoption.h>
 #include <qapplication.h>
 #include <qmainwindow.h>
+#include <qwindow.h>
 #include <qfont.h>
 #include <qgroupbox.h>
 #include <qprocess.h>
@@ -66,6 +67,7 @@
 #include <qmdisubwindow.h>
 #include <qlabel.h>
 #include <qdial.h>
+#include <qsizegrip.h>
 
 #include <QDebug>
 
@@ -75,10 +77,13 @@
 #include <NodeInfo.h>
 #include <Bitmap.h>
 #include <View.h>
+#include <Window.h>
 #include <ControlLook.h>
 #include <ScrollBar.h>
 #include <Bitmap.h>
 #include <IconUtils.h>
+
+#include "../../../platforms/qhaikuplatform/haiku/qhaikuwindow.h"
 
 #include "qstylehelper_p.h"
 #include "qstylecache_p.h"
@@ -1137,6 +1142,20 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
         break;
 #ifndef QT_NO_SIZEGRIP
     case CE_SizeGrip:
+/*		{
+			if (widget->window()->isTopLevel() && widget->isVisible()) {
+				QtHaikuWindow *wnd = static_cast<QtHaikuWindow *>((void*)widget->window()->winId());
+				if (wnd!=NULL) {
+					if (wnd->fQWindow->window()->windowState() == Qt::WindowMaximized) {
+						wnd->PostMessage(kSizeGripDisable);
+						qDebug() << "send kSizeGripDisable";
+					} else {
+						wnd->PostMessage(kSizeGripEnable);
+						qDebug() << "send kSizeGripEnable";
+					}
+				}
+			}
+		}*/
         break;
 #endif // QT_NO_SIZEGRIP
 #ifndef QT_NO_TOOLBAR
@@ -2859,7 +2878,7 @@ QSize QHaikuStyle::sizeFromContents(ContentsType type, const QStyleOption *optio
         }
         break;
     case CT_SizeGrip:
-        newSize = QSize(15, 0);
+        newSize = QSize(15, 15);
         break;
     case CT_MdiControls:
        /* if (const QStyleOptionComplex *styleOpt = qstyleoption_cast<const QStyleOptionComplex *>(option)) {
@@ -2923,6 +2942,8 @@ void QHaikuStyle::polish(QWidget *widget)
 #endif
 	if (qobject_cast<QMdiSubWindow *>(widget))
         widget->installEventFilter(this);
+	if (qobject_cast<QSizeGrip *>(widget))
+        widget->installEventFilter(this);
 }
 
 /*!
@@ -2974,6 +2995,8 @@ void QHaikuStyle::unpolish(QWidget *widget)
         widget->removeEventFilter(this);
 #endif
 	if (qobject_cast<QMdiSubWindow *>(widget))
+        widget->removeEventFilter(this);
+	if (qobject_cast<QSizeGrip *>(widget))
         widget->removeEventFilter(this);
 }
 
@@ -3059,6 +3082,14 @@ bool QHaikuStyle::eventFilter(QObject *o, QEvent *e)
             else
                 stopProgressAnimation(this, bar);
         }
+        if (QSizeGrip *grip = qobject_cast<QSizeGrip *>(o)) {
+			if (grip->window()->isTopLevel()) {
+				QtHaikuWindow *wnd = static_cast<QtHaikuWindow *>((void*)grip->window()->winId());
+				if (wnd) {
+					wnd->PostMessage(kSizeGripEnable);
+				}
+			}
+        }
         break;
     case QEvent::Destroy:
     case QEvent::Hide:
@@ -3066,6 +3097,14 @@ bool QHaikuStyle::eventFilter(QObject *o, QEvent *e)
         // the destroy event. We know that it is a QProgressBar, since
         // we only install a widget event filter for QScrollBars.
         stopProgressAnimation(this, static_cast<QProgressBar *>(o));
+        if (QSizeGrip *grip = qobject_cast<QSizeGrip *>(o)) {
+			if (grip->window()->isTopLevel()) {
+				QtHaikuWindow *wnd = static_cast<QtHaikuWindow *>((void*)grip->window()->winId());
+				if (wnd) {
+					wnd->PostMessage(kSizeGripDisable);
+				}
+			}
+        }
         break;
 #endif // QT_NO_PROGRESSBAR
     default:

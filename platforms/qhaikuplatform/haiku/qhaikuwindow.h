@@ -58,6 +58,9 @@
 
 #include "qhaikuview.h"
 
+#define kSizeGripEnable		'SGEN'
+#define kSizeGripDisable	'SGDI'
+
 QT_BEGIN_NAMESPACE
 
 class QHaikuWindow;

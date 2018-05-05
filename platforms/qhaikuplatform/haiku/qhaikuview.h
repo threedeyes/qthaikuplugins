@@ -72,6 +72,7 @@ class QHaikuSurfaceView : public QObject, public BView
 		QPoint 	lastGlobalMousePoint;
 		
  private:
+		bool isSizeGripperContains(BPoint);
  		bigtime_t lastMouseMoveTime;
 		BBitmap *viewBitmap;
 		Qt::MouseButtons lastButtons;

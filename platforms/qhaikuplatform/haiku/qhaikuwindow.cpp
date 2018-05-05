@@ -52,6 +52,7 @@
 #include <qfileinfo.h>
 #include <qguiapplication.h>
 #include <qstatusbar.h>
+#include <qsizegrip.h>
 
 #include <QMimeData>
 #include <QDragMoveEvent>
@@ -167,6 +168,16 @@ void QtHaikuWindow::MessageReceived(BMessage* msg)
 		return;
 	}
 	switch(msg->what) {
+		case kSizeGripEnable:
+		{
+			SetLook(B_DOCUMENT_WINDOW_LOOK);
+			break;
+		}
+		case kSizeGripDisable:
+		{
+			SetLook(B_TITLED_WINDOW_LOOK);
+			break;
+		}
 		case B_MOUSE_WHEEL_CHANGED:
 		{
 			 float shift_x=0;
@@ -233,6 +244,7 @@ QHaikuWindow::QHaikuWindow(QWindow *wnd)
     				wnd->geometry().bottom()),
     				wnd->title().toUtf8(),
     				B_NO_BORDER_WINDOW_LOOK, B_NORMAL_WINDOW_FEEL, 0);
+    m_winId = (WId)m_window;
 
 	connect(m_window, SIGNAL(quitRequested()), SLOT(platformWindowQuitRequested()), Qt::BlockingQueuedConnection);
     connect(m_window, SIGNAL(windowMoved(QPoint)), SLOT(platformWindowMoved(QPoint)));
@@ -257,8 +269,6 @@ QHaikuWindow::QHaikuWindow(QWindow *wnd)
     setGeometry(wnd->geometry());
 
     QWindowSystemInterface::flushWindowSystemEvents();
-
-    m_winId = (WId)this;
 }
 
 
@@ -279,7 +289,7 @@ void QHaikuWindow::setWindowFlags(Qt::WindowFlags flags)
 	bool tool = (type == Qt::Tool || type == Qt::Drawer);
 	bool tooltip = (type == Qt::ToolTip);
 
-	window_look wlook = dialog ? B_TITLED_WINDOW_LOOK : B_DOCUMENT_WINDOW_LOOK;
+	window_look wlook = B_TITLED_WINDOW_LOOK;
 	window_feel wfeel = B_NORMAL_WINDOW_FEEL;
 	uint32 wflag = B_NO_WORKSPACE_ACTIVATION | B_NOT_ANCHORED_ON_ACTIVATE;
 
@@ -332,6 +342,7 @@ void QHaikuWindow::setWindowFlags(Qt::WindowFlags flags)
 void QHaikuWindow::setWindowTitle(const QString &title)
 {
 	QString newTitle = title;
+	// Using application name for nameless windows
 	if (newTitle == "") {
 		newTitle = QFileInfo(QCoreApplication::applicationFilePath()).fileName().remove("_x86");
 	}
@@ -543,7 +554,7 @@ void QHaikuWindow::setWindowState(Qt::WindowStates states)
 
 QHaikuWindow *QHaikuWindow::windowForWinId(WId id)
 {
-    return (QHaikuWindow*)id;
+    return ((QtHaikuWindow*)id)->fQWindow;
 }
 
 

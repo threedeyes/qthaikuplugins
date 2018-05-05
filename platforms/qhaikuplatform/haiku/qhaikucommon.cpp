@@ -141,9 +141,7 @@ void QHaikuBackingStore::flush(QWindow *window, const QRegion &region, const QPo
         return;
 
     WId id = window->winId();
-    
-    QHaikuWindow *wnd = (QHaikuWindow*)(id);
-    QHaikuSurfaceView *view = wnd->m_window->View();        
+	QHaikuSurfaceView *view = ((QtHaikuWindow*)(id))->View();
 
     QRect outline = region.boundingRect();
     
@@ -164,8 +162,7 @@ void QHaikuBackingStore::resize(const QSize &size, const QRegion &)
 
     QImage::Format format = QGuiApplication::primaryScreen()->handle()->format();
     if (m_image.size() != size) {
-		QHaikuWindow *wnd = (QHaikuWindow*)(id);
-    	QHaikuSurfaceView *view = wnd->m_window->View();
+		QHaikuSurfaceView *view = ((QtHaikuWindow*)(id))->View();
     	if(view->LockLooper()) {
     		m_image = QImage();
 	        delete m_bitmap;

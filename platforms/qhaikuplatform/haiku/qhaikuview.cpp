@@ -110,19 +110,37 @@ QHaikuSurfaceView::hostToQtModifiers(uint32 keyState) const
     return modifiers;
 }
 
+bool
+QHaikuSurfaceView::isSizeGripperContains(BPoint point)
+{
+	if (Window()->Look() != B_DOCUMENT_WINDOW_LOOK)
+		return false;
+
+	BRect gripRect = Window()->Bounds();
+	gripRect.left = gripRect.right - 15;
+	gripRect.top = gripRect.bottom - 15;
+	if (gripRect.Contains(point))
+		return true;
+
+	return false;
+}
+
 void 
 QHaikuSurfaceView::MouseDown(BPoint point)
 {
 	BPoint s_point = ConvertToScreen(point);	
 	QPoint localPoint(point.x, point.y);
 	QPoint globalPoint(s_point.x, s_point.y);
-	
+
+	if (isSizeGripperContains(point))
+		return;
+
 	uint32 buttons = Window()->CurrentMessage()->FindInt32("buttons");
 	
 	lastButtons = hostToQtButtons(buttons);
 	
 	QHaikuWindow *wnd = ((QtHaikuWindow*)Window())->fQWindow;
-	
+
 	SetMouseEventMask(B_POINTER_EVENTS, B_NO_POINTER_HISTORY);
 	
 	if (wnd->window()->flags() & Qt::FramelessWindowHint) {
@@ -141,6 +159,9 @@ QHaikuSurfaceView::MouseUp(BPoint point)
 	BPoint s_point = ConvertToScreen(point);
 	QPoint localPoint(point.x, point.y);
 	QPoint globalPoint(s_point.x, s_point.y);
+
+	if (isSizeGripperContains(point))
+		return;
 
 	BPoint pointer;
 	uint32 buttons;
@@ -174,11 +195,14 @@ QHaikuSurfaceView::MouseMoved(BPoint point, uint32 transit, const BMessage *msg)
 	QPoint globalPoint(s_point.x, s_point.y);
 
 	bigtime_t timeNow = system_time();
-
-	if (timeNow - lastMouseMoveTime > 1000) {
+	// 50 events per sec. limit
+	if (timeNow - lastMouseMoveTime > 20000) {
 		BPoint pointer;
 		uint32 buttons;
 		GetMouse(&pointer, &buttons);
+
+		if (isSizeGripperContains(point))
+			return;
 
 		lastLocalMousePoint = localPoint;
 		lastGlobalMousePoint = globalPoint;
