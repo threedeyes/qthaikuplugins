@@ -294,31 +294,43 @@ void QHaikuWindow::setWindowFlags(Qt::WindowFlags flags)
 
 	window_look wlook = B_TITLED_WINDOW_LOOK;
 	window_feel wfeel = B_NORMAL_WINDOW_FEEL;
-	uint32 wflag = B_NO_WORKSPACE_ACTIVATION | B_NOT_ANCHORED_ON_ACTIVATE;
+	uint32 wflag = 0;//B_NO_WORKSPACE_ACTIVATION | B_NOT_ANCHORED_ON_ACTIVATE;
 
 	if (tool) {
 		wlook = B_FLOATING_WINDOW_LOOK;
 		wflag |= B_WILL_ACCEPT_FIRST_CLICK;
 	}
 
-	if (splash)
+	if (splash) {
 		wlook = B_NO_BORDER_WINDOW_LOOK;
+		wflag = B_NO_WORKSPACE_ACTIVATION | B_NOT_ANCHORED_ON_ACTIVATE;
+	}
 
 	if (popup) {
 		wlook = B_NO_BORDER_WINDOW_LOOK;
-		wflag |= B_WILL_ACCEPT_FIRST_CLICK | B_AVOID_FRONT | B_AVOID_FOCUS;
+		wflag |= B_WILL_ACCEPT_FIRST_CLICK | \
+			B_AVOID_FRONT | \
+			B_AVOID_FOCUS | \
+			B_NO_WORKSPACE_ACTIVATION | \
+			B_NOT_ANCHORED_ON_ACTIVATE;
 		wfeel = window_feel(1025);
 	}
 
 	if (tooltip) {
 		wlook = B_NO_BORDER_WINDOW_LOOK;
-		wflag |= B_WILL_ACCEPT_FIRST_CLICK | B_AVOID_FRONT | B_AVOID_FOCUS;
+		wflag |= B_WILL_ACCEPT_FIRST_CLICK | \
+			B_AVOID_FRONT | \
+			B_AVOID_FOCUS | \
+			B_NO_WORKSPACE_ACTIVATION | \
+			B_NOT_ANCHORED_ON_ACTIVATE;
 		wfeel = window_feel(1025);
 	}
 
     if (flags & Qt::FramelessWindowHint) {
     	wlook = B_NO_BORDER_WINDOW_LOOK;
-    	wflag |= B_WILL_ACCEPT_FIRST_CLICK;
+    	wflag |= B_WILL_ACCEPT_FIRST_CLICK | \
+    		B_NO_WORKSPACE_ACTIVATION | \
+    		B_NOT_ANCHORED_ON_ACTIVATE;
     }
 
 	if (flags & Qt::MSWindowsFixedSizeDialogHint)
