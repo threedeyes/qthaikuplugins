@@ -130,12 +130,12 @@ public:
     bool setMouseGrabEnabled(bool) Q_DECL_OVERRIDE { return false; }
     void propagateSizeHints();
 
-    WId winId() const override { return window()->type() == Qt::Desktop ? -1 : m_winId; }
+    WId winId() const override { return window()->type() == Qt::Desktop ? -1 : (WId)m_window; }
+
+	static QHaikuWindow *windowForWinId(WId id);
 
     void raise();
     void lower();
-
-    static QHaikuWindow *windowForWinId(WId id);
 
     QtHaikuWindow *m_window;
 
@@ -148,8 +148,6 @@ private:
     bool m_positionIncludesFrame;
     bool m_visible;
     bool m_pendingGeometryChangeOnShow;
-
-    WId m_winId;
 
 private Q_SLOTS:
 	void platformWindowQuitRequested();

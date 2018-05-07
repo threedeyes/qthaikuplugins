@@ -242,15 +242,13 @@ QHaikuWindow::QHaikuWindow(QWindow *wnd)
     , m_positionIncludesFrame(false)
     , m_visible(false)
     , m_pendingGeometryChangeOnShow(true)
-{
-	m_window = new QtHaikuWindow(this, BRect(wnd->geometry().left(),
+    , m_window(new QtHaikuWindow(this, BRect(wnd->geometry().left(),
     				wnd->geometry().top(),
     				wnd->geometry().right(),
     				wnd->geometry().bottom()),
     				wnd->title().toUtf8(),
-    				B_NO_BORDER_WINDOW_LOOK, B_NORMAL_WINDOW_FEEL, 0);
-    m_winId = (WId)m_window;
-
+    				B_NO_BORDER_WINDOW_LOOK, B_NORMAL_WINDOW_FEEL, 0))
+{
 	connect(m_window, SIGNAL(quitRequested()), SLOT(platformWindowQuitRequested()), Qt::BlockingQueuedConnection);
     connect(m_window, SIGNAL(windowMoved(QPoint)), SLOT(platformWindowMoved(QPoint)));
 	connect(m_window, SIGNAL(windowResized(QSize)), SLOT(platformWindowResized(QSize)));
