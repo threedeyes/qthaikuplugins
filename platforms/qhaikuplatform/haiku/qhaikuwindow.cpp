@@ -170,12 +170,14 @@ void QtHaikuWindow::MessageReceived(BMessage* msg)
 	switch(msg->what) {
 		case kSizeGripEnable:
 		{
-			SetLook(B_DOCUMENT_WINDOW_LOOK);
+			if (Look() == B_TITLED_WINDOW_LOOK)
+				SetLook(B_DOCUMENT_WINDOW_LOOK);
 			break;
 		}
 		case kSizeGripDisable:
 		{
-			SetLook(B_TITLED_WINDOW_LOOK);
+			if (Look() == B_DOCUMENT_WINDOW_LOOK)
+				SetLook(B_TITLED_WINDOW_LOOK);
 			break;
 		}
 		case B_MOUSE_WHEEL_CHANGED:
@@ -264,6 +266,8 @@ QHaikuWindow::QHaikuWindow(QWindow *wnd)
 	connect(m_window->View(), SIGNAL(exitedView()), this, SLOT(platformExitedView()));
 	connect(m_window->View(), SIGNAL(mouseEvent(QPoint, QPoint, Qt::MouseButtons, Qt::KeyboardModifiers, Qt::MouseEventSource)),
 		this, SLOT(platformMouseEvent(QPoint, QPoint, Qt::MouseButtons, Qt::KeyboardModifiers, Qt::MouseEventSource)));
+
+    window()->setProperty("size-grip", false);
 
     setWindowFlags(wnd->flags());
     setWindowState(wnd->windowState());
@@ -483,9 +487,20 @@ void QHaikuWindow::requestActivateWindow()
 }
 
 
-WId QHaikuWindow::winId() const
+void QHaikuWindow::windowEvent(QEvent *event)
 {
-    return m_winId;
+	switch (event->type()) {
+		case QEvent::DynamicPropertyChange:
+			if ( window()->property("size-grip") == true)
+				m_window->PostMessage(kSizeGripEnable);
+			else
+				m_window->PostMessage(kSizeGripDisable);
+			break;
+		default:
+			break;
+	}
+
+    QPlatformWindow::windowEvent(event);
 }
 
 

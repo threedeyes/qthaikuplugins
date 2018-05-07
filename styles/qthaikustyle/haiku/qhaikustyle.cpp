@@ -3069,44 +3069,39 @@ bool QHaikuStyle::eventFilter(QObject *o, QEvent *e)
 			w->repaint();
     	}
     	break;
-#endif    	
-#ifndef QT_NO_PROGRESSBAR
+#endif
     case QEvent::StyleChange:
     case QEvent::Paint:
     case QEvent::Show:
-        if (QProgressBar *bar = qobject_cast<QProgressBar *>(o)) {
-            // Animation by timer for progress bars that have their min and
-            // max values the same
+#ifndef QT_NO_PROGRESSBAR
+		if (QProgressBar *bar = qobject_cast<QProgressBar *>(o)) {
             if (bar->minimum() == bar->maximum())
                 startProgressAnimation(this, bar);
             else
                 stopProgressAnimation(this, bar);
         }
-        if (QSizeGrip *grip = qobject_cast<QSizeGrip *>(o)) {
+#endif
+		if (QSizeGrip *grip = qobject_cast<QSizeGrip *>(o)) {
 			if (grip->window()->isTopLevel()) {
-				QtHaikuWindow *wnd = static_cast<QtHaikuWindow *>((void*)grip->window()->winId());
-				if (wnd) {
-					wnd->PostMessage(kSizeGripEnable);
-				}
+				QWindow *mainwindow = grip->window()->windowHandle();
+				if (mainwindow)
+					mainwindow->setProperty("size-grip", true);
 			}
         }
         break;
     case QEvent::Destroy:
     case QEvent::Hide:
-        // Do static_cast because there is no type info when getting
-        // the destroy event. We know that it is a QProgressBar, since
-        // we only install a widget event filter for QScrollBars.
+#ifndef QT_NO_PROGRESSBAR
         stopProgressAnimation(this, static_cast<QProgressBar *>(o));
+#endif
         if (QSizeGrip *grip = qobject_cast<QSizeGrip *>(o)) {
 			if (grip->window()->isTopLevel()) {
-				QtHaikuWindow *wnd = static_cast<QtHaikuWindow *>((void*)grip->window()->winId());
-				if (wnd) {
-					wnd->PostMessage(kSizeGripDisable);
-				}
+				QWindow *mainwindow = grip->window()->windowHandle();
+				if (mainwindow)
+					mainwindow->setProperty("size-grip", false);
 			}
         }
         break;
-#endif // QT_NO_PROGRESSBAR
     default:
         break;
     }

@@ -114,10 +114,12 @@ public:
     QHaikuWindow(QWindow *window);
     ~QHaikuWindow();
 
-    void setGeometry(const QRect &rect);
-    void setWindowTitle(const QString &title);
-    void setWindowState(Qt::WindowStates state);
-    void setWindowFlags(Qt::WindowFlags flags);
+    void setGeometry(const QRect &rect) override;
+    void setWindowTitle(const QString &title) override;
+    void setWindowState(Qt::WindowStates state) override;
+    void setWindowFlags(Qt::WindowFlags flags) override;
+
+    void windowEvent(QEvent *event) override;
 
     QMargins frameMargins() const;
 
@@ -128,8 +130,8 @@ public:
     bool setMouseGrabEnabled(bool) Q_DECL_OVERRIDE { return false; }
     void propagateSizeHints();
 
-    WId winId() const;
-    
+    WId winId() const override { return window()->type() == Qt::Desktop ? -1 : m_winId; }
+
     void raise();
     void lower();
 
