@@ -57,26 +57,26 @@
 #include <View.h>
 #include <Bitmap.h>
 
+extern void qt_scrollRectInImage(QImage &img, const QRect &rect, const QPoint &offset);
+
 QT_BEGIN_NAMESPACE
 
-class QHaikuScreen : public QPlatformScreen, public BScreen
+class QHaikuScreen : public QPlatformScreen
 {
 public:
     QHaikuScreen();
     ~QHaikuScreen();
 
-    QRect geometry() const { return m_geometry; }
+    QRect geometry() const;
     int depth() const { return 32; }
     QImage::Format format() const { return QImage::Format_RGB32; }
 	QPlatformCursor *cursor() const;
 	
     QPixmap grabWindow(WId window, int x, int y, int width, int height) const;
 
-//    static QPlatformWindow *windowContainingCursor;
-
-public:
-    QRect m_geometry;
+private:    
     QHaikuCursor *m_cursor;
+    BScreen *m_screen;
 };
 
 //#ifndef QT_NO_DRAGANDDROP

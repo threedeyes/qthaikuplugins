@@ -52,53 +52,68 @@
 
 QT_BEGIN_NAMESPACE
 
-QHaikuScreen::QHaikuScreen()
-    : BScreen(B_MAIN_SCREEN_ID)
-    , m_geometry(0, 0, 800, 600)
+QHaikuScreen::QHaikuScreen() 
+	: QPlatformScreen()
+	, m_screen(new BScreen(B_MAIN_SCREEN_ID))
     , m_cursor(new QHaikuCursor)
 {
-	BRect frame = BScreen::Frame();
-	m_geometry.setCoords(0, 0, frame.Width(), frame.Height());
+	Q_ASSERT(m_screen->IsValid());
 }
+
+
+QHaikuScreen::~QHaikuScreen()
+{
+    delete m_cursor;
+    delete m_screen;
+}
+
 
 QPlatformCursor *QHaikuScreen::cursor() const
 {
     return m_cursor;
 }
 
-QHaikuScreen::~QHaikuScreen()
-{
-    delete m_cursor;
+
+QRect QHaikuScreen::geometry() const
+{	
+	const BRect frame = m_screen->Frame();
+    return QRect(frame.left, frame.top, frame.Width() + 1, frame.Height() + 1);
 }
 
 
 QPixmap QHaikuScreen::grabWindow(WId id, int x, int y, int width, int height) const
 {
     QRect rect(x, y, width, height);
-
+	
     QHaikuWindow *window = QHaikuWindow::windowForWinId(id);
+
     if (!window || window->window()->type() == Qt::Desktop) {
-        QWindowList wl = QGuiApplication::topLevelWindows();
-        QWindow *containing = 0;
-        foreach (QWindow *w, wl) {
-            if (w->type() != Qt::Desktop && w->isExposed() && w->geometry().contains(rect)) {
-                containing = w;
-                break;
-            }
-        }
-
-        if (!containing)
-            return QPixmap();
-
-        id = containing->winId();
-        rect = rect.translated(-containing->geometry().topLeft());
+    	if (width < 0 || height < 0) {
+    		width = geometry().width() - x;
+    		height = geometry().height() - y;
+    	}
+    	BBitmap *bitmap = NULL;
+    	BRect rect(x, y, x + width, y + height);
+    	m_screen->GetBitmap(&bitmap, false, &rect);
+    	if (bitmap->IsValid()) {
+    		QImage image((uchar*)bitmap->Bits(), \
+    			width, height, \
+    			bitmap->BytesPerRow(), \
+    			QImage::Format_RGB32);
+    		image = image.copy(QRect(0, 0, width, height));
+    		delete bitmap;
+    		return QPixmap::fromImage(image);
+    	}
+		return QPixmap();
     }
 
     QHaikuBackingStore *store = QHaikuBackingStore::backingStoreForWinId(id);
     if (store)
         return store->grabWindow(id, rect);
+
     return QPixmap();
 }
+
 
 QHaikuBackingStore::QHaikuBackingStore(QWindow *window)
     : QPlatformBackingStore(window)
@@ -108,6 +123,7 @@ QHaikuBackingStore::QHaikuBackingStore(QWindow *window)
 	m_image = QImage((uchar*)m_bitmap->Bits(), window->width(), window->height(), m_bitmap->BytesPerRow(), QImage::Format_RGB32);
 }
 
+
 QHaikuBackingStore::~QHaikuBackingStore()
 {
 	m_image = QImage();
@@ -116,12 +132,12 @@ QHaikuBackingStore::~QHaikuBackingStore()
     clearHash();
 }
 
+
 QPaintDevice *QHaikuBackingStore::paintDevice()
 {
     return &m_image;
 }
 
-#define Q2BRect(r) BRect(r.left(), r.top(), r.right(), r.bottom())
 
 void QHaikuBackingStore::flush(QWindow *window, const QRegion &region, const QPoint &offset)
 {
@@ -156,6 +172,7 @@ void QHaikuBackingStore::flush(QWindow *window, const QRegion &region, const QPo
     m_backingStoreForWinIdHash[id] = this;
 }
 
+
 void QHaikuBackingStore::resize(const QSize &size, const QRegion &)
 {
     WId id = window()->winId();
@@ -177,7 +194,6 @@ void QHaikuBackingStore::resize(const QSize &size, const QRegion &)
     clearHash();        
 }
 
-extern void qt_scrollRectInImage(QImage &img, const QRect &rect, const QPoint &offset);
 
 bool QHaikuBackingStore::scroll(const QRegion &area, int dx, int dy)
 {
@@ -190,6 +206,7 @@ bool QHaikuBackingStore::scroll(const QRegion &area, int dx, int dy)
 
     return true;
 }
+
 
 QPixmap QHaikuBackingStore::grabWindow(WId window, const QRect &rect) const
 {
@@ -211,10 +228,12 @@ QPixmap QHaikuBackingStore::grabWindow(WId window, const QRect &rect) const
     return QPixmap::fromImage(m_image.copy(adjusted));
 }
 
+
 QHaikuBackingStore *QHaikuBackingStore::backingStoreForWinId(WId id)
 {
     return m_backingStoreForWinIdHash.value(id, 0);
 }
+
 
 void QHaikuBackingStore::clearHash()
 {
@@ -227,6 +246,8 @@ void QHaikuBackingStore::clearHash()
     m_windowAreaHash.clear();
 }
 
+
 QHash<WId, QHaikuBackingStore *> QHaikuBackingStore::m_backingStoreForWinIdHash;
+
 
 QT_END_NAMESPACE

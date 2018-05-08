@@ -582,7 +582,14 @@ void QHaikuWindow::setWindowState(Qt::WindowStates states)
 
 QHaikuWindow *QHaikuWindow::windowForWinId(WId id)
 {
-    return ((QtHaikuWindow*)id)->fQWindow;
+	if (id == -1)
+		return NULL;
+
+	QtHaikuWindow *nativeWindow = static_cast<QtHaikuWindow*>((void*)id);
+	if (nativeWindow != NULL)
+		return nativeWindow->fQWindow;
+
+    return NULL;
 }
 
 
