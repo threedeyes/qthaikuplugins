@@ -657,6 +657,48 @@ void QHaikuStyle::drawPrimitive(PrimitiveElement elem,
             }
         }
         break;
+    case PE_FrameTabBarBase:
+        if (const QStyleOptionTabBarBase *tbb
+                = qstyleoption_cast<const QStyleOptionTabBarBase *>(option)) {
+            QRect tabRect = tbb->rect;
+            painter->save();
+			rgb_color base = mkHaikuColor(option->palette.color( QPalette::Normal, QPalette::Window));
+			QColor backgroundColor(option->palette.color( QPalette::Normal, QPalette::Window));
+			QColor frameColor(mkQColor(tint_color(base, 1.30)));
+            painter->setPen(frameColor);
+            switch (tbb->shape) {
+
+            case QTabBar::RoundedNorth:
+				tabRect = tbb->rect.adjusted(0,1,0,1);
+                painter->drawLine(tabRect.topLeft(), tabRect.topRight());
+                break;
+
+            case QTabBar::RoundedWest:
+                painter->drawLine(tabRect.left(), tabRect.top(), tabRect.left(), tabRect.bottom());
+                break;
+
+            case QTabBar::RoundedSouth:
+				tabRect = tbb->rect.adjusted(0,-1,0,-1);
+                painter->drawLine(tbb->rect.left(), tbb->rect.bottom(),
+                                  tabRect.right(), tabRect.bottom());
+                break;
+
+            case QTabBar::RoundedEast:
+                painter->drawLine(tabRect.topRight(), tabRect.bottomRight());
+                break;
+
+            case QTabBar::TriangularNorth:
+            case QTabBar::TriangularEast:
+            case QTabBar::TriangularWest:
+            case QTabBar::TriangularSouth:
+                painter->restore();
+                QCommonStyle::drawPrimitive(elem, option, painter, widget);
+                return;
+            }
+
+            painter->restore();
+        }
+        return;
     case PE_IndicatorButtonDropDown:
         proxy()->drawPrimitive(PE_PanelButtonCommand, option, painter, widget);
         break;
@@ -974,7 +1016,7 @@ void QHaikuStyle::drawPrimitive(PrimitiveElement elem,
 	     	painter->restore();
         }
         break;
-        case PE_FrameTabWidget:        
+        case PE_FrameTabWidget:
             painter->save();
             if (const QStyleOptionTabWidgetFrame *twf = qstyleoption_cast<const QStyleOptionTabWidgetFrame *>(option)) {
 				rgb_color bgColor = mkHaikuColor(option->palette.color( QPalette::Normal, QPalette::Window));
@@ -2880,6 +2922,8 @@ QSize QHaikuStyle::sizeFromContents(ContentsType type, const QStyleOption *optio
     case CT_SizeGrip:
         newSize = QSize(15, 15);
         break;
+    case CT_TabBarTab:
+        break;
     case CT_MdiControls:
        /* if (const QStyleOptionComplex *styleOpt = qstyleoption_cast<const QStyleOptionComplex *>(option)) {
             int width = 0;
@@ -3542,7 +3586,22 @@ QRect QHaikuStyle::subElementRect(SubElement sr, const QStyleOption *opt, const 
     case SE_SpinBoxLayoutItem:
 		break;
     case SE_TabWidgetTabBar:
-//        r.adjust(10, 0, 10, 0);	//Tab shift
+		if (const QStyleOptionTabWidgetFrame *twf = qstyleoption_cast<const QStyleOptionTabWidgetFrame *>(opt)) {
+			switch(twf->shape) {
+				case QTabBar::RoundedNorth:
+				case QTabBar::TriangularNorth:
+				case QTabBar::RoundedSouth:
+				case QTabBar::TriangularSouth:
+					r.adjust(5, 0, 5, 0);
+					break;
+				case QTabBar::RoundedWest:
+				case QTabBar::TriangularWest:
+				case QTabBar::RoundedEast:
+				case QTabBar::TriangularEast:
+					r.adjust(0, 5, 0, 5);
+					break;
+			}
+		}
         break;
     case SE_TabBarTabLeftButton:
     case SE_TabBarTabRightButton:
