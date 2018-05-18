@@ -38,7 +38,7 @@
 #include <qscrollbar.h>
 #include <qabstractscrollarea.h>
 #include <qwindow.h>
-
+#include <qradiobutton.h>
 #include "qstylecache_p.h"
 #include "qstylehelper_p.h"
 #include <qstringbuilder.h>
@@ -376,6 +376,8 @@ QColor backgroundColor(const QPalette &pal, const QWidget* widget)
     if (qobject_cast<const QScrollBar *>(widget) && widget->parent() &&
             qobject_cast<const QAbstractScrollArea *>(widget->parent()->parent()))
         return widget->parentWidget()->parentWidget()->palette().color(QPalette::Base);
+	if (qobject_cast<const QRadioButton *>(widget) && widget->parent())
+		return widget->parentWidget()->palette().color(QPalette::Window);
     return pal.color(QPalette::Base);
 }
 

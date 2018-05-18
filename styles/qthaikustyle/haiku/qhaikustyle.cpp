@@ -897,11 +897,10 @@ void QHaikuStyle::drawPrimitive(PrimitiveElement elem,
     case PE_IndicatorRadioButton:
         painter->save();
         if (const QStyleOptionButton *radiobutton = qstyleoption_cast<const QStyleOptionButton*>(option)) {
-            
             rect = rect.adjusted(1, -1, 3, 1);
 			BRect bRect(0.0f, 0.0f, rect.width() - 1, rect.height() - 1);
 			TemporarySurface surface(bRect);
-			rgb_color base = mkHaikuColor(option->palette.color( QPalette::Normal, QPalette::Window));
+			rgb_color base = mkHaikuColor(backgroundColor(option->palette, widget));
 			surface.view()->SetHighColor(base);
 			surface.view()->SetLowColor(base);
 			surface.view()->FillRect(bRect);
