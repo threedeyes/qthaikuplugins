@@ -867,8 +867,6 @@ void QHaikuStyle::drawPrimitive(PrimitiveElement elem,
     case PE_IndicatorCheckBox:
         painter->save();
         if (const QStyleOptionButton *checkbox = qstyleoption_cast<const QStyleOptionButton*>(option)) {
-            
-            rect = rect.adjusted(1, 1, -1, -1);
 			BRect bRect(0.0f, 0.0f, rect.width() - 1, rect.height() - 1);
 			TemporarySurface surface(bRect);
 			rgb_color base = mkHaikuColor(backgroundColor(option->palette, widget));
@@ -889,6 +887,7 @@ void QHaikuStyle::drawPrimitive(PrimitiveElement elem,
 			if (checkbox->state & State_NoChange)
 				flags |= BControlLook::B_DISABLED | BControlLook::B_ACTIVATED;
 
+			bRect.InsetBy(-1, -1);
 			be_control_look->DrawCheckBox(surface.view(), bRect, bRect, base, flags);
 			painter->drawImage(rect, surface.image());
         }
@@ -2808,13 +2807,13 @@ int QHaikuStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, con
     case PM_TabBarTabShiftHorizontal:
         return 0;
 	case PM_TabBarScrollButtonWidth:
-		return 18;
+		return 16;
 	case PM_TabBar_ScrollButtonOverlap:
 		return 0;
     case PM_IndicatorWidth:
-    	return 18;
+    	return 15;
     case PM_IndicatorHeight:
-    	return 18;
+    	return 15;
 //    case PM_TabBarTabOverlap:
 //        return 50;
 //    case PM_TabBarBaseOverlap:
