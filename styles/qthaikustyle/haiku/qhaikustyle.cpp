@@ -3316,7 +3316,7 @@ QRect QHaikuStyle::subControlRect(ComplexControl control, const QStyleOptionComp
                 }
             }
 
-            QSize textRect = fontMetrics.boundingRect(groupBox->text).size() + QSize(1, 1);
+            QSize textRect = fontMetrics.boundingRect(groupBox->text).size() + QSize(4, 1);
             int indicatorWidth = proxy()->pixelMetric(PM_IndicatorWidth, option, widget);
             int indicatorHeight = proxy()->pixelMetric(PM_IndicatorHeight, option, widget);
 
@@ -3324,11 +3324,11 @@ QRect QHaikuStyle::subControlRect(ComplexControl control, const QStyleOptionComp
                 rect.setWidth(indicatorWidth);
                 rect.setHeight(indicatorHeight);
                 rect.moveTop((textRect.height() - indicatorHeight) / 2);
-				rect.adjust(10, 2, 10, 2);
+				rect.adjust(8, 2, 8, 2);
             } else if (subControl == SC_GroupBoxLabel) {
-            	rect.adjust(10, 2, 10, 2);
+				rect.adjust(10, 2, 0, 2);
                 if (groupBox->subControls & SC_GroupBoxCheckBox) {
-                    rect.adjust(indicatorWidth, 0, 0, 0);
+                    rect.adjust(indicatorWidth + 4, 0, 0, 0);
                 }
                 rect.setSize(textRect);
             }
