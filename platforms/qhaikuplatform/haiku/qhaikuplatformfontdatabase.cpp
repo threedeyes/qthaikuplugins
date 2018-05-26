@@ -84,31 +84,21 @@ QStringList QHaikuPlatformFontDatabase::fallbacksForFamily(const QString &family
                                                              QFont::StyleHint styleHint,
                                                              QChar::Script script) const
 {
-	QStringList result = QPlatformFontDatabase::fallbacksForFamily(family, style, styleHint, script);
-    
-    if (!result.isEmpty())
-        return result;
-
-    switch (styleHint) {
-        case QFont::Times:
-            result << QString::fromLatin1("Noto Serif");
-            break;
-        case QFont::Courier:
-            result << QString::fromLatin1("Noto Mono");
-            break;
-        case QFont::Monospace:
-            result << QString::fromLatin1("Noto Mono");
-            break;
-        case QFont::Cursive:
-        case QFont::Fantasy:
-        case QFont::Decorative:
-        case QFont::Helvetica:
-        case QFont::System:
-        default:
-            result << QString::fromLatin1("Noto Sans");
-    }
-
-    return result;
+	QStringList result;
+	if (styleHint == QFont::Monospace || styleHint == QFont::Courier) {
+		result.append(QString::fromLatin1("Noto Mono"));
+		result.append(QString::fromLatin1("DejaVu Sans Mono"));
+	} else {
+		if (styleHint == QFont::Serif) {
+			result.append(QString::fromLatin1("Noto Serif"));
+			result.append(QString::fromLatin1("DejaVu Serif"));
+		} else {
+			result.append(QString::fromLatin1("Noto Sans"));
+			result.append(QString::fromLatin1("DejaVu Sans"));
+		}
+	}
+	result.append(QFreeTypeFontDatabase::fallbacksForFamily(family, style, styleHint, script));
+	return result;
 }
 
 QFont QHaikuPlatformFontDatabase::defaultFont() const
