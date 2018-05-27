@@ -287,19 +287,16 @@ QHaikuWindow::~QHaikuWindow()
 void QHaikuWindow::setWindowFlags(Qt::WindowFlags flags)
 {
 	Qt::WindowType type =  static_cast<Qt::WindowType>(int(flags & Qt::WindowType_Mask)) ;
-    
+
 	bool popup = (type == Qt::Popup);
 	bool splash = (type == Qt::SplashScreen);
     bool dialog = ((type == Qt::Dialog) || (type == Qt::Sheet) || (type == Qt::MSWindowsFixedSizeDialogHint));
 	bool tool = (type == Qt::Tool || type == Qt::Drawer);
 	bool tooltip = (type == Qt::ToolTip);
 
-	qDebug() << "tool:" << tool;
-	qDebug() << "popup:" << popup;
-
 	window_look wlook = B_TITLED_WINDOW_LOOK;
 	window_feel wfeel = B_NORMAL_WINDOW_FEEL;
-	uint32 wflag = 0;//B_NO_WORKSPACE_ACTIVATION | B_NOT_ANCHORED_ON_ACTIVATE;
+	uint32 wflag = 0;
 
 	if (tool) {
 		wlook = B_FLOATING_WINDOW_LOOK;
@@ -736,7 +733,6 @@ void QHaikuWindow::platformDropAction(BMessage *msg)
 
 	if (response.isAccepted()) {
 		const Qt::DropAction action = response.acceptedAction();
-		qDebug() << "DropAction action = " << action;
 	}
 }
 
