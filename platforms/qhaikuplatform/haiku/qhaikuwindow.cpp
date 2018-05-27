@@ -294,6 +294,9 @@ void QHaikuWindow::setWindowFlags(Qt::WindowFlags flags)
 	bool tool = (type == Qt::Tool || type == Qt::Drawer);
 	bool tooltip = (type == Qt::ToolTip);
 
+	qDebug() << "tool:" << tool;
+	qDebug() << "popup:" << popup;
+
 	window_look wlook = B_TITLED_WINDOW_LOOK;
 	window_feel wfeel = B_NORMAL_WINDOW_FEEL;
 	uint32 wflag = 0;//B_NO_WORKSPACE_ACTIVATION | B_NOT_ANCHORED_ON_ACTIVATE;
@@ -349,6 +352,18 @@ void QHaikuWindow::setWindowFlags(Qt::WindowFlags flags)
 
     if (flags & Qt::WindowStaysOnTopHint)
         wfeel = B_FLOATING_ALL_WINDOW_FEEL;
+
+	if (flags & Qt::WindowStaysOnTopHint &&
+		flags & Qt::FramelessWindowHint &&
+		tool) {
+		wlook = B_NO_BORDER_WINDOW_LOOK;
+		wflag |= B_WILL_ACCEPT_FIRST_CLICK | \
+			B_AVOID_FRONT | \
+			B_AVOID_FOCUS | \
+			B_NO_WORKSPACE_ACTIVATION | \
+			B_NOT_ANCHORED_ON_ACTIVATE;
+		wfeel = B_FLOATING_ALL_WINDOW_FEEL;
+	}
 
 	m_window->SetLook(wlook);
 	m_window->SetFeel(wfeel);
