@@ -924,32 +924,36 @@ void QHaikuStyle::drawPrimitive(PrimitiveElement elem,
         break;  
     case PE_IndicatorToolBarHandle:
         painter->save();
-        if (option->state & State_Horizontal) {
-            for (int i = rect.height()/5; i <= 4*(rect.height()/5) ; ++i) {
-                int y = rect.topLeft().y() + i + 1;
-                int x1 = rect.topLeft().x() + 3;
-                int x2 = rect.topRight().x() - 2;
-
-                if (i % 2 == 0)
-                    painter->setPen(QPen(option->palette.light(), 0));
-                else
-                    painter->setPen(QPen(dark.lighter(110), 0));
-                painter->drawLine(x1, y, x2, y);
-            }
-        }
-        else { //vertical toolbar
-            for (int i = rect.width()/5; i <= 4*(rect.width()/5) ; ++i) {
-                int x = rect.topLeft().x() + i + 1;
-                int y1 = rect.topLeft().y() + 3;
-                int y2 = rect.topLeft().y() + 5;
-
-                if (i % 2 == 0)
-                    painter->setPen(QPen(option->palette.light(), 0));
-                else
-                    painter->setPen(QPen(dark.lighter(110), 0));
-                painter->drawLine(x, y1, x, y2);
-            }
-        }
+		{
+			rgb_color base = mkHaikuColor(backgroundColor(option->palette, widget));
+			QColor vdark = mkQColor(tint_color(base, B_DARKEN_3_TINT));
+			QColor light = mkQColor(tint_color(base, B_LIGHTEN_2_TINT));
+	
+	        if (option->state & State_Horizontal) {
+				int x = rect.center().x();
+				int y = rect.y() + 4;
+	
+				while (y < rect.bottom() - 3) {
+					painter->setPen(QPen(vdark, 0));
+					painter->drawLine(x, y, x, y);
+					painter->setPen(QPen(light, 0));
+					painter->drawLine(x + 1, y + 1, x + 1, y + 1);
+					y += 3;
+				}
+	        }
+	        else { //vertical toolbar
+				int x = rect.x() + 4;
+				int y = rect.center().y();
+	
+				while (x <= rect.right() - 3) {
+					painter->setPen(QPen(vdark, 0));
+					painter->drawLine(x, y, x, y);
+					painter->setPen(QPen(light, 0));
+					painter->drawLine(x + 1, y + 1, x + 1, y + 1);
+					x += 3;
+				}
+	        }
+		}
         painter->restore();
         break;
 	case PE_FrameDefaultButton:
