@@ -1387,42 +1387,6 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
         }
         painter->restore();
         break;
-    case CE_ProgressBarGroove:
-        painter->save();
-        {
-            painter->fillRect(rect, option->palette.base());
-            QColor borderColor = dark.lighter(110);
-            painter->setPen(QPen(borderColor, 0));
-            const QLine lines[4] = {
-                QLine(QPoint(rect.left() + 1, rect.top()), QPoint(rect.right() - 1, rect.top())),
-                QLine(QPoint(rect.left() + 1, rect.bottom()), QPoint(rect.right() - 1, rect.bottom())),
-                QLine(QPoint(rect.left(), rect.top() + 1), QPoint(rect.left(), rect.bottom() - 1)),
-                QLine(QPoint(rect.right(), rect.top() + 1), QPoint(rect.right(), rect.bottom() - 1))
-            };
-            painter->drawLines(lines, 4);
-            QColor alphaCorner = mergedColors(borderColor, option->palette.background().color());
-            QColor innerShadow = mergedColors(borderColor, option->palette.base().color());
-
-            //corner smoothing
-            painter->setPen(alphaCorner);
-            const QPoint points[4] = {
-                rect.topRight(),
-                rect.topLeft(),
-                rect.bottomRight(),
-                rect.bottomLeft()
-            };
-            painter->drawPoints(points, 4);
-
-            //inner shadow
-            painter->setPen(innerShadow);
-            painter->drawLine(QPoint(rect.left() + 1, rect.top() + 1),
-                              QPoint(rect.right() - 1, rect.top() + 1));
-            painter->drawLine(QPoint(rect.left() + 1, rect.top() + 1),
-                              QPoint(rect.left() + 1, rect.bottom() + 1));
-
-        }
-        painter->restore();
-        break;
     case CE_ProgressBarContents:
         painter->save();
         if (const QStyleOptionProgressBar *bar = qstyleoption_cast<const QStyleOptionProgressBar *>(option)) {
@@ -1431,71 +1395,33 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
             bool inverted = bar->invertedAppearance;
             bool indeterminate = (bar->minimum == 0 && bar->maximum == 0);
 
-            // If the orientation is vertical, we use a transform to rotate
-            // the progress bar 90 degrees clockwise.  This way we can use the
-            // same rendering code for both orientations.
-            if (vertical) {
-                rect = QRect(rect.left(), rect.top(), rect.height(), rect.width()); // flip width and height
-                QTransform m = QTransform::fromTranslate(rect.height()-1, -1.0);
-                m.rotate(90.0);
-                painter->setTransform(m, true);
-            }
+            rgb_color base = mkHaikuColor(backgroundColor(option->palette, widget));
+            rgb_color highlight = ui_color(B_STATUS_BAR_COLOR);
 
-            int maxWidth = rect.width() - 4;
-            int minWidth = 4;
-            qreal progress = qMax(bar->progress, bar->minimum); // workaround for bug in QProgressBar
+            int maxWidth = vertical?rect.height():rect.width();
+            int minWidth = 2;
+
+			BRect bRect;
+            qreal progress = qMax(bar->progress, bar->minimum);
             int progressBarWidth = (progress - bar->minimum) * qreal(maxWidth) / qMax(qreal(1.0), qreal(bar->maximum) - bar->minimum);
-            int width = indeterminate ? maxWidth : qMax(minWidth, progressBarWidth);
 
-            bool reverse = (!vertical && (bar->direction == Qt::RightToLeft)) || vertical;
-            if (inverted)
-                reverse = !reverse;
+			if (vertical)
+				bRect = BRect(0.0f, 0.0f, rect.height() - 1, rect.width() - 1);
+			else
+				bRect = BRect(0.0f, 0.0f, rect.width() - 1, rect.height() - 1);
 
-            QRect progressBar;
-            if (!indeterminate) {
-                if (!reverse) {
-                    progressBar.setRect(rect.left() + 1, rect.top() + 1, width + 1, rect.height() - 3);
-                } else {
-                    progressBar.setRect(rect.right() - 1 - width, rect.top() + 1, width + 1, rect.height() - 3);
-                }
-            } else {
-                int slideWidth = (qMax(rect.width() - 4, minWidth) * 2) / 3;
-                int step = ((animateStep * slideWidth) / progressAnimationFps) % slideWidth;
-                if ((((animateStep * slideWidth) / progressAnimationFps) % (2 * slideWidth)) >= slideWidth)
-                    step = slideWidth - step;
-                progressBar.setRect(rect.left() + 1 + step, rect.top() + 1,
-                                    slideWidth / 2, rect.height() - 3);
-            }
-            QColor highlight = option->palette.color(QPalette::Normal, QPalette::Highlight);
-            painter->setPen(QPen(highlight.darker(140), 0));
+			TemporarySurface surface(bRect);
+			bRect.InsetBy(-1, -1);
+			be_control_look->DrawStatusBar(surface.view(), bRect, bRect, base, highlight, progressBarWidth);
 
-            QColor highlightedGradientStartColor = highlight.lighter(100);
-            QColor highlightedGradientStopColor  = highlight.lighter(130);
-
-            QLinearGradient gradient(rect.topLeft(), QPoint(rect.bottomLeft().x(),
-                                                            rect.bottomLeft().y()*2));
-
-            gradient.setColorAt(0, highlightedGradientStartColor);
-            gradient.setColorAt(1, highlightedGradientStopColor);
-
-            painter->setBrush(gradient);
-            painter->drawRect(progressBar);
-
-            painter->setPen(QPen(highlight.lighter(120), 0));
-            painter->drawLine(QPoint(progressBar.left() + 1, progressBar.top() + 1),
-                              QPoint(progressBar.right(), progressBar.top() + 1));
-            painter->drawLine(QPoint(progressBar.left() + 1, progressBar.top() + 1),
-                              QPoint(progressBar.left() + 1, progressBar.bottom() - 1));
-
-            painter->setPen(QPen(highlightedGradientStartColor, 7.0));//QPen(option->palette.highlight(), 3));
-
-            painter->save();
-            painter->setClipRect(progressBar.adjusted(2, 2, -1, -1));
-            for (int x = progressBar.left() - 32; x < rect.right() ; x+=18) {
-                painter->drawLine(x, progressBar.bottom() + 1, x + 23, progressBar.top() - 2);
-            }
-            painter->restore();
-
+            if (vertical) {
+                QMatrix matrix;
+				matrix.translate(surface.image().width()/2, surface.image().height()/2);
+				matrix.rotate(inverted?90:-90);
+				QImage dstImg = surface.image().transformed(matrix);
+				painter->drawImage(rect, dstImg);
+            } else
+				painter->drawImage(rect, inverted?surface.image().mirrored(true, false):surface.image());
         }
         painter->restore();
         break;
