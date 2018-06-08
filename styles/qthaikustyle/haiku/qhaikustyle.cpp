@@ -423,8 +423,8 @@ static void qt_haiku_draw_windows_frame(QPainter *painter, const QRect &qrect, c
 		painter->drawLine(rect.topRight(), rect.bottomRight());
 	if ((borders & BControlLook::B_BOTTOM_BORDER) != 0)
 		painter->drawLine(rect.bottomRight(), rect.bottomLeft());
-	if( borders & BControlLook::B_RIGHT_BORDER != 0 && 
-		borders & BControlLook::B_BOTTOM_BORDER != 0 && sizer) {
+	if( (borders & BControlLook::B_RIGHT_BORDER) != 0 && 
+		(borders & BControlLook::B_BOTTOM_BORDER) != 0 && sizer) {
 		painter->setPen(bevelShadow2);
 		painter->drawLine(rect.bottomRight() + QPoint(0, -18), rect.bottomRight() + QPoint(5,-18));
 		painter->drawLine(rect.bottomRight() + QPoint(-18, 0), rect.bottomRight() + QPoint(-18, 5));
@@ -515,37 +515,6 @@ static void qt_haiku_draw_disabled_background(BView *view, BRect area, const rgb
 	}
 }
 
-static void qt_haiku_draw_gradient(QPainter *painter, const QRect &rect, const QColor &gradientStart,
-                                        const QColor &gradientStop, Direction direction = TopDown, QBrush bgBrush = QBrush())
-{
-        int x = rect.center().x();
-        int y = rect.center().y();
-        QLinearGradient *gradient;
-        switch (direction) {
-            case FromLeft:
-                gradient = new QLinearGradient(rect.left(), y, rect.right(), y);
-                break;
-            case FromRight:
-                gradient = new QLinearGradient(rect.right(), y, rect.left(), y);
-                break;
-            case BottomUp:
-                gradient = new QLinearGradient(x, rect.bottom(), x, rect.top());
-                break;
-            case TopDown:
-            default:
-                gradient = new QLinearGradient(x, rect.top(), x, rect.bottom());
-                break;
-        }
-        if (bgBrush.gradient())
-            gradient->setStops(bgBrush.gradient()->stops());
-        else {
-            gradient->setColorAt(0, gradientStart);
-            gradient->setColorAt(1, gradientStop);
-        }
-        painter->fillRect(rect, *gradient);
-        delete gradient;
-}
-
 /*!
     Constructs a QHaikuStyle object.
 */
@@ -629,8 +598,6 @@ void QHaikuStyle::drawPrimitive(PrimitiveElement elem,
     dark.setHsv(button.hue(),
                 qMin(255, (int)(button.saturation()*1.9)),
                 qMin(255, (int)(button.value()*0.7)));
-    QColor tabFrameColor = mergedColors(option->palette.background().color(),
-                                                dark.lighter(135), 60);
 
     switch (elem) {
     case PE_IndicatorViewItemCheck:
@@ -839,8 +806,6 @@ void QHaikuStyle::drawPrimitive(PrimitiveElement elem,
         painter->save();
         {
             bool active = (option->state & State_Active);
-			int titleBarHeight = proxy()->pixelMetric(PM_TitleBarHeight);
-			int frameWidth = proxy()->pixelMetric(PM_MdiSubWindowFrameWidth);
 		    qt_haiku_draw_windows_frame(painter, option->rect, active ? B_WINDOW_BORDER_COLOR : B_WINDOW_INACTIVE_BORDER_COLOR, 
 		    	BControlLook::B_LEFT_BORDER | BControlLook::B_RIGHT_BORDER | BControlLook::B_BOTTOM_BORDER);
         }
@@ -852,7 +817,7 @@ void QHaikuStyle::drawPrimitive(PrimitiveElement elem,
 			QRect r = option->rect;
 			rgb_color base = mkHaikuColor(option->palette.color( QPalette::Normal, QPalette::Button));
 			uint32 flags = 0;
-			if (!option->state & State_Enabled)
+			if (!(option->state & State_Enabled))
 				flags |= BControlLook::B_DISABLED;
 			if (option->state & State_HasFocus)
 				flags |= BControlLook::B_FOCUSED;
@@ -1111,10 +1076,8 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
     QRect rect = option->rect;
     QColor shadow = mergedColors(option->palette.background().color().darker(120),
                                  dark.lighter(130), 60);
-    QColor tabFrameColor = mergedColors(option->palette.background().color(),
-                                                dark.lighter(135), 60);
 
-    QColor highlight = option->palette.highlight().color();
+    /*QColor highlight = option->palette.highlight().color();*/
 
     switch (element) {
      case CE_ShapedFrame:
@@ -1393,13 +1356,12 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
             QRect rect = bar->rect;
             bool vertical = (bar->orientation == Qt::Vertical);
             bool inverted = bar->invertedAppearance;
-            bool indeterminate = (bar->minimum == 0 && bar->maximum == 0);
+            //bool indeterminate = (bar->minimum == 0 && bar->maximum == 0);
 
             rgb_color base = mkHaikuColor(backgroundColor(option->palette, widget));
             rgb_color highlight = ui_color(B_STATUS_BAR_COLOR);
 
             int maxWidth = vertical?rect.height():rect.width();
-            int minWidth = 2;
 
 			BRect bRect;
             qreal progress = qMax(bar->progress, bar->minimum);
@@ -1468,7 +1430,6 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
         painter->save();
         // Draws one item in a popup menu.
         if (const QStyleOptionMenuItem *menuItem = qstyleoption_cast<const QStyleOptionMenuItem *>(option)) {
-            QColor highlightOutline = highlight.darker(125);
             QColor menuBackground = option->palette.background().color().lighter(104);
             QColor borderColor = option->palette.background().color().darker(160);
             QColor alphaCornerColor;
@@ -1979,12 +1940,6 @@ void QHaikuStyle::drawComplexControl(ComplexControl control, const QStyleOptionC
     } else {
         alphaCornerColor = mergedColors(option->palette.background().color(), darkOutline);
     }
-    QColor gripShadow = grooveColor.darker(110);
-    QColor buttonShadow = option->palette.button().color().darker(110);
-
-    QColor gradientStartColor = option->palette.button().color().lighter(108);
-    QColor gradientStopColor = mergedColors(option->palette.button().color().darker(108), dark.lighter(150), 70);
-
     QPalette palette = option->palette;
 
     switch (control) {
@@ -1993,8 +1948,7 @@ void QHaikuStyle::drawComplexControl(ComplexControl control, const QStyleOptionC
     	painter->save();
         if (const QStyleOptionSpinBox *spinBox = qstyleoption_cast<const QStyleOptionSpinBox *>(option)) {
 			bool isEnabled = (spinBox->state & State_Enabled);
-			bool hover = isEnabled && (spinBox->state & State_MouseOver);
-			bool sunken = (spinBox->state & State_Sunken);
+			/*bool hover = isEnabled && (spinBox->state & State_MouseOver);*/
 			bool upIsActive = (spinBox->activeSubControls == SC_SpinBoxUp);
 			bool downIsActive = (spinBox->activeSubControls == SC_SpinBoxDown);
 
@@ -2011,7 +1965,7 @@ void QHaikuStyle::drawComplexControl(ComplexControl control, const QStyleOptionC
 			rgb_color bgColor = mkHaikuColor(option->palette.color( QPalette::Normal, QPalette::Window));
 
 			uint32 flags = 0;
-			if (!option->state & State_Enabled)
+			if (!(option->state & State_Enabled))
 				flags |= BControlLook::B_DISABLED;
 			if (option->state & State_HasFocus)
 				flags |= BControlLook::B_FOCUSED;
@@ -2195,7 +2149,6 @@ void QHaikuStyle::drawComplexControl(ComplexControl control, const QStyleOptionC
                 !(titleBar->titleBarState & Qt::WindowMaximized)) {
                 QRect maxButtonRect = proxy()->subControlRect(CC_TitleBar, titleBar, SC_TitleBarMaxButton, widget);
                 if (maxButtonRect.isValid()) {
-                    bool hover = (titleBar->activeSubControls & SC_TitleBarMaxButton) && (titleBar->state & State_MouseOver);
                     bool sunken = (titleBar->activeSubControls & SC_TitleBarMaxButton) && (titleBar->state & State_Sunken);
 
 					QRect bigBox = maxButtonRect.adjusted(4, 4, 0, 0);
@@ -2219,7 +2172,6 @@ void QHaikuStyle::drawComplexControl(ComplexControl control, const QStyleOptionC
             if ((titleBar->subControls & SC_TitleBarCloseButton) && (titleBar->titleBarFlags & Qt::WindowSystemMenuHint)) {
                 QRect closeButtonRect = proxy()->subControlRect(CC_TitleBar, titleBar, SC_TitleBarCloseButton, widget);
                 if (closeButtonRect.isValid()) {
-                    bool hover = (titleBar->activeSubControls & SC_TitleBarCloseButton) && (titleBar->state & State_MouseOver);
                     bool sunken = (titleBar->activeSubControls & SC_TitleBarCloseButton) && (titleBar->state & State_Sunken);
 					QLinearGradient gradient(closeButtonRect.left(), closeButtonRect.top(), closeButtonRect.right(), closeButtonRect.bottom());
             		gradient.setColorAt(sunken?1:0, Qt::white);
@@ -2238,7 +2190,6 @@ void QHaikuStyle::drawComplexControl(ComplexControl control, const QStyleOptionC
                (titleBar->titleBarState & Qt::WindowMaximized)))) {
                 QRect normalButtonRect = proxy()->subControlRect(CC_TitleBar, titleBar, SC_TitleBarNormalButton, widget);
                 if (normalButtonRect.isValid()) {
-                    bool hover = (titleBar->activeSubControls & SC_TitleBarNormalButton) && (titleBar->state & State_MouseOver);
                     bool sunken = (titleBar->activeSubControls & SC_TitleBarNormalButton) && (titleBar->state & State_Sunken);
 
 					QRect bigBox = normalButtonRect.adjusted(4, 4, 0, 0);
@@ -2265,7 +2216,7 @@ void QHaikuStyle::drawComplexControl(ComplexControl control, const QStyleOptionC
         painter->save();
         if (const QStyleOptionSlider *scrollBar = qstyleoption_cast<const QStyleOptionSlider *>(option)) {
             bool isEnabled = scrollBar->state & State_Enabled;
-            bool reverse = scrollBar->direction == Qt::RightToLeft;
+            /*bool reverse = scrollBar->direction == Qt::RightToLeft;*/
             bool horizontal = scrollBar->orientation == Qt::Horizontal;
             bool sunken = scrollBar->state & State_Sunken;
             
@@ -2274,24 +2225,15 @@ void QHaikuStyle::drawComplexControl(ComplexControl control, const QStyleOptionC
 
             BRect bRect(0.0f, 0.0f, option->rect.width() - 1, option->rect.height() - 1);
             BRect bounds = bRect;
-            QRect scrollBarSubLine = proxy()->subControlRect(control, scrollBar, SC_ScrollBarSubLine, widget);
-            QRect scrollBarAddLine = proxy()->subControlRect(control, scrollBar, SC_ScrollBarAddLine, widget);
             QRect scrollBarSlider = proxy()->subControlRect(control, scrollBar, SC_ScrollBarSlider, widget);
-            QRect grooveRect = proxy()->subControlRect(control, scrollBar, SC_ScrollBarGroove, widget);
             
             if (horizontal)
             	scrollBarSlider.adjust(0,1,0,-1);
             else
             	scrollBarSlider.adjust(1,0,-1,0);
             
-            BRect scrollBarSubLineBRect = BRect(scrollBarSubLine.left(), scrollBarSubLine.top(), 
-            									scrollBarSubLine.right(), scrollBarSubLine.bottom());
-            BRect scrollBarAddLineBRect = BRect(scrollBarAddLine.left(), scrollBarAddLine.top(), 
-            									scrollBarAddLine.right(), scrollBarAddLine.bottom());
             BRect scrollBarSliderBRect = BRect(scrollBarSlider.left(), scrollBarSlider.top(), 
             									scrollBarSlider.right(), scrollBarSlider.bottom());
-            BRect grooveRectBRect = BRect(grooveRect.left(), grooveRect.top(), 
-            									grooveRect.right(), grooveRect.bottom());
 
 			rgb_color normal = mkHaikuColor(option->palette.color( QPalette::Normal, QPalette::Window));
 
@@ -2456,14 +2398,11 @@ void QHaikuStyle::drawComplexControl(ComplexControl control, const QStyleOptionC
     case CC_ComboBox:
         painter->save();
         if (const QStyleOptionComboBox *comboBox = qstyleoption_cast<const QStyleOptionComboBox *>(option)) {
-            bool sunken = comboBox->state & State_On; // play dead, if combobox has no items
             bool isEnabled = (comboBox->state & State_Enabled);
-            bool focus = isEnabled && (comboBox->state & State_HasFocus);
            
 			BRect bRect(0.0f, 0.0f, comboBox->rect.width() - 1, comboBox->rect.height() - 1);
 			TemporarySurface surface(bRect);
 			rgb_color base = mkHaikuColor(option->palette.color( QPalette::Normal, QPalette::Window));
-			rgb_color color = tint_color(base, B_DARKEN_2_TINT);
 
 			uint32 flags = 0;
 
@@ -2544,7 +2483,7 @@ void QHaikuStyle::drawComplexControl(ComplexControl control, const QStyleOptionC
         if (const QStyleOptionSlider *slider = qstyleoption_cast<const QStyleOptionSlider *>(option)) {
             QRect groove = subControlRect(CC_Slider, option, SC_SliderGroove, widget);
             QRect handle = subControlRect(CC_Slider, option, SC_SliderHandle, widget);
-            QRect ticks = subControlRect(CC_Slider, option, SC_SliderTickmarks, widget);
+            /*QRect ticks = subControlRect(CC_Slider, option, SC_SliderTickmarks, widget);*/
             
             bool ticksAbove = slider->tickPosition & QSlider::TicksAbove;
             bool ticksBelow = slider->tickPosition & QSlider::TicksBelow;
@@ -2667,9 +2606,6 @@ int QHaikuStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, con
         break;
 	case PM_ScrollView_ScrollBarSpacing:
 		ret = 0;
-		break;
-	case SH_ScrollBar_Transient:
-		ret = false;
 		break;
     case PM_SliderThickness:
         ret = 14;
@@ -3118,7 +3054,7 @@ QRect QHaikuStyle::subControlRect(ComplexControl control, const QStyleOptionComp
         if (const QStyleOptionSlider *slider = qstyleoption_cast<const QStyleOptionSlider *>(option)) {
             bool ticksAbove = slider->tickPosition & QSlider::TicksAbove;
             bool ticksBelow = slider->tickPosition & QSlider::TicksBelow;
-			int tickSize = proxy()->pixelMetric(PM_SliderTickmarkOffset, option, widget);
+			/*int tickSize = proxy()->pixelMetric(PM_SliderTickmarkOffset, option, widget);*/
 
             QPoint grooveCenter = slider->rect.center();
 
@@ -3167,16 +3103,16 @@ QRect QHaikuStyle::subControlRect(ComplexControl control, const QStyleOptionComp
         }
         break;
 #endif // QT_NO_SLIDER
-    case CC_ScrollBar:
+	/*case CC_ScrollBar:
     	if (const QStyleOptionSlider *slider = qstyleoption_cast<const QStyleOptionSlider *>(option)) {
     		int extent = proxy()->pixelMetric(PM_ScrollBarExtent, option, widget);
-    		/*if (slider->orientation == Qt::Horizontal) {
+    		if (slider->orientation == Qt::Horizontal) {
     			rect.setHeight(extent);
     		} else {
     			rect.setWidth(extent);
-    		}*/
+    		}
     	}
-        break;
+        break;*/
 #ifndef QT_NO_SPINBOX
     case CC_SpinBox:
         if (const QStyleOptionSpinBox *spinbox = qstyleoption_cast<const QStyleOptionSpinBox *>(option)) {
@@ -3455,8 +3391,8 @@ int QHaikuStyle::styleHint(StyleHint hint, const QStyleOption *option, const QWi
     case SH_Table_GridLineColor:
         if (option) {
             ret = option->palette.background().color().darker(120).rgb();
-            break;
         }
+        break;
     case SH_ComboBox_Popup:
         if (const QStyleOptionComboBox *cmb = qstyleoption_cast<const QStyleOptionComboBox *>(option))
             ret = !cmb->editable;
@@ -3496,6 +3432,9 @@ int QHaikuStyle::styleHint(StyleHint hint, const QStyleOption *option, const QWi
     case SH_Menu_SubMenuPopupDelay:
         ret = 225; // default from GtkMenu
         break;
+	case SH_ScrollBar_Transient:
+		ret = false;
+		break;
 	case SH_ScrollView_FrameOnlyAroundContents:
 		ret = 1;
 		break;
@@ -3565,14 +3504,13 @@ QRect QHaikuStyle::subElementRect(SubElement sr, const QStyleOption *opt, const 
     case SE_TabBarTabText:
     	if (const QStyleOptionTab *tab = qstyleoption_cast<const QStyleOptionTab *>(opt)) {
    			bool selected = tab->state & State_Selected;
-    		if( tab->shape == QTabBar::TriangularSouth || tab->shape == QTabBar::RoundedSouth)
+    		if( tab->shape == QTabBar::TriangularSouth || tab->shape == QTabBar::RoundedSouth) {
     			r.adjust(0, 0, 0, -5);
-    		else
+    		} else {
     			r.adjust(0, 5, 0, 0);
-   			if (selected) {
-   				if( tab->shape == QTabBar::TriangularNorth || tab->shape == QTabBar::RoundedNorth)
-	   				r.adjust(-1, -1, -1, -1);
-   			}
+    		}
+			if( selected && (tab->shape == QTabBar::TriangularNorth || tab->shape == QTabBar::RoundedNorth))
+   				r.adjust(-1, -1, -1, -1);
     	}
     	break;    	
     default:
