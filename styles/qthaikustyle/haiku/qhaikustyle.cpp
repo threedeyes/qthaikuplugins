@@ -1141,6 +1141,7 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
 				surface.view()->SetHighColor(base);
 				surface.view()->SetLowColor(base);
 				surface.view()->FillRect(bRect);
+				bRect.InsetBy(-1, -1);
 				be_control_look->DrawSplitter(surface.view(), bRect, bRect, base, orient, flags);
 				painter->drawImage(r, surface.image());			    
 			}
