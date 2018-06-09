@@ -834,7 +834,7 @@ void QHaikuStyle::drawPrimitive(PrimitiveElement elem,
         if (const QStyleOptionButton *checkbox = qstyleoption_cast<const QStyleOptionButton*>(option)) {
 			BRect bRect(0.0f, 0.0f, rect.width() - 1, rect.height() - 1);
 			TemporarySurface surface(bRect);
-			rgb_color base = mkHaikuColor(backgroundColor(option->palette, widget));
+			rgb_color base = mkHaikuColor(option->palette.color( QPalette::Normal, QPalette::Button));
 			surface.view()->SetHighColor(base);
 			surface.view()->SetLowColor(base);
 			surface.view()->FillRect(bRect);
