@@ -1148,24 +1148,6 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
         }
         painter->restore();
         break;
-#ifndef QT_NO_SIZEGRIP
-    case CE_SizeGrip:
-/*		{
-			if (widget->window()->isTopLevel() && widget->isVisible()) {
-				QtHaikuWindow *wnd = static_cast<QtHaikuWindow *>((void*)widget->window()->winId());
-				if (wnd!=NULL) {
-					if (wnd->fQWindow->window()->windowState() == Qt::WindowMaximized) {
-						wnd->PostMessage(kSizeGripDisable);
-						qDebug() << "send kSizeGripDisable";
-					} else {
-						wnd->PostMessage(kSizeGripEnable);
-						qDebug() << "send kSizeGripEnable";
-					}
-				}
-			}
-		}*/
-        break;
-#endif // QT_NO_SIZEGRIP
 #ifndef QT_NO_TOOLBAR
     case CE_ToolBar:
         // Reserve the beveled appearance only for mainwindow toolbars
