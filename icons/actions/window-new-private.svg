@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<svg version="1.1" width="64" height="64" color-interpolation="linearRGB"
+     xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg">
+ <g>
+  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:4.5459; stroke-linecap:round; stroke-linejoin:round"
+        d="M9.95 20.57V12.21H24.66V20.57H9.95z
+           M56.52 51.91H9.95V20.57H56.52V51.91z"
+  />
+  <path style="fill:none; stroke:#545454; stroke-width:4.6411; stroke-linecap:round; stroke-linejoin:round"
+        d="M55 50.71H7.49V18.66H55V50.71z"
+  />
+  <path style="fill:none; stroke:#bf5000; stroke-width:4.6411; stroke-linecap:round; stroke-linejoin:round"
+        d="M7.49 18.66V10.12H22.5V18.66H7.49z"
+  />
+  <path style="fill:#ffd400"
+        d="M7.49 18.66V10.12H22.5V18.66H7.49z"
+  />
+  <linearGradient id="gradient0" gradientUnits="userSpaceOnUse" x1="7.49" y1="19.73" x2="55" y2="19.73">
+   <stop offset="0.7947" stop-color="#ffffff"/>
+   <stop offset="1" stop-color="#e6e1dc"/>
+  </linearGradient>
+  <path style="fill:url(#gradient0)"
+        d="M55 50.71H7.49V18.66H55V50.71z"
+  />
+  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:5.5908; stroke-linecap:round; stroke-linejoin:round"
+        d="M13.85 31.47H52.02V55.34H13.85V31.47z"
+        transform="matrix(0.781,0,0,0.7332,21.0018,21.511)"
+  />
+  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:11.1817"
+        d="M44.24 27.17V23.18C44.24 18.05 39.63 13.9 33.97 13.9C28.27 13.9 23.68 18.05 23.68 23.18V27.17"
+        transform="matrix(0.781,0,0,0.7332,21.0018,21.511)"
+  />
+  <path style="fill:none; stroke:#545454; stroke-width:11.1817; stroke-linecap:square"
+        d="M41.3 24.52V20.54C41.3 15.41 36.69 11.25 31.03 11.25C25.33 11.25 20.75 15.41 20.75 20.54V24.52"
+        transform="matrix(0.781,0,0,0.7332,21.0018,21.511)"
+  />
+  <path style="fill:none; stroke:#bf5000; stroke-width:5.5908; stroke-linecap:round; stroke-linejoin:round"
+        d="M11.94 29.81H50.12V53.7H11.94V29.81z"
+        transform="matrix(0.781,0,0,0.7332,21.0018,21.511)"
+  />
+  <linearGradient id="gradient1" gradientUnits="userSpaceOnUse" x1="188.13" y1="27.17" x2="188.13" y2="53.7">
+   <stop offset="0" stop-color="#ffff80"/>
+   <stop offset="1" stop-color="#ffd400"/>
+  </linearGradient>
+  <path style="fill:url(#gradient1)"
+        d="M11.94 29.81H50.12V53.7H11.94V29.81z"
+        transform="matrix(0.781,0,0,0.7332,21.0018,21.511)"
+  />
+  <radialGradient id="gradient2" gradientUnits="userSpaceOnUse" cx="0" cy="0" r="64" gradientTransform="matrix(0,0.3727,-0.2979,0,28.103,25.8545)">
+   <stop offset="0.2865" stop-color="#acacac"/>
+   <stop offset="0.583" stop-color="#ffffff"/>
+   <stop offset="0.9185" stop-color="#acacac"/>
+  </radialGradient>
+  <path style="fill:none; stroke:url(#gradient2); stroke-width:5.5908; stroke-linecap:square"
+        d="M41.3 24.52V20.54C41.3 15.41 36.69 11.25 31.03 11.25C25.33 11.25 20.75 15.41 20.75 20.54V24.52"
+        transform="matrix(0.781,0,0,0.7332,21.0018,21.511)"
+  />
+ </g>
+</svg>
