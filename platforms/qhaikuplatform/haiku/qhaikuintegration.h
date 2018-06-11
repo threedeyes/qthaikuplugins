@@ -58,6 +58,7 @@ QT_BEGIN_NAMESPACE
 
 class QSimpleDrag;
 class QHaikuBackendData;
+class QHaikuSystemLocale;
 
 #if !defined(QT_NO_OPENGL)
 class QHaikuGLContext : public QPlatformOpenGLContext
@@ -113,6 +114,7 @@ private:
     mutable QHaikuClipboard* m_clipboard;
     QSimpleDrag *m_drag;
     QPlatformServices *m_services;
+    QHaikuSystemLocale *m_haikuSystemLocale;
 };
 
 QT_END_NAMESPACE

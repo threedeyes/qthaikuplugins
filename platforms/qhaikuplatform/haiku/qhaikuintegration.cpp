@@ -58,6 +58,7 @@
 #include "qhaikuclipboard.h"
 #include "qhaikuservices.h"
 #include "qhaikuplatformfontdatabase.h"
+#include "qhaikusystemlocale.h"
 
 #if !defined(QT_NO_OPENGL)
 #include <GLView.h>
@@ -100,6 +101,7 @@ QHaikuIntegration::QHaikuIntegration(const QStringList &parameters, int &argc, c
 	, m_clipboard(0)
     , m_drag(new QSimpleDrag())
     , m_services(new QHaikuServices)
+    , m_haikuSystemLocale(new QHaikuSystemLocale)
 {
     m_fontDatabase.reset(new QHaikuPlatformFontDatabase());
     screenAdded(new QHaikuScreen);
@@ -109,6 +111,7 @@ QHaikuIntegration::~QHaikuIntegration()
 {
     delete m_drag;
 	delete m_clipboard;
+	delete m_haikuSystemLocale;
 }
 
 bool QHaikuIntegration::hasCapability(QPlatformIntegration::Capability cap) const
