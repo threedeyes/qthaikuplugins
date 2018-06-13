@@ -1937,7 +1937,7 @@ void QHaikuStyle::drawComplexControl(ComplexControl control, const QStyleOptionC
 
 			QRect rect = option->rect.adjusted(0, 0, 0, 0);
 			BRect bRect(0.0f, 0.0f, rect.width() - 1, rect.height() - 1);
-            QRect editRect = proxy()->subControlRect(CC_SpinBox, spinBox, SC_SpinBoxEditField, widget);
+            QRect editRect = proxy()->subControlRect(CC_SpinBox, spinBox, SC_SpinBoxEditField, widget).adjusted(-2,-2,2,2);
             QRect upRect = proxy()->subControlRect(CC_SpinBox, spinBox, SC_SpinBoxUp, widget);
             QRect downRect = proxy()->subControlRect(CC_SpinBox, spinBox, SC_SpinBoxDown, widget);
 		    BRect bEditRect(editRect.left(), editRect.top(), editRect.right(), editRect.bottom());
@@ -1954,7 +1954,6 @@ void QHaikuStyle::drawComplexControl(ComplexControl control, const QStyleOptionC
 				flags |= BControlLook::B_FOCUSED;
 
 			TemporarySurface surface(bRect);
-			bEditRect.InsetBy(-2, -2);
 			surface.view()->SetViewColor(bgColor);
 			surface.view()->SetLowColor(bgColor);
 			surface.view()->SetHighColor(bgColor);
@@ -2609,7 +2608,7 @@ int QHaikuStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, con
 		ret = 5;
 		break;
     case PM_SpinBoxFrameWidth:
-        ret = 6;
+        ret = 2;
         break;
     case PM_MenuBarItemSpacing:
         ret = 0;
@@ -2731,6 +2730,7 @@ QSize QHaikuStyle::sizeFromContents(ContentsType type, const QStyleOption *optio
     	}
     	break;
     case CT_SpinBox:
+		newSize += QSize(0, 3);
         break;
     case CT_ComboBox:
         newSize = sizeFromContents(CT_PushButton, option, size, widget);
@@ -3103,25 +3103,25 @@ QRect QHaikuStyle::subControlRect(ComplexControl control, const QStyleOptionComp
             if(option->rect.height()-(frameWidth*2) < 16)
 				frameWidth = -(16 - option->rect.height()) / 2;
             int space = 3;
-			QRect frame = spinbox->rect.adjusted(1, frameWidth, -1, -frameWidth);
+			QRect frame = spinbox->rect.adjusted(0, frameWidth, 0, -frameWidth);
 			QSize buttonSize = QSize(frame.height() * 0.7, frame.height() + 4);
 
             switch (subControl) {
             case SC_SpinBoxUp:
                 if (spinbox->buttonSymbols == QAbstractSpinBox::NoButtons)
                     return QRect();
-                rect = QRect(spinbox->rect.right() - buttonSize.width(), frame.top() - 2, buttonSize.width(), buttonSize.height());
+                rect = QRect(spinbox->rect.right() - buttonSize.width(), frame.top() - 3, buttonSize.width() + 2, buttonSize.height() + 2);
                 break;
             case SC_SpinBoxDown:
                 if (spinbox->buttonSymbols == QAbstractSpinBox::NoButtons)
                     return QRect();
-                rect = QRect(spinbox->rect.right() - buttonSize.width() * 2, frame.top() - 2, buttonSize.width(), buttonSize.height());
+                rect = QRect((spinbox->rect.right() - buttonSize.width() * 2) - 1, frame.top() - 3, buttonSize.width() + 1, buttonSize.height() + 2);
                 break;
             case SC_SpinBoxEditField:
                 if (spinbox->buttonSymbols == QAbstractSpinBox::NoButtons) {
-                    rect = frame;
+                    rect = frame.adjusted(1,1,-1,-1);
                 } else {
-                    rect = QRect(frame.left(), frame.top(), spinbox->rect.width() - buttonSize.width() * 2 - space, frame.height());
+                    rect = QRect(frame.left()+1, frame.top()-1, (spinbox->rect.width() - buttonSize.width() * 2 - space) - 1, frame.bottom() + 1);
                 }
                 break;
             case SC_SpinBoxFrame:
