@@ -2032,11 +2032,11 @@ void QHaikuStyle::drawComplexControl(ComplexControl control, const QStyleOptionC
 				BPoint(bUpRect.right, bUpRect.top + halfHeight));
 
 			float halfWidth = floorf(bUpRect.Width() / 2);
-			surface.view()->StrokeLine(BPoint(bUpRect.left + halfWidth, bUpRect.top),
-				BPoint(bUpRect.left + halfWidth, bUpRect.bottom));
+			surface.view()->StrokeLine(BPoint(bUpRect.left + halfWidth, bUpRect.top + 2),
+				BPoint(bUpRect.left + halfWidth, bUpRect.bottom - 2));
 
-			surface.view()->StrokeLine(BPoint(bDownRect.left, bDownRect.top + halfHeight),
-				BPoint(bDownRect.right, bDownRect.top + halfHeight));
+			surface.view()->StrokeLine(BPoint(bDownRect.left, bUpRect.top + halfHeight),
+				BPoint(bDownRect.right, bUpRect.top + halfHeight));
 
 			painter->drawImage(rect, surface.image());
 	    }
@@ -2730,7 +2730,7 @@ QSize QHaikuStyle::sizeFromContents(ContentsType type, const QStyleOption *optio
     	}
     	break;
     case CT_SpinBox:
-		newSize += QSize(0, 3);
+//		newSize += QSize(0, 4);
         break;
     case CT_ComboBox:
         newSize = sizeFromContents(CT_PushButton, option, size, widget);
@@ -3104,7 +3104,7 @@ QRect QHaikuStyle::subControlRect(ComplexControl control, const QStyleOptionComp
 				frameWidth = -(16 - option->rect.height()) / 2;
             int space = 3;
 			QRect frame = spinbox->rect.adjusted(0, frameWidth, 0, -frameWidth);
-			QSize buttonSize = QSize(frame.height() * 0.7, frame.height() + 4);
+			QSize buttonSize = QSize(frame.height() * 0.58, frame.height() + 4);
 
             switch (subControl) {
             case SC_SpinBoxUp:
