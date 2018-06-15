@@ -812,22 +812,36 @@ void QHaikuStyle::drawPrimitive(PrimitiveElement elem,
         painter->restore();
         break;
     case PE_FrameLineEdit:
-        painter->save();
-        {
-			QRect r = option->rect;
-			rgb_color base = mkHaikuColor(option->palette.color( QPalette::Normal, QPalette::Button));
-			uint32 flags = 0;
-			if (!(option->state & State_Enabled))
-				flags |= BControlLook::B_DISABLED;
-			if (option->state & State_HasFocus)
-				flags |= BControlLook::B_FOCUSED;
-		    BRect bRect(0.0f, 0.0f, r.width() - 1, r.height() - 1);
-			TemporarySurface surface(bRect);
-			bRect.InsetBy(-1, -1);
-			be_control_look->DrawTextControlBorder(surface.view(), bRect, bRect, base, flags);
-			painter->drawImage(r, surface.image());
-        }
-        painter->restore();
+    case PE_PanelLineEdit:
+		if (const QStyleOptionFrame *lineEdit = qstyleoption_cast<const QStyleOptionFrame *>(option)) {
+	        painter->save();
+	        {
+				QRect r = option->rect;
+			    BRect bRect(0.0f, 0.0f, r.width() - 1, r.height() - 1);
+				TemporarySurface surface(bRect);
+
+				rgb_color base = ui_color(B_DOCUMENT_BACKGROUND_COLOR);
+				surface.view()->SetViewColor(base);
+				surface.view()->SetHighColor(base);
+				surface.view()->SetLowColor(base);
+				surface.view()->FillRect(bRect);
+
+				uint32 flags = 0;
+				if (!(option->state & State_Enabled))
+					flags |= BControlLook::B_DISABLED;
+				if (option->state & State_HasFocus)
+					flags |= BControlLook::B_FOCUSED;
+
+				bRect.InsetBy(-1, -1);
+				if (widget) {
+					if (qobject_cast<const QAbstractSpinBox *>(widget->parentWidget()))
+						bRect.InsetBy(-1, -1);
+				}
+				be_control_look->DrawTextControlBorder(surface.view(), bRect, bRect, base, flags);
+				painter->drawImage(r, surface.image());
+	        }
+	        painter->restore();
+		}
         break;
     case PE_IndicatorCheckBox:
         painter->save();
