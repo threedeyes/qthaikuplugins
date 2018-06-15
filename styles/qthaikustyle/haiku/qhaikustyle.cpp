@@ -816,7 +816,7 @@ void QHaikuStyle::drawPrimitive(PrimitiveElement elem,
 		if (const QStyleOptionFrame *lineEdit = qstyleoption_cast<const QStyleOptionFrame *>(option)) {
 	        painter->save();
 	        {
-				QRect r = option->rect;
+				QRect r = lineEdit->rect;
 			    BRect bRect(0.0f, 0.0f, r.width() - 1, r.height() - 1);
 				TemporarySurface surface(bRect);
 
@@ -827,9 +827,9 @@ void QHaikuStyle::drawPrimitive(PrimitiveElement elem,
 				surface.view()->FillRect(bRect);
 
 				uint32 flags = 0;
-				if (!(option->state & State_Enabled))
+				if (!(lineEdit->state & State_Enabled))
 					flags |= BControlLook::B_DISABLED;
-				if (option->state & State_HasFocus)
+				if (lineEdit->state & State_HasFocus)
 					flags |= BControlLook::B_FOCUSED;
 
 				bRect.InsetBy(-1, -1);
@@ -903,11 +903,9 @@ void QHaikuStyle::drawPrimitive(PrimitiveElement elem,
         painter->restore();
         break;  */
     case PE_IndicatorRadioButton:
+		painter->save();
         if (const QStyleOptionButton *button = qstyleoption_cast<const QStyleOptionButton *>(option)) {
-            BEGIN_STYLE_PIXMAPCACHE(QLatin1String("radiobutton"))
-
-            p->save();
-            p->setRenderHint(QPainter::Antialiasing);
+            painter->setRenderHint(QPainter::HighQualityAntialiasing);
 
             bool on = button->state & State_On;
             bool sunken = button->state & State_Sunken;
@@ -945,13 +943,14 @@ void QHaikuStyle::drawPrimitive(PrimitiveElement elem,
             borderGradient.setColorAt(0, borderColor);
             borderGradient.setColorAt(1, mkQColor(tint_color(mkHaikuColor(borderColor), 0.8)));
 
-			p->setPen(Qt::NoPen);
-            p->setBrush(bevelGradient);
-            p->drawEllipse(rect);
+			painter->setPen(Qt::NoPen);
+			//TODO: invalid blending bevel in LibreOffice
+			//painter->setBrush(bevelGradient);
+			//painter->drawEllipse(rect);
             rect = rect.adjusted(1, 1, -1, -1);
 
-            p->setBrush(borderGradient);
-            p->drawEllipse(rect);
+            painter->setBrush(borderGradient);
+            painter->drawEllipse(rect);
             rect = rect.adjusted(1, 1, -1, -1);
 
             float topTint;
@@ -968,8 +967,8 @@ void QHaikuStyle::drawPrimitive(PrimitiveElement elem,
             bgGradient.setColorAt(0, mkQColor(tint_color(mkHaikuColor(base), topTint)));
             bgGradient.setColorAt(1, mkQColor(tint_color(mkHaikuColor(base), bottomTint)));
 
-            p->setBrush(bgGradient);
-            p->drawEllipse(rect);
+            painter->setBrush(bgGradient);
+            painter->drawEllipse(rect);
             rect = rect.adjusted(3, 3, -3, -3);
 
             rgb_color color = ui_color(B_CONTROL_MARK_COLOR);
@@ -990,14 +989,12 @@ void QHaikuStyle::drawPrimitive(PrimitiveElement elem,
 			color.blue = uint8(color.blue * mix + hbase.blue * (1.0 - mix));
 
             if (on || (enabled && sunken)) {
-                p->setPen(Qt::NoPen);
-                p->setBrush(mkQColor(color));
-                p->drawEllipse(rect);
-            }
-
-            p->restore();
-            END_STYLE_PIXMAPCACHE
+                painter->setPen(Qt::NoPen);
+                painter->setBrush(mkQColor(color));
+                painter->drawEllipse(rect);
+            }           
         }
+		painter->restore();
         break;
     case PE_IndicatorToolBarHandle:
         painter->save();
