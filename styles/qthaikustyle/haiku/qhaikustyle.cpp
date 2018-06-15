@@ -857,8 +857,8 @@ void QHaikuStyle::drawPrimitive(PrimitiveElement elem,
 			painter->drawImage(rect, surface.image());
         }
         painter->restore();
-        break;  
-    case PE_IndicatorRadioButton:
+        break;
+/*    case PE_IndicatorRadioButton:
         painter->save();
         if (const QStyleOptionButton *radiobutton = qstyleoption_cast<const QStyleOptionButton*>(option)) {
             rect = rect.adjusted(1, -1, 3, 1);
@@ -867,7 +867,8 @@ void QHaikuStyle::drawPrimitive(PrimitiveElement elem,
 			rgb_color base = mkHaikuColor(backgroundColor(option->palette, widget));
 			surface.view()->SetHighColor(base);
 			surface.view()->SetLowColor(base);
-			surface.view()->FillRect(bRect);
+			surface.view()->SetViewColor(base);
+			//surface.view()->FillRect(bRect);
 
 			uint32 flags = 0;
 
@@ -886,7 +887,104 @@ void QHaikuStyle::drawPrimitive(PrimitiveElement elem,
 			painter->drawImage(rect, surface.image());
         }
         painter->restore();
-        break;  
+        break;  */
+    case PE_IndicatorRadioButton:
+        if (const QStyleOptionButton *button = qstyleoption_cast<const QStyleOptionButton *>(option)) {
+            BEGIN_STYLE_PIXMAPCACHE(QLatin1String("radiobutton"))
+
+            p->save();
+            p->setRenderHint(QPainter::Antialiasing);
+
+            bool on = button->state & State_On;
+            bool sunken = button->state & State_Sunken;
+            bool enabled = button->state & State_Enabled;
+            bool focused = button->state & State_HasFocus;
+
+			QColor base = backgroundColor(option->palette, widget);
+			QColor borderColor;
+			QColor bevelLight;
+			QColor bevelShadow;
+			QColor navigationColor = mkQColor(ui_color(B_KEYBOARD_NAVIGATION_COLOR));
+
+			if (!enabled) {
+				borderColor = mkQColor(tint_color(mkHaikuColor(base), 1.15));
+				bevelLight = base;
+				bevelShadow = base;
+			} else if (sunken) {
+				borderColor = mkQColor(tint_color(mkHaikuColor(base), 1.50));
+				bevelLight = borderColor;
+				bevelShadow = borderColor;
+			} else {
+				borderColor = mkQColor(tint_color(mkHaikuColor(base), 1.45));
+				bevelLight = mkQColor(tint_color(mkHaikuColor(base), 0.55));
+				bevelShadow = mkQColor(tint_color(mkHaikuColor(base), 1.11));
+			}
+
+			if (focused)
+				borderColor = navigationColor;
+
+			QLinearGradient bevelGradient(option->rect.topLeft(), option->rect.bottomRight());
+            bevelGradient.setColorAt(0, bevelShadow);
+            bevelGradient.setColorAt(1, bevelLight);
+
+            QLinearGradient borderGradient(option->rect.topLeft(), option->rect.bottomRight());
+            borderGradient.setColorAt(0, borderColor);
+            borderGradient.setColorAt(1, mkQColor(tint_color(mkHaikuColor(borderColor), 0.8)));
+
+			p->setPen(Qt::NoPen);
+            p->setBrush(bevelGradient);
+            p->drawEllipse(rect);
+            rect = rect.adjusted(1, 1, -1, -1);
+
+            p->setBrush(borderGradient);
+            p->drawEllipse(rect);
+            rect = rect.adjusted(1, 1, -1, -1);
+
+            float topTint;
+			float bottomTint;
+			if (!enabled) {
+				topTint = 0.4;
+				bottomTint = 0.2;
+			} else {
+				topTint = 0.15;
+				bottomTint = 0.0;
+			}
+
+            QLinearGradient bgGradient(option->rect.topLeft(), option->rect.bottomRight());
+            bgGradient.setColorAt(0, mkQColor(tint_color(mkHaikuColor(base), topTint)));
+            bgGradient.setColorAt(1, mkQColor(tint_color(mkHaikuColor(base), bottomTint)));
+
+            p->setBrush(bgGradient);
+            p->drawEllipse(rect);
+            rect = rect.adjusted(3, 3, -3, -3);
+
+            rgb_color color = ui_color(B_CONTROL_MARK_COLOR);
+			float mix = 1.0;
+			if (!enabled) {
+				mix = 0.4;
+			} else if (sunken) {
+				if (on) {
+					mix = 0.7;
+				} else {
+					mix = 0.3;
+				}
+			}
+
+			rgb_color hbase = mkHaikuColor(base);
+			color.red = uint8(color.red * mix + hbase.red * (1.0 - mix));
+			color.green = uint8(color.green * mix + hbase.green * (1.0 - mix));
+			color.blue = uint8(color.blue * mix + hbase.blue * (1.0 - mix));
+
+            if (on || (enabled && sunken)) {
+                p->setPen(Qt::NoPen);
+                p->setBrush(mkQColor(color));
+                p->drawEllipse(rect);
+            }
+
+            p->restore();
+            END_STYLE_PIXMAPCACHE
+        }
+        break;
     case PE_IndicatorToolBarHandle:
         painter->save();
 		{
@@ -1033,7 +1131,7 @@ void QHaikuStyle::drawPrimitive(PrimitiveElement elem,
 		        painter->drawLine(frame.topLeft(), frame.topRight());
 		        painter->setPen(bevelShadow);
 		        painter->drawLine(frame.topRight(), frame.bottomRight());
-		        painter->drawLine(frame.bottomLeft(), frame.bottomRight());            	
+		        painter->drawLine(frame.bottomLeft(), frame.bottomRight());
             }
     painter->restore();
     break ;
@@ -1123,7 +1221,7 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
      case CE_CheckBox:
         if (const QStyleOptionButton *btn = qstyleoption_cast<const QStyleOptionButton *>(option)) {
             QStyleOptionButton copy = *btn;
-            copy.rect.adjust(1, -1, 3, 2);
+            //copy.rect.adjust(1, -1, 3, 2);
             QProxyStyle::drawControl(element, &copy, painter, widget);
         }
         break;
@@ -2662,6 +2760,10 @@ int QHaikuStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, con
     	return 15;
     case PM_IndicatorHeight:
     	return 15;
+    case PM_ExclusiveIndicatorWidth:
+		return 17;
+    case PM_ExclusiveIndicatorHeight:
+		return 17;
 //    case PM_TabBarTabOverlap:
 //        return 50;
 //    case PM_TabBarBaseOverlap:
@@ -3104,7 +3206,7 @@ QRect QHaikuStyle::subControlRect(ComplexControl control, const QStyleOptionComp
 				frameWidth = -(16 - option->rect.height()) / 2;
             int space = 3;
 			QRect frame = spinbox->rect.adjusted(0, frameWidth, 0, -frameWidth);
-			QSize buttonSize = QSize(frame.height() * 0.58, frame.height() + 4);
+			QSize buttonSize = QSize(frame.height() * 0.55, frame.height() + 4);
 
             switch (subControl) {
             case SC_SpinBoxUp:
