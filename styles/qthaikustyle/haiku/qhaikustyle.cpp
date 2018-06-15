@@ -834,9 +834,10 @@ void QHaikuStyle::drawPrimitive(PrimitiveElement elem,
 
 				bRect.InsetBy(-1, -1);
 				if (widget) {
-					if (qobject_cast<const QAbstractSpinBox *>(widget->parentWidget()))
+					if (qobject_cast<const QComboBox *>(widget->parentWidget()))
 						bRect.InsetBy(-1, -1);
 				}
+
 				be_control_look->DrawTextControlBorder(surface.view(), bRect, bRect, base, flags);
 				painter->drawImage(r, surface.image());
 	        }
@@ -2046,7 +2047,7 @@ void QHaikuStyle::drawComplexControl(ComplexControl control, const QStyleOptionC
 
 			QRect rect = option->rect.adjusted(0, 0, 0, 0);
 			BRect bRect(0.0f, 0.0f, rect.width() - 1, rect.height() - 1);
-            QRect editRect = proxy()->subControlRect(CC_SpinBox, spinBox, SC_SpinBoxEditField, widget).adjusted(-2,-2,2,2);
+            QRect editRect = proxy()->subControlRect(CC_SpinBox, spinBox, SC_SpinBoxEditField, widget).adjusted(-4,-4,4,4);
             QRect upRect = proxy()->subControlRect(CC_SpinBox, spinBox, SC_SpinBoxUp, widget);
             QRect downRect = proxy()->subControlRect(CC_SpinBox, spinBox, SC_SpinBoxDown, widget);
 		    BRect bEditRect(editRect.left(), editRect.top(), editRect.right(), editRect.bottom());
@@ -2068,8 +2069,10 @@ void QHaikuStyle::drawComplexControl(ComplexControl control, const QStyleOptionC
 			surface.view()->SetHighColor(bgColor);
 			surface.view()->FillRect(bRect);
 
-			if (spinBox->frame)
-				be_control_look->DrawTextControlBorder(surface.view(), bEditRect, bEditRect, base, flags);
+			if (spinBox->frame) {
+				//bEditRect.InsetBy(1,1);
+				//be_control_look->DrawTextControlBorder(surface.view(), bEditRect, bEditRect, base, flags);
+			}
 
 			float frameTint = B_DARKEN_1_TINT;
 			float fgTintUp, bgTintUp;
@@ -2717,7 +2720,7 @@ int QHaikuStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, con
 		ret = 5;
 		break;
     case PM_SpinBoxFrameWidth:
-        ret = 2;
+        ret = 6;
         break;
     case PM_MenuBarItemSpacing:
         ret = 0;
@@ -2843,7 +2846,7 @@ QSize QHaikuStyle::sizeFromContents(ContentsType type, const QStyleOption *optio
     	}
     	break;
     case CT_SpinBox:
-//		newSize += QSize(0, 4);
+		newSize -= QSize(0, 4);
         break;
     case CT_ComboBox:
         newSize = sizeFromContents(CT_PushButton, option, size, widget);
@@ -3217,7 +3220,7 @@ QRect QHaikuStyle::subControlRect(ComplexControl control, const QStyleOptionComp
 				frameWidth = -(16 - option->rect.height()) / 2;
             int space = 3;
 			QRect frame = spinbox->rect.adjusted(0, frameWidth, 0, -frameWidth);
-			QSize buttonSize = QSize(frame.height() * 0.55, frame.height() + 4);
+			QSize buttonSize = QSize(frame.height() * 0.6, frame.height() + 4);
 
             switch (subControl) {
             case SC_SpinBoxUp:
@@ -3234,7 +3237,7 @@ QRect QHaikuStyle::subControlRect(ComplexControl control, const QStyleOptionComp
                 if (spinbox->buttonSymbols == QAbstractSpinBox::NoButtons) {
                     rect = frame.adjusted(1,1,-1,-1);
                 } else {
-                    rect = QRect(frame.left()+1, frame.top()-1, (spinbox->rect.width() - buttonSize.width() * 2 - space) - 1, frame.bottom() + 1);
+                    rect = QRect(frame.left(), frame.top() - 2, (spinbox->rect.width() - buttonSize.width() * 2 - space) - 1, frame.bottom() - 1);
                 }
                 break;
             case SC_SpinBoxFrame:
