@@ -2068,6 +2068,11 @@ void QHaikuStyle::drawComplexControl(ComplexControl control, const QStyleOptionC
 				flags |= BControlLook::B_FOCUSED;
 
 			TemporarySurface surface(bRect);
+			
+			surface.view()->SetViewColor(base);
+			surface.view()->SetLowColor(bgColor);
+			surface.view()->SetHighColor(bgColor);
+			surface.view()->FillRect(bRect);
 
 			if (spinBox->frame) {
 				rgb_color baseEdit = ui_color(B_DOCUMENT_BACKGROUND_COLOR);
@@ -2077,11 +2082,6 @@ void QHaikuStyle::drawComplexControl(ComplexControl control, const QStyleOptionC
 				surface.view()->FillRect(bEditRect);
 				be_control_look->DrawTextControlBorder(surface.view(), bEditRect, bEditRect, bgColor, flags);
 			}
-
-			surface.view()->SetViewColor(base);
-			surface.view()->SetLowColor(bgColor);
-			surface.view()->SetHighColor(bgColor);
-			surface.view()->FillRect(bRect);
 
 			float frameTint = B_DARKEN_1_TINT;
 			float fgTintUp, bgTintUp;
