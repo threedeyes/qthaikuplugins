@@ -56,6 +56,9 @@
 #include <Path.h>
 #include <Entry.h>
 #include <String.h>
+#include <Locale.h>
+#include <LocaleRoster.h>
+#include <Roster.h>
 
 #include <stdio.h>
 
@@ -89,9 +92,15 @@ HQApplication::~HQApplication()
 {
 }
 
-void HQApplication::MessageReceived(BMessage* msg)
+void HQApplication::MessageReceived(BMessage* message)
 {
-	BApplication::MessageReceived(msg);
+	switch (message->what) {
+		case B_LOCALE_CHANGED:
+		break;
+	default:
+		BApplication::MessageReceived(message);
+		break;
+	}
 }
 
 void 
@@ -149,7 +158,8 @@ int32 AppThread(void *data)
 {
 	HQApplication *app = static_cast<HQApplication*>(data);
 	app->LockLooper();
-	app->Run();	
+	app->Run();
+	return B_OK;
 }
 
 

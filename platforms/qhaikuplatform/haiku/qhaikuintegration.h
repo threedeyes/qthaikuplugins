@@ -49,6 +49,7 @@
 #define QT_NO_OPENGL
 
 #include "qhaikuclipboard.h"
+#include "qhaikucommon.h"
 
 #if !defined(QT_NO_OPENGL)
 #include <GLView.h>
@@ -110,11 +111,11 @@ public:
 
 private:
     QScopedPointer<QPlatformFontDatabase> m_fontDatabase;
-    
-    mutable QHaikuClipboard* m_clipboard;
+
     QSimpleDrag *m_drag;
     QPlatformServices *m_services;
     QHaikuSystemLocale *m_haikuSystemLocale;
+    QHaikuScreen *m_screen;
 };
 
 QT_END_NAMESPACE

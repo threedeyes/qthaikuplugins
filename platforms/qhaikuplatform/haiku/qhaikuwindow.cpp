@@ -274,6 +274,11 @@ QHaikuWindow::QHaikuWindow(QWindow *wnd)
     setGeometry(wnd->geometry());
 
     QWindowSystemInterface::flushWindowSystemEvents();
+
+	static WId counter = 0;
+    m_winId = ++counter;
+
+    m_windowForWinIdHash[m_winId] = this;
 }
 
 
@@ -281,6 +286,7 @@ QHaikuWindow::~QHaikuWindow()
 {
 	m_window->Lock();
 	m_window->Quit();
+	m_windowForWinIdHash.remove(m_winId);
 }
 
 
@@ -591,17 +597,20 @@ void QHaikuWindow::setWindowState(Qt::WindowStates states)
     QWindowSystemInterface::handleWindowStateChanged(window(), states);
 }
 
-
-QHaikuWindow *QHaikuWindow::windowForWinId(WId id)
+QHaikuSurfaceView *QHaikuWindow::viewForWinId(WId id)
 {
 	if (id == -1)
 		return NULL;
-
-	QtHaikuWindow *nativeWindow = static_cast<QtHaikuWindow*>((void*)id);
-	if (nativeWindow != NULL)
-		return nativeWindow->fQWindow;
-
+	QHaikuWindow *window = m_windowForWinIdHash.value(id, 0);
+	if (window != NULL) {
+		return window->m_window->View();
+	}
     return NULL;
+}
+
+QHaikuWindow *QHaikuWindow::windowForWinId(WId id)
+{
+	return m_windowForWinIdHash.value(id, 0);
 }
 
 
@@ -768,5 +777,7 @@ void QHaikuWindow::platformKeyEvent(QEvent::Type type, int key, Qt::KeyboardModi
 {
     QWindowSystemInterface::handleKeyEvent(window(), type, key, modifiers, text);
 }
+
+QHash<WId, QHaikuWindow *> QHaikuWindow::m_windowForWinIdHash;
 
 QT_END_NAMESPACE

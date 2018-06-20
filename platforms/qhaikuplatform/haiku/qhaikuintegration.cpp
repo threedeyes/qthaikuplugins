@@ -66,52 +66,33 @@
 
 QT_BEGIN_NAMESPACE
 
-template <typename BaseEventDispatcher>
-class QHaikuEventDispatcher : public BaseEventDispatcher
-{
-public:
-    explicit QHaikuEventDispatcher(QObject *parent = 0)
-        : BaseEventDispatcher(parent)
-    {
-    }
-
-    bool processEvents(QEventLoop::ProcessEventsFlags flags)
-    {
-        bool didSendEvents = BaseEventDispatcher::processEvents(flags);
-
-        return QWindowSystemInterface::sendWindowSystemEvents(flags) || didSendEvents;
-    }
-
-    bool hasPendingEvents()
-    {
-        return BaseEventDispatcher::hasPendingEvents()
-            || QWindowSystemInterface::windowSystemEventsQueued();
-    }
-
-    void flush()
-    {
-        if (qApp)
-            qApp->sendPostedEvents();
-        BaseEventDispatcher::flush();
-    }
-};
-
 QHaikuIntegration::QHaikuIntegration(const QStringList &parameters, int &argc, char **argv)
 	: QPlatformIntegration()
-	, m_clipboard(0)
-    , m_drag(new QSimpleDrag())
+    , m_drag(new QSimpleDrag)
     , m_services(new QHaikuServices)
     , m_haikuSystemLocale(new QHaikuSystemLocale)
+    , m_screen(new QHaikuScreen)
 {
     m_fontDatabase.reset(new QHaikuPlatformFontDatabase());
-    screenAdded(new QHaikuScreen);
+    screenAdded(m_screen);
 }
 
 QHaikuIntegration::~QHaikuIntegration()
 {
-    delete m_drag;
-	delete m_clipboard;
+	destroyScreen(m_screen);
+	m_screen = nullptr;
+
+	delete m_drag;
+	m_drag = nullptr;
+
 	delete m_haikuSystemLocale;
+	m_haikuSystemLocale = nullptr;
+
+	delete m_services;
+	m_services = nullptr;
+
+	be_app->LockLooper();
+	be_app->Quit();
 }
 
 bool QHaikuIntegration::hasCapability(QPlatformIntegration::Capability cap) const
@@ -184,10 +165,11 @@ QPlatformDrag *QHaikuIntegration::drag() const
 
 QPlatformClipboard *QHaikuIntegration::clipboard() const
 {
-    if (!m_clipboard)
-        m_clipboard = new QHaikuClipboard;
-        
-    return m_clipboard;
+    static QPlatformClipboard *clipboard = nullptr;
+    if (!clipboard) {
+        clipboard = new QHaikuClipboard;
+    }
+    return clipboard;
 }
 
 QPlatformServices *QHaikuIntegration::services() const
