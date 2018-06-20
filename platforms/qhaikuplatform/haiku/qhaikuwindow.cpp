@@ -292,6 +292,8 @@ QHaikuWindow::~QHaikuWindow()
 
 void QHaikuWindow::setWindowFlags(Qt::WindowFlags flags)
 {
+	windowFlags = flags;
+
 	Qt::WindowType type =  static_cast<Qt::WindowType>(int(flags & Qt::WindowType_Mask)) ;
 
 	bool popup = (type == Qt::Popup);
@@ -477,17 +479,22 @@ void QHaikuWindow::setVisible(bool visible)
 	m_window->Lock();
 	if (window()->modality() == Qt::WindowModal ||
 		window()->modality() == Qt::ApplicationModal) {
-		m_window->SetFeel(B_MODAL_APP_WINDOW_FEEL);
+		m_window->SetFeel(B_FLOATING_ALL_WINDOW_FEEL);
+	}
+	if (QGuiApplication::modalWindow() != NULL) {
+		m_window->SetFeel(B_FLOATING_ALL_WINDOW_FEEL);
 	}
 	if (visible) {
 		if (window()->type() == Qt::Popup) {
 			m_window->SetWorkspaces(B_CURRENT_WORKSPACE);
 			m_window->Show();
-			m_window->Activate();
+			m_window->Activate(true);
 	    } else
 			m_window->Show();
-    } else
+    } else {
+    	setWindowFlags(windowFlags);
 		m_window->Hide();
+    }
 
     m_window->Unlock();
 

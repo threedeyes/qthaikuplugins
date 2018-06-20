@@ -149,6 +149,7 @@ private:
     WId m_winId;
     static QHash<WId, QHaikuWindow *> m_windowForWinIdHash;
 
+	Qt::WindowFlags windowFlags;
     bool m_positionIncludesFrame;
     bool m_visible;
     bool m_pendingGeometryChangeOnShow;
