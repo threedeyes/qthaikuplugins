@@ -811,7 +811,7 @@ void QHaikuStyle::drawPrimitive(PrimitiveElement elem,
         }
         painter->restore();
         break;
-    case PE_FrameLineEdit:
+    case PE_FrameLineEdit:    	
     case PE_PanelLineEdit:
 		if (const QStyleOptionFrame *lineEdit = qstyleoption_cast<const QStyleOptionFrame *>(option)) {
 	        painter->save();
@@ -836,6 +836,10 @@ void QHaikuStyle::drawPrimitive(PrimitiveElement elem,
 				if (widget) {
 					if (qobject_cast<const QComboBox *>(widget->parentWidget()))
 						bRect.InsetBy(-1, -1);
+					if (qobject_cast<const QAbstractSpinBox *>(widget->parentWidget())) {
+						painter->restore();
+						break;
+					}						
 				}
 
 				be_control_look->DrawTextControlBorder(surface.view(), bRect, bRect, base, flags);
@@ -2047,7 +2051,7 @@ void QHaikuStyle::drawComplexControl(ComplexControl control, const QStyleOptionC
 
 			QRect rect = option->rect.adjusted(0, 0, 0, 0);
 			BRect bRect(0.0f, 0.0f, rect.width() - 1, rect.height() - 1);
-            QRect editRect = proxy()->subControlRect(CC_SpinBox, spinBox, SC_SpinBoxEditField, widget).adjusted(-4,-4,4,4);
+            QRect editRect = proxy()->subControlRect(CC_SpinBox, spinBox, SC_SpinBoxEditField, widget).adjusted(0,0,0,0);
             QRect upRect = proxy()->subControlRect(CC_SpinBox, spinBox, SC_SpinBoxUp, widget);
             QRect downRect = proxy()->subControlRect(CC_SpinBox, spinBox, SC_SpinBoxDown, widget);
 		    BRect bEditRect(editRect.left(), editRect.top(), editRect.right(), editRect.bottom());
@@ -2064,15 +2068,20 @@ void QHaikuStyle::drawComplexControl(ComplexControl control, const QStyleOptionC
 				flags |= BControlLook::B_FOCUSED;
 
 			TemporarySurface surface(bRect);
-			surface.view()->SetViewColor(bgColor);
+
+			if (spinBox->frame) {
+				rgb_color baseEdit = ui_color(B_DOCUMENT_BACKGROUND_COLOR);
+				bEditRect.InsetBy(-1, -1);
+				surface.view()->SetLowColor(baseEdit);
+				surface.view()->SetHighColor(baseEdit);
+				surface.view()->FillRect(bEditRect);
+				be_control_look->DrawTextControlBorder(surface.view(), bEditRect, bEditRect, bgColor, flags);
+			}
+
+			surface.view()->SetViewColor(base);
 			surface.view()->SetLowColor(bgColor);
 			surface.view()->SetHighColor(bgColor);
 			surface.view()->FillRect(bRect);
-
-			if (spinBox->frame) {
-				//bEditRect.InsetBy(1,1);
-				//be_control_look->DrawTextControlBorder(surface.view(), bEditRect, bEditRect, base, flags);
-			}
 
 			float frameTint = B_DARKEN_1_TINT;
 			float fgTintUp, bgTintUp;
@@ -3237,7 +3246,7 @@ QRect QHaikuStyle::subControlRect(ComplexControl control, const QStyleOptionComp
                 if (spinbox->buttonSymbols == QAbstractSpinBox::NoButtons) {
                     rect = frame.adjusted(1,1,-1,-1);
                 } else {
-                    rect = QRect(frame.left(), frame.top() - 2, (spinbox->rect.width() - buttonSize.width() * 2 - space) - 1, frame.bottom() - 1);
+                    rect = QRect(frame.left(), frame.top() - 2, (spinbox->rect.width() - buttonSize.width() * 2 - space) - 1, buttonSize.height());
                 }
                 break;
             case SC_SpinBoxFrame:
