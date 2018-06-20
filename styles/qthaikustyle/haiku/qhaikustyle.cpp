@@ -1241,6 +1241,8 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
             QProxyStyle::drawControl(element, &copy, painter, widget);
         }
         break;
+	case CE_SizeGrip:
+		break;
     case CE_Splitter:
         painter->save();
         {
