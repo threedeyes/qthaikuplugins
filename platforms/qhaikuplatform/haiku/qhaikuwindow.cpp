@@ -627,7 +627,7 @@ void QHaikuWindow::platformWindowMoved(const QPoint &pos)
 	
     QPlatformWindow::setGeometry(adjusted);
 
-	if (window()->isTopLevel() && window()->type() != Qt::Popup) {
+	if (window()->isTopLevel() && window()->type() == Qt::Window) {
 		while (QApplication::activePopupWidget())
 			QApplication::activePopupWidget()->close();
     }
@@ -659,7 +659,7 @@ void QHaikuWindow::platformWindowResized(const QSize &size)
 void QHaikuWindow::platformWindowActivated(bool activated)
 {
 	if (!activated) {
-	    if (window()->isTopLevel() && window()->type() != Qt::Popup) {
+	    if (window()->isTopLevel() && window()->type() == Qt::Window) {
 			while (QApplication::activePopupWidget())
 				QApplication::activePopupWidget()->close();
 	    }
