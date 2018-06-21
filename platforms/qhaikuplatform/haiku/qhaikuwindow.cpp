@@ -558,6 +558,86 @@ void QHaikuWindow::setFrameMarginsEnabled(bool enabled)
         m_margins = QMargins(0, 0, 0, 0);
 }
 
+void QHaikuWindow::getDecoratorSize(float* borderWidth, float* tabHeight)
+{
+	float borderWidthDef = 5.0;
+	float tabHeightDef = 21.0;
+
+	BMessage settings;
+	if (m_window->GetDecoratorSettings(&settings) == B_OK) {
+		BRect tabRect;
+		if (settings.FindRect("tab frame", &tabRect) == B_OK)
+			tabHeightDef = tabRect.Height();
+		settings.FindFloat("border width", &borderWidthDef);
+	} else {
+		if (m_window->Look() == B_NO_BORDER_WINDOW_LOOK) {
+			borderWidthDef = 0.0;
+			tabHeightDef = 0.0;
+		}
+	}
+	if (borderWidth != NULL)
+		*borderWidth = borderWidthDef;
+	if (tabHeight != NULL)
+		*tabHeight = tabHeightDef;
+}
+
+void QHaikuWindow::maximizeWindowRespected(bool respected)
+{
+	BRect screenFrame = (BScreen(B_MAIN_SCREEN_ID)).Frame();
+	float maxZoomWidth = screenFrame.Width();
+	float maxZoomHeight = screenFrame.Height();
+
+	BRect zoomArea = screenFrame;
+
+	BDeskbar deskbar;
+	BRect deskbarFrame = deskbar.Frame();
+	if (!deskbar.IsAutoHide() && respected) {
+		switch (deskbar.Location()) {
+			case B_DESKBAR_TOP:
+				zoomArea.top = deskbarFrame.bottom + 2;
+				break;
+			case B_DESKBAR_BOTTOM:
+				zoomArea.bottom = deskbarFrame.top - 2;
+				break;
+			case B_DESKBAR_LEFT_TOP:
+			case B_DESKBAR_LEFT_BOTTOM:
+				if (!deskbar.IsAlwaysOnTop() && !deskbar.IsAutoRaise())
+					zoomArea.left = deskbarFrame.right + 2;
+				break;
+			default:
+			case B_DESKBAR_RIGHT_TOP:
+			case B_DESKBAR_RIGHT_BOTTOM:
+				if (!deskbar.IsAlwaysOnTop() && !deskbar.IsAutoRaise())
+					zoomArea.right = deskbarFrame.left - 2;
+				break;
+		}
+	}
+
+	float borderWidth;
+	float tabHeight;
+	getDecoratorSize(&borderWidth, &tabHeight);
+
+	zoomArea.left += borderWidth;
+	zoomArea.top += borderWidth + tabHeight;
+	zoomArea.right -= borderWidth;
+	zoomArea.bottom -= borderWidth;
+
+	if (zoomArea.Height() > maxZoomHeight)
+		zoomArea.InsetBy(0, roundf((zoomArea.Height() - maxZoomHeight) / 2));
+
+	if (zoomArea.top > deskbarFrame.bottom
+		|| zoomArea.bottom < deskbarFrame.top) {
+		zoomArea.left = screenFrame.left + borderWidth;
+		zoomArea.right = screenFrame.right - borderWidth;
+	}
+
+	if (zoomArea.Width() > maxZoomWidth)
+		zoomArea.InsetBy(roundf((zoomArea.Width() - maxZoomWidth) / 2), 0);
+
+	setWindowFlags(window()->flags());
+	setGeometryImpl(QRect(zoomArea.left, zoomArea.top, zoomArea.Width() + 1, zoomArea.Height() + 1));
+}
+
 void QHaikuWindow::setWindowState(Qt::WindowStates states)
 {
     Qt::WindowState state = Qt::WindowNoState;
@@ -579,8 +659,7 @@ void QHaikuWindow::setWindowState(Qt::WindowStates states)
     case Qt::WindowMaximized:
     	m_normalGeometry = geometry();
 		setWindowFlags(window()->flags());
-		setGeometryImpl(screen()->availableGeometry().adjusted(m_margins.left(),
-			m_margins.top(), -m_margins.right(), -m_margins.bottom()));
+		maximizeWindowRespected(true);
 		break;
     case Qt::WindowMinimized:
     	setWindowFlags(window()->flags());
@@ -592,7 +671,6 @@ void QHaikuWindow::setWindowState(Qt::WindowStates states)
     default:
         break;
     }
-
     QWindowSystemInterface::handleWindowStateChanged(window(), states);
 }
 

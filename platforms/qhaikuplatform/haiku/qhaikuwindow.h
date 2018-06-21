@@ -49,6 +49,8 @@
 #include <View.h>
 #include <Entry.h>
 #include <Path.h>
+#include <Screen.h>
+#include <Deskbar.h>
 
 #if !defined(QT_NO_OPENGL)
 #include <GLView.h>
@@ -142,6 +144,8 @@ public:
 private:
     void setFrameMarginsEnabled(bool enabled);
     void setGeometryImpl(const QRect &rect);
+    void getDecoratorSize(float* borderWidth, float* tabHeight);
+    void maximizeWindowRespected(bool respected);
 
     QRect m_normalGeometry;
     QMargins m_margins;
