@@ -2076,6 +2076,12 @@ void QHaikuStyle::drawComplexControl(ComplexControl control, const QStyleOptionC
 				be_control_look->DrawTextControlBorder(surface.view(), bEditRect, bEditRect, bgColor, flags);
 			}
 
+			if (spinBox->buttonSymbols == QAbstractSpinBox::NoButtons) {
+				painter->drawImage(rect, surface.image());
+				painter->restore();
+				break;
+			}
+
 			float frameTint = B_DARKEN_1_TINT;
 			float fgTintUp, bgTintUp;
 			float fgTintDown, bgTintDown;
@@ -3239,7 +3245,7 @@ QRect QHaikuStyle::subControlRect(ComplexControl control, const QStyleOptionComp
                 break;
             case SC_SpinBoxEditField:
                 if (spinbox->buttonSymbols == QAbstractSpinBox::NoButtons) {
-                    rect = frame.adjusted(1,1,-1,-1);
+                    rect = frame.adjusted(0,-2, 0, 2);
                 } else {
                     rect = QRect(frame.left(), frame.top() - 2, (spinbox->rect.width() - buttonSize.width() * 2 - space) - 1, buttonSize.height());
                 }
