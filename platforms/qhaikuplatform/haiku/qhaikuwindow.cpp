@@ -47,6 +47,7 @@
 
 #include <qpa/qplatformscreen.h>
 #include <qpa/qwindowsysteminterface.h>
+#include <qpa/qplatformtheme.h>
 
 #include <qapplication.h>
 #include <qfileinfo.h>
@@ -378,11 +379,8 @@ void QHaikuWindow::setWindowFlags(Qt::WindowFlags flags)
 
 void QHaikuWindow::setWindowTitle(const QString &title)
 {
-	QString newTitle = title;
-	// Using application name for nameless windows
-	if (newTitle == "") {
-		newTitle = QFileInfo(QCoreApplication::applicationFilePath()).fileName().remove("_x86");
-	}
+	QString newTitle = QPlatformWindow::formatWindowTitle(title, QStringLiteral(" - "));
+	newTitle = QPlatformTheme::removeMnemonics(newTitle).trimmed();
 	m_window->SetTitle(newTitle.toUtf8());
 }
 
