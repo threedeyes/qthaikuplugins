@@ -2780,6 +2780,8 @@ int QHaikuStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, con
 		return 17;
     case PM_ExclusiveIndicatorHeight:
 		return 17;
+	case PM_HeaderMargin:
+		return 1;
 //    case PM_TabBarTabOverlap:
 //        return 50;
 //    case PM_TabBarBaseOverlap:
@@ -3531,7 +3533,7 @@ int QHaikuStyle::styleHint(StyleHint hint, const QStyleOption *option, const QWi
         ret = false;
         break;
     case SH_Menu_SubMenuPopupDelay:
-        ret = 225; // default from GtkMenu
+        ret = 225;
         break;
 	case SH_ScrollBar_Transient:
 		ret = false;
