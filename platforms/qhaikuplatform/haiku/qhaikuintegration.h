@@ -116,6 +116,7 @@ private:
     QPlatformServices *m_services;
     QHaikuSystemLocale *m_haikuSystemLocale;
     QHaikuScreen *m_screen;
+    mutable QHaikuClipboard* m_clipboard;
 };
 
 QT_END_NAMESPACE

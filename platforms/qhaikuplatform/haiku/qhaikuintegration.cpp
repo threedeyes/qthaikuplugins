@@ -68,6 +68,7 @@ QT_BEGIN_NAMESPACE
 
 QHaikuIntegration::QHaikuIntegration(const QStringList &parameters, int &argc, char **argv)
 	: QPlatformIntegration()
+	, m_clipboard(0)
     , m_drag(new QSimpleDrag)
     , m_services(new QHaikuServices)
     , m_haikuSystemLocale(new QHaikuSystemLocale)
@@ -79,20 +80,11 @@ QHaikuIntegration::QHaikuIntegration(const QStringList &parameters, int &argc, c
 
 QHaikuIntegration::~QHaikuIntegration()
 {
-	destroyScreen(m_screen);
-	m_screen = nullptr;
-
 	delete m_drag;
-	m_drag = nullptr;
-
+	delete m_clipboard;
 	delete m_haikuSystemLocale;
-	m_haikuSystemLocale = nullptr;
-
 	delete m_services;
-	m_services = nullptr;
-
-	be_app->LockLooper();
-	be_app->Quit();
+	destroyScreen(m_screen);
 }
 
 bool QHaikuIntegration::hasCapability(QPlatformIntegration::Capability cap) const
@@ -165,11 +157,9 @@ QPlatformDrag *QHaikuIntegration::drag() const
 
 QPlatformClipboard *QHaikuIntegration::clipboard() const
 {
-    static QPlatformClipboard *clipboard = nullptr;
-    if (!clipboard) {
-        clipboard = new QHaikuClipboard;
-    }
-    return clipboard;
+    if (!m_clipboard)
+        m_clipboard = new QHaikuClipboard;
+    return m_clipboard;
 }
 
 QPlatformServices *QHaikuIntegration::services() const
