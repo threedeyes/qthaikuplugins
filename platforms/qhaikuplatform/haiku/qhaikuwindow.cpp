@@ -471,10 +471,10 @@ void QHaikuWindow::setVisible(bool visible)
 	m_window->Lock();
 	if (window()->modality() == Qt::WindowModal ||
 		window()->modality() == Qt::ApplicationModal) {
-		m_window->SetFeel(B_MODAL_ALL_WINDOW_FEEL);
+		m_window->SetFeel(B_MODAL_APP_WINDOW_FEEL);
 	}
 	if (QGuiApplication::modalWindow() != NULL) {
-		m_window->SetFeel(B_MODAL_ALL_WINDOW_FEEL);
+		m_window->SetFeel(B_MODAL_APP_WINDOW_FEEL);
 	}
 	if (visible) {
 		if (window()->type() == Qt::Popup) {
