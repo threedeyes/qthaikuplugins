@@ -131,6 +131,8 @@ QHaikuSurfaceView* QtHaikuWindow::View(void)
 void QtHaikuWindow::DispatchMessage(BMessage *msg, BHandler *handler)
 {
 	switch(msg->what) {
+		case B_UNMAPPED_KEY_UP:
+		case B_KEY_UP:
 		case B_UNMAPPED_KEY_DOWN:
 		case B_KEY_DOWN:
 			{
@@ -140,23 +142,15 @@ void QtHaikuWindow::DispatchMessage(BMessage *msg, BHandler *handler)
 				const char* bytes;
 				if(msg->FindString("bytes", &bytes) == B_OK)
 					text = QString::fromUtf8(bytes);
-				Q_EMIT keyEvent(QEvent::KeyPress, translateKeyCode(key), fView->hostToQtModifiers(modifiers()), text);
+				uint32 qt_keycode = translateKeyCode(key);
+				if ((qt_keycode == Qt::Key_Tab) && (modifier & B_CONTROL_KEY))
+					break;
+				bool press = (msg->what == B_KEY_DOWN) || (msg->what == B_UNMAPPED_KEY_DOWN);
+				Q_EMIT keyEvent(press ? QEvent::KeyPress : QEvent::KeyRelease, qt_keycode, fView->hostToQtModifiers(modifiers()), text);
 				break;	
 			}
-		case B_UNMAPPED_KEY_UP:
-		case B_KEY_UP:
-			{
-				uint32 modifier = msg->FindInt32("modifiers");
-				uint32 key = msg->FindInt32("key");
-				QString text;
-				const char* bytes;
-				if(msg->FindString("bytes", &bytes) == B_OK)
-					text = QString::fromUtf8(bytes);
-				Q_EMIT keyEvent(QEvent::KeyRelease, translateKeyCode(key), fView->hostToQtModifiers(modifiers()), text);
-				break;
-			}
-	default:
-		break;
+		default:
+			break;
 	}
 	BWindow::DispatchMessage(msg, handler);
 }
