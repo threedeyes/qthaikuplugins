@@ -1402,50 +1402,41 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
 #endif // QT_NO_DOCKWIDGET
     case CE_HeaderSection:
         painter->save();
-        // Draws the header in tables.
         if (const QStyleOptionHeader *header = qstyleoption_cast<const QStyleOptionHeader *>(option)) {
-            QPixmap cache;
-            QString pixmapName = QStyleHelper::uniqueName(QLatin1String("headersection"), option, option->rect.size());
-            pixmapName += QString::number(- int(header->position));
-            pixmapName += QString::number(- int(header->orientation));
-            QRect r = option->rect;
-            QColor gradientStopColor;
-            QColor gradientStartColor = option->palette.button().color();
-            gradientStopColor.setHsv(gradientStartColor.hue(),
-                                     qMin(255, (int)(gradientStartColor.saturation()*2)),
-                                     qMin(255, (int)(gradientStartColor.value()*0.96)));
-            QLinearGradient gradient(rect.topLeft(), rect.bottomLeft());
-            if (option->palette.background().gradient()) {
-                gradient.setStops(option->palette.background().gradient()->stops());
-            } else {
-                gradient.setColorAt(0, gradientStartColor);
-                gradient.setColorAt(0.8, gradientStartColor);
-                gradient.setColorAt(1, gradientStopColor);
-            }
-            painter->fillRect(r, gradient);
+        	BRect drawRect;
+        	QRect rect = option->rect;
+			rgb_color borderColor = mix_color(ui_color(B_PANEL_BACKGROUND_COLOR), make_color(0, 0, 0), 128);
+			rgb_color background = mkHaikuColor(option->palette.color( QPalette::Normal, QPalette::Window));
+			rgb_color base = ui_color(B_PANEL_BACKGROUND_COLOR);
+			BRect bRect(0.0f, 0.0f, rect.width() - 1, rect.height() - 1);
 
-            if (!QPixmapCache::find(pixmapName, cache)) {
-                cache = QPixmap(r.size());
-                cache.fill(Qt::transparent);
-                QRect pixmapRect(0, 0, r.width(), r.height());
-                QPainter cachePainter(&cache);
-                if (header->orientation == Qt::Vertical) {
-                    cachePainter.setPen(QPen(dark));
-                    cachePainter.drawLine(pixmapRect.topRight(), pixmapRect.bottomRight());
-                    if (header->position != QStyleOptionHeader::End) {
-                        cachePainter.setPen(QPen(shadow));
-                        cachePainter.drawLine(pixmapRect.bottomLeft() + QPoint(3, -1), pixmapRect.bottomRight() + QPoint(-3, -1));                                cachePainter.setPen(QPen(option->palette.light().color()));
-                        cachePainter.drawLine(pixmapRect.bottomLeft() + QPoint(3, 0), pixmapRect.bottomRight() + QPoint(-3, 0));                              }
-                } else {
-                    cachePainter.setPen(QPen(dark));
-                    cachePainter.drawLine(pixmapRect.bottomLeft(), pixmapRect.bottomRight());
-                    cachePainter.setPen(QPen(shadow));
-                    cachePainter.drawLine(pixmapRect.topRight() + QPoint(-1, 3), pixmapRect.bottomRight() + QPoint(-1, -3));                                  cachePainter.setPen(QPen(option->palette.light().color()));
-                    cachePainter.drawLine(pixmapRect.topRight() + QPoint(0, 3), pixmapRect.bottomRight() + QPoint(0, -3));                                }
-                cachePainter.end();
-                QPixmapCache::insert(pixmapName, cache);
-            }
-            painter->drawPixmap(r.topLeft(), cache);
+			TemporarySurface surface(bRect);
+
+			surface.view()->SetViewColor(background);
+			surface.view()->SetHighColor(background);
+			surface.view()->SetLowColor(base);
+			surface.view()->FillRect(bRect);
+
+			BRect bgRect = bRect;
+			surface.view()->SetHighColor(tint_color(base, B_DARKEN_2_TINT));
+			surface.view()->StrokeLine(bgRect.LeftBottom(), bgRect.RightBottom());
+
+			bgRect.bottom--;
+			bgRect.right--;
+
+			uint32 flags = BControlLook::B_IS_CONTROL;
+
+			if (option->state & State_Sunken) {
+				base = tint_color(base, B_DARKEN_1_TINT);
+				flags |= BControlLook::B_ACTIVATED;
+			}
+
+			be_control_look->DrawButtonBackground(surface.view(), bgRect, bgRect, base, 0,
+				BControlLook::B_TOP_BORDER | BControlLook::B_BOTTOM_BORDER | flags);
+
+			surface.view()->SetHighColor(tint_color(ui_color(B_PANEL_BACKGROUND_COLOR), B_DARKEN_2_TINT));
+			surface.view()->StrokeLine(bRect.RightTop(), bRect.RightBottom());
+			painter->drawImage(rect, surface.image());
         }
         painter->restore();
         break;
