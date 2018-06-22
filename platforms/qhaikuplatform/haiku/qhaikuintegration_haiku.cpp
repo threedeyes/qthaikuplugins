@@ -95,11 +95,12 @@ HQApplication::~HQApplication()
 void HQApplication::MessageReceived(BMessage* message)
 {
 	switch (message->what) {
-		case B_LOCALE_CHANGED:
-		break;
-	default:
-		BApplication::MessageReceived(message);
-		break;
+		case B_SILENT_RELAUNCH:
+			be_roster->ActivateApp(be_app->Team());
+			break;
+		default:
+			BApplication::MessageReceived(message);
+			break;
 	}
 }
 
