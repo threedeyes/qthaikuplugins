@@ -45,6 +45,8 @@
 #include <QtCore/QUrl>
 #include <QtCore/QDir>
 #include <QtCore/QCoreApplication>
+#include <QProcess>
+#include <Roster.h>
 
 #include <stdlib.h>
 
@@ -60,20 +62,34 @@ QHaikuServices::~QHaikuServices()
 
 bool QHaikuServices::openUrl(const QUrl &url)
 {
-    QString urlString;
-    urlString.append("open ");
-    urlString.append(url.toString());
-    system(urlString.toUtf8());
+	QString argument;
+	QString scheme = url.scheme();
+
+    if (scheme == QLatin1String("file")) {
+		const QString nativeFilePath = url.isLocalFile() && !url.hasFragment() && !url.hasQuery()
+        ? QDir::toNativeSeparators(url.toLocalFile())
+        : url.toString(QUrl::FullyEncoded);
+        argument = nativeFilePath;
+    } else
+		argument = url.toString();
+
+    QByteArray urlData = argument.toLocal8Bit();
+    char *rawUrlData = urlData.data();
+
+	entry_ref ref;
+	if (get_ref_for_path("/bin/open", &ref))
+		return false;
+
+	const char* args[] = { "/bin/open", rawUrlData, NULL };
+	if (be_roster->Launch(&ref, 2, args) != B_OK)
+		return false;
+
     return true;
 }
 
 bool QHaikuServices::openDocument(const QUrl &url)
 {
-    QString urlString;
-    urlString.append("open ");
-    urlString.append(url.toString());
-    system(urlString.toUtf8());
-    return true;
+    return openUrl(url);
 }
 
 QT_END_NAMESPACE
