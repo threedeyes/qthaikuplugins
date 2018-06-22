@@ -220,6 +220,11 @@ QHaikuSurfaceView::MouseMoved(BPoint point, uint32 transit, const BMessage *msg)
 		if (isSizeGripperContains(point))
 			return;
 
+		if ( modifiers() & B_CONTROL_KEY
+			&& modifiers() & B_COMMAND_KEY
+			&& buttons & B_SECONDARY_MOUSE_BUTTON)
+			return;
+
 		lastLocalMousePoint = localPoint;
 		lastGlobalMousePoint = globalPoint;
 
