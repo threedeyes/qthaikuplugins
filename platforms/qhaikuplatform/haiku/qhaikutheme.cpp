@@ -68,7 +68,7 @@ QHaikuTheme::~QHaikuTheme()
 bool QHaikuTheme::usePlatformNativeDialog(DialogType type) const
 {
 	if (type == QPlatformTheme::MessageDialog)
-		return false;
+		return true;
     if (type == QPlatformTheme::FileDialog)
         return false;
 #if !defined(QT_NO_COLORDIALOG)
@@ -86,7 +86,7 @@ QPlatformDialogHelper *QHaikuTheme::createPlatformDialogHelper(DialogType type) 
 {
     switch (type) {
 	case QPlatformTheme::MessageDialog:
-//        return new QtHaikuDialogHelpers::QHaikuPlatformMessageDialogHelper;
+        return new QtHaikuDialogHelpers::QHaikuPlatformMessageDialogHelper;
     case QPlatformTheme::FileDialog:
     case QPlatformTheme::ColorDialog:
     case QPlatformTheme::FontDialog:

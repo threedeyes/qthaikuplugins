@@ -45,6 +45,7 @@
 #include <private/qguiapplication_p.h>
 #include <qpa/qplatformtheme.h>
 #include <QtWidgets/qmessagebox.h>
+#include <QHash>
 #include <qdebug.h>
 
 #include <Alert.h>
@@ -64,14 +65,6 @@ void QHaikuPlatformMessageDialogHelper::exec()
         show(Qt::Dialog, Qt::ApplicationModal, 0);
 }
 
-static QString htmlText(QString text)
-{
-    if (Qt::mightBeRichText(text))
-        return text;
-    text.remove(QLatin1Char('\r'));
-    return text.toHtmlEscaped().replace(QLatin1Char('\n'), QLatin1String("<br />"));
-}
-
 bool QHaikuPlatformMessageDialogHelper::show(Qt::WindowFlags windowFlags
                                          , Qt::WindowModality windowModality
                                          , QWindow *parent)
@@ -84,12 +77,11 @@ bool QHaikuPlatformMessageDialogHelper::show(Qt::WindowFlags windowFlags
     const QString title = options->windowTitle();
     const QString text = informativeText.isEmpty() ? options->text() : (options->text() + QLatin1Char('\n') + informativeText);
     
-    alert_type type = B_INFO_ALERT;
+    alert_type type = B_EMPTY_ALERT;
     switch (options->icon()) {
     	case QMessageBox::NoIcon:
-    		type = B_EMPTY_ALERT;
-    		break;
     	case QMessageBox::Information:
+		case QMessageBox::Question:
     		type = B_INFO_ALERT;
     		break;
 		case QMessageBox::Warning:
@@ -97,42 +89,76 @@ bool QHaikuPlatformMessageDialogHelper::show(Qt::WindowFlags windowFlags
 			break;
 		case QMessageBox::Critical:
 			type = B_STOP_ALERT;
-			break;			
-		case QMessageBox::Question:
-			type = B_INFO_ALERT; //?
 			break;
-		default:
-			type = B_INFO_ALERT;
-			break;			
-    }    
-	
+    }
+
 	QTextDocument doc;
 	doc.setHtml(text);
 
+	int escButton = -1;
+
 	int buttons = options->standardButtons();
-    if (buttons == 0)
+    if (buttons == QPlatformDialogHelper::NoButton)
         buttons = QPlatformDialogHelper::Ok;
 
-	const char *nativeButtonText[3] = {NULL, NULL, NULL};
-	int	buttonsIds[3] = {0, 0, 0};
+	BAlert* alert = new BAlert();
+	alert->SetText(doc.toPlainText().toUtf8());
+	alert->SetType(type);
+	alert->SetButtonSpacing(B_EVEN_SPACING);
+	alert->SetButtonWidth(B_WIDTH_AS_USUAL);
+
 	int32 buttonsCount = 0;
+	QHash<int32, uint32> buttonsHash;
 	
-    for (int i = QPlatformDialogHelper::FirstButton; i < QPlatformDialogHelper::LastButton; i<<=1) {
-        if (buttons & i) {
-			if (buttonsCount > 2)
-				return false;
+	uint32 defButtonsPrio[]={
+			QPlatformDialogHelper::Ok,
+			QPlatformDialogHelper::Apply,
+			QPlatformDialogHelper::Save,
+			QPlatformDialogHelper::Open,
+			QPlatformDialogHelper::Cancel,
+			QPlatformDialogHelper::NoButton
+		};
+	uint32 escapeButtonsPrio[]={
+			QPlatformDialogHelper::Cancel,
+			QPlatformDialogHelper::Abort,
+			QPlatformDialogHelper::Ignore,
+			QPlatformDialogHelper::NoButton
+		};
+
+	uint32 defButtonId = QPlatformDialogHelper::NoButton;
+	for (int i = 0; defButtonsPrio[i] != QPlatformDialogHelper::NoButton; i++) {
+		if (buttons & defButtonsPrio[i] && defButtonId == QPlatformDialogHelper::NoButton)
+			defButtonId = defButtonsPrio[i];
+	}
+
+    for (uint32 i = QPlatformDialogHelper::FirstButton; i < QPlatformDialogHelper::LastButton; i<<=1) {
+        if ((buttons & i) && i != defButtonId) {
             QString label = QGuiApplicationPrivate::platformTheme()->standardButtonText(i);
             label.remove(QChar('&'));
-            nativeButtonText[buttonsCount] = strdup(label.toUtf8());
-            buttonsIds[buttonsCount] = i;
+            alert->AddButton(label.toUtf8(), buttonsCount);
+            buttonsHash[buttonsCount] = i;
             buttonsCount++;
         }
     }
+
+	if (defButtonId != QPlatformDialogHelper::NoButton) {
+		QString label = QGuiApplicationPrivate::platformTheme()->standardButtonText(defButtonId);
+		label.remove(QChar('&'));
+		alert->AddButton(label.toUtf8(), buttonsCount);
+		buttonsHash[buttonsCount] = defButtonId;
+		buttonsCount++;
+	}
+
+	uint32 escapeButtonId = QPlatformDialogHelper::NoButton;
+	for (int i = 0; escapeButtonsPrio[i] != QPlatformDialogHelper::NoButton; i++) {
+		if (buttons & escapeButtonsPrio[i] && escapeButtonId == QPlatformDialogHelper::NoButton)
+			escapeButtonId = escapeButtonsPrio[i];
+	}
 	
-	BAlert* alert = new BAlert(title.toUtf8(), doc.toPlainText().toUtf8(),
-		nativeButtonText[0], nativeButtonText[1], nativeButtonText[2], B_WIDTH_AS_USUAL, type);
-	
-	int buttonId = buttonsIds[alert->Go()];
+	alert->SetShortcut(buttonsHash.key(escapeButtonId, 0), B_ESCAPE);
+
+    int32 alertButton = alert->Go();
+	uint32 buttonId = buttonsHash[alertButton];
 
     QPlatformDialogHelper::StandardButton standardButton = static_cast<QPlatformDialogHelper::StandardButton>(buttonId);
     QPlatformDialogHelper::ButtonRole role = QPlatformDialogHelper::buttonRole(standardButton);
