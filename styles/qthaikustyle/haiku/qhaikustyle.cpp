@@ -113,12 +113,12 @@ typedef enum {
 class TemporarySurface
 {
 public:
-	TemporarySurface(const BRect& bounds)
-		: mBitmap(bounds, B_BITMAP_ACCEPTS_VIEWS, B_RGBA32)
-		, mView(bounds, "Qt temporary surface", 0, 0)
+	TemporarySurface(const BRect& bounds, QImage::Format format = QImage::Format_ARGB32)
+		: mBitmap(bounds, B_RGBA32, true)
+		, mView(bounds, "Qt temporary surface", B_FOLLOW_ALL, B_WILL_DRAW)
 		, mImage(reinterpret_cast<const uchar*>(mBitmap.Bits()),
 			bounds.IntegerWidth() + 1, bounds.IntegerHeight() + 1,
-			mBitmap.BytesPerRow(), QImage::Format_ARGB32)
+			mBitmap.BytesPerRow(), format)
 	{
 		mBitmap.Lock();
 		mBitmap.AddChild(&mView);
@@ -171,7 +171,7 @@ static const int windowsItemFrame        =  2; // menu item frame width
 static const int windowsItemHMargin      =  3; // menu item hor text margin
 static const int windowsItemVMargin      =  8; // menu item ver text margin
 static const int windowsRightBorder      = 15; // right border on windows
-static const int progressAnimationFps    = 24;
+static const int progressAnimationFps    = 25;
 static const int mdiTabWidthMin			 = 100; //minimal tab size for mid window
 static const int mdiTabWidthFix			 = 220; //tab size for mid window (fixed size mode _QS_HAIKU_TAB_FIX_WIDTH_)
 static const int mdiTabTextMarginLeft	 =  32;
@@ -1446,7 +1446,7 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
             QRect rect = bar->rect;
             bool vertical = (bar->orientation == Qt::Vertical);
             bool inverted = bar->invertedAppearance;
-            //bool indeterminate = (bar->minimum == 0 && bar->maximum == 0);
+            bool indeterminate = (bar->minimum == 0 && bar->maximum == 0);
 
             rgb_color base = mkHaikuColor(backgroundColor(option->palette, widget));
             rgb_color highlight = ui_color(B_STATUS_BAR_COLOR);
@@ -1462,7 +1462,10 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
 			else
 				bRect = BRect(0.0f, 0.0f, rect.width() - 1, rect.height() - 1);
 
-			TemporarySurface surface(bRect);
+			if (indeterminate)
+				progressBarWidth = maxWidth;
+
+			TemporarySurface surface(bRect, QImage::Format_RGB32);
 			bRect.InsetBy(-1, -1);
 			be_control_look->DrawStatusBar(surface.view(), bRect, bRect, base, highlight, progressBarWidth);
 
@@ -1472,8 +1475,47 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
 				matrix.rotate(inverted?90:-90);
 				QImage dstImg = surface.image().transformed(matrix);
 				painter->drawImage(rect, dstImg);
-            } else
+            } else {
+				if (indeterminate) {
+					float fStripeWidth = (bRect.Width() / 4) + 5;
+					if (fStripeWidth > 200)
+						fStripeWidth = 200;
+					BPoint stripePoints[4];
+					stripePoints[0].Set(fStripeWidth * 0.5, 0.0);
+					stripePoints[1].Set(fStripeWidth * 1.5, 0.0);
+					stripePoints[2].Set(fStripeWidth, bRect.Height());
+					stripePoints[3].Set(0.0, bRect.Height());
+					BPolygon fStripe = BPolygon(stripePoints, 4);
+
+					rgb_color fColors[2];
+					rgb_color otherColor = tint_color(ui_color(B_STATUS_BAR_COLOR), 1.3);
+					otherColor.alpha = 50;
+					fColors[0] = otherColor;
+					fColors[1] = B_TRANSPARENT_COLOR;
+
+					int fNumColors = 2;
+					int fNumStripes = (int32)ceilf((bRect.Width()) / fStripeWidth) + 1 + fNumColors;
+
+					float fScrollOffset = ((animateStep % progressAnimationFps) * (fStripeWidth * fNumColors) ) / progressAnimationFps;
+					float position = -fStripeWidth * (fNumColors + 0.5) + fScrollOffset;
+
+					surface.view()->SetDrawingMode(B_OP_ALPHA);
+					uint32 colorIndex = 0;
+					for (uint32 i = 0; i < fNumStripes; i++) {
+						surface.view()->SetHighColor(fColors[colorIndex]);
+						colorIndex++;
+						if (colorIndex >= fNumColors)
+							colorIndex = 0;
+						BRect stripeFrame = fStripe.Frame();
+						fStripe.MapTo(stripeFrame, stripeFrame.OffsetToCopy(position, 0.0));
+						surface.view()->FillPolygon(&fStripe);
+						position += fStripeWidth;
+					}
+					surface.view()->SetDrawingMode(B_OP_COPY);
+				}
+				be_control_look->DrawBorder(surface.view(), bRect, bRect, ui_color(B_PANEL_BACKGROUND_COLOR), B_PLAIN_BORDER);
 				painter->drawImage(rect, inverted?surface.image().mirrored(true, false):surface.image());
+            }
         }
         painter->restore();
         break;
