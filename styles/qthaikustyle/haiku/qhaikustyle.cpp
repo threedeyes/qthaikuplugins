@@ -2797,10 +2797,10 @@ int QHaikuStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, con
         ret = smallIconsSizeSettings;
         break;
     case PM_LargeIconSize:
-        ret = smallIconsSizeSettings;
+        ret = largeIconsSizeSettings;
         break;
     case PM_ButtonIconSize:
-        ret = largeIconsSizeSettings;
+        ret = smallIconsSizeSettings;
         break;
     case PM_ToolBarIconSize:
         ret = toolbarIconsSizeSettings;
