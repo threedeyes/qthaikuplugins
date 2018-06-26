@@ -84,6 +84,7 @@
 #include <IconUtils.h>
 
 #include "../../../platforms/qhaikuplatform/haiku/qhaikuwindow.h"
+#include "../../../platforms/qhaikuplatform/haiku/qhaikusettings.h"
 
 #include "qstylehelper_p.h"
 #include "qstylecache_p.h"
@@ -521,6 +522,14 @@ static void qt_haiku_draw_disabled_background(BView *view, BRect area, const rgb
 QHaikuStyle::QHaikuStyle() : QProxyStyle(QStyleFactory::create(QLatin1String("Fusion"))), animateStep(0), animateTimer(0)
 {
     setObjectName(QLatin1String("Haiku"));
+	QSettings settings(QT_SETTINGS_FILENAME, QSettings::NativeFormat);
+	settings.beginGroup("Style");
+	smallIconsSizeSettings = settings.value("icons_small_size", 16).toInt();
+	largeIconsSizeSettings = settings.value("icons_large_size", 32).toInt();
+	toolbarIconsSizeSettings = settings.value("icons_toolbar_icon_size", 24).toInt();
+	toolbarIconMode = settings.value("icons_toolbar_mode", 0).toInt();
+	showMenuIcon = settings.value("icons_menu_icons", true).toBool();
+	settings.endGroup();
 }
 
 /*!
@@ -1633,7 +1642,7 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
                         }
                     } else {
                         // Check box
-                        if (menuItem->icon.isNull()) {
+                        if (menuItem->icon.isNull() || !showMenuIcon) {
                             if (checked || sunken) {
                                 QImage image(qt_haiku_menuitem_checkbox_checked);
                                 if (enabled && (menuItem->state & State_Selected)) {
@@ -1656,7 +1665,7 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
                     }
                 }
             } else { //ignore checkmark
-                if (menuItem->icon.isNull())
+                if (menuItem->icon.isNull() || !showMenuIcon)
                     checkcol = 0;
                 else
                     checkcol = menuItem->maxIconWidth;
@@ -1672,7 +1681,7 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
             QRect vCheckRect = visualRect(opt->direction, menuitem->rect,
                                           QRect(menuitem->rect.x(), menuitem->rect.y(),
                                                 checkcol, menuitem->rect.height()));
-            if (!menuItem->icon.isNull()) {
+            if (!menuItem->icon.isNull() && showMenuIcon) {
                 QIcon::Mode mode = dis ? QIcon::Disabled : QIcon::Normal;
                 if (act && !dis)
                     mode = QIcon::Active;
@@ -2724,12 +2733,6 @@ int QHaikuStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, con
     case PM_ButtonShiftVertical:
         ret = 0;
         break;
-    case PM_MessageBoxIconSize:
-        ret = 32;
-        break;
-    case PM_ListViewIconSize:
-        ret = 16;
-        break;
     case PM_DialogButtonsSeparator:
         ret = 6;
         break;
@@ -2791,10 +2794,25 @@ int QHaikuStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, con
         ret = 1;
         break;
     case PM_SmallIconSize:
-        ret = 16;
+        ret = smallIconsSizeSettings;
+        break;
+    case PM_LargeIconSize:
+        ret = smallIconsSizeSettings;
         break;
     case PM_ButtonIconSize:
-        ret = 16;
+        ret = largeIconsSizeSettings;
+        break;
+    case PM_ToolBarIconSize:
+        ret = toolbarIconsSizeSettings;
+        break;
+    case PM_MessageBoxIconSize:
+        ret = largeIconsSizeSettings;
+        break;
+    case PM_ListViewIconSize:
+        ret = smallIconsSizeSettings;
+        break;
+    case PM_IconViewIconSize:
+        ret = largeIconsSizeSettings;
         break;
     case PM_MenuVMargin:
     case PM_MenuHMargin:
@@ -2922,7 +2940,7 @@ QSize QHaikuStyle::sizeFromContents(ContentsType type, const QStyleOption *optio
                 }
             }
 #ifndef QT_NO_COMBOBOX
-            else if (!menuItem->icon.isNull()) {
+            else if (!menuItem->icon.isNull() && showMenuIcon) {
                 if (const QComboBox *combo = qobject_cast<const QComboBox*>(widget)) {
                     newSize.setHeight(qMax(combo->iconSize().height() + 2, newSize.height()));
                 }
@@ -3588,6 +3606,9 @@ int QHaikuStyle::styleHint(StyleHint hint, const QStyleOption *option, const QWi
 		break;
 	case SH_ScrollView_FrameOnlyAroundContents:
 		ret = 1;
+		break;
+	case SH_ToolButtonStyle:
+		ret = toolbarIconMode;
 		break;
     default:
         ret = QProxyStyle::styleHint(hint, option, widget, returnData);

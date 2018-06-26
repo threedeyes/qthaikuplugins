@@ -107,6 +107,12 @@ private:
     int animateTimer;
     QElapsedTimer startTime;
     QList<QProgressBar *> animatedProgressBars;
+
+	int smallIconsSizeSettings;
+	int largeIconsSizeSettings;
+	int toolbarIconsSizeSettings;
+	int toolbarIconMode;
+	bool showMenuIcon;
 };
 
 QT_END_NAMESPACE
