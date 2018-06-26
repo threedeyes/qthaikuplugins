@@ -39,7 +39,7 @@
 ****************************************************************************/
 
 #include "qhaikutheme.h"
-
+#include "qhaikusettings.h"
 #include "qhaikuplatformdialoghelpers.h"
 #include "qhaikusystemsettings.h"
 #include "qhaikuintegration.h"
@@ -67,13 +67,16 @@ QHaikuTheme::~QHaikuTheme()
 
 bool QHaikuTheme::usePlatformNativeDialog(DialogType type) const
 {
+	QSettings settings(QT_SETTINGS_FILENAME, QSettings::NativeFormat);
+	settings.beginGroup("QPA");
+
 	if (type == QPlatformTheme::MessageDialog)
-		return true;
+		return settings.value("native_messages", true).toBool();
     if (type == QPlatformTheme::FileDialog)
-        return false;
+        return settings.value("native_filepanel", false).toBool();
 #if !defined(QT_NO_COLORDIALOG)
     if (type == QPlatformTheme::ColorDialog)
-        return false;
+        return settings.value("native_colorpicker", false).toBool();
 #endif
 #if !defined(QT_NO_FONTDIALOG)
     if (type == QPlatformTheme::FontDialog)
@@ -97,9 +100,12 @@ QPlatformDialogHelper *QHaikuTheme::createPlatformDialogHelper(DialogType type) 
 
 QVariant QHaikuTheme::themeHint(ThemeHint hint) const
 {
+	QSettings settings(QT_SETTINGS_FILENAME, QSettings::NativeFormat);
+	settings.beginGroup("Style");
+
 	switch (hint) {
 	case QPlatformTheme::SystemIconThemeName:
-		return QVariant(QString(QStringLiteral("haiku")));
+		return QVariant(settings.value("icons_iconset", "haiku").toString());
     case QPlatformTheme::SystemIconFallbackThemeName:
         return QVariant(QString(QStringLiteral("breeze")));
     case QPlatformTheme::IconThemeSearchPaths:
@@ -114,13 +120,14 @@ QVariant QHaikuTheme::themeHint(ThemeHint hint) const
     case QPlatformTheme::StyleNames:
     	{
     		QStringList styles;
-    		styles << "haiku" << "fusion";
+			styles << settings.value("widget_style", "haiku").toString() << "fusion";
         	return styles;
     	}
     case QPlatformTheme::IconPixmapSizes:
     	{
         	QList<int> sizes;
-        	sizes << 16 << 32;
+			sizes << settings.value("icons_small_size", 16).toInt();
+			sizes << settings.value("icons_large_size", 32).toInt();
         	return QVariant::fromValue(sizes);
     	}
     case QPlatformTheme::ContextMenuOnMouseRelease:

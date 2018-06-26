@@ -39,6 +39,7 @@
 ****************************************************************************/
 
 #include "qhaikuintegration.h"
+#include "qhaikusettings.h"
 
 #include <QtWidgets/qapplication.h>
 #include <QProcess>
@@ -231,7 +232,10 @@ QHaikuIntegration *QHaikuIntegration::createHaikuIntegration(const QStringList& 
 		}
 	}
 	// Enable software rendering for QML
-	putenv("QMLSCENE_DEVICE=softwarecontext");
+	QSettings settings(QT_SETTINGS_FILENAME, QSettings::NativeFormat);
+	settings.beginGroup("QPA");
+	if (settings.value("qml_softwarecontext", true).toBool())
+		putenv("QMLSCENE_DEVICE=softwarecontext");
 
     return new QHaikuIntegration(parameters, argc, argv);
 }
