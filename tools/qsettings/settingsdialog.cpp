@@ -1,6 +1,11 @@
 #include "settingsdialog.h"
 #include "ui_settingsdialog.h"
 
+#include <QDir>
+#include <QString>
+#include <QStringList>
+#include <QStyleFactory>
+
 #define QT_SETTINGS_FILENAME "/boot/home/config/settings/qt-plugins"
 
 SettingsDialog::SettingsDialog(QWidget *parent) :
@@ -8,6 +13,18 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
     ui(new Ui::SettingsDialog)
 {
     ui->setupUi(this);
+    ui->styleComboBox->addItems( QStyleFactory::keys() );
+
+    QDir iconsDir("/boot/system/data/icons");
+    QStringList iconSets = iconsDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
+    for (int n=0; n < iconSets.count(); n++) {
+        QString themeFile = iconsDir.absolutePath() +"/" + iconSets[n] + "/index.theme";
+        bool isTheme = QFile::exists(themeFile);
+        if (isTheme) {
+            ui->iconSetComboBox->addItem( iconSets[n], iconSets[n] );
+        }
+    }
+
     readSettings();
 }
 

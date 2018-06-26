@@ -55,7 +55,7 @@
      <item>
       <widget class="QTabWidget" name="tabWidget">
        <property name="currentIndex">
-        <number>1</number>
+        <number>0</number>
        </property>
        <property name="usesScrollButtons">
         <bool>false</bool>
@@ -127,6 +127,9 @@
              <layout class="QVBoxLayout" name="verticalLayout_8">
               <item>
                <widget class="QCheckBox" name="openGlCheckBox">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
                 <property name="text">
                  <string>Enable OpenGL (experimental)</string>
                 </property>
@@ -197,21 +200,6 @@
                <verstretch>0</verstretch>
               </sizepolicy>
              </property>
-             <item>
-              <property name="text">
-               <string>haiku</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>fusion</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>windows</string>
-              </property>
-             </item>
             </widget>
            </item>
            <item>
@@ -257,21 +245,6 @@
                     <verstretch>0</verstretch>
                    </sizepolicy>
                   </property>
-                  <item>
-                   <property name="text">
-                    <string>haiku</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>breeze</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>oxygen</string>
-                   </property>
-                  </item>
                  </widget>
                 </item>
                 <item>
