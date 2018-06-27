@@ -25,12 +25,16 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         main.cpp \
-        settingsdialog.cpp
+        settingsdialog.cpp \
+    whitelistdialog.cpp
 
 HEADERS += \
-        settingsdialog.h
+        settingsdialog.h \
+    whitelistdialog.h \
+    config.h
 
 FORMS += \
-        settingsdialog.ui
+        settingsdialog.ui \
+    whitelistdialog.ui
 
 DISTFILES +=

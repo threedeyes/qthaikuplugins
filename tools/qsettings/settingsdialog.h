@@ -17,9 +17,11 @@ public:
     ~SettingsDialog();
 
 private slots:
-    void on_pushButtonDefaults_clicked();
+    void on_defaultsButton_clicked();
 
-    void on_pushButtonRevert_clicked();
+    void on_revertButton_clicked();
+
+    void on_whiteListButton_clicked();
 
 private:
     void writeSettings();

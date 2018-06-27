@@ -1,12 +1,13 @@
 #include "settingsdialog.h"
+#include "whitelistdialog.h"
 #include "ui_settingsdialog.h"
+#include "config.h"
 
 #include <QDir>
+#include <QDebug>
 #include <QString>
 #include <QStringList>
 #include <QStyleFactory>
-
-#define QT_SETTINGS_FILENAME "/boot/home/config/settings/qt-plugins"
 
 SettingsDialog::SettingsDialog(QWidget *parent) :
     QDialog(parent, Qt::CustomizeWindowHint | Qt::WindowCloseButtonHint | Qt::WindowTitleHint | Qt::MSWindowsFixedSizeDialogHint),
@@ -76,7 +77,7 @@ void SettingsDialog::readSettings()
     settings.endGroup();
  }
 
-void SettingsDialog::on_pushButtonDefaults_clicked()
+void SettingsDialog::on_defaultsButton_clicked()
 {
     ui->messagesCheckBox->setChecked(true);
     ui->filePanelCheckBox->setChecked(false);
@@ -92,7 +93,13 @@ void SettingsDialog::on_pushButtonDefaults_clicked()
     ui->menuIconCheckBox->setChecked(true);
 }
 
-void SettingsDialog::on_pushButtonRevert_clicked()
+void SettingsDialog::on_revertButton_clicked()
 {
     readSettings();
+}
+
+void SettingsDialog::on_whiteListButton_clicked()
+{
+    WhiteListDialog *dlg = new WhiteListDialog(this);
+    dlg->show();
 }
