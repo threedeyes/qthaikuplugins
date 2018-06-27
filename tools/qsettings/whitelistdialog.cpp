@@ -7,6 +7,7 @@
 #include <QStringListModel>
 #include <QModelIndexList>
 #include <QFileDialog>
+#include <QDebug>
 
 WhiteListDialog::WhiteListDialog(QWidget *parent) :
     QDialog(parent),
@@ -22,10 +23,6 @@ WhiteListDialog::WhiteListDialog(QWidget *parent) :
 
 WhiteListDialog::~WhiteListDialog()
 {
-    QSettings settings(QT_SETTINGS_FILENAME, QSettings::NativeFormat);
-    settings.beginGroup("QPA");
-    settings.setValue("opengl_whitelist", listModel.stringList());
-    settings.endGroup();
     delete ui;
 }
 
@@ -35,12 +32,32 @@ void WhiteListDialog::on_addButton_clicked()
     dialog.setFileMode(QFileDialog::AnyFile);
     if(dialog.exec()) {
         QStringList fileNames = dialog.selectedFiles();
-        QStringList stringList = listModel.stringList();
-        stringList << fileNames;
-        listModel.setStringList(stringList);
+        if (fileNames.count() >= 1) {
+            QStringList stringList = listModel.stringList();
+            stringList << fileNames;
+            listModel.setStringList(stringList);
+        }
     }
 }
 
 void WhiteListDialog::on_removeButton_clicked()
 {
+    int selected = ui->whiteListView->selectionModel()->selectedIndexes().at(0).row();
+    QStringList stringList = listModel.stringList();
+    stringList.removeAt(selected);
+    listModel.setStringList(stringList);
+}
+
+void WhiteListDialog::on_okButton_clicked()
+{
+    QSettings settings(QT_SETTINGS_FILENAME, QSettings::NativeFormat);
+    settings.beginGroup("QPA");
+    settings.setValue("opengl_whitelist", listModel.stringList());
+    settings.endGroup();
+    close();
+}
+
+void WhiteListDialog::on_cancelButton_clicked()
+{
+    close();
 }

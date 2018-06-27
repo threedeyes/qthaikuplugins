@@ -55,7 +55,7 @@
         </spacer>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton">
+        <widget class="QPushButton" name="cancelButton">
          <property name="text">
           <string>Calncel</string>
          </property>
@@ -65,7 +65,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton_2">
+        <widget class="QPushButton" name="okButton">
          <property name="text">
           <string>OK</string>
          </property>

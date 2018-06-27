@@ -152,6 +152,9 @@
             </item>
             <item>
              <widget class="QPushButton" name="whiteListButton">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
               <property name="sizePolicy">
                <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                 <horstretch>0</horstretch>

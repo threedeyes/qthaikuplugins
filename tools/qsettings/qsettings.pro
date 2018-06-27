@@ -8,8 +8,10 @@ QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = qsettings
+TARGET = QtConfigurator
 TEMPLATE = app
+
+QMAKE_POST_LINK += $$_PRO_FILE_PWD_/makeres.sh $$_PRO_FILE_PWD_ $$TARGET
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which has been marked as deprecated (the exact warnings
@@ -38,3 +40,4 @@ FORMS += \
     whitelistdialog.ui
 
 DISTFILES +=
+
