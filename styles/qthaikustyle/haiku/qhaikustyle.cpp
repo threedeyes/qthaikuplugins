@@ -850,8 +850,8 @@ void QHaikuStyle::drawPrimitive(PrimitiveElement elem,
 						break;
 					}						
 				}
-
-				be_control_look->DrawTextControlBorder(surface.view(), bRect, bRect, base, flags);
+				if (lineEdit->lineWidth != 0)
+					be_control_look->DrawTextControlBorder(surface.view(), bRect, bRect, base, flags);
 				painter->drawImage(r, surface.image());
 	        }
 	        painter->restore();
