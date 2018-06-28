@@ -114,7 +114,10 @@ QtHaikuWindow::QtHaikuWindow(QHaikuWindow *qwindow,
 	fGLView = NULL;
 #endif	
  	AddChild(fView);
-	RemoveShortcut('W', B_COMMAND_KEY);
+ 	Qt::WindowType type =  static_cast<Qt::WindowType>(int(qwindow->window()->flags() & Qt::WindowType_Mask));
+ 	bool dialog = ((type == Qt::Dialog) || (type == Qt::Sheet) || (type == Qt::MSWindowsFixedSizeDialogHint));
+ 	if (!dialog)
+		RemoveShortcut('W', B_COMMAND_KEY);
 	AddShortcut('Q', B_COMMAND_KEY, new BMessage(kQuitApplication));
 }
 
@@ -297,7 +300,7 @@ void QHaikuWindow::setWindowFlags(Qt::WindowFlags flags)
 {
 	windowFlags = flags;
 
-	Qt::WindowType type =  static_cast<Qt::WindowType>(int(flags & Qt::WindowType_Mask)) ;
+	Qt::WindowType type =  static_cast<Qt::WindowType>(int(flags & Qt::WindowType_Mask));
 
 	bool popup = (type == Qt::Popup);
 	bool splash = (type == Qt::SplashScreen);
