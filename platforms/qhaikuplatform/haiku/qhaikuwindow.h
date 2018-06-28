@@ -60,6 +60,7 @@
 
 #include "qhaikuview.h"
 
+#define kQuitApplication	'QAPP'
 #define kSizeGripEnable		'SGEN'
 #define kSizeGripDisable	'SGDI'
 

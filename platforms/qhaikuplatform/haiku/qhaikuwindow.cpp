@@ -115,6 +115,7 @@ QtHaikuWindow::QtHaikuWindow(QHaikuWindow *qwindow,
 #endif	
  	AddChild(fView);
 	RemoveShortcut('W', B_COMMAND_KEY);
+	AddShortcut('Q', B_COMMAND_KEY, new BMessage(kQuitApplication));
 }
 
 QtHaikuWindow::~QtHaikuWindow()
@@ -145,6 +146,8 @@ void QtHaikuWindow::DispatchMessage(BMessage *msg, BHandler *handler)
 				uint32 qt_keycode = translateKeyCode(key);
 				if ((qt_keycode == Qt::Key_Tab) && (modifier & B_CONTROL_KEY))
 					break;
+				if ((qt_keycode == Qt::Key_Q) && (modifier & B_COMMAND_KEY))
+					break;
 				bool press = (msg->what == B_KEY_DOWN) || (msg->what == B_UNMAPPED_KEY_DOWN);
 				Q_EMIT keyEvent(press ? QEvent::KeyPress : QEvent::KeyRelease, qt_keycode, fView->hostToQtModifiers(modifiers()), text);
 				break;	
@@ -163,6 +166,11 @@ void QtHaikuWindow::MessageReceived(BMessage* msg)
 		return;
 	}
 	switch(msg->what) {
+		case kQuitApplication:
+		{
+			be_app->PostMessage(B_QUIT_REQUESTED);
+			return;
+		}
 		case kSizeGripEnable:
 		{
 			if (Look() == B_TITLED_WINDOW_LOOK)
