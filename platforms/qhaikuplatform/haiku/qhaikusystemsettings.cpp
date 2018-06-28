@@ -70,19 +70,21 @@ QHash<QPlatformTheme::Font, QFont *> qt_haiku_createRoleFonts(QPlatformFontDatab
 	menu_info menuFontInfo;
 	get_menu_info(&menuFontInfo);
 
-    QFont baseFont = db.font(plainFontFamily, plainFontStyle, plainFont.Size() * 72.0 / 96.0);
+	float kDPI = 70.0 / 96.0;
+
+    QFont baseFont = db.font(plainFontFamily, plainFontStyle, plainFont.Size() * kDPI);
     if (plainFont.Size() >= 0)
-	    baseFont.setPixelSize(plainFont.Size());
+		baseFont.setPointSizeF(plainFont.Size() * kDPI);
     baseFont.setStretch(QFont::Unstretched);
 
-    QFont monoFont = db.font(fixedFontFamily, fixedFontStyle, fixedFont.Size() * 72.0 / 96.0);
+    QFont monoFont = db.font(fixedFontFamily, fixedFontStyle, fixedFont.Size() * kDPI);
     if (fixedFont.Size() >= 0)
-    	monoFont.setPixelSize(fixedFont.Size());
+		monoFont.setPointSizeF(fixedFont.Size() * kDPI);
     monoFont.setStretch(QFont::Unstretched);
 
-    QFont menuFont = db.font(menuFontInfo.f_family, menuFontInfo.f_style, menuFontInfo.font_size * 72.0 / 96.0);
+    QFont menuFont = db.font(menuFontInfo.f_family, menuFontInfo.f_style, menuFontInfo.font_size * kDPI);
     if (menuFontInfo.font_size >= 0)
-    	menuFont.setPixelSize(menuFontInfo.font_size);
+		menuFont.setPointSizeF(menuFontInfo.font_size * kDPI);
     menuFont.setStretch(QFont::Unstretched);
 
     QHash<QPlatformTheme::Font, QFont *> fonts;
@@ -103,7 +105,7 @@ QHash<QPlatformTheme::Font, QFont *> qt_haiku_createRoleFonts(QPlatformFontDatab
     fonts.insert(QPlatformTheme::FixedFont, new QFont(monoFont));
 
     QFont smallFont(baseFont);
-    smallFont.setPixelSize(plainFont.Size() * 0.75);
+    smallFont.setPointSizeF((plainFont.Size() * kDPI) * 0.75);
     fonts.insert(QPlatformTheme::SmallFont, new QFont(smallFont));
     fonts.insert(QPlatformTheme::MiniFont, new QFont(smallFont));
 
