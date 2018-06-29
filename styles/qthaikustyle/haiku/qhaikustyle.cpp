@@ -55,6 +55,8 @@
 #include <qprocess.h>
 #include <qpixmapcache.h>
 #include <qdialogbuttonbox.h>
+#include <qpa/qplatformfontdatabase.h>
+#include <qpa/qplatformtheme.h>
 #include <qscrollbar.h>
 #include <qspinbox.h>
 #include <qslider.h>
@@ -2289,9 +2291,7 @@ void QHaikuStyle::drawComplexControl(ComplexControl control, const QStyleOptionC
             painter->fillRect(tabRect.adjusted(2, 2, -2, 2 - frameWidth), gradient);
 
             // draw title
-            QFont font = widget->font();
-            font.setBold(true);
-            painter->setFont(font);
+            QFont font = painter->font();
             painter->setPen(textColor);
             // Note workspace also does elliding but it does not use the correct font
             QString title = QFontMetrics(font).elidedText(titleBar->text, Qt::ElideMiddle, textRect.width() - 14);
@@ -2614,8 +2614,9 @@ void QHaikuStyle::drawComplexControl(ComplexControl control, const QStyleOptionC
                     QColor textColor = groupBox->textColor;
                     if (textColor.isValid())
                         painter->setPen(textColor);
-					QFont font = widget->font();
-					font.setBold(true);
+					const QFont font = groupBox->subControls & SC_GroupBoxCheckBox ?
+						QFontDatabase::systemFont(QFontDatabase::GeneralFont) :
+						QFontDatabase::systemFont(QFontDatabase::TitleFont);
 					painter->setFont(font);
                     painter->drawText(textRect, Qt::TextHideMnemonic | Qt::AlignLeft| groupBox->textAlignment, groupBox->text);
                 }
@@ -3339,14 +3340,16 @@ QRect QHaikuStyle::subControlRect(ComplexControl control, const QStyleOptionComp
             QFontMetrics fontMetrics = option->fontMetrics;
             if (qobject_cast<const QGroupBox *>(widget)) {
                 //Prepare metrics for a bold font
-                QFont font = widget->font();
-                font.setBold(true);
+				const QFont font = groupBox->subControls & SC_GroupBoxCheckBox ?
+					QFontDatabase::systemFont(QFontDatabase::GeneralFont) :
+					QFontDatabase::systemFont(QFontDatabase::TitleFont);
                 fontMetrics = QFontMetrics(font);
             } else if (QStyleHelper::isInstanceOf(groupBox->styleObject, QAccessible::Grouping)) {
                 QVariant var = groupBox->styleObject->property("font");
                 if (var.isValid() && var.canConvert<QFont>()) {
-                    QFont font = var.value<QFont>();
-                    font.setBold(true);
+					const QFont font = groupBox->subControls & SC_GroupBoxCheckBox ?
+						QFontDatabase::systemFont(QFontDatabase::GeneralFont) :
+						QFontDatabase::systemFont(QFontDatabase::TitleFont);
                     fontMetrics = QFontMetrics(font);
                 }
             }
