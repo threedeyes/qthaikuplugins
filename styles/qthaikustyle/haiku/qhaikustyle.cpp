@@ -831,10 +831,10 @@ void QHaikuStyle::drawPrimitive(PrimitiveElement elem,
 			    BRect bRect(0.0f, 0.0f, r.width() - 1, r.height() - 1);
 				TemporarySurface surface(bRect);
 
-				rgb_color base = ui_color(B_DOCUMENT_BACKGROUND_COLOR);
+				rgb_color base = mkHaikuColor(option->palette.color( QPalette::Normal, QPalette::Window));
 				surface.view()->SetViewColor(base);
-				surface.view()->SetHighColor(base);
-				surface.view()->SetLowColor(base);
+				surface.view()->SetHighColor(ui_color(B_DOCUMENT_BACKGROUND_COLOR));
+				surface.view()->SetLowColor(ui_color(B_DOCUMENT_BACKGROUND_COLOR));
 				surface.view()->FillRect(bRect);
 
 				uint32 flags = 0;
@@ -864,9 +864,10 @@ void QHaikuStyle::drawPrimitive(PrimitiveElement elem,
         if (const QStyleOptionButton *checkbox = qstyleoption_cast<const QStyleOptionButton*>(option)) {
 			BRect bRect(0.0f, 0.0f, rect.width() - 1, rect.height() - 1);
 			TemporarySurface surface(bRect);
-			rgb_color base = mkHaikuColor(option->palette.color( QPalette::Normal, QPalette::Button));
-			surface.view()->SetHighColor(base);
-			surface.view()->SetLowColor(base);
+			rgb_color base = mkHaikuColor(option->palette.color( QPalette::Normal, QPalette::Window));
+			surface.view()->SetViewColor(base);
+			surface.view()->SetHighColor(ui_color(B_DOCUMENT_BACKGROUND_COLOR));
+			surface.view()->SetLowColor(ui_color(B_DOCUMENT_BACKGROUND_COLOR));
 			surface.view()->FillRect(bRect);
 
 			uint32 flags = 0;
