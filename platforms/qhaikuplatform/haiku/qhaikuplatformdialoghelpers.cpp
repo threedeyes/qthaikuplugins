@@ -40,12 +40,12 @@
 
 #include "qhaikuplatformdialoghelpers.h"
 
-#include <QTextDocument>
-
 #include <private/qguiapplication_p.h>
 #include <qpa/qplatformtheme.h>
 #include <QtWidgets/qmessagebox.h>
+#include <QTextDocument>
 #include <QHash>
+
 #include <qdebug.h>
 
 #include <Alert.h>
@@ -65,9 +65,7 @@ void QHaikuPlatformMessageDialogHelper::exec()
         show(Qt::Dialog, Qt::ApplicationModal, 0);
 }
 
-bool QHaikuPlatformMessageDialogHelper::show(Qt::WindowFlags windowFlags
-                                         , Qt::WindowModality windowModality
-                                         , QWindow *parent)
+bool QHaikuPlatformMessageDialogHelper::show(Qt::WindowFlags, Qt::WindowModality, QWindow *)
 {
     QSharedPointer<QMessageDialogOptions> options = this->options();
     if (!options.data())
@@ -95,12 +93,6 @@ bool QHaikuPlatformMessageDialogHelper::show(Qt::WindowFlags windowFlags
 	QTextDocument doc;
 	doc.setHtml(text);
 
-	int escButton = -1;
-
-	int buttons = options->standardButtons();
-    if (buttons == QPlatformDialogHelper::NoButton)
-        buttons = QPlatformDialogHelper::Ok;
-
 	BAlert* alert = new BAlert();
 	alert->SetText(doc.toPlainText().toUtf8());
 	alert->SetType(type);
@@ -108,8 +100,9 @@ bool QHaikuPlatformMessageDialogHelper::show(Qt::WindowFlags windowFlags
 	alert->SetButtonWidth(B_WIDTH_AS_USUAL);
 
 	int32 buttonsCount = 0;
+
 	QHash<int32, uint32> buttonsHash;
-	
+
 	uint32 defButtonsPrio[]={
 			QPlatformDialogHelper::Ok,
 			QPlatformDialogHelper::Apply,
@@ -125,6 +118,9 @@ bool QHaikuPlatformMessageDialogHelper::show(Qt::WindowFlags windowFlags
 			QPlatformDialogHelper::NoButton
 		};
 
+	int buttons = options->standardButtons() == QPlatformDialogHelper::NoButton ?
+		QPlatformDialogHelper::Ok : options->standardButtons();
+
 	uint32 defButtonId = QPlatformDialogHelper::NoButton;
 	for (int i = 0; defButtonsPrio[i] != QPlatformDialogHelper::NoButton; i++) {
 		if (buttons & defButtonsPrio[i] && defButtonId == QPlatformDialogHelper::NoButton)
@@ -134,7 +130,7 @@ bool QHaikuPlatformMessageDialogHelper::show(Qt::WindowFlags windowFlags
     for (uint32 i = QPlatformDialogHelper::FirstButton; i < QPlatformDialogHelper::LastButton; i<<=1) {
         if ((buttons & i) && i != defButtonId) {
             QString label = QGuiApplicationPrivate::platformTheme()->standardButtonText(i);
-            label.remove(QChar('&'));
+            label = QPlatformTheme::removeMnemonics(label).trimmed();
             alert->AddButton(label.toUtf8(), buttonsCount);
             buttonsHash[buttonsCount] = i;
             buttonsCount++;
@@ -143,7 +139,7 @@ bool QHaikuPlatformMessageDialogHelper::show(Qt::WindowFlags windowFlags
 
 	if (defButtonId != QPlatformDialogHelper::NoButton) {
 		QString label = QGuiApplicationPrivate::platformTheme()->standardButtonText(defButtonId);
-		label.remove(QChar('&'));
+		label = QPlatformTheme::removeMnemonics(label).trimmed();
 		alert->AddButton(label.toUtf8(), buttonsCount);
 		buttonsHash[buttonsCount] = defButtonId;
 		buttonsCount++;

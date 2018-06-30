@@ -42,7 +42,7 @@
 #include "qhaikuplatformmenuitem.h"
 #include "qhaikunativeiconmenuitem.h"
 
-#include "qdebug.h"
+#include <qpa/qplatformtheme.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -195,10 +195,8 @@ BPopUpMenu* QHaikuPlatformMenu::makeBPopUpMenu(QHaikuPlatformMenu *menu)
     }
     
     for (it = menuItems.begin(); it != menuItems.end(); ++it) {
-    	QString text = (*it)->text().remove('&');;
-    	
-    	qDebug() << text;
-    	
+    	QString text = QPlatformTheme::removeMnemonics((*it)->text()).trimmed();
+
     	if (!(*it)->isSeparator()) {
     		BBitmap *icon = NULL;
     		
