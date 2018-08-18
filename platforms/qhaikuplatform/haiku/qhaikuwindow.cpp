@@ -375,7 +375,6 @@ void QHaikuWindow::setWindowFlags(Qt::WindowFlags flags)
 			B_NOT_ANCHORED_ON_ACTIVATE;
 		wfeel = B_FLOATING_ALL_WINDOW_FEEL;
 	}
-
 	m_window->SetLook(wlook);
 	m_window->SetFeel(wfeel);
 	m_window->SetFlags(wflag);
@@ -484,7 +483,8 @@ void QHaikuWindow::setVisible(bool visible)
 		window()->modality() == Qt::ApplicationModal) {
 		m_window->SetFeel(B_MODAL_APP_WINDOW_FEEL);
 	}
-	if (QGuiApplication::modalWindow() != NULL) {
+	if (QGuiApplication::modalWindow() != NULL &&
+		window()->type() == Qt::Dialog) {
 		m_window->SetFeel(B_MODAL_APP_WINDOW_FEEL);
 	}
 	if (visible) {
