@@ -60,7 +60,8 @@ void SettingsDialog::readSettings()
 {
     QSettings settings(QT_SETTINGS_FILENAME, QSettings::NativeFormat);
     settings.beginGroup("QPA");
-    ui->messagesCheckBox->setChecked(settings.value("native_messages", true).toBool());
+    //ui->messagesCheckBox->setChecked(settings.value("native_messages", true).toBool());
+    ui->messagesCheckBox->setChecked(false);
     ui->filePanelCheckBox->setChecked(settings.value("native_filepanel", false).toBool());
     ui->colorPickerCheckBox->setChecked(settings.value("native_colorpicker", false).toBool());
     ui->openGlCheckBox->setChecked(settings.value("opengl_enabled", false).toBool());

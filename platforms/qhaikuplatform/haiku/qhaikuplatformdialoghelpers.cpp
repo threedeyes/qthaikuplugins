@@ -51,6 +51,8 @@
 #include <Alert.h>
 #include <TextView.h>
 
+#define DISABLE_MSG_NATIVE 1
+
 namespace QtHaikuDialogHelpers {
 
 QHaikuPlatformMessageDialogHelper::QHaikuPlatformMessageDialogHelper()
@@ -68,7 +70,7 @@ void QHaikuPlatformMessageDialogHelper::exec()
 bool QHaikuPlatformMessageDialogHelper::show(Qt::WindowFlags, Qt::WindowModality, QWindow *)
 {
     QSharedPointer<QMessageDialogOptions> options = this->options();
-    if (!options.data())
+    if (!options.data() || DISABLE_MSG_NATIVE)
         return false;
 
     const QString informativeText = options->informativeText();

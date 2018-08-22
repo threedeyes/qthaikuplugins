@@ -84,6 +84,9 @@
              <layout class="QVBoxLayout" name="verticalLayout_5">
               <item>
                <widget class="QCheckBox" name="messagesCheckBox">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
                 <property name="text">
                  <string>Messages</string>
                 </property>
@@ -299,7 +302,7 @@
                 <item>
                  <widget class="QLabel" name="smallIconSizeLabel">
                   <property name="text">
-                   <string>Small Icon size:</string>
+                   <string>Small Icons size:</string>
                   </property>
                  </widget>
                 </item>
