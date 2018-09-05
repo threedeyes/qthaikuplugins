@@ -817,8 +817,14 @@ void QHaikuStyle::drawPrimitive(PrimitiveElement elem,
         painter->save();
         {
             bool active = (option->state & State_Active);
-		    qt_haiku_draw_windows_frame(painter, option->rect, active ? B_WINDOW_BORDER_COLOR : B_WINDOW_INACTIVE_BORDER_COLOR, 
-		    	BControlLook::B_LEFT_BORDER | BControlLook::B_RIGHT_BORDER | BControlLook::B_BOTTOM_BORDER);
+            if (widget && widget->inherits("QMdiSubWindow")) {
+				qt_haiku_draw_windows_frame(painter, option->rect, active ? B_WINDOW_BORDER_COLOR : B_WINDOW_INACTIVE_BORDER_COLOR,
+					BControlLook::B_LEFT_BORDER | BControlLook::B_RIGHT_BORDER | BControlLook::B_BOTTOM_BORDER);
+			} else {
+				QColor menuBackground = option->palette.background().color().lighter(104);
+				painter->fillRect(option->rect, menuBackground);
+				proxy()->drawPrimitive(PE_FrameMenu, option, painter, widget);
+            }
         }
         painter->restore();
         break;
