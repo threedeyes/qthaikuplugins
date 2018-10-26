@@ -128,8 +128,8 @@ static uint32 platformHaikuScanCodes[] = {
         Qt::Key_V,			0x4F,
         Qt::Key_B,			0x50,
         Qt::Key_N,			0x51,
-        Qt::Key_M,			0x51,
-        Qt::Key_Less,		0x52,
+        Qt::Key_M,			0x52,
+        Qt::Key_Less,		0x53,
         Qt::Key_Greater,	0x54,
         Qt::Key_Question,	0x55,
         Qt::Key_Up,			0x57,	//cursor
