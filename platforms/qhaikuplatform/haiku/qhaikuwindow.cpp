@@ -140,19 +140,19 @@ void QtHaikuWindow::DispatchMessage(BMessage *msg, BHandler *handler)
 		case B_UNMAPPED_KEY_DOWN:
 		case B_KEY_DOWN:
 			{
-				uint32 modifier = msg->FindInt32("modifiers");
+				uint32 modifiers = msg->FindInt32("modifiers");
 				uint32 key = msg->FindInt32("key");
 				QString text;
 				const char* bytes;
 				if(msg->FindString("bytes", &bytes) == B_OK)
 					text = QString::fromUtf8(bytes);
 				uint32 qt_keycode = translateKeyCode(key);
-				if ((qt_keycode == Qt::Key_Tab) && (modifier & B_CONTROL_KEY))
+				if ((qt_keycode == Qt::Key_Tab) && (modifiers & B_CONTROL_KEY))
 					break;
-				if ((qt_keycode == Qt::Key_Q) && (modifier & B_COMMAND_KEY))
+				if ((qt_keycode == Qt::Key_Q) && (modifiers & B_COMMAND_KEY))
 					break;
 				bool press = (msg->what == B_KEY_DOWN) || (msg->what == B_UNMAPPED_KEY_DOWN);
-				Q_EMIT keyEvent(press ? QEvent::KeyPress : QEvent::KeyRelease, qt_keycode, fView->hostToQtModifiers(modifiers()), text);
+				Q_EMIT keyEvent(press ? QEvent::KeyPress : QEvent::KeyRelease, qt_keycode, fView->hostToQtModifiers(modifiers), text);
 				break;	
 			}
 		default:
@@ -602,7 +602,7 @@ void QHaikuWindow::maximizeWindowRespected(bool respected)
 
 	BDeskbar deskbar;
 	BRect deskbarFrame = deskbar.Frame();
-	if (!deskbar.IsAutoHide() && respected) {
+	if (!deskbar.IsAutoHide() && respected && !(modifiers() & B_SHIFT_KEY)) {
 		switch (deskbar.Location()) {
 			case B_DESKBAR_TOP:
 				zoomArea.top = deskbarFrame.bottom + 2;
