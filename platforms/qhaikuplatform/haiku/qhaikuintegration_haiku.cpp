@@ -236,6 +236,13 @@ QHaikuIntegration *QHaikuIntegration::createHaikuIntegration(const QStringList& 
 	settings.beginGroup("QPA");
 	if (settings.value("qml_softwarecontext", true).toBool())
 		putenv("QMLSCENE_DEVICE=softwarecontext");
+	
+	// Set XDG variables
+	putenv("XDG_CONFIG_HOME=/boot/home/config/settings");
+	putenv("XDG_CONFIG_DIRS=/boot/system/settings");
+	putenv("XDG_CACHE_HOME=/boot/home/config/cache");
+	putenv("XDG_DATA_HOME=/boot/home/config/non-packaged/data");
+	putenv("XDG_DATA_DIRS=/boot/system/non-packaged/data:/boot/system/data");
 
     return new QHaikuIntegration(parameters, argc, argv);
 }
