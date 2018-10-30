@@ -755,10 +755,11 @@ void QHaikuWindow::platformWindowActivated(bool activated)
             && !activeWindowChangeQueued(window())) {
             QWindowSystemInterface::handleWindowActivated(Q_NULLPTR);
 		}
+		QWindowSystemInterface::handleApplicationStateChanged(Qt::ApplicationInactive);
 		return;
 	}
-	QWindowSystemInterface::handleWindowActivated(window());
 	QWindowSystemInterface::handleApplicationStateChanged(Qt::ApplicationActive);
+	QWindowSystemInterface::handleWindowActivated(window(), Qt::ActiveWindowFocusReason);
 }
 
 
