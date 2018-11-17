@@ -15,7 +15,7 @@
 
 class DeskbarView : public BView {
 	public:
-		DeskbarView(team_id tid);
+		DeskbarView(team_id tid, BRect rect);
 		~DeskbarView();
 		void MouseDown(BPoint point);
 		void MouseUp(BPoint point);

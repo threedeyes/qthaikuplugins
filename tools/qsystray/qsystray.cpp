@@ -1,5 +1,4 @@
 #include <OS.h>
-
 #include <Application.h>
 #include <Window.h>
 #include <Deskbar.h>
@@ -20,8 +19,7 @@
 #define REPL_NAME		"QtTrayItem"
 #define DBAR_SIGNATURE 	"application/x-vnd.Be-TSKB"
 
-
-DeskbarView::DeskbarView(team_id tid) : BView(BRect(0,0,15,15), REPL_NAME,B_FOLLOW_NONE,B_WILL_DRAW)
+DeskbarView::DeskbarView(team_id tid, BRect rect) : BView(rect, REPL_NAME, B_FOLLOW_NONE, B_WILL_DRAW)
 {
 	id = -1;
 	team = tid;
@@ -35,9 +33,9 @@ DeskbarView::DeskbarView(BMessage *message) : BView(message)
 {
 	const void* data;
 	ssize_t numBytes;
-	message->FindData("color",B_ANY_TYPE,&data,&numBytes);	
+	message->FindData("color", B_ANY_TYPE, &data, &numBytes);
 	color = *((rgb_color*)data);
-	message->FindData("team",B_ANY_TYPE,&data,&numBytes);
+	message->FindData("team", B_ANY_TYPE, &data, &numBytes);
 	team = *((team_id*)data);
 	id = -1;
 	ticks = 0;
@@ -47,7 +45,8 @@ DeskbarView::DeskbarView(BMessage *message) : BView(message)
 }
 
 DeskbarView *DeskbarView::Instantiate(BMessage *data) {
-	if (!validate_instantiation(data, REPL_NAME)) return NULL;
+	if (!validate_instantiation(data, REPL_NAME))
+		return NULL;
 	return new DeskbarView(data);
 }
 
@@ -75,16 +74,18 @@ void DeskbarView::Draw(BRect r)
 	SetDrawingMode(B_OP_COPY);
 	SetHighColor(Parent()->ViewColor());
 	FillRect(Bounds());
-	if(ticks>3 && !icon) {
-		SetHighColor(32,32,32,100);			
+
+	if (ticks>3 && !icon) {
+		SetHighColor(32,32,32,100);
 		SetDrawingMode(B_OP_ALPHA);
 		DrawChar('?',BPoint(4,12));
 	}
-	if(icon) {
-		float dx = (Bounds().Width() - icon->Bounds().Width())/2;
-		float dy = (Bounds().Height() - icon->Bounds().Height())/2;
-		SetDrawingMode(B_OP_ALPHA);		
-		DrawBitmap(icon,BPoint(dx,dy));
+
+	if (icon) {
+		float dx = (Bounds().Width() - icon->Bounds().Width()) / 2;
+		float dy = (Bounds().Height() - icon->Bounds().Height()) / 2;
+		SetDrawingMode(B_OP_ALPHA);
+		DrawBitmap(icon, BPoint(dx,dy));
 	}
 }
 
@@ -95,15 +96,14 @@ void DeskbarView::MouseMoved(BPoint point, uint32 transit,const BMessage *messag
 void DeskbarView::MouseUp(BPoint point)
 {
    uint32 buttons = lastButtons;
-   
+
    BMessage *mes = new BMessage('TRAY');
-   mes->AddInt32("event",TRAY_MOUSEUP);
-   mes->AddPoint("point",ConvertToScreen(point));
-   mes->AddInt32("buttons",buttons);
-   mes->AddInt32("clicks",1);
-   mes->AddData("qtrayobject",B_ANY_TYPE,&traysysobject,sizeof(void*));
+   mes->AddInt32("event", TRAY_MOUSEUP);
+   mes->AddPoint("point", ConvertToScreen(point));
+   mes->AddInt32("buttons", buttons);
+   mes->AddInt32("clicks", 1);
+   mes->AddData("qtrayobject", B_ANY_TYPE, &traysysobject, sizeof(void*));
    ReplyMessenger.SendMessage(mes);
-   
 }
 
 void DeskbarView::MouseDown(BPoint point)
@@ -111,24 +111,22 @@ void DeskbarView::MouseDown(BPoint point)
    uint32 buttons = Window()->CurrentMessage()->FindInt32("buttons");
    int32 clicks = Window()->CurrentMessage()->FindInt32("clicks");
    lastButtons = buttons;
-   
+
    BMessage *mes = new BMessage('TRAY');
-   mes->AddInt32("event",TRAY_MOUSEDOWN);
-   mes->AddPoint("point",ConvertToScreen(point));
-   mes->AddInt32("buttons",buttons);
-   mes->AddInt32("clicks",clicks);
-   mes->AddData("qtrayobject",B_ANY_TYPE,&traysysobject,sizeof(void*));
+   mes->AddInt32("event", TRAY_MOUSEDOWN);
+   mes->AddPoint("point", ConvertToScreen(point));
+   mes->AddInt32("buttons", buttons);
+   mes->AddInt32("clicks", clicks);
+   mes->AddData("qtrayobject", B_ANY_TYPE, &traysysobject, sizeof(void*));
    ReplyMessenger.SendMessage(mes);
-   
 }
 
 void DeskbarView::MessageReceived(BMessage *message) {
-//	message->PrintToStream();
 	switch (message->what)
 	{
 		case 'LIVE':
 			{
-				ticks++;				
+				ticks++;
 				Invalidate();
 				team_info teamInfo;
 				status_t error = get_team_info(team, &teamInfo);
@@ -146,23 +144,22 @@ void DeskbarView::MessageReceived(BMessage *message) {
 			{
 				switch( message->FindInt32("what2") ) {
 					case 'TTIP':
-						{							
-							const char *tip=NULL;
-							status_t res = message->FindString("tooltip",&tip);
-							
-							if(!tip || res!=B_OK)
+						{
+							const char *tip = NULL;
+							status_t res = message->FindString("tooltip", &tip);
+
+							if (!tip || res!=B_OK)
 								tip = applicationName.String();
-							if(strlen(tip)==0)
-								tip = applicationName.String();													
-							if(strlen(tip)!=0)		
+							if (strlen(tip) == 0)
+								tip = applicationName.String();
+							if (strlen(tip) != 0)
 								SetToolTip(tip);
-								
 							break;
-						}					
+						}
 					case 'BITS':
 						{
-							BBitmap *oldicon=icon;
-							icon=NULL;
+							BBitmap *oldicon = icon;
+							icon = NULL;
 							delete oldicon;
 							BMessage bits;
 							message->FindMessage("icon", &bits);
@@ -173,22 +170,22 @@ void DeskbarView::MessageReceived(BMessage *message) {
 						}
 					case '_ID_':
 						{
-							message->FindInt32("ReplicantID",&id);
+							message->FindInt32("ReplicantID", &id);
 							break;
 						}
 					case 'MSGR':
 						{
 							ssize_t numBytes;
-							const char *name=NULL;
+							const char *name = NULL;
 							message->FindMessenger("messenger", &ReplyMessenger);
-							message->FindData("qtrayobject",B_ANY_TYPE,&traysysobject,&numBytes);
-							if(message->FindString("application_name",&name)==B_OK)
+							message->FindData("qtrayobject", B_ANY_TYPE, &traysysobject, &numBytes);
+							if(message->FindString("application_name",&name) == B_OK)
 								applicationName.SetTo(name);
 							break;
 						}
 				}
 			}
-			break;		
+			break;
 		default:
 			BView::MessageReceived(message);
 			break;
@@ -197,7 +194,6 @@ void DeskbarView::MessageReceived(BMessage *message) {
 
 DeskbarView::~DeskbarView()
 {
- 
 }
 
 BMessenger GetMessenger(void)
@@ -208,12 +204,12 @@ BMessenger GetMessenger(void)
 	if (aErr != B_OK)return aResult;
 
 	BMessage aMessage(B_GET_PROPERTY);
-	
+
 	aMessage.AddSpecifier("Messenger");
 	aMessage.AddSpecifier("Shelf");
 	aMessage.AddSpecifier("View", "Status");
 	aMessage.AddSpecifier("Window", "Deskbar");
-	
+
 	BMessage aReply;
 
 	if (aDeskbar.SendMessage(&aMessage, &aReply, 1000000, 1000000) == B_OK)
@@ -221,22 +217,21 @@ BMessenger GetMessenger(void)
 	return aResult;
 }
 
-
 status_t SendMessageToReplicant(int32 index, BMessage *msg)
 {
 	BMessage aReply;
 	status_t aErr = B_OK;
-	
+
 	msg->AddInt32( "what2", msg->what );
 	msg->what = B_SET_PROPERTY;
 
-	BMessage	uid_specifier(B_ID_SPECIFIER);
-	
+	BMessage uid_specifier(B_ID_SPECIFIER);
+
 	msg->AddSpecifier("View");
 	uid_specifier.AddInt32("id", index);
 	uid_specifier.AddString("property", "Replicant");
 	msg->AddSpecifier(&uid_specifier);
-		
+
 	aErr = GetMessenger().SendMessage( msg, (BHandler*)NULL, 1000000 );
 	return aErr;
 }
@@ -244,28 +239,30 @@ status_t SendMessageToReplicant(int32 index, BMessage *msg)
 int32 LoadIcon(team_id tid)
 {
 	BDeskbar deskbar;
-	int32 id=-1;
 
-	deskbar.AddItem(new DeskbarView(tid),&id);
-	
-	if(id>0) {
+	int32 id = -1;
+
+	deskbar.AddItem(new DeskbarView(tid, BRect(0,0, deskbar.MaxItemHeight() - 1, deskbar.MaxItemHeight() - 1)), &id);
+
+	if (id > 0) {
 		BMessage msg('_ID_');
-		msg.AddInt32("ReplicantID",id);
-		SendMessageToReplicant(id,&msg);
+		msg.AddInt32("ReplicantID", id);
+		SendMessageToReplicant(id, &msg);
 	}
-	
-	return id;	
+
+	return id;
 }
 
 int32 LoadIcon(void)
 {
 	thread_info threadInfo;
 	status_t error = get_thread_info(find_thread(NULL), &threadInfo);
-	if (error != B_OK) {
+
+	if (error != B_OK)
 		return 0;
-	}
+
 	team_id sTeam = threadInfo.team;
-	
+
 	return LoadIcon(sTeam);
 }
 
@@ -279,7 +276,7 @@ int main(int argc, char *argv[])
 {
 	BApplication(APP_SIGNATURE);
 
-	if(argc<2) {
+	if (argc < 2) {
 		printf("QtSystrayManager for Haiku v0.2\n\tqsystray [team_id]\n\n");
 		exit(0);
 	}
