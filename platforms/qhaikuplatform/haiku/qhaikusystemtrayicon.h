@@ -1,7 +1,7 @@
 /****************************************************************************
 **
 ** Copyright (C) 2017 The Qt Company Ltd.
-** Copyright (C) 2015-2017 Gerasim Troeglazov,
+** Copyright (C) 2015-2018 Gerasim Troeglazov,
 ** Contact: 3dEyes@gmail.com
 **
 ** This file is part of the plugins of the Qt Toolkit.
@@ -45,11 +45,13 @@
 
 #ifndef QT_NO_SYSTEMTRAYICON
 
-#include "QtCore/qstring.h"
+#include "QString"
+#include "QSystemTrayIcon"
+#include "QMenu"
+
 #include "QtGui/qpa/qplatformsystemtrayicon.h"
 #include "QtGui/qpa/qplatformmenu.h"
-#include "QtWidgets/qsystemtrayicon.h"
-#include "QtWidgets/qmenu.h"
+
 #include "qfileinfo.h"
 
 #include <Application.h>

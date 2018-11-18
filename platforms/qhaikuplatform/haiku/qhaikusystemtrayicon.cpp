@@ -1,7 +1,7 @@
 /****************************************************************************
 **
 ** Copyright (C) 2017 The Qt Company Ltd.
-** Copyright (C) 2015-2017 Gerasim Troeglazov,
+** Copyright (C) 2015-2018 Gerasim Troeglazov,
 ** Contact: 3dEyes@gmail.com
 **
 ** This file is part of the plugins of the Qt Toolkit.
@@ -38,9 +38,10 @@
 **
 ****************************************************************************/
 
-#include "QtCore/qcoreapplication.h"
+#include "QCoreApplication"
+#include "QDebug"
+
 #include "qhaikusystemtrayicon.h"
-#include "qdebug.h"
 
 #include <OS.h>
 #include <Application.h>
@@ -144,16 +145,18 @@ QHaikuSystemTrayIcon::updateIcon(const QIcon &qicon)
         return;
 
     currentIcon = qicon;
-
-    QSize size = qicon.actualSize(QSize(16, 16));
+	BDeskbar deskbar;
+	QSize trayIconSize = QSize(deskbar.MaxItemHeight(), deskbar.MaxItemHeight());
+    QSize size = qicon.actualSize(trayIconSize);
     QPixmap pixmap = qicon.pixmap(size);
-    if (pixmap.isNull())
+    QPixmap scaledPixmap = pixmap.scaled(trayIconSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    if (scaledPixmap.isNull())
         return;
-    QImage image = pixmap.toImage();
+    QImage image = scaledPixmap.toImage();
     if(image.isNull())
     	return;
     	
-	BBitmap *icon = new BBitmap(BRect(0, 0, size.width()-1, size.height()-1), B_RGBA32);
+	BBitmap *icon = new BBitmap(BRect(0, 0, trayIconSize.width() - 1, trayIconSize.height() - 1), B_RGBA32);
 	if(icon) {
 		icon->SetBits((const void*)image.bits(), image.byteCount(), 0, B_RGBA32);
 
@@ -332,7 +335,7 @@ QHaikuSystemTrayIcon::haikuEvents(BMessage *message)
 bool
 QHaikuSystemTrayIcon::findTrayExecutable(void)
 {
-	sysTrayExecutable.setFile("/bin/qsystray");
+	sysTrayExecutable.setFile("/NoIndex64/Clones/qthaikuplugins/tools/qsystray/qsystray");
 	if (sysTrayExecutable.exists() && sysTrayExecutable.isFile())
 		return true;
 	return false;
