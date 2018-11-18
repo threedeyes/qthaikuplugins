@@ -335,7 +335,7 @@ QHaikuSystemTrayIcon::haikuEvents(BMessage *message)
 bool
 QHaikuSystemTrayIcon::findTrayExecutable(void)
 {
-	sysTrayExecutable.setFile("/NoIndex64/Clones/qthaikuplugins/tools/qsystray/qsystray");
+	sysTrayExecutable.setFile("/bin/qsystray");
 	if (sysTrayExecutable.exists() && sysTrayExecutable.isFile())
 		return true;
 	return false;
