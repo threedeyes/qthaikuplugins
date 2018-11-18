@@ -68,7 +68,7 @@ QT_BEGIN_NAMESPACE
 
 QHaikuIntegration::QHaikuIntegration(const QStringList &parameters, int &argc, char **argv)
 	: QPlatformIntegration()
-	, m_clipboard(0)
+	, m_clipboard(new QHaikuClipboard)
     , m_drag(new QSimpleDrag)
     , m_services(new QHaikuServices)
     , m_haikuSystemLocale(new QHaikuSystemLocale)
@@ -157,8 +157,6 @@ QPlatformDrag *QHaikuIntegration::drag() const
 
 QPlatformClipboard *QHaikuIntegration::clipboard() const
 {
-    if (!m_clipboard)
-        m_clipboard = new QHaikuClipboard;
     return m_clipboard;
 }
 

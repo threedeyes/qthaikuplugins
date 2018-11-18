@@ -41,7 +41,12 @@
 #ifndef QHAIKUCLIPBOARD_H
 #define QHAIKUCLIPBOARD_H
 
-#include <QtCore/qglobal.h>
+#include <qglobal.h>
+
+#include <Looper.h>
+#include <Message.h>
+#include <Messenger.h>
+#include <Bitmap.h>
 
 #if !defined(QT_NO_CLIPBOARD)
 #include <qpa/qplatformclipboard.h>
@@ -53,12 +58,15 @@ class QHaikuClipboard : public QPlatformClipboard
 public:
     QHaikuClipboard();
     ~QHaikuClipboard();
-    QMimeData *mimeData(QClipboard::Mode mode = QClipboard::Clipboard);
-    void setMimeData(QMimeData *data, QClipboard::Mode mode = QClipboard::Clipboard);
-
+    QMimeData *mimeData(QClipboard::Mode mode = QClipboard::Clipboard) override;
+    void setMimeData(QMimeData *data, QClipboard::Mode mode = QClipboard::Clipboard) override;
+    bool supportsMode(QClipboard::Mode mode) const override;
+    bool ownsMode(QClipboard::Mode mode) const override;
+	void clipboardChanged();
 private:
-    class MimeData;
-    MimeData *m_mimeData;
+	bool preventChangedEvent;
+    QMimeData *m_systemMimeData;
+    QMimeData *m_userMimeData;
 };
 
 QT_END_NAMESPACE

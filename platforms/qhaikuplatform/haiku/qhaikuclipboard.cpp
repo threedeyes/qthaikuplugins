@@ -42,45 +42,88 @@
 
 #include "qhaikuclipboard.h"
 
-#include <QtGui/QColor>
+#include <QColor>
+#include <QMimeData>
+#include <QStringList>
+#include <QUrl>
+#include <QImage>
+#include <QTextDocumentFragment>
+#include <QDebug>
 
-#include <QtCore/QDebug>
-#include <QtCore/QMimeData>
-#include <QtCore/QStringList>
-#include <QtCore/QUrl>
-
+#include <Application.h>
 #include <String.h>
 #include <Clipboard.h>
+#include <Messenger.h>
 
 QT_BEGIN_NAMESPACE
 
 QHaikuClipboard::QHaikuClipboard()
+    : m_systemMimeData(nullptr)
+    , m_userMimeData(nullptr)
+    , preventChangedEvent(false)
 {
+	status_t err;
+	err = be_clipboard->StartWatching(be_app_messenger);
+	if (err != B_OK)
+		qDebug() << "ERROR: be_clipboard->StartWatching: " << err;
+
+	BMessage *msg = new BMessage('CLIP');
+	msg->AddPointer("QHaikuClipboard", (void*)this);
+	be_app->PostMessage(msg);
 }
 
 QHaikuClipboard::~QHaikuClipboard()
-{   
+{
+	be_clipboard->StopWatching(be_app_messenger);
+	delete m_userMimeData;
+	delete m_systemMimeData;
 }
 
-void QHaikuClipboard::setMimeData(QMimeData *data, QClipboard::Mode mode)
+void QHaikuClipboard::setMimeData(QMimeData *mimeData, QClipboard::Mode mode)
 {
     if (mode != QClipboard::Clipboard)
         return;
 
+    if (mimeData) {
+        if (m_systemMimeData == mimeData)
+            return;
+
+        if (m_userMimeData == mimeData)
+            return;
+    }
+
 	if (be_clipboard->Lock()) {
 		be_clipboard->Clear();
-		if (data){
+		if (mimeData) {
 			BMessage* clip = (BMessage *)NULL;
 	    	if( (clip = be_clipboard->Data()) != NULL) {
-	    		QStringList formats = data->formats();
-				for(int f = 0; f < formats.size(); ++f) {
-            		QString mimeType = formats.at(f);	    			
-					clip->AddData(mimeType.toUtf8(), B_MIME_TYPE, data->data(mimeType).data(), data->data(mimeType).count());
-	    		}
-	    	}
+				bool textPlain = false;
+				QStringList formats = mimeData->formats();
+				for (int format = 0; format < formats.size(); ++format) {
+					QString mimeType = formats.at(format);
+					clip->AddData(mimeType.toUtf8(), B_MIME_TYPE, mimeData->data(mimeType).data(), mimeData->data(mimeType).count());
+					if (mimeType == "text/plain")
+						textPlain = true;
+				}
+				if (!textPlain && mimeData->hasHtml()) {
+					QString body = mimeData->html();
+					body = body.mid(body.indexOf("<body"));
+					body = body.mid(body.indexOf(">") + 1);
+					body = body.left(body.indexOf("</body>"));
+					body = body.remove("\n");
+					QString plainText = QTextDocumentFragment::fromHtml(body).toPlainText();
+					clip->AddData("text/plain", B_MIME_TYPE, plainText.toUtf8(), plainText.toUtf8().count() + 1);
+				}
+			}
 		}
+
+		preventChangedEvent = true;
+		m_userMimeData = mimeData;
+
 		be_clipboard->Commit();
 	   	be_clipboard->Unlock();
+
+		emitChanged(QClipboard::Clipboard);
 	}
 }
 
@@ -89,39 +132,106 @@ QMimeData *QHaikuClipboard::mimeData(QClipboard::Mode mode)
     if (mode != QClipboard::Clipboard)
         return 0;
 
-	QMimeData *md = new QMimeData();
+    if (m_userMimeData)
+        return m_userMimeData;
+
+    if (!m_systemMimeData)
+        m_systemMimeData = new QMimeData();
+    else
+        m_systemMimeData->clear();
 
 	BMessage* clip = (BMessage *)NULL;
   	if (be_clipboard->Lock()) {
     	if( (clip = be_clipboard->Data()) != NULL) {
     		BMessage *msg = (BMessage*)(be_clipboard->Data());
-    		
+
 			char *name;
 			uint32 type;
 			int32 count;
 
-			for ( int i = 0; msg->GetInfo(B_MIME_TYPE, i, &name, &type, &count) == B_OK; i++ ) {
+			for ( int i = 0; msg->GetInfo(B_ANY_TYPE, i, &name, &type, &count) == B_OK; i++ ) {
 				const void *data;
 				ssize_t dataLen = 0;
-				status_t stat = msg->FindData(name,B_MIME_TYPE,&data,&dataLen);
-				if(dataLen && stat==B_OK)	{
+				status_t stat = msg->FindData(name, B_ANY_TYPE, &data, &dataLen);
+
+				if(dataLen && stat==B_OK) {
 					QString mime(name);
-					if(mime=="text/plain") {
+					if (mime == "text/plain") {
 						QString text = QString::fromUtf8((const char*)data, dataLen);
-						md->setText(text);
-					} else if(mime=="text/html") {
+						m_systemMimeData->setText(text);
+					} else if (mime == "text/html") {
 						QString html = QString::fromUtf8((const char*)data, dataLen);
-						md->setHtml(html);
+						m_systemMimeData->setHtml(html);
+					} else if (mime == "image/bitmap") {
+						BMessage flatten;
+						if (msg->FindMessage("image/bitmap", &flatten) == B_OK) {
+							BBitmap* bitmap = new(std::nothrow) BBitmap(&flatten);
+							if (bitmap) {
+								QImage::Format imageFormat = QImage::Format_Invalid;
+								switch (bitmap->ColorSpace()) {
+									case B_RGB32:
+										imageFormat = QImage::Format_RGB32;
+										break;
+									case B_RGBA32:
+										imageFormat = QImage::Format_ARGB32;
+										break;
+									case B_RGB24:
+										imageFormat = QImage::Format_RGB888;
+										break;
+									case B_RGB16:
+										imageFormat = QImage::Format_RGB16;
+										break;
+									case B_GRAY8:
+										imageFormat = QImage::Format_Grayscale8;
+										break;
+									case B_GRAY1:
+										imageFormat = QImage::Format_Mono;
+										break;
+									default:
+										imageFormat = QImage::Format_Invalid;
+										break;
+								}
+								if (imageFormat != QImage::Format_Invalid) {
+									QSize bitmapSize(bitmap->Bounds().IntegerWidth() + 1,
+										bitmap->Bounds().IntegerHeight() + 1);
+									QImage image(bitmapSize, imageFormat);
+									memcpy(image.bits(), bitmap->Bits(), image.sizeInBytes());
+									m_systemMimeData->setImageData(image);
+								}
+								delete bitmap;
+							}
+						}
 					} else {
 						QByteArray clip_data((const char*)data, dataLen);
-						md->setData(mime,clip_data);
+						m_systemMimeData->setData(mime, clip_data);
 					}
 				}
-			}		
+			}
 			be_clipboard->Unlock();
     	}
 	}
-	return md;
+	return m_systemMimeData;
+}
+
+bool QHaikuClipboard::supportsMode(QClipboard::Mode mode) const
+{
+    return (mode == QClipboard::Clipboard);
+}
+
+bool QHaikuClipboard::ownsMode(QClipboard::Mode mode) const
+{
+    Q_UNUSED(mode);
+    return false;
+}
+
+void QHaikuClipboard::clipboardChanged()
+{
+	if (!preventChangedEvent) {
+		delete m_userMimeData;
+		m_userMimeData = nullptr;
+		emitChanged(QClipboard::Clipboard);
+	}
+	preventChangedEvent = false;
 }
 
 QT_END_NAMESPACE

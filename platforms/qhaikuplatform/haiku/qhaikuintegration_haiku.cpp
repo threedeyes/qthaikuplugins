@@ -41,13 +41,15 @@
 #include "qhaikuintegration.h"
 #include "qhaikusettings.h"
 
-#include <QtWidgets/qapplication.h>
+#include <QApplication>
 #include <QProcess>
 #include <QString>
 #include <QStringList>
+#include <QClipboard>
+#include <QEvent>
+#include <QDebug>
+
 #include <private/qguiapplication_p.h>
-#include <qevent.h>
-#include <qdebug.h>
 
 #include <Application.h>
 #include <kernel/OS.h>
@@ -60,6 +62,7 @@
 #include <Locale.h>
 #include <LocaleRoster.h>
 #include <Roster.h>
+#include <Clipboard.h>
 
 #include <stdio.h>
 
@@ -77,6 +80,7 @@ public:
 private:
 	BPath 	refReceived;
 	BMessenger  fTrackerMessenger;
+	QHaikuClipboard *fClipboard;
 };
 
 namespace {
@@ -87,6 +91,7 @@ HQApplication::HQApplication(const char* signature)
 		: BApplication(signature)
 {
 	RefHandled = false;
+	fClipboard = NULL;
 }
 
 HQApplication::~HQApplication()
@@ -99,6 +104,18 @@ void HQApplication::MessageReceived(BMessage* message)
 		case B_SILENT_RELAUNCH:
 			be_roster->ActivateApp(be_app->Team());
 			break;
+		case 'CLIP':
+			{
+			if (message->FindPointer("QHaikuClipboard", (void**)(&fClipboard)) != B_OK)
+				fClipboard = NULL;
+			break;
+			}
+		case B_CLIPBOARD_CHANGED:
+			{
+			if (fClipboard != NULL)
+				fClipboard->clipboardChanged();
+			break;
+			}
 		default:
 			BApplication::MessageReceived(message);
 			break;
