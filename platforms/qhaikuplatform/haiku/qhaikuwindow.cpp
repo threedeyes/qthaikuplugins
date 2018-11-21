@@ -349,7 +349,8 @@ void QHaikuWindow::setWindowFlags(Qt::WindowFlags flags)
     		B_NOT_ANCHORED_ON_ACTIVATE;
     }
 
-	if (flags & Qt::MSWindowsFixedSizeDialogHint)
+	if (flags & Qt::MSWindowsFixedSizeDialogHint ||
+		windowMinimumSize() == windowMaximumSize())
     	wflag |= B_NOT_RESIZABLE | B_NOT_ZOOMABLE;
 
 	if (flags & Qt::CustomizeWindowHint){
@@ -422,6 +423,8 @@ void QHaikuWindow::propagateSizeHints()
 		maxH = maximumSize.height();
 
 	m_window->SetSizeLimits(minW, maxW, minH, maxH);
+
+	setWindowFlags(window()->flags());
 }
 
 
