@@ -146,7 +146,7 @@ QHaikuSystemTrayIcon::updateIcon(const QIcon &qicon)
         return;
 
     currentIcon = qicon;
-#if B_HAIKU_VERSION > B_HAIKU_VERSION_1_BETA_1
+#ifdef USE_NEW_DESKBAR_API
 	BDeskbar deskbar;
 	QSize trayIconSize = QSize(deskbar.MaxItemHeight(), deskbar.MaxItemHeight());
 #else
