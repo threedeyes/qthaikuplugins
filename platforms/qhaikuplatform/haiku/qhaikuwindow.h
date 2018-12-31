@@ -122,7 +122,7 @@ public:
     void setWindowState(Qt::WindowStates state) override;
     void setWindowFlags(Qt::WindowFlags flags) override;
 
-    void windowEvent(QEvent *event) override;
+    bool windowEvent(QEvent *event) override;
 
     QMargins frameMargins() const;
 

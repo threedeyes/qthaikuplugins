@@ -516,7 +516,7 @@ void QHaikuWindow::requestActivateWindow()
 }
 
 
-void QHaikuWindow::windowEvent(QEvent *event)
+bool QHaikuWindow::windowEvent(QEvent *event)
 {
 	switch (event->type()) {
 		case QEvent::DynamicPropertyChange:
@@ -529,7 +529,7 @@ void QHaikuWindow::windowEvent(QEvent *event)
 			break;
 	}
 
-    QPlatformWindow::windowEvent(event);
+    return QPlatformWindow::windowEvent(event);
 }
 
 
