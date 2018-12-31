@@ -59,6 +59,7 @@
 #include <NodeInfo.h>
 #include <Looper.h>
 #include <Notification.h>
+#include <BeBuild.h>
 
 #include <stdlib.h>
 #include <string.h>
@@ -145,8 +146,12 @@ QHaikuSystemTrayIcon::updateIcon(const QIcon &qicon)
         return;
 
     currentIcon = qicon;
+#if B_HAIKU_VERSION > B_HAIKU_VERSION_1_BETA_1
 	BDeskbar deskbar;
 	QSize trayIconSize = QSize(deskbar.MaxItemHeight(), deskbar.MaxItemHeight());
+#else
+	QSize trayIconSize = QSize(16, 16);
+#endif
     QSize size = qicon.actualSize(trayIconSize);
     QPixmap pixmap = qicon.pixmap(size);
     QPixmap scaledPixmap = pixmap.scaled(trayIconSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
