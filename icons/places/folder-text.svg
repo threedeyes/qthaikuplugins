@@ -39,31 +39,31 @@
   <path style="fill:#a03d03"
         d="M3 15L38 30L42 59L40.5 28L3 15z"
   />
-  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:4; stroke-linecap:round; stroke-linejoin:round"
-        d="M8 4V28H38V4H8z"
-        transform="matrix(0.9722,0,0,1.0333,-2.8888,32)"
+  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:4.9083; stroke-linecap:round; stroke-linejoin:round"
+        d="M27.08 19.71H56.53V56.53H27.08V19.71z"
+        transform="matrix(0.8098,0,0,0.7962,-16.7828,17.019)"
   />
-  <path style="fill:none; stroke:#545454; stroke-width:4; stroke-linecap:round; stroke-linejoin:round"
-        d="M6 2V26H36V2H6z"
-        transform="matrix(0.9722,0,0,1.0333,-2.8888,32)"
+  <path style="fill:none; stroke:#000080; stroke-width:4.9083; stroke-linecap:round; stroke-linejoin:round"
+        d="M24.62 17.27H54.08V54.08H24.62V17.27z"
+        transform="matrix(0.8098,0,0,0.7962,-16.7828,17.019)"
   />
-  <linearGradient id="gradient4" gradientUnits="userSpaceOnUse" x1="128" y1="1.99" x2="128" y2="26">
+  <linearGradient id="gradient4" gradientUnits="userSpaceOnUse" x1="162.06" y1="17.27" x2="162.06" y2="54.08">
    <stop offset="0" stop-color="#ffffff"/>
-   <stop offset="1" stop-color="#e5e5e5"/>
+   <stop offset="1" stop-color="#d9d9ff"/>
   </linearGradient>
   <path style="fill:url(#gradient4)"
-        d="M6 2V26H36V2H6z"
-        transform="matrix(0.9722,0,0,1.0333,-2.8888,32)"
+        d="M24.62 17.27H54.08V54.08H24.62V17.27z"
+        transform="matrix(0.8098,0,0,0.7962,-16.7828,17.019)"
   />
-  <linearGradient id="gradient5" gradientUnits="userSpaceOnUse" x1="128" y1="6.98" x2="128" y2="18.98">
-   <stop offset="0" stop-color="#ff8080"/>
-   <stop offset="1" stop-color="#d90000"/>
-  </linearGradient>
-  <path style="fill:url(#gradient5)"
-        d="M16 4C11 7 15 11 18 13C21 15 24 17.63 24 19C24 22 22 24 19 24C16 24 10 17 10 13C10 9 10 4 16 4z
-           M19 7C16 10 22 14 25 11C28 8 22 4 19 7z
-           M27 15C24 18 30 22 33 19C36 16 30 12 27 15z"
-        transform="matrix(0.9722,0,0,1.0333,-2.8888,32)"
+  <path style="fill:#000080"
+        d="M29.54 22.17H49.17V24.62H29.54V22.17z
+           M29.54 29.54H46.71V31.98H29.54V29.54z"
+        transform="matrix(0.8098,0,0,0.7962,-16.7828,17.019)"
+  />
+  <path style="fill:#000080"
+        d="M29.54 44.25H46.71V46.71H29.54V44.25z
+           M29.54 36.9H49.17V39.35H29.54V36.9z"
+        transform="matrix(0.8098,0,0,0.7962,-16.7828,17.019)"
   />
  </g>
 </svg>
