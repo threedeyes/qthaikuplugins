@@ -58,3 +58,8 @@ cp -f --remove-destination status/*.svg $dataDir/icons/haiku/status/64
 rm -rf $dataDir/icons/haiku/status/24 \
 	$dataDir/icons/haiku/status/symbolic
 ln -rfs $dataDir/icons/haiku/status/22 $dataDir/icons/haiku/status/24
+
+echo "Install emblems icons"
+cp -f --remove-destination emblems/*.svg $dataDir/icons/haiku/emblems/8
+cp -f --remove-destination emblems/*.svg $dataDir/icons/haiku/emblems/16
+cp -f --remove-destination emblems/*.svg $dataDir/icons/haiku/emblems/22
