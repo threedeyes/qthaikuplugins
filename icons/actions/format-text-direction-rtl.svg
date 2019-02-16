@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<svg version="1.1" width="64" height="64" color-interpolation="linearRGB"
+     xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg">
+ <g>
+  <path style="fill:#000000; fill-opacity:0.4"
+        d="M42 8L38 4L10 32L14 36L42 8z
+           M8 34L4 42L12 38L8 34z"
+        transform="matrix(1.3333,0,0,1.3333,4,4)"
+  />
+  <linearGradient id="gradient0" gradientUnits="userSpaceOnUse" x1="-50" y1="85.75" x2="-56.5" y2="79.25">
+   <stop offset="0" stop-color="#010101" stop-opacity="0.4039"/>
+   <stop offset="1" stop-color="#010101"/>
+  </linearGradient>
+  <path style="fill:url(#gradient0)"
+        d="M0 24V12L24 0L16 8H27L19 16H8L0 24z"
+        transform="matrix(1.3333,0,0,1.3333,4,4)"
+  />
+  <path style="fill:none; stroke:#545454; stroke-width:4; stroke-linecap:round; stroke-linejoin:round"
+        d="M6 32L2 40L10 36L6 32z"
+        transform="matrix(1.3333,0,0,1.3333,4,4)"
+  />
+  <linearGradient id="gradient1" gradientUnits="userSpaceOnUse" x1="2.99" y1="31.68" x2="10.31" y2="39">
+   <stop offset="0" stop-color="#010101"/>
+   <stop offset="1" stop-color="#ffffff"/>
+  </linearGradient>
+  <path style="fill:url(#gradient1)"
+        d="M6 32L2 40L10 36L6 32z"
+        transform="matrix(1.3333,0,0,1.3333,4,4)"
+  />
+  <path style="fill:none; stroke:#800000; stroke-width:4; stroke-linecap:round; stroke-linejoin:round"
+        d="M40 6L36 2L8 30L12 34L40 6z"
+        transform="matrix(1.3333,0,0,1.3333,4,4)"
+  />
+  <linearGradient id="gradient2" gradientUnits="userSpaceOnUse" x1="128" y1="1.99" x2="128" y2="34">
+   <stop offset="0" stop-color="#ffabab"/>
+   <stop offset="1" stop-color="#d90000"/>
+  </linearGradient>
+  <path style="fill:url(#gradient2)"
+        d="M40 6L36 2L8 30L12 34L40 6z"
+        transform="matrix(1.3333,0,0,1.3333,4,4)"
+  />
+  <linearGradient id="gradient3" gradientUnits="userSpaceOnUse" x1="94" y1="-41.75" x2="100.5" y2="-35.25">
+   <stop offset="0" stop-color="#010101" stop-opacity="0.4039"/>
+   <stop offset="1" stop-color="#010101"/>
+  </linearGradient>
+  <path style="fill:none; stroke:url(#gradient3); stroke-width:4; stroke-linejoin:round"
+        d=""
+        transform="matrix(1.3333,0,0,1.3333,4,4)"
+  />
+  <path style="fill:#000000; fill-opacity:0.4"
+        d=""
+        transform="matrix(1.3333,0,0,1.3333,4,4)"
+  />
+ </g>
+</svg>
