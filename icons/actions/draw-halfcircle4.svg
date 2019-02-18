@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<svg version="1.1" width="64" height="64" color-interpolation="linearRGB"
+     xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg">
+ <g>
+  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:5.7258; stroke-linecap:round; stroke-linejoin:round"
+        d="M8.16 33.55C8.04 46.41 19.18 56.88 32.79 56.88C46.36 56.88 57.4 46.43 57.4 33.55C57.4 31.99 8.17 31.99 8.16 33.55z"
+  />
+  <path style="fill:none; stroke:#005900; stroke-width:4; stroke-linecap:round; stroke-linejoin:round"
+        d="M6.12 30.55C6.01 43.41 17.15 53.88 30.75 53.88C44.33 53.88 55.37 43.43 55.37 30.55C55.37 28.99 6.13 28.99 6.12 30.55z"
+  />
+ </g>
+</svg>
