@@ -122,6 +122,7 @@ static uint32 platformHaikuScanCodes[] = {
 		Qt::Key_5,			0x49, //numpad ???
         Qt::Key_Right,		0x4A, //numpad
 
+		Qt::Key_Shift,		0x4B,
         Qt::Key_Z,			0x4C,
         Qt::Key_X,			0x4D,
         Qt::Key_C,			0x4E,
@@ -132,18 +133,25 @@ static uint32 platformHaikuScanCodes[] = {
         Qt::Key_Less,		0x53,
         Qt::Key_Greater,	0x54,
         Qt::Key_Question,	0x55,
+        Qt::Key_Shift,		0x56,
         Qt::Key_Up,			0x57,	//cursor
         Qt::Key_End,		0x58,	//numpad
         Qt::Key_Down,		0x59,   //numpad
         Qt::Key_PageDown,	0x5A,   //numpad
 		Qt::Key_Enter,		0x5B,   //numpad
 
+		Qt::Key_Alt,		0x5C,
+		Qt::Key_Control,	0x5D,
 		Qt::Key_Space,		0x5E,
+		Qt::Key_Control,	0x5F,
+		Qt::Key_Alt,		0x60,
 		Qt::Key_Left,		0x61,   //cursor
 		Qt::Key_Down,		0x62,   //cursor
 		Qt::Key_Right,		0x63,   //cursor
 		Qt::Key_Insert,		0x64,   //cursor
 		Qt::Key_Delete,		0x65,   //numpad
+		Qt::Key_Meta,		0x66,
+		Qt::Key_Meta,		0x67,
 		0,					0x00
 	};
 
