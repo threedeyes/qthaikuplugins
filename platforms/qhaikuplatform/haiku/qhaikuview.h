@@ -52,7 +52,7 @@
 #include <Point.h>
 #include <Rect.h>
 
-#define Q_HAIKU_MOUSE_EVENTS_TIME 20000
+#define Q_HAIKU_MOUSE_EVENTS_TIME 10000
 #define Q_HAIKU_MOUSE_PREVENT_TIME 300000
 
 class QHaikuSurfaceView : public QObject, public BView
@@ -78,6 +78,7 @@ class QHaikuSurfaceView : public QObject, public BView
 		
  private:
 		bool isSizeGripperContains(BPoint);
+		Qt::MouseButtons m_buttons;
 		bigtime_t lastMouseMoveTime;
 		bigtime_t mousePreventTime;
 		BBitmap *viewBitmap;

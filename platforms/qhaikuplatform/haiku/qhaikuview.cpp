@@ -40,6 +40,10 @@
 
 #include <stdio.h>
 
+#include <QGuiApplication>
+#include <QMimeData>
+#include <QDragMoveEvent>
+
 #include "qhaikuwindow.h"
 #include "qhaikuview.h"
 
@@ -54,7 +58,8 @@ Q_DECLARE_METATYPE(Qt::Orientation)
 QHaikuSurfaceView::QHaikuSurfaceView(BRect rect)
 	: QObject()
 	, BView(rect, "QHaikuSurfaceView", B_FOLLOW_ALL, B_WILL_DRAW),
-	viewBitmap(0)
+	viewBitmap(0),
+	m_buttons(0)
 {
     qRegisterMetaType<QEvent::Type>();
     qRegisterMetaType<Qt::MouseButtons>();
@@ -157,6 +162,8 @@ QHaikuSurfaceView::MouseDown(BPoint point)
 		Window()->Activate();
 	}
 
+	m_buttons = hostToQtButtons(buttons);
+
 	Q_EMIT mouseEvent(localPoint, globalPoint, hostToQtButtons(buttons),
 		hostToQtModifiers(modifiers()), Qt::MouseEventNotSynthesized);
 
@@ -180,6 +187,8 @@ QHaikuSurfaceView::MouseUp(BPoint point)
 	uint32 buttons;
 	GetMouse(&pointer, &buttons);
 
+	m_buttons = hostToQtButtons(buttons);
+
 	Q_EMIT mouseEvent(localPoint, globalPoint, hostToQtButtons(buttons),
 		hostToQtModifiers(modifiers()), Qt::MouseEventNotSynthesized);
 
@@ -189,9 +198,6 @@ QHaikuSurfaceView::MouseUp(BPoint point)
 void 
 QHaikuSurfaceView::MouseMoved(BPoint point, uint32 transit, const BMessage *msg)
 {
-	if (msg != NULL)
-		return;
-
 	if (system_time() - mousePreventTime < Q_HAIKU_MOUSE_PREVENT_TIME)
 		return;
 
@@ -228,8 +234,39 @@ QHaikuSurfaceView::MouseMoved(BPoint point, uint32 transit, const BMessage *msg)
 		lastLocalMousePoint = localPoint;
 		lastGlobalMousePoint = globalPoint;
 
-		Q_EMIT mouseEvent(localPoint, globalPoint, hostToQtButtons(buttons),
-			hostToQtModifiers(modifiers()), Qt::MouseEventNotSynthesized);
+		if (msg != NULL) {
+			QMimeData *dragData = new QMimeData();
+			QList<QUrl> urls;
+			entry_ref aRef;
+			for (int i = 0; msg->FindRef("refs", i, &aRef) == B_OK; i++) {
+				BEntry entry(&aRef);
+				BPath path;
+				entry.GetPath(&path);
+				QUrl url = QUrl::fromLocalFile(path.Path());
+				urls.append(url);
+			}
+			if (urls.count() > 0)
+				dragData->setUrls(urls);
+			ssize_t dataLength = 0;
+			const char* text = NULL;
+			if (msg->FindData("text/plain", B_MIME_TYPE, (const void**)&text, &dataLength) == B_OK) {
+				if (dataLength > 0) {
+					dragData->setText(QString::fromUtf8(text, dataLength));
+				}
+			}
+			QHaikuWindow *wnd = ((QtHaikuWindow*)Window())->fQWindow;
+			QDragMoveEvent dmEvent(localPoint,
+		                    Qt::CopyAction | Qt::MoveAction | Qt::LinkAction,
+		                    dragData,
+		                    hostToQtButtons(buttons),
+		                    hostToQtModifiers(modifiers()));
+		    dmEvent.setDropAction(Qt::CopyAction);
+		    dmEvent.accept();
+		    QGuiApplication::sendEvent(wnd->window(), &dmEvent);
+		} else {
+			Q_EMIT mouseEvent(localPoint, globalPoint, m_buttons,
+				hostToQtModifiers(modifiers()), Qt::MouseEventNotSynthesized);
+		}
 
 		lastMouseMoveTime = timeNow;
 	}
