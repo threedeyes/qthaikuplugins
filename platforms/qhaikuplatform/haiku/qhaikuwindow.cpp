@@ -414,13 +414,13 @@ void QHaikuWindow::propagateSizeHints()
     m_window->GetSizeLimits(&minW, &maxW, &minH, &maxH);
 
     if (minimumSize.width() > 0)
-		minW = minimumSize.width();
+		minW = minimumSize.width() - 1;
     if (minimumSize.height() > 0)
-		minH = minimumSize.height();
+		minH = minimumSize.height() - 1;
     if (maximumSize.width() < QWINDOWSIZE_MAX)
-		maxW = maximumSize.width();
+		maxW = maximumSize.width() - 1;
     if (maximumSize.height() < QWINDOWSIZE_MAX)
-		maxH = maximumSize.height();
+		maxH = maximumSize.height() - 1;
 
 	m_window->SetSizeLimits(minW, maxW, minH, maxH);
 
