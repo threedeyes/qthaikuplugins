@@ -268,8 +268,8 @@ QHaikuWindow::QHaikuWindow(QWindow *wnd)
 
 	connect(m_window->View(), SIGNAL(enteredView()), this, SLOT(platformEnteredView()));
 	connect(m_window->View(), SIGNAL(exitedView()), this, SLOT(platformExitedView()));
-	connect(m_window->View(), SIGNAL(mouseEvent(QPoint, QPoint, Qt::MouseButtons, Qt::KeyboardModifiers, Qt::MouseEventSource)),
-		this, SLOT(platformMouseEvent(QPoint, QPoint, Qt::MouseButtons, Qt::KeyboardModifiers, Qt::MouseEventSource)));
+	connect(m_window->View(), SIGNAL(mouseEvent(QPoint, QPoint, Qt::MouseButtons, Qt::MouseButton, QEvent::Type, Qt::KeyboardModifiers, Qt::MouseEventSource)),
+		this, SLOT(platformMouseEvent(QPoint, QPoint, Qt::MouseButtons, Qt::MouseButton, QEvent::Type, Qt::KeyboardModifiers, Qt::MouseEventSource)));
 
     window()->setProperty("size-grip", false);
 
@@ -849,11 +849,13 @@ void QHaikuWindow::platformExitedView()
 
 void QHaikuWindow::platformMouseEvent(const QPoint &localPosition,
 	const QPoint &globalPosition,
-	Qt::MouseButtons buttons,
+	Qt::MouseButtons state,
+	Qt::MouseButton button,
+	QEvent::Type type,
 	Qt::KeyboardModifiers modifiers,
 	Qt::MouseEventSource source)
 {
-    QWindowSystemInterface::handleMouseEvent(window(), localPosition, globalPosition, buttons, modifiers, source);
+    QWindowSystemInterface::handleMouseEvent(window(), localPosition, globalPosition, state, button, type, modifiers, source);
 }
 
 void QHaikuWindow::platformWheelEvent(const QPoint &localPosition,

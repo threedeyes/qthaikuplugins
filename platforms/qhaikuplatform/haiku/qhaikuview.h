@@ -70,6 +70,7 @@ class QHaikuSurfaceView : public QObject, public BView
 
 		void PreventMouse(void);
 
+		Qt::MouseButton hostToQtButton(uint32 buttons) const;
 		Qt::MouseButtons hostToQtButtons(uint32 buttons) const;
 		Qt::KeyboardModifiers hostToQtModifiers(uint32 keyState) const;
 		
@@ -78,14 +79,16 @@ class QHaikuSurfaceView : public QObject, public BView
 		
  private:
 		bool isSizeGripperContains(BPoint);
-		Qt::MouseButtons m_buttons;
+		Qt::MouseButtons lastMouseButtons;
 		bigtime_t lastMouseMoveTime;
 		bigtime_t mousePreventTime;
 		BBitmap *viewBitmap;
  Q_SIGNALS:
 		void mouseEvent(const QPoint &localPosition,
 			const QPoint &globalPosition,
-			Qt::MouseButtons buttons,
+			Qt::MouseButtons state,
+			Qt::MouseButton button,
+			QEvent::Type type,
 			Qt::KeyboardModifiers modifiers,
 			Qt::MouseEventSource source);
 	    void enteredView();

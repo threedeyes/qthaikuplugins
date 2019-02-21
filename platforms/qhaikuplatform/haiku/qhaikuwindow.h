@@ -170,7 +170,9 @@ private Q_SLOTS:
     void platformExitedView();
     void platformMouseEvent(const QPoint &localPosition,
 		const QPoint &globalPosition,
-		Qt::MouseButtons buttons,
+		Qt::MouseButtons state,
+		Qt::MouseButton button,
+		QEvent::Type type,
 		Qt::KeyboardModifiers modifiers,
 		Qt::MouseEventSource source);
     void platformWheelEvent(const QPoint &localPosition,

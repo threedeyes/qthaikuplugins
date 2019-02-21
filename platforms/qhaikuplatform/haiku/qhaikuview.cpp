@@ -50,6 +50,7 @@
 QT_BEGIN_NAMESPACE
 
 Q_DECLARE_METATYPE(QEvent::Type)
+Q_DECLARE_METATYPE(Qt::MouseButton)
 Q_DECLARE_METATYPE(Qt::MouseButtons)
 Q_DECLARE_METATYPE(Qt::MouseEventSource)
 Q_DECLARE_METATYPE(Qt::KeyboardModifiers)
@@ -62,6 +63,7 @@ QHaikuSurfaceView::QHaikuSurfaceView(BRect rect)
 	m_buttons(0)
 {
     qRegisterMetaType<QEvent::Type>();
+    qRegisterMetaType<Qt::MouseButton>();
     qRegisterMetaType<Qt::MouseButtons>();
     qRegisterMetaType<Qt::MouseEventSource>();
     qRegisterMetaType<Qt::KeyboardModifiers>();
@@ -94,7 +96,7 @@ QHaikuSurfaceView::Draw(BRect rect)
 	}
 }
 
-Qt::MouseButtons 
+Qt::MouseButtons
 QHaikuSurfaceView::hostToQtButtons(uint32 buttons) const
 {
 	Qt::MouseButtons qtButtons = Qt::NoButton;
@@ -107,6 +109,18 @@ QHaikuSurfaceView::hostToQtButtons(uint32 buttons) const
         qtButtons |= Qt::RightButton;
         
     return qtButtons;
+}
+
+Qt::MouseButton
+QHaikuSurfaceView::hostToQtButton(uint32 buttons) const
+{
+    if (buttons & B_PRIMARY_MOUSE_BUTTON)
+        return Qt::LeftButton;
+    if (buttons & B_TERTIARY_MOUSE_BUTTON)
+        return Qt::MidButton;
+    if (buttons & B_SECONDARY_MOUSE_BUTTON)
+        return Qt::RightButton;
+    return Qt::NoButton;
 }
 
 Qt::KeyboardModifiers
@@ -162,9 +176,10 @@ QHaikuSurfaceView::MouseDown(BPoint point)
 		Window()->Activate();
 	}
 
-	m_buttons = hostToQtButtons(buttons);
+	lastMouseButtons = hostToQtButtons(buttons);
+	Qt::MouseButton button = hostToQtButton(buttons);
 
-	Q_EMIT mouseEvent(localPoint, globalPoint, hostToQtButtons(buttons),
+	Q_EMIT mouseEvent(localPoint, globalPoint, m_buttons, button, QEvent::MouseButtonPress,
 		hostToQtModifiers(modifiers()), Qt::MouseEventNotSynthesized);
 
 	BView::MouseDown(point);
@@ -187,9 +202,9 @@ QHaikuSurfaceView::MouseUp(BPoint point)
 	uint32 buttons;
 	GetMouse(&pointer, &buttons);
 
-	m_buttons = hostToQtButtons(buttons);
+	Qt::MouseButton button = hostToQtButton(m_buttons);
 
-	Q_EMIT mouseEvent(localPoint, globalPoint, hostToQtButtons(buttons),
+	Q_EMIT mouseEvent(localPoint, globalPoint, hostToQtButtons(buttons), button, QEvent::MouseButtonRelease,
 		hostToQtModifiers(modifiers()), Qt::MouseEventNotSynthesized);
 
 	BView::MouseUp(point);
@@ -264,7 +279,7 @@ QHaikuSurfaceView::MouseMoved(BPoint point, uint32 transit, const BMessage *msg)
 		    dmEvent.accept();
 		    QGuiApplication::sendEvent(wnd->window(), &dmEvent);
 		} else {
-			Q_EMIT mouseEvent(localPoint, globalPoint, m_buttons,
+			Q_EMIT mouseEvent(localPoint, globalPoint, hostToQtButtons(buttons), Qt::NoButton, QEvent::MouseMove,
 				hostToQtModifiers(modifiers()), Qt::MouseEventNotSynthesized);
 		}
 
