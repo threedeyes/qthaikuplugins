@@ -2656,13 +2656,15 @@ void QHaikuStyle::drawComplexControl(ComplexControl control, const QStyleOptionC
 
 				rgb_color base = mkHaikuColor(option->palette.color( QPalette::Normal, QPalette::Window));
 				rgb_color fill_color = tint_color(base, B_DARKEN_1_TINT);
+				rgb_color shadow_color = tint_color(base, B_DARKEN_2_TINT);
+
 				uint32 flags = 0;
 
 		        BRect bRect(0.0f, 0.0f, option->rect.width() - 1,  option->rect.height() - 1);
 				TemporarySurface surface(bRect);				
-				
+
 				surface.view()->SetViewColor(base);
-				surface.view()->SetHighColor(B_TRANSPARENT_COLOR);
+				surface.view()->SetHighColor(base);
 				surface.view()->SetLowColor(base);
 				surface.view()->FillRect(bRect);
 				surface.view()->SetHighColor(base);
@@ -2680,7 +2682,7 @@ void QHaikuStyle::drawComplexControl(ComplexControl control, const QStyleOptionC
 					BRect bMarksRect = BRect(r.left(), r.top(), r.right(), r.bottom());
 					be_control_look->DrawSliderHashMarks(surface.view(), bMarksRect, bMarksRect, base, num, (hash_mark_location)mlocation, flags, orient);
 				}
-				surface.view()->SetDrawingMode(B_OP_ALPHA);
+				surface.view()->SetDrawingMode(B_OP_COPY);
 				if ((option->subControls & SC_SliderGroove) && groove.isValid()) {
 		            QRect gr = groove;
 		            if (slider->orientation == Qt::Horizontal) {
@@ -2698,8 +2700,13 @@ void QHaikuStyle::drawComplexControl(ComplexControl control, const QStyleOptionC
 					BRect bThumbRect = BRect(handle.left(), handle.top(), handle.right(), handle.bottom());
 					if (ticksAbove && !ticksBelow)
 						be_control_look->DrawSliderTriangle(surface.view(), bThumbRect, bThumbRect, base, flags, orient);
-					else
+					else {
+						BRect bThumbRect2 = bThumbRect;
 						be_control_look->DrawSliderThumb(surface.view(), bThumbRect, bThumbRect, base, flags, orient);
+						surface.view()->SetHighColor(shadow_color);
+						surface.view()->StrokeLine(bThumbRect2.LeftBottom() + BPoint(1, 0), bThumbRect2.RightBottom());
+						surface.view()->StrokeLine(bThumbRect2.RightTop() + BPoint(0, 1), bThumbRect2.RightBottom());
+					}
 				}
 				painter->drawImage(slider->rect, surface.image());
 			}
