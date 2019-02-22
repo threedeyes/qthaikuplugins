@@ -350,7 +350,8 @@ void QHaikuWindow::setWindowFlags(Qt::WindowFlags flags)
     }
 
 	if (flags & Qt::MSWindowsFixedSizeDialogHint ||
-		windowMinimumSize() == windowMaximumSize())
+		windowMinimumSize() == windowMaximumSize() ||
+		wlook == B_NO_BORDER_WINDOW_LOOK)
     	wflag |= B_NOT_RESIZABLE | B_NOT_ZOOMABLE;
 
 	if (flags & Qt::CustomizeWindowHint){
