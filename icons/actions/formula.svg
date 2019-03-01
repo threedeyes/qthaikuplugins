@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<svg version="1.1" width="64" height="64" color-interpolation="linearRGB"
+     xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg">
+ <g>
+  <path style="fill:none; stroke:#04209c; stroke-width:6.891; stroke-linejoin:round"
+        d="M8.55 27.63V29.55H14.47L21.13 55.73C21.23 56.13 21.64 56.44 22.13 56.48C22.62 56.52 23.09 56.28 23.29 55.91L36.69 29.55H55.34V34.36H57.62V28.59C57.62 28.05 57.11 27.63 56.48 27.63H35.93C35.48 27.63 35.07 27.85 34.89 28.2L22.6 52.37L16.51 28.38C16.39 27.94 15.93 27.63 15.4 27.63H8.55z"
+        transform="matrix(1,0,0,1.0559,-1,-10.3527)"
+  />
+  <linearGradient id="gradient0" gradientUnits="userSpaceOnUse" x1="58.21" y1="15.81" x2="57.53" y2="52.3">
+   <stop offset="0" stop-color="#abd5ff"/>
+   <stop offset="1" stop-color="#045cb6"/>
+  </linearGradient>
+  <path style="fill:url(#gradient0)"
+        d="M8.55 27.63V29.55H14.47L21.13 55.73C21.23 56.13 21.64 56.44 22.13 56.48C22.62 56.52 23.09 56.28 23.29 55.91L36.69 29.55H55.34V34.36H57.62V28.59C57.62 28.05 57.11 27.63 56.48 27.63H35.93C35.48 27.63 35.07 27.85 34.89 28.2L22.6 52.37L16.51 28.38C16.39 27.94 15.93 27.63 15.4 27.63H8.55z"
+        transform="matrix(1,0,0,1.0559,-1,-10.3527)"
+  />
+ </g>
+</svg>
