@@ -208,24 +208,26 @@ QHaikuIntegration *QHaikuIntegration::createHaikuIntegration(const QStringList& 
 
 	thread_id my_thread;	
 
-	haikuApplication = new HQApplication(appSignature.toUtf8());
-	be_app = haikuApplication;
+	if (be_app == NULL) {
+		haikuApplication = new HQApplication(appSignature.toUtf8());
+		be_app = haikuApplication;
 
-	my_thread = spawn_thread(AppThread, "BApplication_thread", B_NORMAL_PRIORITY, (void*)haikuApplication);
-	resume_thread(my_thread);
+		my_thread = spawn_thread(AppThread, "BApplication_thread", B_NORMAL_PRIORITY, (void*)haikuApplication);
+		resume_thread(my_thread);
 
-	haikuApplication->UnlockLooper();
+		haikuApplication->UnlockLooper();
 
-	if (argc == 1) {
-		for (int i = 0; i < 100; i++) {
-			if (haikuApplication->RefHandled) {
-				BPath path(&haikuApplication->Ref);
-				argc = 2;
-				argv[1] = strdup(path.Path());
-				argv[2] = 0;
-				break;
+		if (argc == 1) {
+			for (int i = 0; i < 100; i++) {
+				if (haikuApplication->RefHandled) {
+					BPath path(&haikuApplication->Ref);
+					argc = 2;
+					argv[1] = strdup(path.Path());
+					argv[2] = 0;
+					break;
+				}
+				snooze(1000);
 			}
-			snooze(1000);
 		}
 	}
 
