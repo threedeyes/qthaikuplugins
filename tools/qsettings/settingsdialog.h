@@ -4,6 +4,8 @@
 #include <QDialog>
 #include <QSettings>
 
+#include "simplecrypt.h"
+
 namespace Ui {
 class SettingsDialog;
 }
@@ -29,6 +31,7 @@ private:
 
     Ui::SettingsDialog *ui;
     QSettings *settings;
+    SimpleCrypt *crypt;
 };
 
 #endif // SETTINGSDIALOG_H
