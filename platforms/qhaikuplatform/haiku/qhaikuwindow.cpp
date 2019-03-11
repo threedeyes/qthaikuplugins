@@ -41,6 +41,7 @@
 #include "qhaikuwindow.h"
 #include "qhaikucommon.h"
 #include "qhaikukeymap.h"
+#include "qhaikusettings.h"
 
 #include <private/qguiapplication_p.h>
 #include <private/qwindow_p.h>
@@ -459,6 +460,33 @@ void QHaikuWindow::setGeometryImpl(const QRect &rect)
     }
 }
 
+void QHaikuWindow::syncDeskBarVisible(void)
+{
+	app_info appInfo;
+	if (be_app->GetAppInfo(&appInfo) == B_OK) {
+		int visible = 0;
+		const QWindowList windows = QGuiApplication::topLevelWindows();
+		for (int i = 0; i < windows.size(); ++i) {
+			if (windows.at(i)->isVisible())
+				++visible;
+		}
+		if (visible == 0) {
+			BMessage message;
+			message.what = 'BRAQ';
+			message.AddInt32("be:team", appInfo.team);
+			BMessenger("application/x-vnd.Be-TSKB").SendMessage(&message);
+		} else {
+			BMessage message;
+			message.what = 'BRAS';
+			message.AddInt32("be:team", appInfo.team);
+			message.AddInt32("be:flags", appInfo.flags);
+			message.AddString("be:signature", appInfo.signature);
+			message.AddRef("be:ref", &appInfo.ref);
+			BMessenger("application/x-vnd.Be-TSKB").SendMessage(&message);
+		}
+	}
+}
+
 
 void QHaikuWindow::setVisible(bool visible)
 {
@@ -504,6 +532,11 @@ void QHaikuWindow::setVisible(bool visible)
     }
 
     m_window->Unlock();
+
+	QSettings settings(QT_SETTINGS_FILENAME, QSettings::NativeFormat);
+	settings.beginGroup("QPA");
+	if (settings.value("hide_from_deskbar", true).toBool())
+		syncDeskBarVisible();
 
     m_visible = visible;
 }

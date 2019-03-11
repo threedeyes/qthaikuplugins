@@ -184,6 +184,9 @@ int32 AppThread(void *data)
 
 QHaikuIntegration *QHaikuIntegration::createHaikuIntegration(const QStringList& parameters, int &argc, char **argv)
 {
+	QSettings settings(QT_SETTINGS_FILENAME, QSettings::NativeFormat);
+	settings.beginGroup("QPA");
+
 	QString appSignature;
 
 	char signature[B_MIME_TYPE_LENGTH];
@@ -214,6 +217,13 @@ QHaikuIntegration *QHaikuIntegration::createHaikuIntegration(const QStringList& 
 
 		my_thread = spawn_thread(AppThread, "BApplication_thread", B_NORMAL_PRIORITY, (void*)haikuApplication);
 		resume_thread(my_thread);
+
+		if (settings.value("hide_from_deskbar", true).toBool()) {
+			BMessage message;
+			message.what = 'BRAQ';
+			message.AddInt32("be:team", ::getpid());
+			BMessenger("application/x-vnd.Be-TSKB").SendMessage(&message);
+		}
 
 		haikuApplication->UnlockLooper();
 
@@ -251,8 +261,6 @@ QHaikuIntegration *QHaikuIntegration::createHaikuIntegration(const QStringList& 
 		}
 	}
 	// Enable software rendering for QML
-	QSettings settings(QT_SETTINGS_FILENAME, QSettings::NativeFormat);
-	settings.beginGroup("QPA");
 	if (settings.value("qml_softwarecontext", true).toBool())
 		putenv("QMLSCENE_DEVICE=softwarecontext");
 	

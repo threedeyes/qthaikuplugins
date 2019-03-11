@@ -50,7 +50,9 @@
 #include <Entry.h>
 #include <Path.h>
 #include <Screen.h>
+#include <String.h>
 #include <Deskbar.h>
+#include <Roster.h>
 
 #if !defined(QT_NO_OPENGL)
 #include <GLView.h>
@@ -147,6 +149,7 @@ private:
     void setGeometryImpl(const QRect &rect);
     void getDecoratorSize(float* borderWidth, float* tabHeight);
     void maximizeWindowRespected(bool respected);
+    void syncDeskBarVisible(void);
 
     QRect m_normalGeometry;
     QMargins m_margins;
