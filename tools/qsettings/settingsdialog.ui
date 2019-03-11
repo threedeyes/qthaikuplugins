@@ -551,7 +551,7 @@
             <bool>true</bool>
            </property>
            <property name="checked">
-            <bool>false</bool>
+            <bool>true</bool>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_16">
             <item>
@@ -574,8 +574,27 @@
                    </size>
                   </property>
                   <property name="text">
-                   <string>HTTP</string>
+                   <string>HTTP:</string>
                   </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QComboBox" name="httpProxyScheme">
+                  <item>
+                   <property name="text">
+                    <string>http://</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>socks5://</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>socks5h://</string>
+                   </property>
+                  </item>
                  </widget>
                 </item>
                 <item>
@@ -592,7 +611,7 @@
                  <widget class="QSpinBox" name="httpProxyPort">
                   <property name="minimumSize">
                    <size>
-                    <width>80</width>
+                    <width>70</width>
                     <height>0</height>
                    </size>
                   </property>
@@ -665,8 +684,27 @@
                    </size>
                   </property>
                   <property name="text">
-                   <string>HTTPS</string>
+                   <string>HTTPS:</string>
                   </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QComboBox" name="httpsProxyScheme">
+                  <item>
+                   <property name="text">
+                    <string>http://</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>socks5://</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>socks5h://</string>
+                   </property>
+                  </item>
                  </widget>
                 </item>
                 <item>
@@ -683,7 +721,7 @@
                  <widget class="QSpinBox" name="httpsProxyPort">
                   <property name="minimumSize">
                    <size>
-                    <width>80</width>
+                    <width>70</width>
                     <height>0</height>
                    </size>
                   </property>
@@ -756,8 +794,27 @@
                    </size>
                   </property>
                   <property name="text">
-                   <string>FTP</string>
+                   <string>FTP:</string>
                   </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QComboBox" name="ftpProxyScheme">
+                  <item>
+                   <property name="text">
+                    <string>http://</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>socks5://</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>socks5h://</string>
+                   </property>
+                  </item>
                  </widget>
                 </item>
                 <item>
@@ -774,7 +831,7 @@
                  <widget class="QSpinBox" name="ftpProxyPort">
                   <property name="minimumSize">
                    <size>
-                    <width>80</width>
+                    <width>70</width>
                     <height>0</height>
                    </size>
                   </property>
