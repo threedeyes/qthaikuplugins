@@ -41,6 +41,8 @@
 #include "qhaikuintegration.h"
 #include "qhaikusettings.h"
 
+#include "simplecrypt.h"
+
 #include <QApplication>
 #include <QProcess>
 #include <QString>
@@ -184,6 +186,7 @@ int32 AppThread(void *data)
 
 QHaikuIntegration *QHaikuIntegration::createHaikuIntegration(const QStringList& parameters, int &argc, char **argv)
 {
+	SimpleCrypt crypt(Q_UINT64_C(0x3de48151623423de));
 	QSettings settings(QT_SETTINGS_FILENAME, QSettings::NativeFormat);
 	settings.beginGroup("QPA");
 
@@ -263,6 +266,55 @@ QHaikuIntegration *QHaikuIntegration::createHaikuIntegration(const QStringList& 
 	// Enable software rendering for QML
 	if (settings.value("qml_softwarecontext", true).toBool())
 		putenv("QMLSCENE_DEVICE=softwarecontext");
+	settings.endGroup();
+
+	// Proxy settings
+	settings.beginGroup("Network");
+	if (settings.value("use_proxy", false).toBool()) {
+		QString emptyString = crypt.encryptToString(QString(""));
+		if (settings.value("http_proxy_enable", false).toBool()) {
+			QString username = settings.value("http_proxy_username", QString("")).toString();
+			QString password = crypt.decryptToString(settings.value("http_proxy_password", emptyString).toString());
+			QString scheme = settings.value("http_proxy_scheme", QString("http://")).toString();
+			QString http_proxy("http_proxy=");
+			http_proxy += scheme;
+			if (!username.isEmpty() && !password.isEmpty())
+				http_proxy += username + ":" + password + "@";
+			http_proxy += settings.value("http_proxy_address", QString("")).toString() + ":";
+			http_proxy += QString::number(settings.value("http_proxy_port", 8080).toInt()) + "/";
+			putenv(http_proxy.toUtf8());
+		}
+		if (settings.value("https_proxy_enable", false).toBool()) {
+			QString username = settings.value("https_proxy_username", QString("")).toString();
+			QString password = crypt.decryptToString(settings.value("https_proxy_password", emptyString).toString());
+			QString scheme = settings.value("https_proxy_scheme", QString("http://")).toString();
+			QString https_proxy("https_proxy=");
+			https_proxy += scheme;
+			if (!username.isEmpty() && !password.isEmpty())
+				https_proxy += username + ":" + password + "@";
+			https_proxy += settings.value("https_proxy_address", QString("")).toString() + ":";
+			https_proxy += QString::number(settings.value("https_proxy_port", 8080).toInt()) + "/";
+			putenv(https_proxy.toUtf8());
+		}
+		if (settings.value("ftp_proxy_enable", false).toBool()) {
+			QString username = settings.value("ftp_proxy_username", QString("")).toString();
+			QString password = crypt.decryptToString(settings.value("ftp_proxy_password", emptyString).toString());
+			QString scheme = settings.value("ftp_proxy_scheme", QString("http://")).toString();
+			QString ftp_proxy("ftp_proxy=");
+			ftp_proxy += scheme;
+			if (!username.isEmpty() && !password.isEmpty())
+				ftp_proxy += username + ":" + password + "@";
+			ftp_proxy += settings.value("ftp_proxy_address", QString("")).toString() + ":";
+			ftp_proxy += QString::number(settings.value("ftp_proxy_port", 8080).toInt()) + "/";
+			putenv(ftp_proxy.toUtf8());
+		}
+		QString no_proxy = settings.value("no_proxy_list", QString("")).toString();
+		if (!no_proxy.isEmpty()) {
+			no_proxy = "no_proxy=\"" + no_proxy + "\"";
+			putenv(no_proxy.toUtf8());
+		}
+	}
+	settings.endGroup();
 	
 	// Set XDG variables
 	putenv("XDG_CONFIG_HOME=/boot/home/config/settings");

@@ -15,6 +15,8 @@ PKGCONFIG += freetype2
 
 QMAKE_USE_PRIVATE += freetype
 
+INCLUDEPATH += ../../../3rdparty/simplecrypt/
+
 SOURCES =   main.cpp \
             qhaikuintegration.cpp \
             qhaikuintegration_haiku.cpp \
@@ -32,7 +34,8 @@ SOURCES =   main.cpp \
             qhaikusystemlocale.cpp \
             qhaikuview.cpp \
             qhaikuservices.cpp \
-            qhaikucursor.cpp
+            qhaikucursor.cpp \
+            ../../../3rdparty/simplecrypt/simplecrypt.cpp
 
 HEADERS =   qhaikuintegration.h \
             qhaikuwindow.h \
