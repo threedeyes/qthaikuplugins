@@ -2,22 +2,29 @@
 <svg version="1.1" width="64" height="64" color-interpolation="linearRGB"
      xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg">
  <g>
-  <path style="fill:none; stroke:#b2b2b2; stroke-width:3.369; stroke-linecap:round; stroke-linejoin:round"
-        d="M3.69 2.92H60.29V60.21H3.69V2.92z"
+  <path style="fill:#939393; fill-opacity:0.5098"
+        d="M7 58L59 8L63 13L11 63L7 58z"
+        transform="matrix(1,0,0,1,-1,1)"
   />
-  <path style="fill:#b2b2b2; fill-opacity:0.8"
-        d="M4.93 30H59.05V33.2H4.93V30z"
+  <path style="fill:none; stroke:#939393; stroke-opacity:0.8823; stroke-width:3.3689; stroke-linecap:round; stroke-linejoin:round"
+        d="M3.69 2.92H60.29V60.2H3.69V2.92z"
+        transform="matrix(0.9039,0,0,0.9028,4.016,3.1199)"
   />
-  <path style="fill:#b2b2b2; fill-opacity:0.8"
-        d="M30.64 4.44H33.34V58.77H30.64V4.44z"
+  <path style="fill:#8c8181; fill-opacity:0.8"
+        d="M4.92 30H59.04V33.2H4.92V30z"
+        transform="matrix(0.9039,0,0,0.9028,4.016,3.1199)"
   />
-  <path style="fill:#ce5c00"
-        d="M2.51 53.33C1.73 53.33 1.11 53.43 1.11 53.55V61.66C1.11 61.78 1.73 61.88 2.51 61.88H61.28C62.05 61.88 62.68 61.78 62.68 61.66V53.55C62.68 53.43 62.05 53.33 61.28 53.33H2.51z"
-        transform="matrix(-0.9335,0.9031,-0.6168,-0.6349,96.7112,40.4195)"
+  <path style="fill:#8c8181; fill-opacity:0.8"
+        d="M30.63 4.44H33.34V58.77H30.63V4.44z"
+        transform="matrix(0.9039,0,0,0.9028,4.016,3.1199)"
   />
   <path style="fill:#fcaf3e"
-        d="M3.46 55.93V60.29H60.32V55.93H3.46z"
-        transform="matrix(-0.9333,0.9034,-0.6965,-0.7175,101.6416,45.534)"
+        d="M62 7L58 3L1 58L5 62L62 7z"
+        transform="matrix(0.9039,0,0,0.9028,4.016,3.1199)"
+  />
+  <path style="fill:none; stroke:#ce5c00; stroke-width:3"
+        d="M61.47 8.82C62.2 8.12 62.71 7.49 62.64 7.42L57.64 2.27C57.56 2.19 56.92 2.69 56.2 3.39L1.33 56.47C0.61 57.16 0.09 57.8 0.16 57.87L5.16 63.02C5.24 63.1 5.89 62.59 6.61 61.9L61.47 8.82z"
+        transform="matrix(0.9039,0,0,0.9028,4.016,3.1199)"
   />
  </g>
 </svg>

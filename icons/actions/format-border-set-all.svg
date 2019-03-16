@@ -2,32 +2,36 @@
 <svg version="1.1" width="64" height="64" color-interpolation="linearRGB"
      xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg">
  <g>
-  <path style="fill:none; stroke:#b2b2b2; stroke-width:4.6451; stroke-linecap:round; stroke-linejoin:round"
-        d="M5.13 12.88H74.86V104.23H5.13V12.88z"
-        transform="matrix(0.8252,0,0,0.6375,-0.5091,-5.2546)"
+  <path style="fill:#767676; fill-opacity:0.8352"
+        d="M10 62V55L56 56V9H62V62H10z
+           M9 54H14V16H54L55 10H8L9 54z"
   />
-  <path style="fill:#b2b2b2; fill-opacity:0.8"
-        d="M6.66 56.06H73.33V61.16H6.66V56.06z"
-        transform="matrix(0.8252,0,0,0.6375,-0.5091,-5.2546)"
+  <path style="fill:none; stroke:#b2b2b2; stroke-width:3.425; stroke-linecap:round; stroke-linejoin:round"
+        d="M3.72 2.95H61.26V61.19H3.72V2.95z"
+        transform="matrix(0.9179,0,0,0.9026,2.1649,3.121)"
   />
-  <path style="fill:#b2b2b2; fill-opacity:0.8"
-        d="M38.33 15.29H41.66V101.93H38.33V15.29z"
-        transform="matrix(0.8252,0,0,0.6375,-0.5091,-5.2546)"
+  <path style="fill:#767676; fill-opacity:0.8352"
+        d="M4.98 30.48H60V33.73H4.98V30.48z"
+        transform="matrix(0.9179,0,0,0.9026,2.1649,3.121)"
+  />
+  <path style="fill:#767676; fill-opacity:0.8352"
+        d="M31.12 4.49H33.86V59.72H31.12V4.49z"
+        transform="matrix(0.9179,0,0,0.9026,2.1649,3.121)"
   />
   <path style="fill:#fcaf3e"
-        d="M4.85 12.88V104.34H74.9V12.88H4.85z
-           M10 20.38H70V96.84H10V20.38z"
-        transform="matrix(0.8252,0,0,0.6375,-0.5091,-5.2546)"
+        d="M3.49 2.95V61.26H61.29V2.95H3.49z
+           M7.74 7.73H57.25V56.48H7.74V7.73z"
+        transform="matrix(0.9179,0,0,0.9026,2.1649,3.121)"
   />
   <path style="fill:#ce5c00"
-        d="M4.85 10.33C3.93 10.33 3.19 11.47 3.19 12.88V104.34C3.19 105.75 3.93 106.89 4.85 106.89H74.9C75.82 106.89 76.57 105.75 76.57 104.34V12.88C76.57 11.47 75.82 10.33 74.9 10.33H4.85z
-           M6.52 15.43H73.24V101.79H6.52V15.43z"
-        transform="matrix(0.8252,0,0,0.6375,-0.5091,-5.2546)"
+        d="M3.49 1.33C2.73 1.33 2.12 2.05 2.12 2.95V61.26C2.12 62.16 2.73 62.88 3.49 62.88H61.29C62.05 62.88 62.67 62.16 62.67 61.26V2.95C62.67 2.05 62.05 1.33 61.29 1.33H3.49z
+           M4.87 4.58H59.92V59.63H4.87V4.58z"
+        transform="matrix(0.9179,0,0,0.9026,2.1649,3.121)"
   />
   <path style="fill:#ce5c00"
-        d="M10 20.38V96.84H69.99V20.38H10z
-           M13.33 25.48H66.66V91.74H13.33V25.48z"
-        transform="matrix(0.8252,0,0,0.6375,-0.5091,-5.2546)"
+        d="M7.74 7.73V56.48H57.24V7.73H7.74z
+           M10.49 10.98H54.49V53.22H10.49V10.98z"
+        transform="matrix(0.9179,0,0,0.9026,2.1649,3.121)"
   />
  </g>
 </svg>

@@ -2,25 +2,24 @@
 <svg version="1.1" width="64" height="64" color-interpolation="linearRGB"
      xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg">
  <g>
-  <path style="fill:none; stroke:#b2b2b2; stroke-width:4.6451; stroke-linecap:round; stroke-linejoin:round"
-        d="M5.13 12.88H74.86V104.23H5.13V12.88z"
-        transform="matrix(-0.8117,-0.0026,0.002,-0.6375,64.1561,69.7401)"
+  <path style="fill:#010101; fill-opacity:0.4784"
+        d="M57.19 10.34L3.2 10.14L3.23 3.14L57.22 4.34L57.19 10.34z"
+        transform="matrix(0.9999,0.0064,-0.0064,0.9999,5.0441,4.8052)"
   />
-  <path style="fill:#b2b2b2; fill-opacity:0.8"
-        d="M6.66 56.06H73.33V61.16H6.66V56.06z"
-        transform="matrix(-0.8117,-0.0026,0.002,-0.6375,64.1561,69.7401)"
+  <path style="fill:none; stroke:#868686; stroke-opacity:0.8862; stroke-width:3.093; stroke-linecap:round; stroke-linejoin:round"
+        d="M58.53 59.56L6.53 59.36L6.73 6.8L58.73 6.99L58.53 59.56z"
   />
-  <path style="fill:#b2b2b2; fill-opacity:0.8"
-        d="M38.33 15.29H41.66V101.93H38.33V15.29z"
-        transform="matrix(-0.8117,-0.0026,0.002,-0.6375,64.1561,69.7401)"
+  <path style="fill:#757575; fill-opacity:0.8"
+        d="M57.48 34.71L7.76 34.52L7.77 31.59L57.49 31.77L57.48 34.71z"
+  />
+  <path style="fill:#757575; fill-opacity:0.8"
+        d="M33.78 58.07L31.3 58.06L31.48 8.21L33.96 8.22L33.78 58.07z"
   />
   <path style="fill:#ce5c00"
-        d="M4.85 10.33C3.93 10.33 3.19 11.47 3.19 12.88V104.34C3.19 105.75 3.93 106.89 4.85 106.89H74.9C75.82 106.89 76.57 105.75 76.57 104.34V12.88C76.57 11.47 75.82 10.33 74.9 10.33H4.85z"
-        transform="matrix(-0.839,-0.0027,0.0002,-0.0901,65.4353,11.2266)"
+        d="M59.79 13.31C60.5 13.31 61.07 13.22 61.07 13.11L61.1 5.67C61.1 5.56 60.53 5.47 59.81 5.46L5.82 5.27C5.12 5.26 4.54 5.35 4.54 5.46L4.51 12.9C4.51 13.01 5.09 13.11 5.79 13.11L59.79 13.31z"
   />
   <path style="fill:#fcaf3e"
-        d="M4.85 12.88V104.34H74.9V12.88H4.85z"
-        transform="matrix(-0.8117,-0.0026,0.0001,-0.0485,64.358,8.2753)"
+        d="M58.92 10.92L58.93 7.92L6.69 7.73L6.68 10.73L58.92 10.92z"
   />
  </g>
 </svg>
