@@ -2,44 +2,43 @@
 <svg version="1.1" width="64" height="64" color-interpolation="linearRGB"
      xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg">
  <g>
-  <path style="fill:none; stroke:#010101; stroke-width:4"
-        d="M32 2C15.43 2 2 15.43 2 32C2 48.56 15.43 62 32 62C48.56 62 62 48.56 62 32C62 15.43 48.56 2 32 2z"
-        transform="matrix(0.875,0,0,0.875,3.9999,3.9999)"
+  <path style="fill:#000000; fill-opacity:0.4039"
+        d="M31.99 5.74C17.5 5.74 5.74 17.5 5.74 31.99C5.74 46.48 17.5 58.24 31.99 58.24C46.48 58.24 58.24 46.48 58.24 31.99C58.24 17.5 46.48 5.74 31.99 5.74z"
+        transform="matrix(1,0,0,1.0761,4,0.5619)"
   />
-  <linearGradient id="gradient0" gradientUnits="userSpaceOnUse" x1="34.83" y1="123.48" x2="-57.49" y2="34.83">
+  <path style="fill:none; stroke:#010101; stroke-width:3.5"
+        d="M31.99 5.74C17.5 5.74 5.74 17.5 5.74 31.99C5.74 46.48 17.5 58.24 31.99 58.24C46.48 58.24 58.24 46.48 58.24 31.99C58.24 17.5 46.48 5.74 31.99 5.74z"
+  />
+  <linearGradient id="gradient0" gradientUnits="userSpaceOnUse" x1="34.47" y1="112.04" x2="-46.3" y2="34.47">
    <stop offset="0" stop-color="#010101"/>
    <stop offset="0.7785" stop-color="#707070"/>
    <stop offset="0.8166" stop-color="#737373"/>
    <stop offset="1" stop-color="#ffffff"/>
   </linearGradient>
   <path style="fill:url(#gradient0)"
-        d="M32 2C15.43 2 2 15.43 2 32C2 48.56 15.43 62 32 62C48.56 62 62 48.56 62 32C62 15.43 48.56 2 32 2z"
-        transform="matrix(0.875,0,0,0.875,3.9999,3.9999)"
+        d="M31.99 5.74C17.5 5.74 5.74 17.5 5.74 31.99C5.74 46.48 17.5 58.24 31.99 58.24C46.48 58.24 58.24 46.48 58.24 31.99C58.24 17.5 46.48 5.74 31.99 5.74z"
   />
-  <radialGradient id="gradient1" gradientUnits="userSpaceOnUse" cx="0" cy="0" r="64" gradientTransform="matrix(0.3134,0,0,0.3134,24.9988,24.9988)">
+  <radialGradient id="gradient1" gradientUnits="userSpaceOnUse" cx="0" cy="0" r="64" gradientTransform="matrix(0.2742,0,0,0.2742,25.8738,25.8738)">
    <stop offset="0" stop-color="#848484"/>
    <stop offset="0.7487" stop-color="#4b4b4b"/>
    <stop offset="1" stop-color="#323232"/>
   </radialGradient>
   <path style="fill:url(#gradient1)"
-        d="M31.99 17.99C24.26 17.99 17.99 24.26 17.99 31.99C17.99 39.72 24.26 45.99 31.99 45.99C39.72 45.99 45.99 39.72 45.99 31.99C45.99 24.26 39.72 17.99 31.99 17.99z"
-        transform="matrix(0.875,0,0,0.875,3.9999,3.9999)"
+        d="M31.99 19.74C25.22 19.74 19.74 25.22 19.74 31.99C19.74 38.75 25.22 44.24 31.99 44.24C38.75 44.24 44.24 38.75 44.24 31.99C44.24 25.22 38.75 19.74 31.99 19.74z"
   />
-  <linearGradient id="gradient2" gradientUnits="userSpaceOnUse" x1="34.47" y1="-7.27" x2="73.38" y2="35.72">
+  <linearGradient id="gradient2" gradientUnits="userSpaceOnUse" x1="34.16" y1="-2.36" x2="68.2" y2="35.25">
    <stop offset="0.632" stop-color="#434343"/>
    <stop offset="1" stop-color="#ffffff"/>
   </linearGradient>
-  <path style="fill:none; stroke:url(#gradient2); stroke-width:1.9029"
-        d="M31.99 4.81C16.98 4.81 4.81 16.98 4.81 31.99C4.81 47 16.98 59.18 31.99 59.18C47 59.18 59.18 47 59.18 31.99C59.18 16.98 47 4.81 31.99 4.81z"
-        transform="matrix(0.875,0,0,0.875,3.9999,3.9999)"
+  <path style="fill:none; stroke:url(#gradient2); stroke-width:1.665"
+        d="M31.99 8.2C18.85 8.2 8.2 18.85 8.2 31.99C8.2 45.12 18.85 55.78 31.99 55.78C45.12 55.78 55.78 45.12 55.78 31.99C55.78 18.85 45.12 8.2 31.99 8.2z"
   />
-  <linearGradient id="gradient3" gradientUnits="userSpaceOnUse" x1="30.23" y1="70.06" x2="-5.71" y2="29.94">
+  <linearGradient id="gradient3" gradientUnits="userSpaceOnUse" x1="30.45" y1="65.3" x2="-0.99" y2="30.19">
    <stop offset="0.6735" stop-color="#080808"/>
    <stop offset="1" stop-color="#ffffff"/>
   </linearGradient>
-  <path style="fill:none; stroke:url(#gradient3); stroke-width:1.7678"
-        d="M31.99 6.74C18.05 6.74 6.74 18.05 6.74 32C6.74 45.95 18.05 57.26 31.99 57.26C45.93 57.26 57.24 45.95 57.24 32C57.24 18.05 45.93 6.74 31.99 6.74z"
-        transform="matrix(0.875,0,0,0.875,3.9999,3.9999)"
+  <path style="fill:none; stroke:url(#gradient3); stroke-width:1.5468"
+        d="M31.99 9.89C19.79 9.89 9.89 19.79 9.89 31.99C9.89 44.2 19.79 54.1 31.99 54.1C44.18 54.1 54.08 44.2 54.08 31.99C54.08 19.79 44.18 9.89 31.99 9.89z"
   />
  </g>
 </svg>

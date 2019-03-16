@@ -2,57 +2,60 @@
 <svg version="1.1" width="64" height="64" color-interpolation="linearRGB"
      xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg">
  <g>
-  <path style="fill:none; stroke:#800000; stroke-width:3.8706"
-        d="M21.76 27.03H10.09V54.19H21.76V27.03z"
-        transform="matrix(0.8881,0,0,0.888,4.0447,4.1119)"
+  <path style="fill:#000000; fill-opacity:0.396"
+        d="M49.36 51.08L59.97 55.9L49.29 60.52L52.88 55.83L49.36 51.08z
+           M4.39 15.8L9.04 4.99L13.68 15.8L9.04 12.2L4.39 15.8z
+           M5.77 55.12L59.13 55.37
+           M8.78 59.18V4.99
+           M23.36 29.02H13V51.31H23.36V29.02z
+           M54.11 38.2H43.75V51.31H54.11V38.2z
+           M54.11 38.2H43.75V51.31H54.11V38.2z
+           M38.74 9.35H28.37V51.3H38.74V9.35z
+           M39.01 11.02L28.37 10.47V50.19H38.74L39.01 11.02z
+           M23.36 28.11H13V52.23H23.36V28.11z"
+        transform="matrix(1,0,0,1,3,3)"
   />
-  <path style="fill:none; stroke:#004080; stroke-width:6.2175"
-        d="M39.38 7.78L27.4 7.17V51.89H39.07L39.38 7.78z"
-        transform="matrix(0.8881,0,0,0.888,4.0447,4.1119)"
+  <path style="fill:none; stroke:#800000; stroke-width:3.4372"
+        d="M23.36 28.11H13V52.23H23.36V28.11z"
   />
-  <linearGradient id="gradient0" gradientUnits="userSpaceOnUse" x1="158.11" y1="5.91" x2="158.11" y2="53.15">
+  <path style="fill:none; stroke:#004080; stroke-width:5.5214"
+        d="M39.01 11.02L28.37 10.47V50.19H38.74L39.01 11.02z"
+  />
+  <linearGradient id="gradient0" gradientUnits="userSpaceOnUse" x1="144.46" y1="9.35" x2="144.46" y2="51.3">
    <stop offset="0" stop-color="#abd5ff"/>
    <stop offset="1" stop-color="#006cd9"/>
   </linearGradient>
   <path style="fill:url(#gradient0)"
-        d="M39.07 5.91H27.4V53.15H39.07V5.91z"
-        transform="matrix(0.8881,0,0,0.888,4.0447,4.1119)"
+        d="M38.74 9.35H28.37V51.3H38.74V9.35z"
   />
-  <path style="fill:none; stroke:#005900; stroke-width:4.7962"
-        d="M56.38 38.39H44.71V53.16H56.38V38.39z"
-        transform="matrix(0.8881,0,0,0.888,4.0447,4.1119)"
+  <path style="fill:none; stroke:#005900; stroke-width:4.2592"
+        d="M54.11 38.2H43.75V51.31H54.11V38.2z"
   />
-  <linearGradient id="gradient1" gradientUnits="userSpaceOnUse" x1="159.08" y1="38.39" x2="159.08" y2="53.15">
+  <linearGradient id="gradient1" gradientUnits="userSpaceOnUse" x1="145.32" y1="38.2" x2="145.32" y2="51.3">
    <stop offset="0" stop-color="#80ff80"/>
    <stop offset="1" stop-color="#00b200"/>
   </linearGradient>
   <path style="fill:url(#gradient1)"
-        d="M56.38 38.39H44.71V53.16H56.38V38.39z"
-        transform="matrix(0.8881,0,0,0.888,4.0447,4.1119)"
+        d="M54.11 38.2H43.75V51.31H54.11V38.2z"
   />
-  <linearGradient id="gradient2" gradientUnits="userSpaceOnUse" x1="157.14" y1="28.05" x2="157.14" y2="53.16">
+  <linearGradient id="gradient2" gradientUnits="userSpaceOnUse" x1="143.6" y1="29.02" x2="143.6" y2="51.31">
    <stop offset="0" stop-color="#ffabab"/>
    <stop offset="1" stop-color="#d90000"/>
   </linearGradient>
   <path style="fill:url(#gradient2)"
-        d="M21.76 28.06H10.09V53.16H21.76V28.06z"
-        transform="matrix(0.8881,0,0,0.888,4.0447,4.1119)"
+        d="M23.36 29.02H13V51.31H23.36V29.02z"
   />
-  <path style="fill:none; stroke:#000000; stroke-width:1.5319"
-        d="M5.34 62.02V0.99"
-        transform="matrix(0.8881,0,0,0.888,4.0447,4.1119)"
+  <path style="fill:none; stroke:#000000; stroke-width:1.3604"
+        d="M8.78 59.18V4.99"
   />
-  <path style="fill:none; stroke:#000000; stroke-width:1.5495"
-        d="M1.95 57.45L62.03 57.73"
-        transform="matrix(0.8881,0,0,0.888,4.0447,4.1119)"
+  <path style="fill:none; stroke:#000000; stroke-width:1.376"
+        d="M5.77 55.12L59.13 55.37"
   />
   <path style="fill:#000000"
-        d="M0.4 13.17L5.63 1L10.86 13.17L5.63 9.11L0.4 13.17z"
-        transform="matrix(0.8881,0,0,0.888,4.0447,4.1119)"
+        d="M4.39 15.8L9.04 4.99L13.68 15.8L9.04 12.2L4.39 15.8z"
   />
   <path style="fill:#000000"
-        d="M51.03 52.9L62.98 58.32L50.95 63.53L54.99 58.25L51.03 52.9z"
-        transform="matrix(0.8881,0,0,0.888,4.0447,4.1119)"
+        d="M49.36 51.08L59.97 55.9L49.29 60.52L52.88 55.83L49.36 51.08z"
   />
  </g>
 </svg>
