@@ -63,3 +63,6 @@ echo "Install emblems icons"
 cp -f --remove-destination emblems/*.svg $dataDir/icons/haiku/emblems/8
 cp -f --remove-destination emblems/*.svg $dataDir/icons/haiku/emblems/16
 cp -f --remove-destination emblems/*.svg $dataDir/icons/haiku/emblems/22
+
+echo "Install preferences icons"
+cp -f --remove-destination preferences/*.svg $dataDir/icons/haiku/preferences/32
