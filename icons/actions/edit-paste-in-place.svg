@@ -2,21 +2,23 @@
 <svg version="1.1" width="64" height="64" color-interpolation="linearRGB"
      xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg">
  <g>
-  <path style="fill:none; stroke:#8c0303; stroke-width:4; stroke-linejoin:round"
-        d="M30 2C23.37 2 18 7.36 18 14C18 20.62 30 38 30 38C30 38 42 20.62 42 14C42 7.36 36.61 2 30 2z"
-        transform="matrix(1.3928,0,0,1.3759,-9.2851,4.0001)"
+  <path style="fill:#000000; fill-opacity:0.4156"
+        d="M32.49 6.75C23.26 6.75 15.78 14.12 15.78 23.26C15.78 32.37 32.49 56.28 32.49 56.28C32.49 56.28 49.21 32.37 49.21 23.26C49.21 14.12 41.7 6.75 32.49 6.75z
+           M32.49 6.75C23.26 6.75 15.78 14.12 15.78 23.26C15.78 32.37 32.49 56.28 32.49 56.28C32.49 56.28 49.21 32.37 49.21 23.26C49.21 14.12 41.7 6.75 32.49 6.75z"
+        transform="matrix(1.0598,0,0,1.0605,2.0555,0.591)"
   />
-  <linearGradient id="gradient0" gradientUnits="userSpaceOnUse" x1="71.62" y1="-2.68" x2="76.8" y2="28.33">
+  <path style="fill:none; stroke:#8c0303; stroke-width:5.5375; stroke-linejoin:round"
+        d="M32.49 6.75C23.26 6.75 15.78 14.12 15.78 23.26C15.78 32.37 32.49 56.28 32.49 56.28C32.49 56.28 49.21 32.37 49.21 23.26C49.21 14.12 41.7 6.75 32.49 6.75z"
+  />
+  <linearGradient id="gradient0" gradientUnits="userSpaceOnUse" x1="90.46" y1="0.31" x2="97.68" y2="42.97">
    <stop offset="0" stop-color="#ff9e9e"/>
    <stop offset="1" stop-color="#ff0606"/>
   </linearGradient>
   <path style="fill:url(#gradient0)"
-        d="M30 2C23.37 2 18 7.36 18 14C18 20.62 30 38 30 38C30 38 42 20.62 42 14C42 7.36 36.61 2 30 2z"
-        transform="matrix(1.3928,0,0,1.3759,-9.2851,4.0001)"
+        d="M32.49 6.75C23.26 6.75 15.78 14.12 15.78 23.26C15.78 32.37 32.49 56.28 32.49 56.28C32.49 56.28 49.21 32.37 49.21 23.26C49.21 14.12 41.7 6.75 32.49 6.75z"
   />
   <path style="fill:#ffffff; fill-opacity:0.6784"
-        d="M30 8C26.68 8 24 10.68 24 14C24 17.3 26.68 20 30 20C33.31 20 36 17.3 36 14C36 10.68 33.31 8 30 8z"
-        transform="matrix(1.3928,0,0,1.3759,-9.2851,4.0001)"
+        d="M32.49 15C27.87 15 24.14 18.69 24.14 23.26C24.14 27.8 27.87 31.51 32.49 31.51C37.1 31.51 40.85 27.8 40.85 23.26C40.85 18.69 37.1 15 32.49 15z"
   />
  </g>
 </svg>
