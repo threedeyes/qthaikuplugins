@@ -1,1 +1,22 @@
-<svg height="24" width="24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><linearGradient id="a"><stop offset="0" stop-color="#eeeeec"/><stop offset="1" stop-color="#e0e0de"/></linearGradient><radialGradient id="b" cx="2.25" cy="16" gradientTransform="matrix(.503704 0 0 .11633788 10.861863 16.175388)" gradientUnits="userSpaceOnUse" r="16.875"><stop offset="0"/><stop offset="1" stop-opacity="0"/></radialGradient><linearGradient id="c" gradientTransform="matrix(.874941 0 0 .868551 2.834335 1.349651)" gradientUnits="userSpaceOnUse" x1="10.769515" x2="15.923767" xlink:href="#a" y1="8.71965" y2="15.039417"/><linearGradient id="d" gradientTransform="matrix(1.001575 0 0 1 1.492156 .000001)" gradientUnits="userSpaceOnUse" x1="10.769515" x2="15.923767" xlink:href="#a" y1="8.71965" y2="15.039417"/><g fill-rule="evenodd" transform="translate(0 2)"><ellipse cx="11.995196" cy="18.036797" display="block" fill="url(#b)" opacity=".6" rx="8.500005" ry="1.963204"/><path d="m6.889 2.5h10.25l3.861 8.000393-3.861 8.002906h-10.25l-3.889-8.003692z" fill="url(#d)" stroke="#888a85"/><path d="m7.629 3.5h8.76l3.535 6.977518-3.535 7.024623-8.76-.0078-3.52-6.971848z" fill="url(#c)" stroke="#fdfdfb"/></g></svg>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<svg version="1.1" width="64" height="64" color-interpolation="linearRGB"
+     xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg">
+ <g>
+  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:5"
+        d="M22.04 14.39H54.84L67.19 40L54.84 65.61H22.04L9.6 39.99L22.04 14.39z"
+        transform="matrix(0.8871,0,0,0.9098,0.8322,-2.8826)"
+  />
+  <linearGradient id="gradient0" gradientUnits="userSpaceOnUse" x1="162.06" y1="27.08" x2="162.06" y2="54.08">
+   <stop offset="0" stop-color="#80ff80"/>
+   <stop offset="1" stop-color="#00b200"/>
+  </linearGradient>
+  <path style="fill:url(#gradient0)"
+        d="M24.41 17.6H52.44L63.75 39.92L52.44 62.4L24.41 62.38L13.14 40.07L24.41 17.6z"
+        transform="matrix(0.9662,0,0,0.9991,-5.207,-8.4538)"
+  />
+  <path style="fill:none; stroke:#005900; stroke-width:4"
+        d="M22.04 14.39H54.84L67.19 40L54.84 65.61H22.04L9.6 39.99L22.04 14.39z"
+        transform="matrix(0.8871,0,0,0.9098,-2.1677,-4.8826)"
+  />
+ </g>
+</svg>
