@@ -99,7 +99,7 @@ QSystemTrayIconLooper::MessageReceived(BMessage* theMessage)
 } 
 
 QHaikuSystemTrayIcon::QHaikuSystemTrayIcon()
-	: looper(0), pulse(0), replicantId(-1), qystrayExist(false)
+	: looper(0), pulse(0), replicantId(-1), qystrayExist(false), currentMenu(NULL)
 {
 	qystrayExist = findTrayExecutable();
 }
@@ -315,7 +315,7 @@ QHaikuSystemTrayIcon::haikuEvents(BMessage *message)
 					}
 					if (buttons == B_SECONDARY_MOUSE_BUTTON) {
 						QPoint gpos = QPoint(point.x,point.y);
-		                if (currentMenu)
+		                if (currentMenu != NULL)
 		                	currentMenu->showPopup(NULL, shelfRect, NULL);
 		                emit activated(QPlatformSystemTrayIcon::Context);		
 						break;
