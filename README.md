@@ -2,6 +2,7 @@
 Qt5 plugins for haiku platform
 
 * **styles/qthaikustyle** - Native Haiku style plugin
+* **imageformats/qhvifplugin** - HVIF format plugin
 * **platforms/qhaikuplatform** - Experemental QPA plugin
 * **tools/qsystray** - SystemTray manager
 * **tools/qsettings** - Qt Preflet
