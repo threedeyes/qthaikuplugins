@@ -25,6 +25,11 @@ static void playerProc(void *cookie, void *buffer, size_t len, const media_raw_a
 			memset(buffer, 0, len);
 			return;
 	}
+	
+	if (obj->m_pushSource) {
+		obj->m_ringbuffer->Read((unsigned char*)buffer, len);
+		return;
+	}
 
 	int bytesRead = obj->m_source->read((char*)buffer, len);
 	if (bytesRead <= 0) {
@@ -53,9 +58,12 @@ HaikuAudioOutput::HaikuAudioOutput()
 	: m_error(QAudio::NoError)
 	, m_state(QAudio::StoppedState)
 	, m_bytesWritten(0)
+	, m_pushSource(false)
 	, m_player(NULL)
 	, m_bufferSize(0)
 	, m_periodSize(0)
+	, m_source(NULL)
+	, m_ringbuffer(NULL)
 	, m_intervalOffset(0)
 	, m_notifyInterval(1000)    
 {
@@ -71,7 +79,20 @@ void HaikuAudioOutput::start(QIODevice *source)
 	if (m_state != QAudio::StoppedState)
 		stop();
 
+	if (m_source && m_pushSource) {
+		delete m_source;
+		m_source = NULL;
+	}
+	
+	if (m_ringbuffer) {
+		delete m_ringbuffer;
+		m_ringbuffer = NULL;
+	}
+
+	close();
+
 	m_source = source;
+	m_pushSource = false;
 	m_error = QAudio::NoError;
 
 	if (open()) {
@@ -89,16 +110,33 @@ QIODevice *HaikuAudioOutput::start()
 	if (m_state != QAudio::StoppedState)
 		stop();
 
-	m_error = QAudio::NoError;
+	if (m_source && m_pushSource) {
+		delete m_source;
+		m_source = NULL;
+	}
+	
+	if (m_ringbuffer) {
+		delete m_ringbuffer;
+		m_ringbuffer = NULL;
+	}
 
-	if (open())
+	close();
+
+	m_error = QAudio::NoError;
+    m_source = new HaikuIODevicePrivate(this);
+    m_source->open(QIODevice::WriteOnly | QIODevice::Unbuffered);
+    m_pushSource = true;
+
+	if (open()) {
 		setState(QAudio::IdleState);
-	else {
+		m_player->Start();
+		m_player->SetHasData(true);
+	} else {
 		setError(QAudio::OpenError);
 		setState(QAudio::StoppedState);
 	}
 
-    return NULL;
+    return m_source;
 }
 
 void HaikuAudioOutput::stop()
@@ -222,12 +260,9 @@ bool HaikuAudioOutput::open()
 	}
 
 	qint64 bytesPerSecond = m_format.sampleRate() * m_format.channelCount() * m_format.sampleSize() / 8;
-
-	m_periodTime = (m_category == LOW_LATENCY_CATEGORY_NAME) ? LowLatencyPeriodTimeMs : PeriodTimeMs;
-	
+	m_periodTime = (m_category == LOW_LATENCY_CATEGORY_NAME) ? LowLatencyPeriodTimeMs : PeriodTimeMs;	
 	m_periodSize = qMin(int(2048), int(bytesPerSecond * m_periodTime) / 1000);
-	//m_periodSize = (bytesPerSecond * m_periodTime) / 1000;
-	
+
 	if (m_category == LOW_LATENCY_CATEGORY_NAME) {
 		m_bufferSize = (bytesPerSecond * LowLatencyBufferSizeMs) / qint64(1000);
 	} else {
@@ -237,8 +272,20 @@ bool HaikuAudioOutput::open()
 	uint32 format = media_raw_audio_format::B_AUDIO_SHORT;
 	uint32 byte_order = B_MEDIA_LITTLE_ENDIAN;
 
-	if(m_format.sampleSize() != 16 || m_format.sampleType() != QAudioFormat::SignedInt)
+	if (m_format.sampleSize() != 16
+		&& m_format.sampleSize() != 32)
 		return false;
+
+	switch (m_format.sampleType()) {
+		case QAudioFormat::SignedInt:
+			format = media_raw_audio_format::B_AUDIO_SHORT;
+			break;
+		case QAudioFormat::Float:
+			format = media_raw_audio_format::B_AUDIO_FLOAT;
+			break;
+		default:
+			return false;
+	}
 
 	if(m_format.byteOrder() == QAudioFormat::LittleEndian)
 		byte_order = B_MEDIA_LITTLE_ENDIAN;
@@ -250,8 +297,13 @@ bool HaikuAudioOutput::open()
 		(uint32)m_format.channelCount(),
 		format,
 		byte_order,
-		(uint32)m_bufferSize /  2
+		(uint32)m_bufferSize / (m_format.sampleSize() / 8)
 	};
+
+	if (m_pushSource)
+		m_ringbuffer = new RingBuffer(m_bufferSize * 3);
+	else
+		m_pushSource = NULL;
 
 	QString appname = QFileInfo(QCoreApplication::applicationFilePath()).fileName();
 
@@ -278,6 +330,16 @@ void HaikuAudioOutput::close()
 		delete m_player;
 		m_player = NULL;
 	}
+
+	if (m_pushSource && m_source) {
+        delete m_source;
+        m_source = NULL;
+    }
+    
+    if (m_ringbuffer) {
+    	delete m_ringbuffer;
+    	m_ringbuffer = NULL;
+    }
 }
 
 void HaikuAudioOutput::setError(QAudio::Error error)
@@ -298,18 +360,53 @@ void HaikuAudioOutput::setState(QAudio::State state)
 
 void HaikuAudioOutput::suspendInternal(QAudio::State suspendState)
 {
-	if (m_player) {
+	if (m_player)
 		m_player->Stop();
-		setState(suspendState);
-	}
+	setState(suspendState);
 }
 
 void HaikuAudioOutput::resumeInternal()
 {
-	if (m_player) {
-		m_player->Start();
-		setState(QAudio::ActiveState);
+    if (m_pushSource) {
+        setState(QAudio::IdleState);
+    } else {
+		if (m_player) {
+			m_player->Start();
+			setState(QAudio::ActiveState);
+		}
 	}
 }
 
+HaikuIODevicePrivate::HaikuIODevicePrivate(HaikuAudioOutput* audio)
+{
+    audioDevice = qobject_cast<HaikuAudioOutput*>(audio);
+}
+
+HaikuIODevicePrivate::~HaikuIODevicePrivate() {}
+
+qint64 HaikuIODevicePrivate::readData( char* data, qint64 len)
+{
+    Q_UNUSED(data)
+    Q_UNUSED(len)
+
+    return 0;
+}
+
+qint64 HaikuIODevicePrivate::writeData(const char* data, qint64 len)
+{
+    int retry = 0;
+    qint64 written = 0;
+    if((audioDevice->m_state == QAudio::ActiveState)
+            ||(audioDevice->m_state == QAudio::IdleState)) {
+        while(written < len) {
+            int chunk = audioDevice->m_ringbuffer->Write( (unsigned char*)(data+written),(len-written));
+            if(chunk <= 0)
+                retry++;
+            written+=chunk;
+            if(retry > 10)
+                return written;
+        }
+    }
+    return written;
+}
 QT_END_NAMESPACE

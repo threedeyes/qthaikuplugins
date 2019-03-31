@@ -14,6 +14,8 @@
 
 QT_BEGIN_NAMESPACE
 
+class HaikuIODevicePrivate;
+
 class HaikuAudioOutput : public QAbstractAudioOutput
 {
 	Q_OBJECT
@@ -68,24 +70,27 @@ public:
 	void setState(QAudio::State state);
 	void suspendInternal(QAudio::State suspendState);
 	void resumeInternal();
+	
+	friend class HaikuIODevicePrivate;
+	bool m_pushSource;
 
 	BSoundPlayer *m_player;
+	RingBuffer *m_ringbuffer;
 };
 
 class HaikuIODevicePrivate : public QIODevice
 {
+    friend class HaikuAudioOutput;
     Q_OBJECT
-
 public:
-    inline HaikuIODevicePrivate(HaikuAudioOutput *audio) : m_audioDevice(audio) {}
-    inline ~HaikuIODevicePrivate() override {}
+    HaikuIODevicePrivate(HaikuAudioOutput* audio);
+    ~HaikuIODevicePrivate();
 
-protected:
-    inline qint64 readData(char *, qint64) override { return 0; }
-    inline qint64 writeData(const char *data, qint64 len) override { return 0; };
+    qint64 readData( char* data, qint64 len);
+    qint64 writeData(const char* data, qint64 len);
 
 private:
-    HaikuAudioOutput *m_audioDevice;
+    HaikuAudioOutput *audioDevice;
 };
 
 QT_END_NAMESPACE

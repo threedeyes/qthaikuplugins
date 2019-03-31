@@ -5,15 +5,14 @@
 #include "haikuaudiooutput.h"
 #include <QDebug>
 
-static const char *INPUT_ID = "HaikuAudioInput";
-static const char *OUTPUT_ID = "HaikuAudioOutput";
+static const char *INPUT_ID = "MediaKit Input";
+static const char *OUTPUT_ID = "MediaKit Output";
 
 QT_BEGIN_NAMESPACE
 
 HaikuAudioPlugin::HaikuAudioPlugin(QObject *parent)
     : QAudioSystemPlugin(parent)
 {
-	qDebug() << "HaikuAudioPlugin";
 }
 
 QByteArray HaikuAudioPlugin::defaultDevice(QAudio::Mode mode) const

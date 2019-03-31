@@ -53,7 +53,7 @@ QStringList HaikuAudioDeviceInfo::supportedCodecs()
 
 QList<int> HaikuAudioDeviceInfo::supportedSampleRates()
 {
-    return QList<int>() << 48000;
+    return QList<int>() << 44100 << 48000;
 }
 
 QList<int> HaikuAudioDeviceInfo::supportedChannelCounts()
@@ -63,7 +63,7 @@ QList<int> HaikuAudioDeviceInfo::supportedChannelCounts()
 
 QList<int> HaikuAudioDeviceInfo::supportedSampleSizes()
 {
-    return QList<int>() << 16;
+    return QList<int>() << 16 << 32;
 }
 
 QList<QAudioFormat::Endian> HaikuAudioDeviceInfo::supportedByteOrders()
@@ -73,7 +73,7 @@ QList<QAudioFormat::Endian> HaikuAudioDeviceInfo::supportedByteOrders()
 
 QList<QAudioFormat::SampleType> HaikuAudioDeviceInfo::supportedSampleTypes()
 {
-    return QList<QAudioFormat::SampleType>() << QAudioFormat::SignedInt;
+    return QList<QAudioFormat::SampleType>() << QAudioFormat::SignedInt << QAudioFormat::Float;
 }
 
 QT_END_NAMESPACE
