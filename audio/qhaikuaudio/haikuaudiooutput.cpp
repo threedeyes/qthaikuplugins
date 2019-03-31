@@ -8,11 +8,11 @@
 
 QT_BEGIN_NAMESPACE
 
-const int PeriodTimeMs = 20;
-const int BufferSizeMs = 80;
+const int PeriodTimeMs = 10;
+const int BufferSizeMs = 40;
 
-const int LowLatencyPeriodTimeMs = 10;
-const int LowLatencyBufferSizeMs = 40;
+const int LowLatencyPeriodTimeMs = 5;
+const int LowLatencyBufferSizeMs = 20;
 
 #define LOW_LATENCY_CATEGORY_NAME "game"
 
@@ -326,6 +326,7 @@ bool HaikuAudioOutput::open()
 void HaikuAudioOutput::close()
 {
 	if (m_player) {
+		m_player->SetHasData(false);
 		m_player->Stop();
 		delete m_player;
 		m_player = NULL;
@@ -360,8 +361,10 @@ void HaikuAudioOutput::setState(QAudio::State state)
 
 void HaikuAudioOutput::suspendInternal(QAudio::State suspendState)
 {
-	if (m_player)
+	if (m_player) {
+		m_player->SetHasData(false);
 		m_player->Stop();
+	}
 	setState(suspendState);
 }
 
@@ -371,6 +374,7 @@ void HaikuAudioOutput::resumeInternal()
         setState(QAudio::IdleState);
     } else {
 		if (m_player) {
+			m_player->SetHasData(true);
 			m_player->Start();
 			setState(QAudio::ActiveState);
 		}
