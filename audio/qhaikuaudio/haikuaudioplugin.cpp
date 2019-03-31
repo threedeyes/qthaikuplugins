@@ -1,7 +1,7 @@
 #include "haikuaudioplugin.h"
 
 #include "haikuaudiodeviceinfo.h"
-//#include "haikuaudioinput.h"
+#include "haikuaudioinput.h"
 #include "haikuaudiooutput.h"
 #include <QDebug>
 
@@ -32,8 +32,7 @@ QAbstractAudioInput *HaikuAudioPlugin::createInput(const QByteArray &device)
 {
     Q_ASSERT(device == INPUT_ID);
     Q_UNUSED(device);
-//    return new QAbstractAudioInput();
-	return NULL;
+    return new HaikuAudioInput();	
 }
 
 QAbstractAudioOutput *HaikuAudioPlugin::createOutput(const QByteArray &device)

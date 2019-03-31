@@ -7,12 +7,14 @@ LIBS += -lbe -lmedia
 HEADERS += haikuaudioplugin.h \
            haikuaudiodeviceinfo.h \
            haikuaudiooutput.h \
-           haikuaudioringbuffer.h
+           haikuaudioringbuffer.h \
+           haikuaudioinput.h
 
 SOURCES += haikuaudioplugin.cpp \
            haikuaudiodeviceinfo.cpp \
            haikuaudiooutput.cpp \
-           haikuaudioringbuffer.cpp
+           haikuaudioringbuffer.cpp \
+           haikuaudioinput.cpp
 
 OTHER_FILES += haiku_audio.json
 
