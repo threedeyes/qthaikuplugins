@@ -311,7 +311,7 @@ bool HaikuAudioOutput::open()
 	else
 		m_pushSource = NULL;
 
-	QString appname = QFileInfo(QCoreApplication::applicationFilePath()).fileName();
+	QString appname = QCoreApplication::applicationName();
 
 	m_player = new BSoundPlayer(&mediaKitFormat, appname.toUtf8(), playerProc, NULL, (void*)this);
 
@@ -409,6 +409,8 @@ qint64 HaikuIODevicePrivate::writeData(const char* data, qint64 len)
     if((audioDevice->m_state == QAudio::ActiveState)
             ||(audioDevice->m_state == QAudio::IdleState)) {
         while(written < len) {
+        	while (audioDevice->m_ringbuffer->GetWriteAvailable() < (len-written))
+        		snooze(100);
             int chunk = audioDevice->m_ringbuffer->Write( (unsigned char*)(data+written),(len-written));
             if(chunk <= 0)
                 retry++;
