@@ -272,16 +272,22 @@ bool HaikuAudioOutput::open()
 	uint32 format = media_raw_audio_format::B_AUDIO_SHORT;
 	uint32 byte_order = B_MEDIA_LITTLE_ENDIAN;
 
-	if (m_format.sampleSize() != 16
-		&& m_format.sampleSize() != 32)
-		return false;
-
-	switch (m_format.sampleType()) {
-		case QAudioFormat::SignedInt:
-			format = media_raw_audio_format::B_AUDIO_SHORT;
+	switch (m_format.sampleType()) {		
+		case QAudioFormat::SignedInt:			
+			if (m_format.sampleSize() == 8)
+				format = media_raw_audio_format::B_AUDIO_CHAR;
+			else if (m_format.sampleSize() == 16)
+				format = media_raw_audio_format::B_AUDIO_SHORT;
+			else if (m_format.sampleSize() == 32)
+				format = media_raw_audio_format::B_AUDIO_INT;
+			else
+				return false;
 			break;
 		case QAudioFormat::Float:
-			format = media_raw_audio_format::B_AUDIO_FLOAT;
+			if (m_format.sampleSize() == 32)
+				format = media_raw_audio_format::B_AUDIO_FLOAT;
+			else
+				return false;
 			break;
 		default:
 			return false;

@@ -63,7 +63,7 @@ QList<int> HaikuAudioDeviceInfo::supportedChannelCounts()
 
 QList<int> HaikuAudioDeviceInfo::supportedSampleSizes()
 {
-    return QList<int>() << 16 << 32;
+    return QList<int>() << 8 << 16 << 32;
 }
 
 QList<QAudioFormat::Endian> HaikuAudioDeviceInfo::supportedByteOrders()
