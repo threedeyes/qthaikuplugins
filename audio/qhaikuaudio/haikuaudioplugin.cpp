@@ -25,7 +25,7 @@ QList<QByteArray> HaikuAudioPlugin::availableDevices(QAudio::Mode mode) const
     if (mode == QAudio::AudioOutput)
         return QList<QByteArray>() << OUTPUT_ID;
     else
-        return QList<QByteArray>();
+        return QList<QByteArray>() << INPUT_ID;
 }
 
 QAbstractAudioInput *HaikuAudioPlugin::createInput(const QByteArray &device)
