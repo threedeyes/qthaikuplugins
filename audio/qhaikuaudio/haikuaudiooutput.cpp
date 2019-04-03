@@ -14,6 +14,8 @@ const int BufferSizeMs = 40;
 const int LowLatencyPeriodTimeMs = 5;
 const int LowLatencyBufferSizeMs = 20;
 
+const int TimeOutMs = 250;
+
 #define LOW_LATENCY_CATEGORY_NAME "game"
 
 static void playerProc(void *cookie, void *buffer, size_t len, const media_raw_audio_format &format)
@@ -406,19 +408,23 @@ qint64 HaikuIODevicePrivate::writeData(const char* data, qint64 len)
 {
     int retry = 0;
     qint64 written = 0;
-    if((audioDevice->m_state == QAudio::ActiveState)
-            ||(audioDevice->m_state == QAudio::IdleState)) {
-        while(written < len) {
-        	while (audioDevice->m_ringbuffer->GetWriteAvailable() < (len-written))
-        		snooze(100);
-            int chunk = audioDevice->m_ringbuffer->Write( (unsigned char*)(data+written),(len-written));
-            if(chunk <= 0)
-                retry++;
-            written+=chunk;
-            if(retry > 10)
-                return written;
-        }
-    }
+	if((audioDevice->m_state == QAudio::ActiveState)
+		||(audioDevice->m_state == QAudio::IdleState)) {
+		while(written < len) {
+			bigtime_t begTime = system_time();
+			while (audioDevice->m_ringbuffer->GetWriteAvailable() < (len-written)) {
+				if (system_time() - begTime > TimeOutMs * 1000)
+					return written;
+				snooze(100);
+			}
+			int chunk = audioDevice->m_ringbuffer->Write( (unsigned char*)(data+written), (len-written));
+			if(chunk <= 0)
+				retry++;
+			written+=chunk;
+			if(retry > 10)
+				return written;
+		}
+	}
     return written;
 }
 QT_END_NAMESPACE
