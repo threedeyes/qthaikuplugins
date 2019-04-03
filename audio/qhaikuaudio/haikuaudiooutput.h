@@ -65,7 +65,6 @@ public:
 	int m_bufferSize;
 
 	bool open();
-	void close();
 	void setError(QAudio::Error error);
 	void setState(QAudio::State state);
 	void suspendInternal(QAudio::State suspendState);
@@ -76,6 +75,12 @@ public:
 
 	BSoundPlayer *m_player;
 	RingBuffer *m_ringbuffer;
+
+public Q_SLOTS:
+	void close();
+
+Q_SIGNALS:
+	void closeDevice();
 };
 
 class HaikuIODevicePrivate : public QIODevice

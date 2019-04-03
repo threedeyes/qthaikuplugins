@@ -20,6 +20,7 @@ const int TimeOutMs = 250;
 
 static void playerProc(void *cookie, void *buffer, size_t len, const media_raw_audio_format &format)
 {
+	Q_UNUSED(format)
 	HaikuAudioOutput *obj = (HaikuAudioOutput*)cookie;
 	if (obj->m_state == QAudio::StoppedState
 		|| obj->m_state == QAudio::SuspendedState
@@ -33,16 +34,16 @@ static void playerProc(void *cookie, void *buffer, size_t len, const media_raw_a
 		return;
 	}
 
-	int bytesRead = obj->m_source->read((char*)buffer, len);
+	size_t bytesRead = obj->m_source->read((char*)buffer, len);
 	if (bytesRead <= 0) {
-		obj->close();
+		emit obj->closeDevice();
 		if (bytesRead != 0)
 			obj->setError(QAudio::IOError);
 		obj->setState(QAudio::StoppedState);
 		memset(buffer, 0, len);
 	} else {
 		if (bytesRead < len)
-			memset(buffer + bytesRead, 0, len - bytesRead);
+			memset((char*)buffer + bytesRead, 0, len - bytesRead);
 		obj->m_bytesWritten += bytesRead;
 	}
 
@@ -57,18 +58,19 @@ static void playerProc(void *cookie, void *buffer, size_t len, const media_raw_a
 }
 
 HaikuAudioOutput::HaikuAudioOutput()
-	: m_error(QAudio::NoError)
+	: m_source(NULL)
+	, m_error(QAudio::NoError)
 	, m_state(QAudio::StoppedState)
-	, m_bytesWritten(0)
-	, m_pushSource(false)
-	, m_player(NULL)
-	, m_bufferSize(0)
-	, m_periodSize(0)
-	, m_source(NULL)
-	, m_ringbuffer(NULL)
 	, m_intervalOffset(0)
-	, m_notifyInterval(1000)    
+	, m_bytesWritten(0)
+	, m_periodSize(0)
+	, m_notifyInterval(1000)
+	, m_bufferSize(0)
+	, m_pushSource(false)
+	, m_player(0)
+	, m_ringbuffer(0)
 {
+	connect(this, SIGNAL(closeDevice()), this, SLOT(close()));
 }
 
 HaikuAudioOutput::~HaikuAudioOutput()
@@ -339,12 +341,10 @@ void HaikuAudioOutput::close()
 		delete m_player;
 		m_player = NULL;
 	}
-
 	if (m_pushSource && m_source) {
         delete m_source;
         m_source = NULL;
     }
-    
     if (m_ringbuffer) {
     	delete m_ringbuffer;
     	m_ringbuffer = NULL;
@@ -413,8 +413,9 @@ qint64 HaikuIODevicePrivate::writeData(const char* data, qint64 len)
 		while(written < len) {
 			bigtime_t begTime = system_time();
 			while (audioDevice->m_ringbuffer->GetWriteAvailable() < (len-written)) {
-				if (system_time() - begTime > TimeOutMs * 1000)
+				if (system_time() - begTime > TimeOutMs * 1000) {
 					return written;
+				}
 				snooze(100);
 			}
 			int chunk = audioDevice->m_ringbuffer->Write( (unsigned char*)(data+written), (len-written));
