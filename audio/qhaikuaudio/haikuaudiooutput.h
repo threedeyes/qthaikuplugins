@@ -14,7 +14,7 @@
 
 QT_BEGIN_NAMESPACE
 
-class HaikuIODevicePrivate;
+class HaikuOutputDevicePrivate;
 
 class HaikuAudioOutput : public QAbstractAudioOutput
 {
@@ -69,8 +69,9 @@ public:
 	void setState(QAudio::State state);
 	void suspendInternal(QAudio::State suspendState);
 	void resumeInternal();
-	
-	friend class HaikuIODevicePrivate;
+
+	friend class HaikuOutputDevicePrivate;
+
 	bool m_pushSource;
 
 	BSoundPlayer *m_player;
@@ -83,13 +84,13 @@ Q_SIGNALS:
 	void closeDevice();
 };
 
-class HaikuIODevicePrivate : public QIODevice
+class HaikuOutputDevicePrivate : public QIODevice
 {
     friend class HaikuAudioOutput;
     Q_OBJECT
 public:
-    HaikuIODevicePrivate(HaikuAudioOutput* audio);
-    ~HaikuIODevicePrivate();
+    HaikuOutputDevicePrivate(HaikuAudioOutput* audio);
+    ~HaikuOutputDevicePrivate();
 
     qint64 readData( char* data, qint64 len);
     qint64 writeData(const char* data, qint64 len);

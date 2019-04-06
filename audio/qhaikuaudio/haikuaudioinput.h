@@ -8,6 +8,29 @@
 #include <QTime>
 #include <QTimer>
 
+#include <OS.h>
+
+#include <MediaKit.h>
+#include <SupportKit.h>
+
+#include <MediaFile.h>
+#include <MediaNode.h>
+#include <MediaRecorder.h>
+#include <MediaTrack.h>
+#include <MediaRoster.h>
+#include <TimeSource.h>
+#include <NodeInfo.h>
+#include <MediaAddOn.h>
+
+extern "C" {
+	#include <libavutil/opt.h>
+	#include <libavutil/channel_layout.h>
+	#include <libavutil/samplefmt.h>
+	#include <libswresample/swresample.h>
+}
+
+#include "haikuaudioringbuffer.h"
+
 QT_BEGIN_NAMESPACE
 
 class HaikuAudioInput : public QAbstractAudioInput
@@ -68,6 +91,24 @@ public:
     int m_intervalTime;
 
     bool m_pullMode;
+    
+    bool m_isRecording;
+    
+    RingBuffer *m_ringBuffer;
+    SwrContext *m_swrContext;
+    
+    AVSampleFormat m_outAVFormat;
+
+private:
+	BMediaRoster * m_mediaRoster;
+	BMediaRecorder * m_mediaRecorder;
+	media_format m_recordFormat;
+	media_node m_audioInputNode;
+	media_node m_audioMixerNode;
+
+private slots:
+    void userFeed();
+    bool deviceReady();
 };
 
 class InputPrivate : public QIODevice

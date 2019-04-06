@@ -18,14 +18,14 @@ QAudioFormat HaikuAudioDeviceInfo::preferredFormat() const
     if (m_mode == QAudio::AudioOutput) {
         format.setSampleRate(48000);
         format.setChannelCount(2);
-        format.setByteOrder(QAudioFormat::LittleEndian);
+        format.setByteOrder(((B_HOST_IS_BENDIAN) ? QAudioFormat::BigEndian : QAudioFormat::LittleEndian));
         format.setSampleType(QAudioFormat::SignedInt);
         format.setSampleSize(16);
         format.setCodec(QLatin1String("audio/pcm"));
     } else {
         format.setSampleRate(48000);
         format.setChannelCount(2);
-        format.setByteOrder(QAudioFormat::LittleEndian);
+        format.setByteOrder(((B_HOST_IS_BENDIAN) ? QAudioFormat::BigEndian : QAudioFormat::LittleEndian));
         format.setSampleType(QAudioFormat::SignedInt);
         format.setSampleSize(16);
         format.setCodec(QLatin1String("audio/pcm"));
@@ -53,7 +53,9 @@ QStringList HaikuAudioDeviceInfo::supportedCodecs()
 
 QList<int> HaikuAudioDeviceInfo::supportedSampleRates()
 {
-    return QList<int>() << 44100 << 48000;
+ 	if (m_mode == QAudio::AudioOutput)
+    	return QList<int>() << 44100 << 48000 << 96000;
+   	return QList<int>() << 48000;
 }
 
 QList<int> HaikuAudioDeviceInfo::supportedChannelCounts()
@@ -63,17 +65,19 @@ QList<int> HaikuAudioDeviceInfo::supportedChannelCounts()
 
 QList<int> HaikuAudioDeviceInfo::supportedSampleSizes()
 {
-    return QList<int>() << 8 << 16 << 32;
+    return QList<int>() << 16 << 32;
 }
 
 QList<QAudioFormat::Endian> HaikuAudioDeviceInfo::supportedByteOrders()
 {
-    return QList<QAudioFormat::Endian>() << QAudioFormat::LittleEndian << QAudioFormat::BigEndian;
+   	return QList<QAudioFormat::Endian>() << ((B_HOST_IS_BENDIAN) ? QAudioFormat::BigEndian : QAudioFormat::LittleEndian);
 }
 
 QList<QAudioFormat::SampleType> HaikuAudioDeviceInfo::supportedSampleTypes()
 {
-    return QList<QAudioFormat::SampleType>() << QAudioFormat::SignedInt << QAudioFormat::Float;
+	if (m_mode == QAudio::AudioOutput)
+    	return QList<QAudioFormat::SampleType>() << QAudioFormat::SignedInt << QAudioFormat::Float;
+    return QList<QAudioFormat::SampleType>() << QAudioFormat::SignedInt;
 }
 
 QT_END_NAMESPACE

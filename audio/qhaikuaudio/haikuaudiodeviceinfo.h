@@ -3,6 +3,8 @@
 
 #include <qaudiosystem.h>
 
+#include <ByteOrder.h>
+
 QT_BEGIN_NAMESPACE
 
 class HaikuAudioDeviceInfo : public QAbstractAudioDeviceInfo

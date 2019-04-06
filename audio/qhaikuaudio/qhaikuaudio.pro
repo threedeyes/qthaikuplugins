@@ -2,7 +2,12 @@ TARGET = qtaudio_haiku
 
 QT += multimedia-private
 
-LIBS += -lbe -lmedia
+CONFIG += link_pkgconfig
+
+PKGCONFIG += libswresample
+PKGCONFIG += libavutil
+
+LIBS += -lbe -lmedia -lswresample -lavutil
 
 HEADERS += haikuaudioplugin.h \
            haikuaudiodeviceinfo.h \

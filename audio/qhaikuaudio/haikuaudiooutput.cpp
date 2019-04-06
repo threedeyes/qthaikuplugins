@@ -14,7 +14,7 @@ const int BufferSizeMs = 40;
 const int LowLatencyPeriodTimeMs = 5;
 const int LowLatencyBufferSizeMs = 20;
 
-const int TimeOutMs = 250;
+const int TimeOutMs = 100;
 
 #define LOW_LATENCY_CATEGORY_NAME "game"
 
@@ -127,7 +127,7 @@ QIODevice *HaikuAudioOutput::start()
 	close();
 
 	m_error = QAudio::NoError;
-    m_source = new HaikuIODevicePrivate(this);
+    m_source = new HaikuOutputDevicePrivate(this);
     m_source->open(QIODevice::WriteOnly | QIODevice::Unbuffered);
     m_pushSource = true;
 
@@ -276,7 +276,7 @@ bool HaikuAudioOutput::open()
 	uint32 format = media_raw_audio_format::B_AUDIO_SHORT;
 	uint32 byte_order = B_MEDIA_LITTLE_ENDIAN;
 
-	switch (m_format.sampleType()) {		
+	switch (m_format.sampleType()) {
 		case QAudioFormat::SignedInt:			
 			if (m_format.sampleSize() == 8)
 				format = media_raw_audio_format::B_AUDIO_CHAR;
@@ -311,7 +311,7 @@ bool HaikuAudioOutput::open()
 	};
 
 	if (m_pushSource)
-		m_ringbuffer = new RingBuffer(m_bufferSize * 3);
+		m_ringbuffer = new RingBuffer(m_bufferSize * 4);
 	else
 		m_pushSource = NULL;
 
@@ -389,14 +389,14 @@ void HaikuAudioOutput::resumeInternal()
 	}
 }
 
-HaikuIODevicePrivate::HaikuIODevicePrivate(HaikuAudioOutput* audio)
+HaikuOutputDevicePrivate::HaikuOutputDevicePrivate(HaikuAudioOutput* audio)
 {
     audioDevice = qobject_cast<HaikuAudioOutput*>(audio);
 }
 
-HaikuIODevicePrivate::~HaikuIODevicePrivate() {}
+HaikuOutputDevicePrivate::~HaikuOutputDevicePrivate() {}
 
-qint64 HaikuIODevicePrivate::readData( char* data, qint64 len)
+qint64 HaikuOutputDevicePrivate::readData( char* data, qint64 len)
 {
     Q_UNUSED(data)
     Q_UNUSED(len)
@@ -404,7 +404,7 @@ qint64 HaikuIODevicePrivate::readData( char* data, qint64 len)
     return 0;
 }
 
-qint64 HaikuIODevicePrivate::writeData(const char* data, qint64 len)
+qint64 HaikuOutputDevicePrivate::writeData(const char* data, qint64 len)
 {
     int retry = 0;
     qint64 written = 0;
@@ -412,20 +412,32 @@ qint64 HaikuIODevicePrivate::writeData(const char* data, qint64 len)
 		||(audioDevice->m_state == QAudio::IdleState)) {
 		while(written < len) {
 			bigtime_t begTime = system_time();
-			while (audioDevice->m_ringbuffer->GetWriteAvailable() < (len-written)) {
-				if (system_time() - begTime > TimeOutMs * 1000) {
-					return written;
-				}
-				snooze(100);
+			while (audioDevice->m_ringbuffer->GetWriteAvailable() < (len-written) && (system_time() - begTime < TimeOutMs * 1000)) {
+				snooze(1);
 			}
+			if (system_time() - begTime < TimeOutMs * 1000)
+				break;
 			int chunk = audioDevice->m_ringbuffer->Write( (unsigned char*)(data+written), (len-written));
 			if(chunk <= 0)
 				retry++;
 			written+=chunk;
-			if(retry > 10)
+			if(retry > 10) {
+				audioDevice->m_bytesWritten += written;
 				return written;
+			}
 		}
 	}
+    if (written > 0) {
+        audioDevice->m_bytesWritten += written;
+        audioDevice->setError(QAudio::NoError);
+        audioDevice->setState(QAudio::ActiveState);
+        return written;
+    } else {
+        audioDevice->close();
+        audioDevice->setError(QAudio::FatalError);
+        audioDevice->setState(QAudio::StoppedState);
+        return 0;
+    }
     return written;
 }
 QT_END_NAMESPACE
