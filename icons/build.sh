@@ -66,3 +66,10 @@ cp -f --remove-destination emblems/*.svg $dataDir/icons/haiku/emblems/22
 
 echo "Install preferences icons"
 cp -f --remove-destination preferences/*.svg $dataDir/icons/haiku/preferences/32
+
+echo "Install apps icons"
+cp -f --remove-destination apps/*.svg $dataDir/icons/haiku/apps/16
+cp -f --remove-destination apps/*.svg $dataDir/icons/haiku/apps/22
+cp -f --remove-destination apps/*.svg $dataDir/icons/haiku/apps/32
+cp -f --remove-destination apps/*.svg $dataDir/icons/haiku/apps/48
+cp -f --remove-destination apps/*.svg $dataDir/icons/haiku/apps/64
