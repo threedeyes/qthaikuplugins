@@ -381,7 +381,7 @@ qint64 HaikuAudioOutput::write(const char *data, qint64 len)
 	bigtime_t begTime = system_time();
 	while (availableBytes = m_ringbuffer->GetWriteAvailable() < len) {
 		if (system_time() - begTime > TimeOutMs * 1000) {
-   			written = m_ringbuffer->Write( (unsigned char*)data, len);
+			written = m_ringbuffer->Write( (unsigned char*)data, availableBytes);
 			m_bytesWritten += written;
 			return written;
 		}
