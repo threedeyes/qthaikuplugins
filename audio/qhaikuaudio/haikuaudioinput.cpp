@@ -449,16 +449,19 @@ qint64 HaikuAudioInput::read(char *data, qint64 len)
 {
 	if (!m_isRecording)
 		return 0;
+
 	int readed = 0;
 
 	bigtime_t begTime = system_time();
-	while(m_ringBuffer->GetReadAvailable() < len) {
+	while (m_ringBuffer->GetReadAvailable() < len) {
 		if (system_time() - begTime > TimeOutMs * 1000) {
 			readed = m_ringBuffer->Read((unsigned char*)data, m_ringBuffer->GetReadAvailable());
 			m_bytesRead += readed;
 			return readed;
 		}
+		snooze(10);
 	}
+
 	readed = m_ringBuffer->Read((unsigned char*)data, len);
 	m_bytesRead += readed;
 

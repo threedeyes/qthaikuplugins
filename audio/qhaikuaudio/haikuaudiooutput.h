@@ -71,6 +71,7 @@ public:
 	void resumeInternal();
 
 	friend class HaikuOutputDevicePrivate;
+	qint64 write(const char *data, qint64 len);
 
 	bool m_pushSource;
 
@@ -96,7 +97,7 @@ public:
     qint64 writeData(const char* data, qint64 len);
 
 private:
-    HaikuAudioOutput *audioDevice;
+    HaikuAudioOutput *m_audioDevice;
 };
 
 QT_END_NAMESPACE
