@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<svg version="1.1" width="64" height="64" color-interpolation="linearRGB"
+     xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg">
+ <g>
+  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:3.9995; stroke-linejoin:round"
+        d="M58 14.89L42 14.96L49.99 6.92L58 14.89z"
+        transform="matrix(2.5515,0,0,2.7128,-93.0494,3.9506)"
+  />
+  <path style="fill:none; stroke:#005900; stroke-width:3.9995; stroke-linejoin:round"
+        d="M56 12.89L40.02 12.96L47.99 4.92L56 12.89z"
+        transform="matrix(2.5515,0,0,2.7128,-91.0494,6.8672)"
+  />
+  <linearGradient id="gradient0" gradientUnits="userSpaceOnUse" x1="-59.95" y1="13.31" x2="-59.99" y2="5.32">
+   <stop offset="0" stop-color="#80ff80"/>
+   <stop offset="1" stop-color="#00b200"/>
+  </linearGradient>
+  <path style="fill:url(#gradient0)"
+        d="M56 12.89L40.02 12.96L47.99 4.92L56 12.89z"
+        transform="matrix(2.8017,0,0,3.076,-103.0606,3.1322)"
+  />
+ </g>
+</svg>
