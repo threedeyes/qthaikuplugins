@@ -22,7 +22,7 @@
   <path style="fill:url(#gradient1)"
         d="M16 11V41L42 57L49 22L16 11z"
   />
-  <linearGradient id="gradient2" gradientUnits="userSpaceOnUse" x1="78.33" y1="-26.64" x2="101.44" y2="12.93">
+  <linearGradient id="gradient2" gradientUnits="userSpaceOnUse" x1="78.33" y1="-26.63" x2="101.44" y2="12.93">
    <stop offset="0" stop-color="#9a9a9a"/>
    <stop offset="1" stop-color="#505050"/>
   </linearGradient>
@@ -39,26 +39,24 @@
   <path style="fill:#a03d03"
         d="M3 15L38 30L42 59L40.5 28L3 15z"
   />
-  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:3.9415; stroke-linecap:round; stroke-linejoin:round"
-        d="M5.14 32.71H28.99V62.02H5.14V32.71z"
+  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:3.9414; stroke-linecap:round; stroke-linejoin:round"
+        d="M5.13 32.7H28.98V62.02H5.13V32.7z"
   />
-  <path style="fill:none; stroke:#000080; stroke-width:3.9415; stroke-linecap:round; stroke-linejoin:round"
-        d="M3.15 30.76H27.01V60.07H3.15V30.76z"
+  <path style="fill:none; stroke:#000000; stroke-width:4; stroke-linecap:round; stroke-linejoin:round"
+        d="M3.15 30.76H27.01V60.06H3.15V30.76z"
   />
-  <linearGradient id="gradient4" gradientUnits="userSpaceOnUse" x1="114.45" y1="30.76" x2="114.45" y2="60.07">
+  <linearGradient id="gradient4" gradientUnits="userSpaceOnUse" x1="114.44" y1="30.76" x2="114.44" y2="60.06">
    <stop offset="0" stop-color="#ffffff"/>
    <stop offset="1" stop-color="#d9d9ff"/>
   </linearGradient>
   <path style="fill:url(#gradient4)"
-        d="M3.15 30.76H27.01V60.07H3.15V30.76z"
+        d="M3.15 30.76H27.01V60.06H3.15V30.76z"
   />
-  <path style="fill:none; stroke:#000080; stroke-width:2.5"
-        d="M5 38H9L11 47L13 38H17L19 47L21 38H25L21 51H17L15 42L13 51H9L5 38z"
-        transform="matrix(0.9168,0,0,1,1.2467,1)"
+  <path style="fill:none; stroke:#000080; stroke-width:2.3982"
+        d="M5.83 39H9.49L11.33 48L13.16 39H16.83L18.66 48L20.49 39H24.16L20.49 52H16.83L14.99 43L13.16 52H9.49L5.83 39z"
   />
   <path style="fill:#047ab7"
-        d="M5 38H9L11 47L13 38H17L19 47L21 38H25L21 51H17L15 42L13 51H9L5 38z"
-        transform="matrix(0.9168,0,0,1,1.2467,1)"
+        d="M5.83 39H9.49L11.33 48L13.16 39H16.83L18.66 48L20.49 39H24.16L20.49 52H16.83L14.99 43L13.16 52H9.49L5.83 39z"
   />
  </g>
 </svg>
