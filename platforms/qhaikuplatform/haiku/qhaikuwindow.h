@@ -116,69 +116,70 @@ class QHaikuWindow : public QObject, public QPlatformWindow
 {
 	Q_OBJECT
 public:
-    QHaikuWindow(QWindow *window);
-    ~QHaikuWindow();
+	QHaikuWindow(QWindow *window);
+	~QHaikuWindow();
 
-    void setGeometry(const QRect &rect) override;
-    void setWindowTitle(const QString &title) override;
-    void setWindowState(Qt::WindowStates state) override;
-    void setWindowFlags(Qt::WindowFlags flags) override;
+	void setGeometry(const QRect &rect) override;
+	void setWindowTitle(const QString &title) override;
+	void setWindowState(Qt::WindowStates state) override;
+	void setWindowFlags(Qt::WindowFlags flags) override;
+	void setParent(const QPlatformWindow *window) override;
 
-    bool windowEvent(QEvent *event) override;
+	bool windowEvent(QEvent *event) override;
 
-    QMargins frameMargins() const;
+	QMargins frameMargins() const;
 
-    void setVisible(bool visible);
-    void requestActivateWindow();
+	void setVisible(bool visible);
+	void requestActivateWindow();
     
-    bool setKeyboardGrabEnabled(bool) Q_DECL_OVERRIDE { return false; }
-    bool setMouseGrabEnabled(bool) Q_DECL_OVERRIDE { return false; }
-    void propagateSizeHints();
+	bool setKeyboardGrabEnabled(bool) Q_DECL_OVERRIDE { return false; }
+	bool setMouseGrabEnabled(bool) Q_DECL_OVERRIDE { return false; }
+	void propagateSizeHints();
 
-    WId winId() const override { return m_winId; }
+	WId winId() const override { return m_winId; }
 
 	static QHaikuWindow *windowForWinId(WId id);
 	static QHaikuSurfaceView *viewForWinId(WId id);
 
-    void raise();
-    void lower();
+	void raise();
+	void lower();
 
-    QtHaikuWindow *m_window;
+	QtHaikuWindow *m_window;
+	QHaikuWindow *m_parent;
 private:
-    void setFrameMarginsEnabled(bool enabled);
-    void setGeometryImpl(const QRect &rect);
-    void getDecoratorSize(float* borderWidth, float* tabHeight);
-    void maximizeWindowRespected(bool respected);
-    void syncDeskBarVisible(void);
+	void setFrameMarginsEnabled(bool enabled);
+	void setGeometryImpl(const QRect &rect);
+	void getDecoratorSize(float* borderWidth, float* tabHeight);
+	void maximizeWindowRespected(bool respected);
+	void syncDeskBarVisible(void);
 
-    QRect m_normalGeometry;
-    QMargins m_margins;
+	QRect m_normalGeometry;
+	QMargins m_margins;
 
-    WId m_winId;
-    static QHash<WId, QHaikuWindow *> m_windowForWinIdHash;
+	WId m_winId;
+	static QHash<WId, QHaikuWindow *> m_windowForWinIdHash;
 
 	Qt::WindowFlags windowFlags;
-    bool m_positionIncludesFrame;
-    bool m_visible;
-    bool m_pendingGeometryChangeOnShow;
-
+	bool m_positionIncludesFrame;
+	bool m_visible;
+	bool m_pendingGeometryChangeOnShow;
 private Q_SLOTS:
 	void platformWindowQuitRequested();
-    void platformWindowMoved(const QPoint &pos);
-    void platformWindowResized(const QSize &size);
-    void platformWindowActivated(bool activated);
-    void platformWindowZoomed();
-    void platformDropAction(BMessage *message);
-    void platformEnteredView();
-    void platformExitedView();
-    void platformMouseEvent(const QPoint &localPosition,
+	void platformWindowMoved(const QPoint &pos);
+	void platformWindowResized(const QSize &size);
+	void platformWindowActivated(bool activated);
+	void platformWindowZoomed();
+	void platformDropAction(BMessage *message);
+	void platformEnteredView();
+	void platformExitedView();
+	void platformMouseEvent(const QPoint &localPosition,
 		const QPoint &globalPosition,
 		Qt::MouseButtons state,
 		Qt::MouseButton button,
 		QEvent::Type type,
 		Qt::KeyboardModifiers modifiers,
 		Qt::MouseEventSource source);
-    void platformWheelEvent(const QPoint &localPosition,
+	void platformWheelEvent(const QPoint &localPosition,
 		const QPoint &globalPosition,
 		int delta,
 		Qt::Orientation orientation,

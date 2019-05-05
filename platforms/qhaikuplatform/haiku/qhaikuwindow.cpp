@@ -92,6 +92,7 @@ static uint32 translateKeyCode(uint32 key)
 	return code;
 }
 
+
 static bool activeWindowChangeQueued(const QWindow *window)
 {
     QWindowSystemInterfacePrivate::ActivatedWindowEvent *systemEvent =
@@ -99,6 +100,27 @@ static bool activeWindowChangeQueued(const QWindow *window)
         (QWindowSystemInterfacePrivate::peekWindowSystemEvent(QWindowSystemInterfacePrivate::ActivatedWindow));
     return systemEvent && systemEvent->activated != window;
 }
+
+
+static QWindow *childWindowAt(QWindow *win, const QPoint &p)
+{
+    for (QObject *obj : win->children()) {
+        if (obj->isWindowType()) {
+            QWindow *childWin = static_cast<QWindow *>(obj);
+            if (childWin->isVisible()) {
+                if (QWindow *recurse = childWindowAt(childWin, p))
+                    return recurse;
+            }
+        }
+    }
+    if (!win->isTopLevel()
+            && !(win->flags() & Qt::WindowTransparentForInput)
+            && win->geometry().contains(win->parent()->mapFromGlobal(p))) {
+        return win;
+    }
+    return nullptr;
+}
+
 
 QtHaikuWindow::QtHaikuWindow(QHaikuWindow *qwindow,
 		BRect frame,
@@ -121,6 +143,7 @@ QtHaikuWindow::QtHaikuWindow(QHaikuWindow *qwindow,
 		RemoveShortcut('W', B_COMMAND_KEY);
 	AddShortcut('Q', B_COMMAND_KEY, new BMessage(kQuitApplication));
 }
+
 
 QtHaikuWindow::~QtHaikuWindow()
 {
@@ -255,6 +278,7 @@ QHaikuWindow::QHaikuWindow(QWindow *wnd)
     				wnd->geometry().bottom()),
     				wnd->title().toUtf8(),
     				B_NO_BORDER_WINDOW_LOOK, B_NORMAL_WINDOW_FEEL, 0))
+	, m_parent(0)
 {
 	connect(m_window, SIGNAL(quitRequested()), SLOT(platformWindowQuitRequested()), Qt::BlockingQueuedConnection);
     connect(m_window, SIGNAL(windowMoved(QPoint)), SLOT(platformWindowMoved(QPoint)));
@@ -384,6 +408,14 @@ void QHaikuWindow::setWindowFlags(Qt::WindowFlags flags)
 }
 
 
+void QHaikuWindow::setParent(const QPlatformWindow *window)
+{
+	if (m_parent != (QHaikuWindow*)window) {
+		m_parent = (QHaikuWindow*)window;
+	}
+}
+
+
 void QHaikuWindow::setWindowTitle(const QString &title)
 {
 	QString newTitle = QPlatformWindow::formatWindowTitle(title, QStringLiteral(" - "));
@@ -438,15 +470,17 @@ void QHaikuWindow::setGeometryImpl(const QRect &rect)
     if (adjusted.height() <= 0)
         adjusted.setHeight(1);
 
-    if (m_positionIncludesFrame) {
-        adjusted.translate(m_margins.left(), m_margins.top());
-    } else {
-        // make sure we're not placed off-screen
-        if (adjusted.left() < m_margins.left())
-            adjusted.translate(m_margins.left(), 0);
-        if (adjusted.top() < m_margins.top())
-            adjusted.translate(0, m_margins.top());
-    }
+	if (window()->parent() == NULL) {
+	    if (m_positionIncludesFrame) {
+	        adjusted.translate(m_margins.left(), m_margins.top());
+	    } else {
+	        // make sure we're not placed off-screen
+	        if (adjusted.left() < m_margins.left())
+	            adjusted.translate(m_margins.left(), 0);
+	        if (adjusted.top() < m_margins.top())
+	            adjusted.translate(0, m_margins.top());
+	    }
+	}
 
     QPlatformWindow::setGeometry(adjusted);
     m_window->MoveTo(adjusted.left(), adjusted.top());
@@ -487,21 +521,21 @@ void QHaikuWindow::syncDeskBarVisible(void)
 	}
 }
 
-
 void QHaikuWindow::setVisible(bool visible)
 {
-    if (visible == m_visible)
-        return;
+	if (window()->parent())
+		return;
+	if (visible == m_visible)
+		return;
+	if (visible) {
+		if (window()->type() != Qt::ToolTip)
+			QWindowSystemInterface::handleWindowActivated(window());
 
-    if (visible) {
-        if (window()->type() != Qt::ToolTip)
-            QWindowSystemInterface::handleWindowActivated(window());
-
-        if (m_pendingGeometryChangeOnShow) {
-            m_pendingGeometryChangeOnShow = false;
-            QWindowSystemInterface::handleGeometryChange(window(), geometry());
-        }
-    }
+		if (m_pendingGeometryChangeOnShow) {
+			m_pendingGeometryChangeOnShow = false;
+			QWindowSystemInterface::handleGeometryChange(window(), geometry());
+		}
+	}
 
     if (visible) {
         QRect rect(QPoint(), geometry().size());
@@ -889,7 +923,11 @@ void QHaikuWindow::platformMouseEvent(const QPoint &localPosition,
 	Qt::KeyboardModifiers modifiers,
 	Qt::MouseEventSource source)
 {
-    QWindowSystemInterface::handleMouseEvent(window(), localPosition, globalPosition, state, button, type, modifiers, source);
+	QWindow *childWindow = childWindowAt(window(), globalPosition);
+	if (childWindow)
+		QWindowSystemInterface::handleMouseEvent(childWindow, childWindow->mapFromGlobal(globalPosition), globalPosition, state, button, type, modifiers, source);
+	else
+		QWindowSystemInterface::handleMouseEvent(window(), localPosition, globalPosition, state, button, type, modifiers, source);
 }
 
 void QHaikuWindow::platformWheelEvent(const QPoint &localPosition,
@@ -898,7 +936,11 @@ void QHaikuWindow::platformWheelEvent(const QPoint &localPosition,
 	Qt::Orientation orientation,
 	Qt::KeyboardModifiers modifiers)
 {
-    QWindowSystemInterface::handleWheelEvent(window(), localPosition, globalPosition, delta, orientation, modifiers);
+	QWindow *childWindow = childWindowAt(window(), globalPosition);
+	if (childWindow)
+		QWindowSystemInterface::handleWheelEvent(childWindow, childWindow->mapFromGlobal(globalPosition), globalPosition, delta, orientation, modifiers);
+	else
+		QWindowSystemInterface::handleWheelEvent(window(), localPosition, globalPosition, delta, orientation, modifiers);
 }
 
 void QHaikuWindow::platformKeyEvent(QEvent::Type type, int key, Qt::KeyboardModifiers modifiers, const QString &text)
