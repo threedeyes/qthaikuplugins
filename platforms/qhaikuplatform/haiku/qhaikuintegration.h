@@ -1,7 +1,7 @@
 /****************************************************************************
 **
 ** Copyright (C) 2017 The Qt Company Ltd.
-** Copyright (C) 2015-2017 Gerasim Troeglazov,
+** Copyright (C) 2015-2019 Gerasim Troeglazov,
 ** Contact: 3dEyes@gmail.com
 **
 ** This file is part of the plugins of the Qt Toolkit.
@@ -82,8 +82,9 @@ private:
 };
 #endif
 
-class QHaikuIntegration : public QPlatformIntegration
+class QHaikuIntegration : public QObject, public QPlatformIntegration
 {
+	Q_OBJECT
 public:
     QHaikuIntegration(const QStringList &parameters, int &argc, char **argv);
     ~QHaikuIntegration();
@@ -117,6 +118,8 @@ private:
     QHaikuSystemLocale *m_haikuSystemLocale;
     QHaikuScreen *m_screen;
     mutable QHaikuClipboard* m_clipboard;
+private Q_SLOTS:
+	bool platformAppQuit();
 };
 
 QT_END_NAMESPACE

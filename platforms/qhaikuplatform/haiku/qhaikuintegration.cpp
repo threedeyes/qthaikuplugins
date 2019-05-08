@@ -1,7 +1,7 @@
 /****************************************************************************
 **
 ** Copyright (C) 2017 The Qt Company Ltd.
-** Copyright (C) 2015-2017 Gerasim Troeglazov,
+** Copyright (C) 2015-2019 Gerasim Troeglazov,
 ** Contact: 3dEyes@gmail.com
 **
 ** This file is part of the plugins of the Qt Toolkit.
@@ -67,7 +67,7 @@
 QT_BEGIN_NAMESPACE
 
 QHaikuIntegration::QHaikuIntegration(const QStringList &parameters, int &argc, char **argv)
-	: QPlatformIntegration()
+	: QObject(), QPlatformIntegration()
 	, m_clipboard(new QHaikuClipboard)
     , m_drag(new QSimpleDrag)
     , m_services(new QHaikuServices)

@@ -38,6 +38,7 @@ SOURCES =   main.cpp \
             ../../../3rdparty/simplecrypt/simplecrypt.cpp
 
 HEADERS =   qhaikuintegration.h \
+			qhaikuintegration_haiku.h \
             qhaikuwindow.h \
             qhaikucommon.h \
             qhaikutheme.h \

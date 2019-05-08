@@ -1,7 +1,7 @@
 /****************************************************************************
 **
 ** Copyright (C) 2017 The Qt Company Ltd.
-** Copyright (C) 2015-2017 Gerasim Troeglazov,
+** Copyright (C) 2015-2019 Gerasim Troeglazov,
 ** Contact: 3dEyes@gmail.com
 **
 ** This file is part of the plugins of the Qt Toolkit.
@@ -39,58 +39,16 @@
 ****************************************************************************/
 
 #include "qhaikuintegration.h"
+#include "qhaikuintegration_haiku.h"
 #include "qhaikusettings.h"
-
-#include "simplecrypt.h"
-
-#include <QApplication>
-#include <QProcess>
-#include <QString>
-#include <QStringList>
-#include <QClipboard>
-#include <QEvent>
-#include <QDebug>
-
-#include <private/qguiapplication_p.h>
-
-#include <Application.h>
-#include <kernel/OS.h>
-#include <Application.h>
-#include <File.h>
-#include <AppFileInfo.h>
-#include <Path.h>
-#include <Entry.h>
-#include <String.h>
-#include <Locale.h>
-#include <LocaleRoster.h>
-#include <Roster.h>
-#include <Clipboard.h>
-
-#include <stdio.h>
-
-class HQApplication : public BApplication
-{
-public:
-	HQApplication(const char*);
-	~HQApplication();
-
-	virtual void MessageReceived(BMessage *message);
-	void	RefsReceived(BMessage *pmsg);
-	virtual bool QuitRequested();
-	bool	RefHandled;
-	entry_ref Ref;
-private:
-	BPath 	refReceived;
-	BMessenger  fTrackerMessenger;
-	QHaikuClipboard *fClipboard;
-};
 
 namespace {
 static HQApplication* haikuApplication = NULL;
 }
 
 HQApplication::HQApplication(const char* signature)
-		: BApplication(signature)
+		: QObject()
+		, BApplication(signature)
 {
 	RefHandled = false;
 	fClipboard = NULL;
@@ -165,12 +123,9 @@ bool HQApplication::QuitRequested()
 		quit = (visible <= 1);
 	}
 
-	if (quit) {
-		QCloseEvent event;
-		QGuiApplication::sendEvent(QCoreApplication::instance(), &event);
-		if (event.isAccepted())
-			return true;
-	}
+	if (quit)
+		return Q_EMIT appQuit();
+
     return false;
 }
 
@@ -183,6 +138,12 @@ int32 AppThread(void *data)
 	return B_OK;
 }
 
+bool QHaikuIntegration::platformAppQuit()
+{
+	QCloseEvent event;
+	QGuiApplication::sendEvent(QCoreApplication::instance(), &event);
+	return event.isAccepted();
+}
 
 QHaikuIntegration *QHaikuIntegration::createHaikuIntegration(const QStringList& parameters, int &argc, char **argv)
 {
@@ -323,5 +284,7 @@ QHaikuIntegration *QHaikuIntegration::createHaikuIntegration(const QStringList& 
 	putenv("XDG_DATA_HOME=/boot/home/config/non-packaged/data");
 	putenv("XDG_DATA_DIRS=/boot/system/non-packaged/data:/boot/system/data");
 
-    return new QHaikuIntegration(parameters, argc, argv);
+    QHaikuIntegration *newHaikuIntegration = new QHaikuIntegration(parameters, argc, argv);
+    connect(haikuApplication, SIGNAL(appQuit()), newHaikuIntegration, SLOT(platformAppQuit()));
+    return newHaikuIntegration;
 }
