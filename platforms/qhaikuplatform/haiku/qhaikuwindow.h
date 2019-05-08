@@ -179,6 +179,11 @@ private Q_SLOTS:
 		QEvent::Type type,
 		Qt::KeyboardModifiers modifiers,
 		Qt::MouseEventSource source);
+	void platformMouseDragEvent(const QPoint &localPosition,
+		Qt::DropActions actions,
+		QMimeData *data,
+		Qt::MouseButtons buttons,
+		Qt::KeyboardModifiers modifiers);
 	void platformWheelEvent(const QPoint &localPosition,
 		const QPoint &globalPosition,
 		int delta,

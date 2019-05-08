@@ -92,6 +92,11 @@ class QHaikuSurfaceView : public QObject, public BView
 			QEvent::Type type,
 			Qt::KeyboardModifiers modifiers,
 			Qt::MouseEventSource source);
+		void mouseDragEvent(const QPoint &localPosition,
+			Qt::DropActions actions,
+			QMimeData *data,
+			Qt::MouseButtons buttons,
+			Qt::KeyboardModifiers modifiers);
 	    void enteredView();
 		void exitedView();
 };

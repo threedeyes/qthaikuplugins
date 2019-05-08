@@ -295,6 +295,8 @@ QHaikuWindow::QHaikuWindow(QWindow *wnd)
 	connect(m_window->View(), SIGNAL(exitedView()), this, SLOT(platformExitedView()));
 	connect(m_window->View(), SIGNAL(mouseEvent(QPoint, QPoint, Qt::MouseButtons, Qt::MouseButton, QEvent::Type, Qt::KeyboardModifiers, Qt::MouseEventSource)),
 		this, SLOT(platformMouseEvent(QPoint, QPoint, Qt::MouseButtons, Qt::MouseButton, QEvent::Type, Qt::KeyboardModifiers, Qt::MouseEventSource)));
+	connect(m_window->View(), SIGNAL(mouseDragEvent(QPoint, Qt::DropActions, QMimeData*,  Qt::MouseButtons, Qt::KeyboardModifiers)),
+		this, SLOT(platformMouseDragEvent(QPoint, Qt::DropActions, QMimeData*,  Qt::MouseButtons, Qt::KeyboardModifiers)));
 
     window()->setProperty("size-grip", false);
 
@@ -845,6 +847,8 @@ void QHaikuWindow::platformWindowZoomed()
 
 void QHaikuWindow::platformDropAction(BMessage *msg)
 {
+	if (window()->parent())
+		return;
 	BPoint dropOffset;
 	BPoint dropPoint = msg->DropPoint(&dropOffset);
 	m_window->ConvertFromScreen(&dropPoint);
@@ -924,10 +928,26 @@ void QHaikuWindow::platformMouseEvent(const QPoint &localPosition,
 	Qt::MouseEventSource source)
 {
 	QWindow *childWindow = childWindowAt(window(), globalPosition);
-	if (childWindow)
-		QWindowSystemInterface::handleMouseEvent(childWindow, childWindow->mapFromGlobal(globalPosition), globalPosition, state, button, type, modifiers, source);
-	else
-		QWindowSystemInterface::handleMouseEvent(window(), localPosition, globalPosition, state, button, type, modifiers, source);
+	if (childWindow) {
+		QWindowSystemInterface::handleMouseEvent(childWindow,
+			childWindow->mapFromGlobal(globalPosition),
+			globalPosition, state, button, type, modifiers, source);
+	} else {
+		QWindowSystemInterface::handleMouseEvent(window(),
+			localPosition, globalPosition, state, button, type, modifiers, source);
+	}
+}
+
+void QHaikuWindow::platformMouseDragEvent(const QPoint &localPosition,
+	Qt::DropActions actions,
+	QMimeData *data,
+	Qt::MouseButtons buttons,
+	Qt::KeyboardModifiers modifiers)
+{
+	QDragMoveEvent dmEvent(localPosition, actions, data, buttons, modifiers);
+	dmEvent.setDropAction(Qt::CopyAction);
+	dmEvent.accept();
+	QGuiApplication::sendEvent(window(), &dmEvent);
 }
 
 void QHaikuWindow::platformWheelEvent(const QPoint &localPosition,

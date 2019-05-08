@@ -50,6 +50,7 @@
 QT_BEGIN_NAMESPACE
 
 Q_DECLARE_METATYPE(QEvent::Type)
+Q_DECLARE_METATYPE(Qt::DropActions)
 Q_DECLARE_METATYPE(Qt::MouseButton)
 Q_DECLARE_METATYPE(Qt::MouseButtons)
 Q_DECLARE_METATYPE(Qt::MouseEventSource)
@@ -64,6 +65,7 @@ QHaikuSurfaceView::QHaikuSurfaceView(BRect rect)
 	lastMouseButton(Qt::NoButton)
 {
     qRegisterMetaType<QEvent::Type>();
+	qRegisterMetaType<Qt::DropActions>();
     qRegisterMetaType<Qt::MouseButton>();
     qRegisterMetaType<Qt::MouseButtons>();
     qRegisterMetaType<Qt::MouseEventSource>();
@@ -250,6 +252,8 @@ QHaikuSurfaceView::MouseMoved(BPoint point, uint32 transit, const BMessage *msg)
 		lastLocalMousePoint = localPoint;
 		lastGlobalMousePoint = globalPoint;
 
+		QHaikuWindow *wnd = ((QtHaikuWindow*)Window())->fQWindow;
+
 		if (msg != NULL) {
 			QMimeData *dragData = new QMimeData();
 			QList<QUrl> urls;
@@ -270,15 +274,8 @@ QHaikuSurfaceView::MouseMoved(BPoint point, uint32 transit, const BMessage *msg)
 					dragData->setText(QString::fromUtf8(text, dataLength));
 				}
 			}
-			QHaikuWindow *wnd = ((QtHaikuWindow*)Window())->fQWindow;
-			QDragMoveEvent dmEvent(localPoint,
-		                    Qt::CopyAction | Qt::MoveAction | Qt::LinkAction,
-		                    dragData,
-		                    hostToQtButtons(buttons),
-		                    hostToQtModifiers(modifiers()));
-		    dmEvent.setDropAction(Qt::CopyAction);
-		    dmEvent.accept();
-		    QGuiApplication::sendEvent(wnd->window(), &dmEvent);
+			Q_EMIT mouseDragEvent(localPoint, Qt::CopyAction | Qt::MoveAction | Qt::LinkAction, dragData,
+				hostToQtButtons(buttons), hostToQtModifiers(modifiers()));
 		} else {
 			Q_EMIT mouseEvent(localPoint, globalPoint, hostToQtButtons(buttons), Qt::NoButton, QEvent::MouseMove,
 				hostToQtModifiers(modifiers()), Qt::MouseEventNotSynthesized);
