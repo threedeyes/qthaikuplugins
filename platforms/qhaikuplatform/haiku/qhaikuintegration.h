@@ -119,7 +119,7 @@ private:
     QHaikuScreen *m_screen;
     mutable QHaikuClipboard* m_clipboard;
 private Q_SLOTS:
-	bool platformAppQuit();
+	void platformAppQuit();
 };
 
 QT_END_NAMESPACE

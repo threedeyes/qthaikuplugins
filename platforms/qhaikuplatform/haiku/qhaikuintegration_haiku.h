@@ -88,7 +88,7 @@ private:
 	BMessenger  fTrackerMessenger;
 	QHaikuClipboard *fClipboard;
 Q_SIGNALS:
-	bool appQuit();
+	void appQuit();
 };
 
 #endif

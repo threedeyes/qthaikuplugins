@@ -44,6 +44,8 @@
 
 namespace {
 static HQApplication* haikuApplication = NULL;
+static bool haikuApplicationQuitAccepted = false;
+static bool haikuApplicationQuitChecked = false;
 }
 
 HQApplication::HQApplication(const char* signature)
@@ -108,29 +110,20 @@ HQApplication::RefsReceived(BMessage *pmsg)
    	}
 }
 
-
 bool HQApplication::QuitRequested()
 {
-	bool quit = true;
+	haikuApplicationQuitAccepted = false;
+	haikuApplicationQuitChecked = false;
 
-	if (!QGuiApplicationPrivate::instance()->modalWindowList.isEmpty()) {
-		int visible = 0;
-		const QWindowList windows = QGuiApplication::topLevelWindows();
-		for (int i = 0; i < windows.size(); ++i) {
-			if (windows.at(i)->isVisible())
-				++visible;
-		}
-		quit = (visible <= 1);
-	}
+	Q_EMIT appQuit();
 
-	if (quit)
-		return Q_EMIT appQuit();
+	while(!haikuApplicationQuitChecked)
+		snooze(100);
 
-    return false;
+	return haikuApplicationQuitAccepted;
 }
 
-
-int32 AppThread(void *data)
+static int32 haikuAppThread(void *data)
 {
 	HQApplication *app = static_cast<HQApplication*>(data);
 	app->LockLooper();
@@ -138,11 +131,12 @@ int32 AppThread(void *data)
 	return B_OK;
 }
 
-bool QHaikuIntegration::platformAppQuit()
+void QHaikuIntegration::platformAppQuit()
 {
 	QCloseEvent event;
 	QGuiApplication::sendEvent(QCoreApplication::instance(), &event);
-	return event.isAccepted();
+	haikuApplicationQuitAccepted = event.isAccepted();
+	haikuApplicationQuitChecked = true;
 }
 
 QHaikuIntegration *QHaikuIntegration::createHaikuIntegration(const QStringList& parameters, int &argc, char **argv)
@@ -179,7 +173,7 @@ QHaikuIntegration *QHaikuIntegration::createHaikuIntegration(const QStringList& 
 		haikuApplication = new HQApplication(appSignature.toUtf8());
 		be_app = haikuApplication;
 
-		my_thread = spawn_thread(AppThread, "BApplication_thread", B_NORMAL_PRIORITY, (void*)haikuApplication);
+		my_thread = spawn_thread(haikuAppThread, "BApplication_thread", B_NORMAL_PRIORITY, (void*)haikuApplication);
 		resume_thread(my_thread);
 
 		if (settings.value("hide_from_deskbar", true).toBool()) {
