@@ -273,11 +273,11 @@ QHaikuWindow::QHaikuWindow(QWindow *wnd)
     , m_visible(false)
     , m_pendingGeometryChangeOnShow(true)
     , m_window(new QtHaikuWindow(this, BRect(wnd->geometry().left(),
-    				wnd->geometry().top(),
-    				wnd->geometry().right(),
-    				wnd->geometry().bottom()),
-    				wnd->title().toUtf8(),
-    				B_NO_BORDER_WINDOW_LOOK, B_NORMAL_WINDOW_FEEL, 0))
+					wnd->geometry().top(),
+					wnd->geometry().right(),
+					wnd->geometry().bottom()),
+					wnd->title().toUtf8().constData(),
+					B_NO_BORDER_WINDOW_LOOK, B_NORMAL_WINDOW_FEEL, 0))
 	, m_parent(0)
 {
 	connect(m_window, SIGNAL(quitRequested()), SLOT(platformWindowQuitRequested()), Qt::BlockingQueuedConnection);
@@ -422,7 +422,7 @@ void QHaikuWindow::setWindowTitle(const QString &title)
 {
 	QString newTitle = QPlatformWindow::formatWindowTitle(title, QStringLiteral(" - "));
 	newTitle = QPlatformTheme::removeMnemonics(newTitle).trimmed();
-	m_window->SetTitle(newTitle.toUtf8());
+	m_window->SetTitle(newTitle.toUtf8().constData());
 }
 
 

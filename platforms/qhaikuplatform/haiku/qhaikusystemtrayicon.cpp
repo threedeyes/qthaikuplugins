@@ -70,8 +70,6 @@ QT_BEGIN_NAMESPACE
 #define TRAY_MOUSEDOWN 	1
 #define TRAY_MOUSEUP	2
 
-#define maxTipLength 	128
-
 #define DBAR_SIGNATURE 	"application/x-vnd.Be-TSKB"
 
 
@@ -185,13 +183,12 @@ QHaikuSystemTrayIcon::updateToolTip(const QString &tip)
 {
 	currentToolTip = tip;
 
-    BString tipStr("");
+	BString tipStr("");
 
-    if (!currentToolTip.isNull()) {
-    	currentToolTip.remove(QRegExp("<[^>]*>"));
-    	currentToolTip.replace("&nbsp;", " ");
-    	const char *str = (const char *)(currentToolTip.toUtf8());
-    	tipStr.SetTo(str);
+	if (!currentToolTip.isNull()) {
+		currentToolTip.remove(QRegExp("<[^>]*>"));
+		currentToolTip.replace("&nbsp;", " ");
+		tipStr.SetTo(currentToolTip.toUtf8().constData(), currentToolTip.toUtf8().count());
     }
 
 	BMessage *message = new BMessage('TTIP');
@@ -225,12 +222,12 @@ QHaikuSystemTrayIcon::showMessage(const QString &title, const QString &msg,
 	const QIcon& icon, MessageIcon iconType, int secs)
 {
 	QFileInfo appFileInfo(QCoreApplication::applicationFilePath());
-	BString stitle((const char *)(title.toUtf8()));
-	BString smessage((const char *)(msg.toUtf8()));
-	BString smessageId((const char *)(appFileInfo.fileName().toUtf8()));
-	BString group((const char*)(appFileInfo.baseName().toUtf8()));
+	BString stitle(title.toUtf8().constData());
+	BString smessage(msg.toUtf8().constData());
+	BString smessageId(appFileInfo.fileName().toUtf8().constData());
+	BString group(appFileInfo.baseName().toUtf8().constData());
 
-	BFile file(appFileInfo.filePath().toUtf8(), O_RDONLY);
+	BFile file(appFileInfo.filePath().toUtf8().constData(), O_RDONLY);
 	BNodeInfo nodeInfo(&file);
 	BRect rect(0, 0, B_LARGE_ICON - 1, B_LARGE_ICON -1);
 	BBitmap bitmap(rect, B_RGBA32);
@@ -376,7 +373,7 @@ QHaikuSystemTrayIcon::installIcon(void)
 		replicantId = deskBarLoadIcon();
 
 	QString appName = QFileInfo(QCoreApplication::applicationFilePath()).fileName();
-	BString app_name((const char *)(appName.toUtf8()));
+	BString app_name(appName.toUtf8().constData());
 
 	BMessage message('MSGR');
 	QHaikuSystemTrayIcon *sysTray = this;
@@ -430,7 +427,7 @@ QHaikuSystemTrayIcon::executeCommand(const char *command)
 int32 
 QHaikuSystemTrayIcon::deskBarLoadIcon(team_id tid)
 {
-	BString cmd((const char *)(sysTrayExecutable.absoluteFilePath().toUtf8()));
+	BString cmd(sysTrayExecutable.absoluteFilePath().toUtf8().constData());
 	cmd << " " << (int)tid;
 	int32 id = executeCommand(cmd.String());
 	return id;

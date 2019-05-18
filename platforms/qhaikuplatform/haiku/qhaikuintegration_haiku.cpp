@@ -152,7 +152,7 @@ QHaikuIntegration *QHaikuIntegration::createHaikuIntegration(const QStringList& 
 
 	QString appPath = QCoreApplication::applicationFilePath();
 
-	BFile appFile(appPath.toUtf8(), B_READ_ONLY);
+	BFile appFile(appPath.toUtf8().constData(), B_READ_ONLY);
 	if (appFile.InitCheck() == B_OK) {
 		BAppFileInfo info(&appFile);
 		if (info.InitCheck() == B_OK) {
@@ -170,7 +170,7 @@ QHaikuIntegration *QHaikuIntegration::createHaikuIntegration(const QStringList& 
 	thread_id my_thread;	
 
 	if (be_app == NULL) {
-		haikuApplication = new HQApplication(appSignature.toUtf8());
+		haikuApplication = new HQApplication(appSignature.toUtf8().constData());
 		be_app = haikuApplication;
 
 		my_thread = spawn_thread(haikuAppThread, "BApplication_thread", B_NORMAL_PRIORITY, (void*)haikuApplication);
@@ -215,7 +215,7 @@ QHaikuIntegration *QHaikuIntegration::createHaikuIntegration(const QStringList& 
 		env += resultUserEnv.split("\n");
 
 		foreach (const QString &line, env) {
-			putenv(line.toUtf8());
+			putenv(line.toUtf8().constData());
 		}
 	}
 	// Enable software rendering for QML
@@ -237,7 +237,7 @@ QHaikuIntegration *QHaikuIntegration::createHaikuIntegration(const QStringList& 
 				http_proxy += username + ":" + password + "@";
 			http_proxy += settings.value("http_proxy_address", QString("")).toString() + ":";
 			http_proxy += QString::number(settings.value("http_proxy_port", 8080).toInt()) + "/";
-			putenv(http_proxy.toUtf8());
+			putenv(http_proxy.toUtf8().constData());
 		}
 		if (settings.value("https_proxy_enable", false).toBool()) {
 			QString username = settings.value("https_proxy_username", QString("")).toString();
@@ -249,7 +249,7 @@ QHaikuIntegration *QHaikuIntegration::createHaikuIntegration(const QStringList& 
 				https_proxy += username + ":" + password + "@";
 			https_proxy += settings.value("https_proxy_address", QString("")).toString() + ":";
 			https_proxy += QString::number(settings.value("https_proxy_port", 8080).toInt()) + "/";
-			putenv(https_proxy.toUtf8());
+			putenv(https_proxy.toUtf8().constData());
 		}
 		if (settings.value("ftp_proxy_enable", false).toBool()) {
 			QString username = settings.value("ftp_proxy_username", QString("")).toString();
@@ -261,12 +261,12 @@ QHaikuIntegration *QHaikuIntegration::createHaikuIntegration(const QStringList& 
 				ftp_proxy += username + ":" + password + "@";
 			ftp_proxy += settings.value("ftp_proxy_address", QString("")).toString() + ":";
 			ftp_proxy += QString::number(settings.value("ftp_proxy_port", 8080).toInt()) + "/";
-			putenv(ftp_proxy.toUtf8());
+			putenv(ftp_proxy.toUtf8().constData());
 		}
 		QString no_proxy = settings.value("no_proxy_list", QString("")).toString();
 		if (!no_proxy.isEmpty()) {
 			no_proxy = "no_proxy=\"" + no_proxy + "\"";
-			putenv(no_proxy.toUtf8());
+			putenv(no_proxy.toUtf8().constData());
 		}
 	}
 	settings.endGroup();

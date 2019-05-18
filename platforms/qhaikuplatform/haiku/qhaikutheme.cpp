@@ -168,7 +168,7 @@ QIcon QHaikuTheme::fileIcon(const QFileInfo &fileInfo, QPlatformTheme::IconOptio
 	if (filename == "/")
 		filename = "/boot/system/servers/mount_server";
 		
-	BFile file(filename.toUtf8(), O_RDONLY);
+	BFile file(filename.toUtf8().constData(), O_RDONLY);
 	BNodeInfo nodeInfo(&file);
 	icon_size iconSize = B_LARGE_ICON;
 	BRect rect(0, 0, iconSize - 1, iconSize -1);

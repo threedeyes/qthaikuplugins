@@ -215,8 +215,8 @@ BPopUpMenu* QHaikuPlatformMenu::makeBPopUpMenu(QHaikuPlatformMenu *menu)
 			BMessage *msg = new BMessage('STMI');
 			int64 val = (*it)->tag();
 			msg->AddInt64("tag", val);
-			BMenuItem *item = (icon != NULL)||iconPressent ? new IconMenuItem(text.toUtf8(), icon, msg) :
-					new BMenuItem(text.toUtf8(), msg);
+			BMenuItem *item = (icon != NULL)||iconPressent ? new IconMenuItem(text.toUtf8().constData(), icon, msg) :
+					new BMenuItem(text.toUtf8().constData(), msg);
 			item->SetEnabled((*it)->isEnabled());
 			item->SetTarget(menuLooper);
 			haikuMenu->AddItem(item);

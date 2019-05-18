@@ -101,7 +101,7 @@ void QHaikuClipboard::setMimeData(QMimeData *mimeData, QClipboard::Mode mode)
 				QStringList formats = mimeData->formats();
 				for (int format = 0; format < formats.size(); ++format) {
 					QString mimeType = formats.at(format);
-					clip->AddData(mimeType.toUtf8(), B_MIME_TYPE, mimeData->data(mimeType).data(), mimeData->data(mimeType).count());
+					clip->AddData(mimeType.toUtf8().constData(), B_MIME_TYPE, mimeData->data(mimeType).data(), mimeData->data(mimeType).count());
 					if (mimeType == "text/plain")
 						textPlain = true;
 				}
@@ -112,7 +112,7 @@ void QHaikuClipboard::setMimeData(QMimeData *mimeData, QClipboard::Mode mode)
 					body = body.left(body.indexOf("</body>"));
 					body = body.remove("\n");
 					QString plainText = QTextDocumentFragment::fromHtml(body).toPlainText();
-					clip->AddData("text/plain", B_MIME_TYPE, plainText.toUtf8(), plainText.toUtf8().count() + 1);
+					clip->AddData("text/plain", B_MIME_TYPE, plainText.toUtf8().constData(), plainText.toUtf8().count() + 1);
 				}
 			}
 		}

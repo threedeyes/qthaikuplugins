@@ -96,7 +96,7 @@ bool QHaikuPlatformMessageDialogHelper::show(Qt::WindowFlags, Qt::WindowModality
 	doc.setHtml(text);
 
 	BAlert* alert = new BAlert();
-	alert->SetText(doc.toPlainText().toUtf8());
+	alert->SetText(doc.toPlainText().toUtf8().constData());
 	alert->SetType(type);
 	alert->SetButtonSpacing(B_EVEN_SPACING);
 	alert->SetButtonWidth(B_WIDTH_AS_USUAL);
@@ -133,7 +133,7 @@ bool QHaikuPlatformMessageDialogHelper::show(Qt::WindowFlags, Qt::WindowModality
         if ((buttons & i) && i != defButtonId) {
             QString label = QGuiApplicationPrivate::platformTheme()->standardButtonText(i);
             label = QPlatformTheme::removeMnemonics(label).trimmed();
-            alert->AddButton(label.toUtf8(), buttonsCount);
+            alert->AddButton(label.toUtf8().constData(), buttonsCount);
             buttonsHash[buttonsCount] = i;
             buttonsCount++;
         }
@@ -142,7 +142,7 @@ bool QHaikuPlatformMessageDialogHelper::show(Qt::WindowFlags, Qt::WindowModality
 	if (defButtonId != QPlatformDialogHelper::NoButton) {
 		QString label = QGuiApplicationPrivate::platformTheme()->standardButtonText(defButtonId);
 		label = QPlatformTheme::removeMnemonics(label).trimmed();
-		alert->AddButton(label.toUtf8(), buttonsCount);
+		alert->AddButton(label.toUtf8().constData(), buttonsCount);
 		buttonsHash[buttonsCount] = defButtonId;
 		buttonsCount++;
 	}
