@@ -167,6 +167,7 @@ static uint32 platformHaikuScanCodes_Numlock[] = {
         Qt::Key_2,			0x59,
         Qt::Key_3,			0x5A,
 		Qt::Key_Enter,		0x5B,
+		Qt::Key_0,			0x64,
 		Qt::Key_Comma,		0x65,
 		0,					0x00
 	};
