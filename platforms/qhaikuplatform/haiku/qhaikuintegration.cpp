@@ -75,7 +75,7 @@ QHaikuIntegration::QHaikuIntegration(const QStringList &parameters, int &argc, c
     , m_screen(new QHaikuScreen)
 {
     m_fontDatabase.reset(new QHaikuPlatformFontDatabase());
-    screenAdded(m_screen);
+	QWindowSystemInterface::handleScreenAdded(m_screen);
 }
 
 QHaikuIntegration::~QHaikuIntegration()
@@ -84,7 +84,6 @@ QHaikuIntegration::~QHaikuIntegration()
 	delete m_clipboard;
 	delete m_haikuSystemLocale;
 	delete m_services;
-	destroyScreen(m_screen);
 }
 
 bool QHaikuIntegration::hasCapability(QPlatformIntegration::Capability cap) const
