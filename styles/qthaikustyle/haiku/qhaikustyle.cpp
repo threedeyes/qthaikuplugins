@@ -2945,7 +2945,7 @@ QSize QHaikuStyle::sizeFromContents(ContentsType type, const QStyleOption *optio
         newSize += QSize(0, 1);
         break;
     case CT_MenuBarItem:
-        newSize += QSize(8, -2);
+        newSize += QSize(8, -1);
         break;
     case CT_MenuItem:
         if (const QStyleOptionMenuItem *menuItem = qstyleoption_cast<const QStyleOptionMenuItem *>(option)) {
@@ -3557,7 +3557,7 @@ int QHaikuStyle::styleHint(StyleHint hint, const QStyleOption *option, const QWi
         ret = false;
         break;
     case SH_MainWindow_SpaceBelowMenuBar:
-        ret = 0;
+        ret = -24;
         break;
     case SH_MenuBar_MouseTracking:
         ret = 1;
