@@ -1292,6 +1292,7 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
         if (const QStyleOptionToolBar *toolbar = qstyleoption_cast<const QStyleOptionToolBar *>(option)) {
             QRect rect = option->rect;
 
+			bool paintTopBorder = false;
             bool paintLeftBorder = true;
             bool paintRightBorder = true;
             bool paintBottomBorder = true;
@@ -1351,12 +1352,14 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
 
             QColor light = option->palette.background().color().lighter(110);
 
-            //draw top border
-            painter->setPen(QPen(light));
-            painter->drawLine(rect.topLeft().x(),
-                        rect.topLeft().y(),
-                        rect.topRight().x(),
-                        rect.topRight().y());
+            //draw borders
+			if (paintTopBorder) {
+				painter->setPen(QPen(light));
+				painter->drawLine(rect.topLeft().x(),
+							rect.topLeft().y(),
+							rect.topRight().x(),
+							rect.topRight().y());
+			}
 
             if (paintLeftBorder) {
                 painter->setPen(QPen(light));
