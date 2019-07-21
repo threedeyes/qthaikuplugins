@@ -270,7 +270,10 @@ QHaikuIntegration *QHaikuIntegration::createHaikuIntegration(const QStringList& 
 		}
 	}
 	settings.endGroup();
-	
+
+	// Set HOME variable
+	putenv("HOME=/boot/home");
+
 	// Set XDG variables
 	putenv("XDG_CONFIG_HOME=/boot/home/config/settings");
 	putenv("XDG_CONFIG_DIRS=/boot/system/settings");
