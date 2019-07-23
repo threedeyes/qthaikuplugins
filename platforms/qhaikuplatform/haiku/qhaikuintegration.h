@@ -68,14 +68,14 @@ public:
     QHaikuGLContext(QOpenGLContext *context);
     ~QHaikuGLContext();
 
-    bool makeCurrent(QPlatformSurface *surface);
-    void doneCurrent();
-    void swapBuffers(QPlatformSurface *surface);
-    void (*getProcAddress(const QByteArray &procName)) ();
+    bool makeCurrent(QPlatformSurface *surface) override;
+    void doneCurrent() override;
+    void swapBuffers(QPlatformSurface *surface) override;
+    QFunctionPointer getProcAddress(const char *procName) override;
 
-    QSurfaceFormat format() const;
-    bool isSharing() const;
-    bool isValid() const;
+    QSurfaceFormat format() const override;
+    bool isSharing() const override;
+    bool isValid() const override;
 private:
 	QSurfaceFormat d_format;
 	BGLView *glview;

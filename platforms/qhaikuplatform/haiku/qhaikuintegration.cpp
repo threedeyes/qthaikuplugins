@@ -185,10 +185,10 @@ QHaikuGLContext::~QHaikuGLContext()
 //	delete glview;
 }
 
-void (*QHaikuGLContext::getProcAddress(const QByteArray &procName)) ()
+QFunctionPointer QHaikuGLContext::getProcAddress(const char *procName)
 {
-	qDebug() << procName.constData();
-	return (void (*)())glview->GetGLProcAddress(procName.constData());
+	void *ptr = glview->GetGLProcAddress(procName);
+	return (QFunctionPointer)ptr;
 }
 
 
