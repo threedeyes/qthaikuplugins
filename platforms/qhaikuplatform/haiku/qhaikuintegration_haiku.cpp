@@ -215,7 +215,7 @@ QHaikuIntegration *QHaikuIntegration::createHaikuIntegration(const QStringList& 
 		env += resultUserEnv.split("\n");
 
 		foreach (const QString &line, env) {
-			putenv(line.toUtf8().constData());
+			putenv(line.toUtf8().data());
 		}
 	}
 	// Enable software rendering for QML
@@ -237,7 +237,7 @@ QHaikuIntegration *QHaikuIntegration::createHaikuIntegration(const QStringList& 
 				http_proxy += username + ":" + password + "@";
 			http_proxy += settings.value("http_proxy_address", QString("")).toString() + ":";
 			http_proxy += QString::number(settings.value("http_proxy_port", 8080).toInt()) + "/";
-			putenv(http_proxy.toUtf8().constData());
+			putenv(http_proxy.toUtf8().data());
 		}
 		if (settings.value("https_proxy_enable", false).toBool()) {
 			QString username = settings.value("https_proxy_username", QString("")).toString();
@@ -249,7 +249,7 @@ QHaikuIntegration *QHaikuIntegration::createHaikuIntegration(const QStringList& 
 				https_proxy += username + ":" + password + "@";
 			https_proxy += settings.value("https_proxy_address", QString("")).toString() + ":";
 			https_proxy += QString::number(settings.value("https_proxy_port", 8080).toInt()) + "/";
-			putenv(https_proxy.toUtf8().constData());
+			putenv(https_proxy.toUtf8().data());
 		}
 		if (settings.value("ftp_proxy_enable", false).toBool()) {
 			QString username = settings.value("ftp_proxy_username", QString("")).toString();
@@ -261,12 +261,12 @@ QHaikuIntegration *QHaikuIntegration::createHaikuIntegration(const QStringList& 
 				ftp_proxy += username + ":" + password + "@";
 			ftp_proxy += settings.value("ftp_proxy_address", QString("")).toString() + ":";
 			ftp_proxy += QString::number(settings.value("ftp_proxy_port", 8080).toInt()) + "/";
-			putenv(ftp_proxy.toUtf8().constData());
+			putenv(ftp_proxy.toUtf8().data());
 		}
 		QString no_proxy = settings.value("no_proxy_list", QString("")).toString();
 		if (!no_proxy.isEmpty()) {
 			no_proxy = "no_proxy=\"" + no_proxy + "\"";
-			putenv(no_proxy.toUtf8().constData());
+			putenv(no_proxy.toUtf8().data());
 		}
 	}
 	settings.endGroup();
