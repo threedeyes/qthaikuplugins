@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<svg version="1.1" width="64" height="64" color-interpolation="linearRGB"
+     xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg">
+ <g>
+  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:4.9548; stroke-linecap:round; stroke-linejoin:round"
+        d="M54 31L36 12L32 16C32 16 46 31.12 46 31C46 30.87 32 43.69 32 44C32 44.38 37 49 37 49L54 31z"
+        transform="matrix(1.2774,0,0,1.251,-32.6463,-4.9084)"
+  />
+  <path style="fill:none; stroke:#095609; stroke-width:4; stroke-linecap:round; stroke-linejoin:round"
+        d="M54 31L36 12L32 16C32 16 46 31.12 46 31C46 30.87 32 43.69 32 44C32 44.38 37 49 37 49L54 31z"
+        transform="matrix(1.2774,0,0,1.251,-33.2011,-7.4105)"
+  />
+  <linearGradient id="gradient0" gradientUnits="userSpaceOnUse" x1="165.44" y1="7.43" x2="165.44" y2="54.06">
+   <stop offset="0" stop-color="#80ff80"/>
+   <stop offset="1" stop-color="#00b200"/>
+  </linearGradient>
+  <path style="fill:url(#gradient0)"
+        d="M54 31L36 12L32 16C32 16 46 31.12 46 31C46 30.87 32 43.69 32 44C32 44.38 37 49 37 49L54 31z"
+        transform="matrix(1.2774,0,0,1.251,-33.2011,-7.4105)"
+  />
+  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:8; stroke-linecap:round; stroke-linejoin:round"
+        d="M33.21 9.9C20.33 9.9 9.9 20.33 9.9 33.21C9.9 46.08 20.33 56.53 33.21 56.53C46.08 56.53 56.53 46.08 56.53 33.21C56.53 20.33 46.08 9.9 33.21 9.9z"
+        transform="matrix(0.333,0,0,0.333,39.3132,21.3132)"
+  />
+  <linearGradient id="gradient1" gradientUnits="userSpaceOnUse" x1="162.06" y1="7.43" x2="162.06" y2="54.08">
+   <stop offset="0" stop-color="#ffabab"/>
+   <stop offset="1" stop-color="#d90000"/>
+  </linearGradient>
+  <path style="fill:url(#gradient1)"
+        d="M30.76 7.44C17.88 7.44 7.44 17.88 7.44 30.76C7.44 43.62 17.88 54.08 30.76 54.08C43.62 54.08 54.08 43.62 54.08 30.76C54.08 17.88 43.62 7.44 30.76 7.44z"
+        transform="matrix(0.3147,0,0,0.3147,39.4212,21.4212)"
+  />
+  <path style="fill:none; stroke:#800000; stroke-width:8"
+        d="M30.76 7.44C17.88 7.44 7.44 17.88 7.44 30.76C7.44 43.62 17.88 54.08 30.76 54.08C43.62 54.08 54.08 43.62 54.08 30.76C54.08 17.88 43.62 7.44 30.76 7.44z"
+        transform="matrix(0.3147,0,0,0.3147,39.4212,21.4212)"
+  />
+ </g>
+</svg>
