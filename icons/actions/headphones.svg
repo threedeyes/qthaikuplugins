@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<svg version="1.1" width="64" height="64" color-interpolation="linearRGB"
+     xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg">
+ <g>
+  <path style="fill:none; stroke:#000000; stroke-width:8; stroke-linecap:round"
+        d="M38 21C38 11.6 30.37 4 21 4C11.6 4 4 11.6 4 21"
+        transform="matrix(1.2954,0,0,1.294,3.9998,4.0001)"
+  />
+  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:8; stroke-linecap:round"
+        d="M40 23C40 13.6 32.37 6 23 6C13.6 6 6 13.6 6 23"
+        transform="matrix(1.2954,0,0,1.294,3.9998,4.0001)"
+  />
+  <linearGradient id="gradient0" gradientUnits="userSpaceOnUse" x1="128" y1="1.99" x2="128" y2="22">
+   <stop offset="0" stop-color="#808080"/>
+   <stop offset="1" stop-color="#282828"/>
+  </linearGradient>
+  <path style="fill:none; stroke:url(#gradient0); stroke-width:4; stroke-linecap:round"
+        d="M38 21C38 11.6 30.37 4 21 4C11.6 4 4 11.6 4 21"
+        transform="matrix(1.2954,0,0,1.294,3.9998,4.0001)"
+  />
+  <path style="fill:none; stroke:#000000; stroke-width:3.9996; stroke-linecap:round; stroke-linejoin:round"
+        d="M38.77 24.74L37.47 35.66C37.35 36.66 36.24 37.53 35.25 37.41L35.13 38.41C35.01 39.4 33.9 40.27 32.91 40.16L28.94 39.68L30.48 26.78L34.45 27.25C35.44 27.37 36.32 28.48 36.2 29.47L36.79 24.51L38.77 24.74z"
+        transform="matrix(1.2954,0,0,1.294,3.9998,4.0001)"
+  />
+  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:3.9996; stroke-linecap:round; stroke-linejoin:round"
+        d="M40.77 26.74L39.47 37.66C39.35 38.66 38.24 39.53 37.25 39.41L37.13 40.41C37.01 41.4 35.9 42.27 34.91 42.16L30.94 41.68L32.48 28.78L36.45 29.25C37.44 29.37 38.32 30.48 38.2 31.47L38.79 26.51L40.77 26.74z"
+        transform="matrix(1.2954,0,0,1.294,3.9998,4.0001)"
+  />
+  <linearGradient id="gradient1" gradientUnits="userSpaceOnUse" x1="-84.34" y1="10.07" x2="-86.23" y2="25.96">
+   <stop offset="0" stop-color="#808080"/>
+   <stop offset="1" stop-color="#282828"/>
+  </linearGradient>
+  <path style="fill:url(#gradient1)"
+        d="M38.77 24.74L37.47 35.66C37.35 36.66 36.24 37.53 35.25 37.41L35.13 38.41C35.01 39.4 33.9 40.27 32.91 40.16L28.94 39.68L30.48 26.78L34.45 27.25C35.44 27.37 36.32 28.48 36.2 29.47L36.79 24.51L38.77 24.74z"
+        transform="matrix(1.2954,0,0,1.294,3.9998,4.0001)"
+  />
+  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:3.9996; stroke-linecap:round; stroke-linejoin:round"
+        d="M5.21 26.75L6.46 37.68C6.58 38.67 7.69 39.55 8.68 39.44L8.79 40.43C8.91 41.43 10.01 42.3 11.01 42.19L14.98 41.73L13.5 28.82L9.53 29.28C8.53 29.39 7.65 30.5 7.77 31.49L7.2 26.52L5.21 26.75z"
+        transform="matrix(1.2954,0,0,1.294,3.9998,4.0001)"
+  />
+  <path style="fill:none; stroke:#000000; stroke-width:3.9996; stroke-linecap:round; stroke-linejoin:round"
+        d="M3.21 24.75L4.46 35.68C4.58 36.67 5.69 37.55 6.68 37.44L6.79 38.43C6.91 39.43 8.01 40.3 9.01 40.19L12.98 39.73L11.5 26.82L7.53 27.28C6.53 27.39 5.65 28.5 5.77 29.49L5.2 24.52L3.21 24.75z"
+        transform="matrix(1.2954,0,0,1.294,3.9998,4.0001)"
+  />
+  <linearGradient id="gradient2" gradientUnits="userSpaceOnUse" x1="126.39" y1="10.62" x2="128.22" y2="26.51">
+   <stop offset="0" stop-color="#808080"/>
+   <stop offset="1" stop-color="#282828"/>
+  </linearGradient>
+  <path style="fill:url(#gradient2)"
+        d="M3.21 24.75L4.46 35.68C4.58 36.67 5.69 37.55 6.68 37.44L6.79 38.43C6.91 39.43 8.01 40.3 9.01 40.19L12.98 39.73L11.5 26.82L7.53 27.28C6.53 27.39 5.65 28.5 5.77 29.49L5.2 24.52L3.21 24.75z"
+        transform="matrix(1.2954,0,0,1.294,3.9998,4.0001)"
+  />
+ </g>
+</svg>
