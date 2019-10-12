@@ -2,21 +2,21 @@
 <svg version="1.1" width="64" height="64" color-interpolation="linearRGB"
      xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg">
  <g>
-  <path style="fill:none; stroke:#000000; stroke-opacity:0.396; stroke-width:6.3624; stroke-linejoin:round"
-        d="M17.45 110.92V102.1L36.77 58.85L17.49 20.01V11.4H62.49V24.47H31.77L48.36 58.54L30.93 97.75H62.49V110.92H17.45z"
-        transform="matrix(0.9027,0,0,0.5372,-1.6113,0.805)"
+  <path style="fill:none; stroke:#000000; stroke-opacity:0.396; stroke-width:4.7258; stroke-linejoin:round"
+        d="M14.14 60.39V55.65L31.58 32.41L14.17 11.55V6.92H54.79V13.95H27.06L42.04 32.25L26.3 53.31H54.79V60.39H14.14z"
+        transform="matrix(0.9583,0,0,0.9342,1.3807,2.1268)"
   />
-  <linearGradient id="gradient0" gradientUnits="userSpaceOnUse" x1="58.15" y1="3.86" x2="57.45" y2="44.43">
+  <path style="fill:none; stroke:#003f80; stroke-width:6; stroke-linejoin:round"
+        d="M12.14 58.39V53.65L29.58 30.41L12.17 9.55V4.92H52.79V11.95H25.06L40.04 30.25L24.3 51.31H52.79V58.39H12.14z"
+        transform="matrix(0.9583,0,0,0.9342,1.3807,2.1268)"
+  />
+  <linearGradient id="gradient0" gradientUnits="userSpaceOnUse" x1="153.65" y1="11.15" x2="153.65" y2="49.75">
    <stop offset="0" stop-color="#abd5ff"/>
-   <stop offset="1" stop-color="#045cb6"/>
+   <stop offset="1" stop-color="#006cd9"/>
   </linearGradient>
   <path style="fill:url(#gradient0)"
-        d="M17.45 110.92V102.1L36.77 58.85L17.49 20.01V11.4H62.49V24.47H31.77L48.36 58.54L30.93 97.75H62.49V110.92H17.45z"
-        transform="matrix(0.9027,0,0,0.5372,-3.6113,-1.1949)"
-  />
-  <path style="fill:none; stroke:#031f9c; stroke-width:6.3624; stroke-linejoin:round"
-        d="M17.45 110.92V102.1L36.77 58.85L17.49 20.01V11.4H62.49V24.47H31.77L48.36 58.54L30.93 97.75H62.49V110.92H17.45z"
-        transform="matrix(0.9027,0,0,0.5372,-3.6113,-1.1949)"
+        d="M12.14 58.39V53.65L29.58 30.41L12.17 9.55V4.92H52.79V11.95H25.06L40.04 30.25L24.3 51.31H52.79V58.39H12.14z"
+        transform="matrix(0.9583,0,0,0.9342,1.3807,2.1268)"
   />
  </g>
 </svg>
