@@ -6,13 +6,14 @@
         d="M4 32C4 32 17.97 15 32 15C45.97 15 60 32 60 32C60 32 45.65 48 32 48C17.67 48 4 32 4 32z"
         transform="matrix(1.0535,0,0,1,-0.2142,6)"
   />
-  <path style="fill:none; stroke:#010101; stroke-width:5"
+  <path style="fill:none; stroke:#141414; stroke-width:5"
         d="M4 32C4 32 17.97 15 32 15C45.97 15 60 32 60 32C60 32 45.65 48 32 48C17.67 48 4 32 4 32z"
   />
-  <linearGradient id="gradient0" gradientUnits="userSpaceOnUse" x1="78.16" y1="16.23" x2="78.55" y2="41.13">
+  <radialGradient id="gradient0" gradientUnits="userSpaceOnUse" cx="0" cy="0" r="64" gradientTransform="matrix(0.0398,0.3239,-0.3627,0.0446,29.5924,25.7243)">
    <stop offset="0" stop-color="#ffffff"/>
-   <stop offset="1" stop-color="#b9b9b9"/>
-  </linearGradient>
+   <stop offset="0.74" stop-color="#dadada"/>
+   <stop offset="1" stop-color="#9d9d9d"/>
+  </radialGradient>
   <path style="fill:url(#gradient0)"
         d="M4 32C4 32 17.97 15 32 15C45.97 15 60 32 60 32C60 32 45.65 48 32 48C17.67 48 4 32 4 32z"
   />
@@ -48,41 +49,6 @@
   </linearGradient>
   <path style="fill:url(#gradient2)"
         d="M32 25C28 25 25 28 25 32C25 36 28 39 32 39C36 39 39 36 39 32C39 28 36 25 32 25z"
-  />
-  <path style="fill:none; stroke:#010101; stroke-opacity:0.4117; stroke-width:2"
-        d="M5 25L0 20
-           M14 17L10 11
-           M25 12L23 6
-           M39 12L41 6
-           M50 18L54 12
-           M59 25L63 21"
-        transform="matrix(1,0,0,1,1,2)"
-  />
-  <path style="fill:none; stroke:#010101; stroke-width:2"
-        d="M5 25L0 20
-           M14 17L10 11
-           M25 12L23 6
-           M39 12L41 6
-           M50 18L54 12
-           M59 25L63 21"
-  />
-  <path style="fill:none; stroke:#010101; stroke-opacity:0.4117; stroke-width:2"
-        d="M5 25L0 20
-           M14 17L10 11
-           M25 12L23 6
-           M39 12L41 6
-           M50 18L54 12
-           M59 25L63 21"
-        transform="matrix(1,0,0,-0.9976,1,65.3543)"
-  />
-  <path style="fill:none; stroke:#010101; stroke-width:2"
-        d="M5 25L0 20
-           M14 17L10 11
-           M25 12L23 6
-           M39 12L41 6
-           M50 18L54 12
-           M59 25L63 21"
-        transform="matrix(1,0,0,-0.9976,0,63.3543)"
   />
  </g>
 </svg>
