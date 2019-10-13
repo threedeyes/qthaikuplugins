@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<svg version="1.1" width="64" height="64" color-interpolation="linearRGB"
+     xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg">
+ <g>
+  <path style="fill:none; stroke:#010000; stroke-opacity:0.4235; stroke-width:6; stroke-linecap:square; stroke-linejoin:round"
+        d="M5 13V50H58V13H5z"
+        transform="matrix(0.9831,0,0,0.977,3.0291,4.2194)"
+  />
+  <path style="fill:none; stroke:#010000; stroke-width:6; stroke-linecap:square"
+        d="M5 13V50H58V13H5z"
+        transform="matrix(0.9831,0,0,0.977,1.0291,1.2194)"
+  />
+  <radialGradient id="gradient0" gradientUnits="userSpaceOnUse" cx="0" cy="0" r="64" gradientTransform="matrix(0.0095,0.2992,-0.8745,0.0279,46.7485,18.4041)">
+   <stop offset="0" stop-color="#ffea00"/>
+   <stop offset="1" stop-color="#ffaa00"/>
+  </radialGradient>
+  <path style="fill:url(#gradient0)"
+        d="M5 13V50H58V13H5z"
+        transform="matrix(1.0211,0,0,1.0311,-0.1652,-0.4832)"
+  />
+  <path style="fill:#a05914; fill-opacity:0.9882"
+        d="M7.83 18.28V28.73H10.44V18.28H7.83z
+           M14.36 18.28V28.73H16.97V18.28H14.36z
+           M20.89 18.28V32.65H23.51V18.28H20.89z
+           M27.42 18.28V28.73H30.04V18.28H27.42z
+           M33.95 18.28V28.73H36.57V18.28H33.95z
+           M40.48 18.28V32.65H43.1V18.28H40.48z
+           M47.02 18.28V28.73H49.63V18.28H47.02z
+           M53.55 18.28V28.73H56.16V18.28H53.55z"
+        transform="matrix(0.9831,0,0,0.977,1.0291,1.2194)"
+  />
+ </g>
+</svg>
