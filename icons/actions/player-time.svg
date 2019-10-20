@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<svg version="1.1" width="64" height="64" color-interpolation="linearRGB"
+     xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg">
+ <g>
+  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:4.9548; stroke-linecap:round; stroke-linejoin:round"
+        d="M55.47 33.2L13 9.88V56.52L55.47 33.2z"
+  />
+  <path style="fill:none; stroke:#005900; stroke-width:4.9548; stroke-linecap:round; stroke-linejoin:round"
+        d="M52.99 30.75L10.5 7.42V54.06L52.99 30.75z"
+  />
+  <linearGradient id="gradient0" gradientUnits="userSpaceOnUse" x1="165.44" y1="7.42" x2="165.44" y2="54.06">
+   <stop offset="0" stop-color="#80ff80"/>
+   <stop offset="1" stop-color="#00b200"/>
+  </linearGradient>
+  <path style="fill:url(#gradient0)"
+        d="M52.99 30.75L10.5 7.42V54.06L52.99 30.75z"
+  />
+  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:2.6493; stroke-linecap:round; stroke-linejoin:round"
+        d="M21.74 62.72V60.17H39.62V62.72H21.74z"
+        transform="matrix(1,0,0,1,-16,-1)"
+  />
+  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:2.6493"
+        d="M24.49 42.36C24.49 47.45 28.62 48.08 28.62 50.63C28.62 53.18 24.49 53.81 24.49 58.9H36.87C36.87 53.81 32.74 53.18 32.74 50.63C32.74 48.08 36.87 47.45 36.87 42.36H24.49z"
+        transform="matrix(1,0,0,1,-16,-1)"
+  />
+  <path style="fill:none; stroke:#0074b2; stroke-width:2.6493"
+        d="M23.12 41.09C23.12 46.18 27.24 46.81 27.24 49.36C27.24 51.9 23.12 52.54 23.12 57.63H35.49C35.49 52.54 31.37 51.9 31.37 49.36C31.37 46.81 35.49 46.18 35.49 41.09H23.12z"
+        transform="matrix(1,0,0,1,-16,-1)"
+  />
+  <path style="fill:none; stroke:#7d3602; stroke-width:2.6493; stroke-linecap:round; stroke-linejoin:round"
+        d="M20.37 39.81V37.27H38.24V39.81H20.37z"
+        transform="matrix(1,0,0,1,-16,-1)"
+  />
+  <linearGradient id="gradient1" gradientUnits="userSpaceOnUse" x1="82.89" y1="13.22" x2="91.4" y2="27">
+   <stop offset="0" stop-color="#f8fcff"/>
+   <stop offset="1" stop-color="#aae2ff"/>
+  </linearGradient>
+  <path style="fill:url(#gradient1)"
+        d="M23.12 41.09C23.12 46.18 27.24 46.81 27.24 49.36C27.24 51.9 23.12 52.54 23.12 57.63H35.49C35.49 52.54 31.37 51.9 31.37 49.36C31.37 46.81 35.49 46.18 35.49 41.09H23.12z"
+        transform="matrix(1,0,0,1,-16,-1)"
+  />
+  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:2.6493; stroke-linecap:round; stroke-linejoin:round"
+        d="M21.74 41.09V38.54H39.62V41.09H21.74z"
+        transform="matrix(1,0,0,1,-16,-1)"
+  />
+  <linearGradient id="gradient2" gradientUnits="userSpaceOnUse" x1="56.11" y1="37.27" x2="56.11" y2="39.81">
+   <stop offset="0" stop-color="#f5d18b"/>
+   <stop offset="1" stop-color="#d77c3a"/>
+  </linearGradient>
+  <path style="fill:url(#gradient2)"
+        d="M20.37 39.81V37.27H38.24V39.81H20.37z"
+        transform="matrix(1,0,0,1,-16,-1)"
+  />
+  <path style="fill:none; stroke:#7d3602; stroke-width:2.6493; stroke-linecap:round; stroke-linejoin:round"
+        d="M20.37 61.45V58.9H38.24V61.45H20.37z"
+        transform="matrix(1,0,0,1,-16,-1)"
+  />
+  <linearGradient id="gradient3" gradientUnits="userSpaceOnUse" x1="56.11" y1="58.9" x2="56.11" y2="61.45">
+   <stop offset="0" stop-color="#f5d18b"/>
+   <stop offset="1" stop-color="#d77c3a"/>
+  </linearGradient>
+  <path style="fill:url(#gradient3)"
+        d="M20.37 61.45V58.9H38.24V61.45H20.37z"
+        transform="matrix(1,0,0,1,-16,-1)"
+  />
+  <linearGradient id="gradient4" gradientUnits="userSpaceOnUse" x1="73.3" y1="3.7" x2="81.23" y2="11.04">
+   <stop offset="0" stop-color="#ff80ea"/>
+   <stop offset="1" stop-color="#d900b3"/>
+  </linearGradient>
+  <path style="fill:url(#gradient4)"
+        d="M24.49 57.63H34.12C34.12 55.08 33.43 54.45 32.74 53.81C30.68 53.81 29.99 53.81 29.31 49.36C29.31 46.81 32.74 46.81 32.74 44.9C31.37 48.72 27.24 41.09 25.87 44.9C25.87 46.81 29.31 46.81 29.31 49.36C28.62 53.81 27.93 53.81 25.87 53.81C25.18 54.45 24.49 55.08 24.49 57.63z"
+        transform="matrix(1,0,0,1,-16,-1)"
+  />
+ </g>
+</svg>
