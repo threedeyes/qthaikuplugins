@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<svg version="1.1" width="64" height="64" color-interpolation="linearRGB"
+     xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg">
+ <g>
+  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:5.092; stroke-linecap:round; stroke-linejoin:round"
+        d="M9.09 9.09H47.28V37.09H9.09V9.09z"
+  />
+  <path style="fill:none; stroke:#bf5000; stroke-width:5.092; stroke-linecap:round; stroke-linejoin:round"
+        d="M6.54 6.54H44.74V34.54H6.54V6.54z"
+  />
+  <linearGradient id="gradient0" gradientUnits="userSpaceOnUse" x1="156.78" y1="6.53" x2="156.78" y2="34.54">
+   <stop offset="0" stop-color="#ffff80"/>
+   <stop offset="1" stop-color="#ffd400"/>
+  </linearGradient>
+  <path style="fill:url(#gradient0)"
+        d="M6.54 6.54H44.74V34.54H6.54V6.54z"
+  />
+  <path style="fill:#bf5000"
+        d="M44.74 6.54L25.64 19.27L6.54 6.54L25.64 23.09L44.74 6.54z
+           M44.74 34.54L32.01 16.72L29.46 18L44.74 34.54z
+           M21.82 18L19.27 16.72L6.54 34.67L21.82 18z"
+  />
+  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:5.092; stroke-linecap:round; stroke-linejoin:round"
+        d="M34.55 49.82V57.45L47.28 46L34.55 34.54V42.18C24.7 42.18 16.73 38.74 16.73 34.54C16.73 42.97 24.7 49.82 34.55 49.82z"
+        transform="matrix(1,0,0,1,8,0)"
+  />
+  <path style="fill:none; stroke:#545454; stroke-width:5.092; stroke-linecap:round; stroke-linejoin:round"
+        d="M32.01 47.27V54.91L44.74 43.45L32.01 32V39.63C22.15 39.63 14.18 36.2 14.18 32C14.18 40.42 22.15 47.27 32.01 47.27z"
+        transform="matrix(1,0,0,1,8,0)"
+  />
+  <linearGradient id="gradient1" gradientUnits="userSpaceOnUse" x1="166.96" y1="32" x2="166.96" y2="54.91">
+   <stop offset="0" stop-color="#ffffff"/>
+   <stop offset="1" stop-color="#e5e5e5"/>
+  </linearGradient>
+  <path style="fill:url(#gradient1)"
+        d="M32.01 47.27V54.91L44.74 43.45L32.01 32V39.63C22.15 39.63 14.18 36.2 14.18 32C14.18 40.42 22.15 47.27 32.01 47.27z"
+        transform="matrix(1,0,0,1,8,0)"
+  />
+ </g>
+</svg>
