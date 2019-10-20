@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<svg version="1.1" width="64" height="64" color-interpolation="linearRGB"
+     xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg">
+ <g>
+  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:4.9083; stroke-linecap:round; stroke-linejoin:round"
+        d="M33.21 9.9C20.33 9.9 9.9 20.33 9.9 33.21C9.9 46.08 20.33 56.53 33.21 56.53C46.08 56.53 56.53 46.08 56.53 33.21C56.53 20.33 46.08 9.9 33.21 9.9z"
+        transform="matrix(0.4455,0,0,0.4455,3.7038,17.7038)"
+  />
+  <path style="fill:none; stroke:#800000; stroke-width:10"
+        d="M30.76 7.44C17.88 7.44 7.44 17.88 7.44 30.76C7.44 43.62 17.88 54.08 30.76 54.08C43.62 54.08 54.08 43.62 54.08 30.76C54.08 17.88 43.62 7.44 30.76 7.44z"
+        transform="matrix(0.4455,0,0,0.4455,2.7412,16.7412)"
+  />
+  <linearGradient id="gradient0" gradientUnits="userSpaceOnUse" x1="162.06" y1="7.43" x2="162.06" y2="54.08">
+   <stop offset="0" stop-color="#ffabab"/>
+   <stop offset="1" stop-color="#d90000"/>
+  </linearGradient>
+  <path style="fill:url(#gradient0)"
+        d="M30.76 7.44C17.88 7.44 7.44 17.88 7.44 30.76C7.44 43.62 17.88 54.08 30.76 54.08C43.62 54.08 54.08 43.62 54.08 30.76C54.08 17.88 43.62 7.44 30.76 7.44z"
+        transform="matrix(0.4455,0,0,0.4455,2.7412,16.7412)"
+  />
+  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:4.8645; stroke-linecap:round; stroke-linejoin:round"
+        d="M44 31L29 47V37H6V24H29V14L44 31z"
+        transform="matrix(1,0,0,1,16,3)"
+  />
+  <path style="fill:none; stroke:#003f80; stroke-width:4.8645; stroke-linecap:round; stroke-linejoin:round"
+        d="M44 31L29 47V37H6V24H29V14L44 31z"
+        transform="matrix(1,0,0,1,15,0)"
+  />
+  <linearGradient id="gradient1" gradientUnits="userSpaceOnUse" x1="116.25" y1="28.32" x2="116.25" y2="53.34">
+   <stop offset="0" stop-color="#abd5ff"/>
+   <stop offset="1" stop-color="#006cd9"/>
+  </linearGradient>
+  <path style="fill:url(#gradient1)"
+        d="M44 31L29 47V37H6V24H29V14L44 31z"
+        transform="matrix(1,0,0,1,15,0)"
+  />
+ </g>
+</svg>
