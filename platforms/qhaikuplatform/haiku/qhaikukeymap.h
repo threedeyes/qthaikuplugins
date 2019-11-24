@@ -56,7 +56,7 @@ static uint32 platformHaikuScanCodes[] = {
 		Qt::Key_F10,		0x0B,
 		Qt::Key_F11,		0x0C,
 		Qt::Key_F12,		0x0D,
-		Qt::Key_Print,		0x0E,
+//		Qt::Key_Print,		0x0E,   //conflict
 //      Qt::Key_ScrollLock = 0x0F,  //modificator
 		Qt::Key_Pause,		0x22,
 
