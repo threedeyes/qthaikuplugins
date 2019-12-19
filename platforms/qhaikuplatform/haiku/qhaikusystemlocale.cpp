@@ -43,6 +43,7 @@
 #include <LocaleRoster.h>
 #include <Message.h>
 #include <String.h>
+#include <StringList.h>
 
 #include "qhaikusystemlocale.h"
 #include "qdatetime.h"
@@ -59,20 +60,16 @@ void QHaikuSystemLocale::getLocaleFromHaiku() const
 {
     QWriteLocker locker(&m_lock);
 
+	m_uilanguages.clear();
+
 	BMessage preferredLanguages;
 	BLocaleRoster::Default()->GetPreferredLanguages(&preferredLanguages);
-	QString languageCode = "en";
-	const char* firstPreferredLanguage;
-	if (preferredLanguages.FindString("language", &firstPreferredLanguage) == B_OK)
-		languageCode = QString(firstPreferredLanguage);
-
-    QString countryCode = "US";    
-    BFormattingConventions conventions;
-	BLocale::Default()->GetFormattingConventions(&conventions);
-	if (conventions.CountryCode() != NULL)
-		countryCode = QString(conventions.CountryCode());
-
-    m_locale = QLocale(languageCode + QLatin1Char('_') + countryCode);
+	BString language;
+	for (int i = 0; preferredLanguages.FindString("language", i, &language) == B_OK; i++) {
+		m_uilanguages << language.String();
+	}
+	m_locale = QLocale(m_uilanguages.at(0).toLocal8Bit().constData());
+	m_uilanguages.replaceInStrings("_","-");
 }
 
 QVariant QHaikuSystemLocale::query(QueryType type, QVariant in) const
@@ -164,6 +161,13 @@ QVariant QHaikuSystemLocale::query(QueryType type, QVariant in) const
         return m_locale.createSeparatedList(in.value<QStringList>());
     case LocaleChanged:
         Q_ASSERT_X(false, Q_FUNC_INFO, "This can't happen.");
+	case UILanguages: {
+		if (m_uilanguages.isEmpty()) {
+			QString langs = "en-US";
+			return langs.split(QChar(','));
+		} else
+			return m_uilanguages;
+    }
     default:
         break;
     }

@@ -44,6 +44,8 @@
 #include "private/qlocale_p.h"
 #include <QtCore/qreadwritelock.h>
 
+#include <StringList.h>
+
 QT_BEGIN_NAMESPACE
 
 class QHaikuSystemLocale : public QSystemLocale
@@ -59,6 +61,7 @@ private:
 	
     mutable QLocale m_locale;
     mutable QReadWriteLock m_lock;
+    mutable QStringList m_uilanguages;
 };
 
 QT_END_NAMESPACE
