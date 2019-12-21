@@ -111,8 +111,7 @@ public:
     QPlatformTheme *createPlatformTheme(const QString &name) const; 
 
 private:
-    QScopedPointer<QPlatformFontDatabase> m_fontDatabase;
-
+    QPlatformFontDatabase *m_fontDatabase;
     QSimpleDrag *m_drag;
     QPlatformServices *m_services;
     QHaikuSystemLocale *m_haikuSystemLocale;

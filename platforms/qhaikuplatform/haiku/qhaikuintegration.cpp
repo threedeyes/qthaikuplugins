@@ -59,6 +59,7 @@
 #include "qhaikuservices.h"
 #include "qhaikuplatformfontdatabase.h"
 #include "qhaikusystemlocale.h"
+#include "qhaikukillonexitapps.h"
 
 #if !defined(QT_NO_OPENGL)
 #include <GLView.h>
@@ -66,24 +67,35 @@
 
 QT_BEGIN_NAMESPACE
 
+
 QHaikuIntegration::QHaikuIntegration(const QStringList &parameters, int &argc, char **argv)
 	: QObject(), QPlatformIntegration()
-	, m_clipboard(new QHaikuClipboard)
-    , m_drag(new QSimpleDrag)
-    , m_services(new QHaikuServices)
-    , m_haikuSystemLocale(new QHaikuSystemLocale)
-    , m_screen(new QHaikuScreen)
 {
-    m_fontDatabase.reset(new QHaikuPlatformFontDatabase());
+	m_screen = new QHaikuScreen();
 	QWindowSystemInterface::handleScreenAdded(m_screen);
+    m_fontDatabase = new QHaikuPlatformFontDatabase();
+	m_services = new QHaikuServices();
+	m_clipboard = new QHaikuClipboard();
+	m_haikuSystemLocale = new QHaikuSystemLocale;
+	m_drag = new QSimpleDrag();
 }
 
 QHaikuIntegration::~QHaikuIntegration()
 {
-	delete m_drag;
-	delete m_clipboard;
+	delete m_fontDatabase;
 	delete m_haikuSystemLocale;
+	delete m_clipboard;
+	delete m_drag;
 	delete m_services;
+
+	QWindowSystemInterface::handleScreenRemoved(m_screen);
+
+	app_info info;
+	if (be_app->GetAppInfo(&info) == B_OK) {
+		QString appMime = QString::fromLocal8Bit(info.signature);
+		if (killOnExitMimeTypes.contains(appMime, Qt::CaseInsensitive))
+			kill(::getpid(), SIGKILL);
+	}
 }
 
 bool QHaikuIntegration::hasCapability(QPlatformIntegration::Capability cap) const
@@ -102,7 +114,6 @@ bool QHaikuIntegration::hasCapability(QPlatformIntegration::Capability cap) cons
 
 QPlatformWindow *QHaikuIntegration::createPlatformWindow(QWindow *window) const
 {
-    Q_UNUSED(window);
     QPlatformWindow *w = new QHaikuWindow(window);
     w->requestActivateWindow();
     return w;
@@ -146,7 +157,7 @@ QAbstractEventDispatcher *QHaikuIntegration::createEventDispatcher() const
 
 QPlatformFontDatabase *QHaikuIntegration::fontDatabase() const
 {
-    return m_fontDatabase.data();
+    return m_fontDatabase;
 }
 
 QPlatformDrag *QHaikuIntegration::drag() const
