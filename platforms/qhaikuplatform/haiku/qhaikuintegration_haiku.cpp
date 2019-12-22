@@ -133,9 +133,12 @@ static int32 haikuAppThread(void *data)
 
 void QHaikuIntegration::platformAppQuit()
 {
+	haikuApplicationQuitAccepted = true;
 	QCloseEvent event;
-	QGuiApplication::sendEvent(QCoreApplication::instance(), &event);
-	haikuApplicationQuitAccepted = event.isAccepted();
+	foreach (QWindow *w, QGuiApplication::topLevelWindows()) {
+		QGuiApplication::sendEvent(w, &event);
+		haikuApplicationQuitAccepted &= event.isAccepted();
+	}
 	haikuApplicationQuitChecked = true;
 }
 
