@@ -171,6 +171,8 @@ void QtHaikuWindow::DispatchMessage(BMessage *msg, BHandler *handler)
 				if(msg->FindString("bytes", &bytes) == B_OK)
 					text = QString::fromUtf8(bytes);
 				uint32 qt_keycode = translateKeyCode(key);
+				if (qt_keycode == 0)
+					break;
 				if ((qt_keycode == Qt::Key_Tab) && (modifiers & B_CONTROL_KEY))
 					break;
 				if ((qt_keycode == Qt::Key_Q) && (modifiers & B_COMMAND_KEY))
