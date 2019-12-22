@@ -205,7 +205,7 @@ QHaikuIntegration *QHaikuIntegration::createHaikuIntegration(const QStringList& 
 	}
 	// Enable software rendering for QML
 	if (settings.value("qml_softwarecontext", true).toBool())
-		putenv("QMLSCENE_DEVICE=softwarecontext");
+		setenv("QMLSCENE_DEVICE", "softwarecontext", 0);
 	settings.endGroup();
 
 	// Proxy settings
@@ -257,14 +257,14 @@ QHaikuIntegration *QHaikuIntegration::createHaikuIntegration(const QStringList& 
 	settings.endGroup();
 
 	// Set HOME variable
-	putenv("HOME=/boot/home");
+	setenv("HOME","/boot/home", 0);
 
 	// Set XDG variables
-	putenv("XDG_CONFIG_HOME=/boot/home/config/settings");
-	putenv("XDG_CONFIG_DIRS=/boot/system/settings");
-	putenv("XDG_CACHE_HOME=/boot/home/config/cache");
-	putenv("XDG_DATA_HOME=/boot/home/config/non-packaged/data");
-	putenv("XDG_DATA_DIRS=/boot/system/non-packaged/data:/boot/system/data");
+	setenv("XDG_CONFIG_HOME", "/boot/home/config/settings", 0);
+	setenv("XDG_CONFIG_DIRS", "/boot/system/settings", 0);
+	setenv("XDG_CACHE_HOME", "/boot/home/config/cache", 0);
+	setenv("XDG_DATA_HOME", "/boot/home/config/non-packaged/data", 0);
+	setenv("XDG_DATA_DIRS", "/boot/system/non-packaged/data:/boot/system/data", 0);
 
     QHaikuIntegration *newHaikuIntegration = new QHaikuIntegration(parameters, argc, argv);
     return newHaikuIntegration;
