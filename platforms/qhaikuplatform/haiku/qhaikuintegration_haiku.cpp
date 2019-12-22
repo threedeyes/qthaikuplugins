@@ -44,13 +44,9 @@
 
 namespace {
 static HQApplication* haikuApplication = NULL;
-static bool haikuApplicationQuitAccepted = false;
-static bool haikuApplicationQuitChecked = false;
 }
 
-HQApplication::HQApplication(const char* signature)
-		: QObject()
-		, BApplication(signature)
+HQApplication::HQApplication(const char* signature)	: BApplication(signature)
 {
 	RefHandled = false;
 	fClipboard = NULL;
@@ -112,15 +108,12 @@ HQApplication::RefsReceived(BMessage *pmsg)
 
 bool HQApplication::QuitRequested()
 {
-	haikuApplicationQuitAccepted = false;
-	haikuApplicationQuitChecked = false;
-
-	Q_EMIT appQuit();
-
-	while(!haikuApplicationQuitChecked)
-		snooze(100);
-
-	return haikuApplicationQuitAccepted;
+	if (QGuiApplicationPrivate::instance()->threadData->eventLoops.isEmpty()) {
+		return true;
+    } else if (!QWindowSystemInterface::handleApplicationTermination<QWindowSystemInterface::SynchronousDelivery>()) {
+        return false;
+    }
+	return false;
 }
 
 static int32 haikuAppThread(void *data)
@@ -129,17 +122,6 @@ static int32 haikuAppThread(void *data)
 	app->LockLooper();
 	app->Run();
 	return B_OK;
-}
-
-void QHaikuIntegration::platformAppQuit()
-{
-	haikuApplicationQuitAccepted = true;
-	QCloseEvent event;
-	foreach (QWindow *w, QGuiApplication::topLevelWindows()) {
-		QGuiApplication::sendEvent(w, &event);
-		haikuApplicationQuitAccepted &= event.isAccepted();
-	}
-	haikuApplicationQuitChecked = true;
 }
 
 QHaikuIntegration *QHaikuIntegration::createHaikuIntegration(const QStringList& parameters, int &argc, char **argv)
@@ -285,6 +267,5 @@ QHaikuIntegration *QHaikuIntegration::createHaikuIntegration(const QStringList& 
 	putenv("XDG_DATA_DIRS=/boot/system/non-packaged/data:/boot/system/data");
 
     QHaikuIntegration *newHaikuIntegration = new QHaikuIntegration(parameters, argc, argv);
-    connect(haikuApplication, SIGNAL(appQuit()), newHaikuIntegration, SLOT(platformAppQuit()));
     return newHaikuIntegration;
 }

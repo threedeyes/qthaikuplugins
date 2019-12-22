@@ -71,9 +71,8 @@
 
 #include <stdio.h>
 
-class HQApplication : public QObject, public BApplication
+class HQApplication : public BApplication
 {
-	Q_OBJECT
 public:
 	HQApplication(const char*);
 	~HQApplication();
@@ -87,8 +86,6 @@ private:
 	BPath 	refReceived;
 	BMessenger  fTrackerMessenger;
 	QHaikuClipboard *fClipboard;
-Q_SIGNALS:
-	void appQuit();
 };
 
 #endif
