@@ -937,6 +937,10 @@ void QHaikuWindow::platformMouseEvent(const QPoint &localPosition,
 	} else {
 		QWindowSystemInterface::handleMouseEvent(window(),
 			localPosition, globalPosition, state, button, type, modifiers, source);
+		if (window()->cursor().shape() == Qt::BitmapCursor || window()->cursor().shape() == Qt::CustomCursor) {
+			QPoint pos = window()->mapFromGlobal(window()->cursor().pos());
+			QWindowSystemInterface::handleExposeEvent(window(), QRect(pos.x()-32, pos.y()-32, pos.x()+32, pos.y() + 32));
+		}
 	}
 }
 

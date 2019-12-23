@@ -43,7 +43,15 @@
 
 #include <qpa/qplatformcursor.h>
 #include <qpa/qplatformwindow.h>
-#include <qdebug.h>
+
+#include <QUuid>
+#include <QCryptographicHash> 
+#include <QBitmap>
+#include <QPixmap>
+#include <QImage>
+#include <QColor>
+#include <QFile> 
+#include <QDebug>
 
 #include <Application.h>
 
@@ -72,34 +80,69 @@ QHaikuCursor::QHaikuCursor()
 	m_cursorHash.insert(Qt::ClosedHandCursor, new BCursor(B_CURSOR_ID_GRABBING));
 	m_cursorHash.insert(Qt::WhatsThisCursor, new BCursor(B_CURSOR_ID_HELP));
 	m_cursorHash.insert(Qt::BusyCursor, new BCursor(B_CURSOR_ID_PROGRESS));
+	m_bitmap = NULL;
 }
 
 QHaikuCursor::~QHaikuCursor()
 {
+	removeCurrentCursorBitmap();
 	foreach (BCursor *cursor, m_cursorHash)
 		delete cursor;
 }
 
 void QHaikuCursor::changeCursor(QCursor *windowCursor, QWindow *window)
-{	
-	if (windowCursor != NULL) {
-		BCursor *cursor = m_cursorHash.value(windowCursor->shape(), NULL);
-		if (cursor != NULL) {
-			be_app->SetCursor(cursor);
-			return;
-		}
-	}
-	be_app->SetCursor((BCursor*)B_CURSOR_SYSTEM_DEFAULT);
-}
-/*
-void QHaikuCursor::setPos(const QPoint &pos)
 {
-    m_pos = pos;
+	if (!windowCursor || !window)
+		return;
+	QScreen *screen = window->screen();
+	if (!screen)
+		return;
+
+	if (windowCursor->shape() == Qt::BitmapCursor || windowCursor->shape() == Qt::CustomCursor) {
+		QPoint hotspot = windowCursor->hotSpot();
+		unsigned char emptyCursor[] = { 16, 1, hotspot.x(), hotspot.y(),
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+	    be_app->SetCursor(emptyCursor);
+
+  		QImage image = windowCursor->pixmap().isNull() ? windowCursor->bitmap()->toImage() : windowCursor->pixmap().toImage();
+  		if (windowCursor->pixmap().isNull()) {
+  			QImage mask = windowCursor->mask()->toImage();
+  			QPixmap maskedBitmap = QPixmap::fromImage(image);
+  			maskedBitmap.setMask(*windowCursor->mask());
+   			image = maskedBitmap.toImage();
+  		}
+   		image.convertTo(QImage::Format_ARGB32);
+		removeCurrentCursorBitmap();
+   		m_bitmap = new BBitmap(BRect(0,0, image.width()-1, image.height()-1), B_RGBA32);
+   		memcpy(m_bitmap->Bits(), image.bits(), image.sizeInBytes());
+	    return;
+	}
+
+	BCursor *cursor = m_cursorHash.value(windowCursor->shape(), NULL);
+	if (cursor != NULL) {
+		be_app->SetCursor(cursor);
+		removeCurrentCursorBitmap();
+		return;
+	}
+
+	be_app->SetCursor((BCursor*)B_CURSOR_SYSTEM_DEFAULT);
+	removeCurrentCursorBitmap();
 }
 
-QPoint QHaikuCursor::pos() const
+BBitmap *QHaikuCursor::getCurrentCursorBitmap(void)
 {
-    return m_pos;
-}*/
+	return m_bitmap;
+}
+
+void QHaikuCursor::removeCurrentCursorBitmap(void)
+{
+	if (m_bitmap != NULL) {
+   		delete m_bitmap;
+   		m_bitmap = NULL;
+   	}
+}
 
 QT_END_NAMESPACE

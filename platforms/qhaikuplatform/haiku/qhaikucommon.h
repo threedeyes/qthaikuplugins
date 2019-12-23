@@ -51,6 +51,8 @@
 
 #include <qscopedpointer.h>
 #include <qimage.h>
+#include <qbitmap.h>
+#include <qpainter.h>
 #include <qhash.h>
 
 #include <Screen.h>

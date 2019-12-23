@@ -42,7 +42,10 @@
 #define QHAIKUCURSOR_H
 
 #include <qpa/qplatformcursor.h>
+#include <Bitmap.h>
 #include <Cursor.h>
+
+#include "qhaikucursorsdata.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -52,12 +55,12 @@ public:
     explicit QHaikuCursor();
     ~QHaikuCursor();
     void changeCursor(QCursor * windowCursor, QWindow *);
-//    void setPos(const QPoint &pos);
-//    QPoint pos() const;
+    BBitmap *getCurrentCursorBitmap(void);
 private:
+	void removeCurrentCursorBitmap(void);
 	typedef QHash<int, BCursor*> CursorHash;
 	CursorHash m_cursorHash;
-    QPoint m_pos;
+    BBitmap *m_bitmap;
 };
 
 QT_END_NAMESPACE
