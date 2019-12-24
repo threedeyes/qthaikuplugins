@@ -44,6 +44,7 @@
 #include <qpa/qwindowsysteminterface.h>
 #include <qpa/qplatformwindow.h>
 #include <qpa/qplatformdrag.h>
+#include <qregion.h>
 #include <qdebug.h>
 
 #include <SupportDefs.h>
@@ -66,7 +67,6 @@ class QHaikuSurfaceView : public QObject, public BView
 		virtual void MouseDown(BPoint p);
 		virtual void MouseUp(BPoint p);
 		virtual void MouseMoved(BPoint point, uint32 transit, const BMessage *msg);
-		void SetViewBitmap(BBitmap *bmp);
 
 		void PreventMouse(void);
 
@@ -83,7 +83,6 @@ class QHaikuSurfaceView : public QObject, public BView
 		Qt::MouseButton lastMouseButton;
 		bigtime_t lastMouseMoveTime;
 		bigtime_t mousePreventTime;
-		BBitmap *viewBitmap;
  Q_SIGNALS:
 		void mouseEvent(const QPoint &localPosition,
 			const QPoint &globalPosition,
@@ -99,6 +98,7 @@ class QHaikuSurfaceView : public QObject, public BView
 			Qt::KeyboardModifiers modifiers);
 	    void enteredView();
 		void exitedView();
+		void exposeEvent(QRegion region);
 };
 
 #endif

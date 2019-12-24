@@ -141,8 +141,6 @@ QPaintDevice *QHaikuBackingStore::paintDevice()
 
 void QHaikuBackingStore::flush(QWindow *window, const QRegion &region, const QPoint &offset)
 {
-    Q_UNUSED(region);
-
     if (m_image.size().isEmpty())
         return;
 
@@ -165,7 +163,6 @@ void QHaikuBackingStore::flush(QWindow *window, const QRegion &region, const QPo
 		view->SetDrawingMode(B_OP_COPY);
 
 		BRect rect(outline.left(), outline.top(), outline.right(), outline.bottom());
-		view->SetViewBitmap(m_bitmap);
 		view->DrawBitmapAsync(m_bitmap, rect, rect);
 
 		if (window->cursor().shape() == Qt::BitmapCursor || window->cursor().shape() == Qt::CustomCursor) {
@@ -204,12 +201,11 @@ void QHaikuBackingStore::resize(const QSize &size, const QRegion &)
 
 			BRect rect(0, 0, size.width() - 1, size.height() - 1);
 			m_bitmap = new BBitmap(rect, B_RGB32, true);
-	    	view->SetViewBitmap(m_bitmap);
-			m_image = QImage((uchar*)m_bitmap->Bits(), size.width(), size.height(), m_bitmap->BytesPerRow(), QImage::Format_RGB32);			
+			m_image = QImage((uchar*)m_bitmap->Bits(), size.width(), size.height(), m_bitmap->BytesPerRow(), QImage::Format_RGB32);
 			view->UnlockLooper();
     	}
     }
-    clearHash();        
+    clearHash();
 }
 
 

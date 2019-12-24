@@ -193,6 +193,7 @@ private Q_SLOTS:
 		int key,
 		Qt::KeyboardModifiers modifiers,
 		const QString &text);
+	void platformExposeEvent(QRegion region);
 };
 
 QT_END_NAMESPACE

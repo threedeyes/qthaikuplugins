@@ -299,6 +299,7 @@ QHaikuWindow::QHaikuWindow(QWindow *wnd)
 		this, SLOT(platformMouseEvent(QPoint, QPoint, Qt::MouseButtons, Qt::MouseButton, QEvent::Type, Qt::KeyboardModifiers, Qt::MouseEventSource)));
 	connect(m_window->View(), SIGNAL(mouseDragEvent(QPoint, Qt::DropActions, QMimeData*,  Qt::MouseButtons, Qt::KeyboardModifiers)),
 		this, SLOT(platformMouseDragEvent(QPoint, Qt::DropActions, QMimeData*,  Qt::MouseButtons, Qt::KeyboardModifiers)));
+	connect(m_window->View(), SIGNAL(exposeEvent(QRegion)), this, SLOT(platformExposeEvent(QRegion)));
 
     window()->setProperty("size-grip", false);
 
@@ -757,7 +758,7 @@ void QHaikuWindow::setWindowState(Qt::WindowStates states)
     default:
         break;
     }
-    QWindowSystemInterface::handleWindowStateChanged(window(), states);
+    QWindowSystemInterface::handleWindowStateChanged<QWindowSystemInterface::SynchronousDelivery>(window(), states);
 }
 
 QHaikuSurfaceView *QHaikuWindow::viewForWinId(WId id)
@@ -796,8 +797,8 @@ void QHaikuWindow::platformWindowMoved(const QPoint &pos)
     }
 
     if (m_visible) {
-        QWindowSystemInterface::handleGeometryChange(window(), adjusted);
-        QWindowSystemInterface::handleExposeEvent(window(), QRect(QPoint(), adjusted.size()));
+        QWindowSystemInterface::handleGeometryChange<QWindowSystemInterface::SynchronousDelivery>(window(), adjusted);
+        QWindowSystemInterface::handleExposeEvent<QWindowSystemInterface::SynchronousDelivery>(window(), QRect(QPoint(), adjusted.size()));
     } else {
         m_pendingGeometryChangeOnShow = true;
     }
@@ -812,8 +813,8 @@ void QHaikuWindow::platformWindowResized(const QSize &size)
     QPlatformWindow::setGeometry(adjusted);
     
     if (m_visible) {
-        QWindowSystemInterface::handleGeometryChange(window(), adjusted);
-        QWindowSystemInterface::handleExposeEvent(window(), QRect(QPoint(), adjusted.size()));
+        QWindowSystemInterface::handleGeometryChange<QWindowSystemInterface::SynchronousDelivery>(window(), adjusted);
+        QWindowSystemInterface::handleExposeEvent<QWindowSystemInterface::SynchronousDelivery>(window(), QRect(QPoint(), adjusted.size()));
     } else {
         m_pendingGeometryChangeOnShow = true;
     }
@@ -828,13 +829,13 @@ void QHaikuWindow::platformWindowActivated(bool activated)
 	    }
 		if (window() == QGuiApplication::focusWindow()
             && !activeWindowChangeQueued(window())) {
-            QWindowSystemInterface::handleWindowActivated(Q_NULLPTR);
+            QWindowSystemInterface::handleWindowActivated<QWindowSystemInterface::SynchronousDelivery>(0);
 		}
-		QWindowSystemInterface::handleApplicationStateChanged(Qt::ApplicationInactive);
+		QWindowSystemInterface::handleApplicationStateChanged<QWindowSystemInterface::SynchronousDelivery>(Qt::ApplicationInactive);
 		return;
 	}
-	QWindowSystemInterface::handleApplicationStateChanged(Qt::ApplicationActive);
-	QWindowSystemInterface::handleWindowActivated(window(), Qt::ActiveWindowFocusReason);
+	QWindowSystemInterface::handleApplicationStateChanged<QWindowSystemInterface::SynchronousDelivery>(Qt::ApplicationActive);
+	QWindowSystemInterface::handleWindowActivated<QWindowSystemInterface::SynchronousDelivery>(window(), Qt::ActiveWindowFocusReason);
 }
 
 
@@ -972,6 +973,11 @@ void QHaikuWindow::platformWheelEvent(const QPoint &localPosition,
 void QHaikuWindow::platformKeyEvent(QEvent::Type type, int key, Qt::KeyboardModifiers modifiers, const QString &text)
 {
     QWindowSystemInterface::handleKeyEvent(window(), type, key, modifiers, text);
+}
+
+void QHaikuWindow::platformExposeEvent(QRegion region)
+{
+	QWindowSystemInterface::handleExposeEvent<QWindowSystemInterface::SynchronousDelivery>(window(), region);
 }
 
 QHash<WId, QHaikuWindow *> QHaikuWindow::m_windowForWinIdHash;

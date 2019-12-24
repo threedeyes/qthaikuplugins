@@ -60,7 +60,6 @@ Q_DECLARE_METATYPE(Qt::Orientation)
 QHaikuSurfaceView::QHaikuSurfaceView(BRect rect)
 	: QObject()
 	, BView(rect, "QHaikuSurfaceView", B_FOLLOW_ALL, B_WILL_DRAW),
-	viewBitmap(0),
 	lastMouseState(Qt::NoButton),
 	lastMouseButton(Qt::NoButton)
 {
@@ -93,10 +92,8 @@ QHaikuSurfaceView::PreventMouse(void)
 void
 QHaikuSurfaceView::Draw(BRect rect)
 {
-	if(viewBitmap != NULL) {
-		SetDrawingMode(B_OP_COPY);
-		DrawBitmap(viewBitmap, rect, rect);
-	}
+	QRegion region(QRect(rect.left, rect.top, rect.IntegerWidth() +1, rect.IntegerHeight() + 1));
+	Q_EMIT exposeEvent(region);
 }
 
 Qt::MouseButtons
@@ -284,10 +281,4 @@ QHaikuSurfaceView::MouseMoved(BPoint point, uint32 transit, const BMessage *msg)
 		lastMouseMoveTime = timeNow;
 	}
 	BView::MouseMoved(point, transit, msg);
-}
-
-void
-QHaikuSurfaceView::SetViewBitmap(BBitmap *bmp)
-{
-	viewBitmap = bmp;
 }
