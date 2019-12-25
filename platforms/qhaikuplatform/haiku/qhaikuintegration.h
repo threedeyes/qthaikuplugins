@@ -117,6 +117,8 @@ private:
     QHaikuSystemLocale *m_haikuSystemLocale;
     QHaikuScreen *m_screen;
     mutable QHaikuClipboard* m_clipboard;
+private Q_SLOTS:
+	bool platformAppQuit();
 };
 
 QT_END_NAMESPACE
