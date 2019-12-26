@@ -153,6 +153,7 @@ private:
 	void maximizeWindowRespected(bool respected);
 	void syncDeskBarVisible(void);
 
+	QPoint m_lastMousePos;
 	QRect m_normalGeometry;
 	QMargins m_margins;
 

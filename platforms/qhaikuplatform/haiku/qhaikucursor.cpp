@@ -107,16 +107,16 @@ void QHaikuCursor::changeCursor(QCursor *windowCursor, QWindow *window)
 			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 	    be_app->SetCursor(emptyCursor);
 
-  		QImage image = windowCursor->pixmap().isNull() ? windowCursor->bitmap()->toImage() : windowCursor->pixmap().toImage();
-  		if (windowCursor->pixmap().isNull()) {
-  			QImage mask = windowCursor->mask()->toImage();
-  			QPixmap maskedBitmap = QPixmap::fromImage(image);
-  			maskedBitmap.setMask(*windowCursor->mask());
-   			image = maskedBitmap.toImage();
-  		}
-   		image.convertTo(QImage::Format_ARGB32);
+		QImage image = windowCursor->pixmap().isNull() ? windowCursor->bitmap()->toImage() : windowCursor->pixmap().toImage();
+		if (windowCursor->pixmap().isNull()) {
+			QImage mask = windowCursor->mask()->toImage();
+			QPixmap maskedBitmap = QPixmap::fromImage(image);
+			maskedBitmap.setMask(*windowCursor->mask());
+			image = maskedBitmap.toImage();
+		}
+		image.convertTo(QImage::Format_ARGB32);
 		removeCurrentCursorBitmap();
-   		m_bitmap = new BBitmap(BRect(0,0, image.width()-1, image.height()-1), B_RGBA32);
+		m_bitmap = new BBitmap(BRect(0, 0, image.width() - 1, image.height() - 1), B_RGBA32);
    		memcpy(m_bitmap->Bits(), image.bits(), image.sizeInBytes());
 	    return;
 	}
@@ -144,5 +144,18 @@ void QHaikuCursor::removeCurrentCursorBitmap(void)
    		m_bitmap = NULL;
    	}
 }
+
+QPoint QHaikuCursor::pos() const
+{
+	uint32 buttons;
+	BPoint screenWhere;
+	get_mouse(&screenWhere, &buttons);
+	return QPoint(screenWhere.x, screenWhere.y);
+}
+
+void QHaikuCursor::setPos(const QPoint &pos)
+{
+}
+
 
 QT_END_NAMESPACE

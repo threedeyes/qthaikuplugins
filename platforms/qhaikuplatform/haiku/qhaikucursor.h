@@ -54,8 +54,10 @@ class QHaikuCursor : public QPlatformCursor
 public:
     explicit QHaikuCursor();
     ~QHaikuCursor();
-    void changeCursor(QCursor * windowCursor, QWindow *);
+    void changeCursor(QCursor * windowCursor, QWindow *) override;
     BBitmap *getCurrentCursorBitmap(void);
+    QPoint pos() const override;
+    void setPos(const QPoint &pos) override;
 private:
 	void removeCurrentCursorBitmap(void);
 	typedef QHash<int, BCursor*> CursorHash;

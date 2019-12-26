@@ -315,6 +315,8 @@ QHaikuWindow::QHaikuWindow(QWindow *wnd)
     m_winId = ++counter;
 
     m_windowForWinIdHash[m_winId] = this;
+
+    m_lastMousePos = QPoint(0,0);
 }
 
 
@@ -532,22 +534,6 @@ void QHaikuWindow::setVisible(bool visible)
 		return;
 	if (visible == m_visible)
 		return;
-	if (visible) {
-		if (window()->type() != Qt::ToolTip)
-			QWindowSystemInterface::handleWindowActivated(window());
-
-		if (m_pendingGeometryChangeOnShow) {
-			m_pendingGeometryChangeOnShow = false;
-			QWindowSystemInterface::handleGeometryChange(window(), geometry());
-		}
-	}
-
-    if (visible) {
-        QRect rect(QPoint(), geometry().size());
-        QWindowSystemInterface::handleExposeEvent(window(), rect);
-    } else {
-        QWindowSystemInterface::handleExposeEvent(window(), QRegion());
-    }
 
 	m_window->Lock();
 	if (window()->modality() == Qt::WindowModal ||
@@ -569,8 +555,25 @@ void QHaikuWindow::setVisible(bool visible)
     	setWindowFlags(windowFlags);
 		m_window->Hide();
     }
-
     m_window->Unlock();
+
+	if (visible) {
+		if (window()->type() != Qt::ToolTip)
+			QWindowSystemInterface::handleWindowActivated(window());
+
+		if (m_pendingGeometryChangeOnShow) {
+			m_pendingGeometryChangeOnShow = false;
+			QWindowSystemInterface::handleGeometryChange(window(), geometry());
+		}
+	}
+
+    if (visible) {
+        QRect rect(QPoint(), geometry().size());
+        QWindowSystemInterface::handleExposeEvent(window(), rect);
+        qDebug() << "QCursor " << window()->cursor().pos();
+    } else {
+        QWindowSystemInterface::handleExposeEvent(window(), QRegion());
+    }
 
 	QSettings settings(QT_SETTINGS_FILENAME, QSettings::NativeFormat);
 	settings.beginGroup("QPA");
@@ -938,10 +941,14 @@ void QHaikuWindow::platformMouseEvent(const QPoint &localPosition,
 		QWindowSystemInterface::handleMouseEvent(window(),
 			localPosition, globalPosition, state, button, type, modifiers, source);
 		if (window()->cursor().shape() == Qt::BitmapCursor || window()->cursor().shape() == Qt::CustomCursor) {
+			QPoint pos1 = window()->mapFromGlobal(m_lastMousePos);
+			QWindowSystemInterface::handleExposeEvent(window(), QRect(pos1.x() - 32, pos1.y() - 32, 64, 64));
+
 			QPoint pos = window()->mapFromGlobal(window()->cursor().pos());
-			QWindowSystemInterface::handleExposeEvent(window(), QRect(pos.x()-32, pos.y()-32, pos.x()+32, pos.y() + 32));
+			QWindowSystemInterface::handleExposeEvent(window(), QRect(pos.x() - 32, pos.y() - 32, 64, 64));
 		}
 	}
+	m_lastMousePos = globalPosition;
 }
 
 void QHaikuWindow::platformMouseDragEvent(const QPoint &localPosition,
