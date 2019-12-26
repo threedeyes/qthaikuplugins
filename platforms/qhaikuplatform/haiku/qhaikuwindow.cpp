@@ -811,13 +811,11 @@ void QHaikuWindow::platformWindowResized(const QSize &size)
 	adjusted.setHeight(size.height() + 1);
 
     QPlatformWindow::setGeometry(adjusted);
-    
-    if (m_visible) {
-        QWindowSystemInterface::handleGeometryChange<QWindowSystemInterface::SynchronousDelivery>(window(), adjusted);
-        QWindowSystemInterface::handleExposeEvent<QWindowSystemInterface::SynchronousDelivery>(window(), QRect(QPoint(), adjusted.size()));
-    } else {
+
+    if (m_visible)
+        QWindowSystemInterface::handleGeometryChange(window(), adjusted);
+    else
         m_pendingGeometryChangeOnShow = true;
-    }
 }
 
 void QHaikuWindow::platformWindowActivated(bool activated)
@@ -920,6 +918,7 @@ void QHaikuWindow::platformEnteredView()
 void QHaikuWindow::platformExitedView()
 {
     QWindowSystemInterface::handleLeaveEvent(window());
+    QWindowSystemInterface::handleExposeEvent(window(), window()->geometry());
 }
 
 void QHaikuWindow::platformMouseEvent(const QPoint &localPosition,
