@@ -72,9 +72,10 @@ QHaikuSurfaceView::QHaikuSurfaceView(BRect rect)
     qRegisterMetaType<Qt::Orientation>();
 
 	SetDrawingMode(B_OP_COPY);
+	SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR));
+
 	lastMouseMoveTime = system_time();
 	mousePreventTime = system_time();
-	//SetViewColor(B_TRANSPARENT_32_BIT);
 }
 
 QHaikuSurfaceView::~QHaikuSurfaceView()
@@ -92,7 +93,7 @@ QHaikuSurfaceView::PreventMouse(void)
 void
 QHaikuSurfaceView::Draw(BRect rect)
 {
-	QRegion region(QRect(rect.left, rect.top, rect.IntegerWidth() +1, rect.IntegerHeight() + 1));
+	QRegion region(QRect(rect.left, rect.top, rect.IntegerWidth() + 1, rect.IntegerHeight() + 1));
 	Q_EMIT exposeEvent(region);
 }
 
