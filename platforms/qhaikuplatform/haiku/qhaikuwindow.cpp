@@ -941,11 +941,14 @@ void QHaikuWindow::platformMouseEvent(const QPoint &localPosition,
 		QWindowSystemInterface::handleMouseEvent(window(),
 			localPosition, globalPosition, state, button, type, modifiers, source);
 		if (window()->cursor().shape() == Qt::BitmapCursor || window()->cursor().shape() == Qt::CustomCursor) {
-			QPoint pos1 = window()->mapFromGlobal(m_lastMousePos);
-			QWindowSystemInterface::handleExposeEvent(window(), QRect(pos1.x() - 32, pos1.y() - 32, 64, 64));
+			QPoint hotSpot = window()->cursor().hotSpot();
+			QPoint pos = window()->mapFromGlobal(m_lastMousePos);
+			QRect rect = window()->cursor().bitmap()->rect().translated(pos.x() - hotSpot.x(), pos.y() - hotSpot.y());
+			QWindowSystemInterface::handleExposeEvent(window(), QRegion(rect.adjusted(-1, -1, 1, 1)));
 
-			QPoint pos = window()->mapFromGlobal(window()->cursor().pos());
-			QWindowSystemInterface::handleExposeEvent(window(), QRect(pos.x() - 32, pos.y() - 32, 64, 64));
+			pos = window()->mapFromGlobal(window()->cursor().pos());
+			rect = window()->cursor().bitmap()->rect().translated(pos.x() - hotSpot.x(), pos.y() - hotSpot.y());
+			QWindowSystemInterface::handleExposeEvent(window(), QRegion(rect.adjusted(-1, -1, 1, 1)));
 		}
 	}
 	m_lastMousePos = globalPosition;
