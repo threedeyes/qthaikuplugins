@@ -570,7 +570,6 @@ void QHaikuWindow::setVisible(bool visible)
     if (visible) {
         QRect rect(QPoint(), geometry().size());
         QWindowSystemInterface::handleExposeEvent(window(), rect);
-        qDebug() << "QCursor " << window()->cursor().pos();
     } else {
         QWindowSystemInterface::handleExposeEvent(window(), QRegion());
     }
