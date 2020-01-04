@@ -914,13 +914,14 @@ void QHaikuWindow::platformDropAction(BMessage *msg)
 
 void QHaikuWindow::platformEnteredView()
 {
-    QWindowSystemInterface::handleEnterEvent(window());
+	QPoint pos = window()->cursor().pos();
+    QWindowSystemInterface::handleEnterEvent(window(), window()->mapFromGlobal(pos), pos);
 }
 
 void QHaikuWindow::platformExitedView()
 {
     QWindowSystemInterface::handleLeaveEvent(window());
-    QWindowSystemInterface::handleExposeEvent(window(), window()->geometry());
+    QWindowSystemInterface::handleExposeEvent(window(), QRect(QPoint(0,0), window()->size()));
 }
 
 void QHaikuWindow::platformMouseEvent(const QPoint &localPosition,
@@ -936,6 +937,7 @@ void QHaikuWindow::platformMouseEvent(const QPoint &localPosition,
 		QWindowSystemInterface::handleMouseEvent(childWindow,
 			childWindow->mapFromGlobal(globalPosition),
 			globalPosition, state, button, type, modifiers, source);
+			QWindowSystemInterface::handleExposeEvent(window(), QRect(QPoint(0,0), window()->size()));
 	} else {
 		QWindowSystemInterface::handleMouseEvent(window(),
 			localPosition, globalPosition, state, button, type, modifiers, source);
@@ -972,9 +974,10 @@ void QHaikuWindow::platformWheelEvent(const QPoint &localPosition,
 	Qt::KeyboardModifiers modifiers)
 {
 	QWindow *childWindow = childWindowAt(window(), globalPosition);
-	if (childWindow)
+	if (childWindow) {
 		QWindowSystemInterface::handleWheelEvent(childWindow, childWindow->mapFromGlobal(globalPosition), globalPosition, delta, orientation, modifiers);
-	else
+		QWindowSystemInterface::handleExposeEvent(window(), QRect(QPoint(0,0), window()->size()));
+	} else
 		QWindowSystemInterface::handleWheelEvent(window(), localPosition, globalPosition, delta, orientation, modifiers);
 }
 
