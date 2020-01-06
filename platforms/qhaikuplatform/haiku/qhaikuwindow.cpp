@@ -760,7 +760,7 @@ void QHaikuWindow::setWindowState(Qt::WindowStates states)
     default:
         break;
     }
-    QWindowSystemInterface::handleWindowStateChanged<QWindowSystemInterface::SynchronousDelivery>(window(), states);
+    QWindowSystemInterface::handleWindowStateChanged(window(), states);
 }
 
 QHaikuSurfaceView *QHaikuWindow::viewForWinId(WId id)
@@ -799,8 +799,8 @@ void QHaikuWindow::platformWindowMoved(const QPoint &pos)
     }
 
     if (m_visible) {
-        QWindowSystemInterface::handleGeometryChange<QWindowSystemInterface::SynchronousDelivery>(window(), adjusted);
-        QWindowSystemInterface::handleExposeEvent<QWindowSystemInterface::SynchronousDelivery>(window(), QRect(QPoint(), adjusted.size()));
+        QWindowSystemInterface::handleGeometryChange(window(), adjusted);
+        QWindowSystemInterface::handleExposeEvent(window(), QRect(QPoint(), adjusted.size()));
     } else {
         m_pendingGeometryChangeOnShow = true;
     }
@@ -829,13 +829,13 @@ void QHaikuWindow::platformWindowActivated(bool activated)
 	    }
 		if (window() == QGuiApplication::focusWindow()
             && !activeWindowChangeQueued(window())) {
-            QWindowSystemInterface::handleWindowActivated<QWindowSystemInterface::SynchronousDelivery>(0);
+            QWindowSystemInterface::handleWindowActivated(0);
 		}
-		QWindowSystemInterface::handleApplicationStateChanged<QWindowSystemInterface::SynchronousDelivery>(Qt::ApplicationInactive);
+		QWindowSystemInterface::handleApplicationStateChanged(Qt::ApplicationInactive);
 		return;
 	}
-	QWindowSystemInterface::handleApplicationStateChanged<QWindowSystemInterface::SynchronousDelivery>(Qt::ApplicationActive);
-	QWindowSystemInterface::handleWindowActivated<QWindowSystemInterface::SynchronousDelivery>(window(), Qt::ActiveWindowFocusReason);
+	QWindowSystemInterface::handleApplicationStateChanged(Qt::ApplicationActive);
+	QWindowSystemInterface::handleWindowActivated(window(), Qt::ActiveWindowFocusReason);
 }
 
 
