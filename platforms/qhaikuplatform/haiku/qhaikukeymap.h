@@ -151,6 +151,8 @@ static uint32 platformHaikuScanCodes[] = {
 		Qt::Key_Delete,		0x65,   //numpad
 		Qt::Key_Meta,		0x66,
 		Qt::Key_Meta,		0x67,
+		Qt::Key_Backslash,	0x6A,	//Japanese [\|]
+		Qt::Key_Backslash,	0x6B,	//Japanese [\_]
 		0,					0x00
 	};
 
@@ -167,7 +169,7 @@ static uint32 platformHaikuScanCodes_Numlock[] = {
 		Qt::Key_3,			0x5A,
 		Qt::Key_Enter,		0x5B,
 		Qt::Key_0,			0x64,
-		Qt::Key_Comma,		0x65,
+		Qt::Key_Comma,		0x65,		
 		0,					0x00
 	};
 
