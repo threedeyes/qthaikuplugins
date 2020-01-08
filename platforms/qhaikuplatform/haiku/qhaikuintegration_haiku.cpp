@@ -97,15 +97,13 @@ HQApplication::RefsReceived(BMessage *pmsg)
 
 	entry_ref ref;
 	for (int32 i = 0; i < count; i++) {
-   		if (pmsg->FindRef("refs", i, &ref) == B_OK) {   			
-   			refReceived.SetTo(&ref);
-   			Ref = ref;
-   			if (RefHandled) {
-   				QCoreApplication::postEvent(qApp, new QFileOpenEvent(refReceived.Path()));
-   			}
-   			RefHandled = true;
-   		}
-   	}
+		if (pmsg->FindRef("refs", i, &ref) == B_OK) {
+			refReceived.SetTo(&ref);
+			Ref = ref;
+			QCoreApplication::postEvent(QCoreApplication::instance(), new QFileOpenEvent(refReceived.Path()));
+			RefHandled = true;
+		}
+	}
 }
 
 bool HQApplication::QuitRequested()
@@ -156,7 +154,7 @@ QHaikuIntegration *QHaikuIntegration::createHaikuIntegration(const QStringList& 
 		appSignature = QLatin1String("application/x-vnd.qt5-") +
 			QCoreApplication::applicationName().remove("_x86");
 
-	thread_id my_thread;	
+	thread_id my_thread;
 
 	if (be_app == NULL) {
 		haikuApplication = new HQApplication(appSignature.toUtf8().constData());
