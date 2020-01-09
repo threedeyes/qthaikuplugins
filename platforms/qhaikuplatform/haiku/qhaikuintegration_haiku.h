@@ -81,8 +81,6 @@ public:
 	virtual void MessageReceived(BMessage *message);
 	void	RefsReceived(BMessage *pmsg);
 	virtual bool QuitRequested();
-	bool	RefHandled;
-	entry_ref Ref;
 private:
 	BPath 	refReceived;
 	BMessenger  fTrackerMessenger;

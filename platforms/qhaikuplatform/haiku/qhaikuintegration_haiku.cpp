@@ -50,7 +50,6 @@ HQApplication::HQApplication(const char* signature)
 	: QObject()
 	, BApplication(signature)
 {
-	RefHandled = false;
 	fClipboard = NULL;
 }
 
@@ -99,9 +98,7 @@ HQApplication::RefsReceived(BMessage *pmsg)
 	for (int32 i = 0; i < count; i++) {
 		if (pmsg->FindRef("refs", i, &ref) == B_OK) {
 			refReceived.SetTo(&ref);
-			Ref = ref;
 			QCoreApplication::postEvent(QCoreApplication::instance(), new QFileOpenEvent(refReceived.Path()));
-			RefHandled = true;
 		}
 	}
 }
@@ -171,19 +168,6 @@ QHaikuIntegration *QHaikuIntegration::createHaikuIntegration(const QStringList& 
 		}
 
 		haikuApplication->UnlockLooper();
-
-		if (argc == 1) {
-			for (int i = 0; i < 100; i++) {
-				if (haikuApplication->RefHandled) {
-					BPath path(&haikuApplication->Ref);
-					argc = 2;
-					argv[1] = strdup(path.Path());
-					argv[2] = 0;
-					break;
-				}
-				snooze(1000);
-			}
-		}
 	}
 
 	// Dirty hack for environment initialisation
