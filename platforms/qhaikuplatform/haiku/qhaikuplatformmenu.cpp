@@ -88,8 +88,6 @@ QHaikuPlatformMenu::~QHaikuPlatformMenu()
 
 void QHaikuPlatformMenu::insertMenuItem(QPlatformMenuItem *menuItem, QPlatformMenuItem *before)
 {
-//	qDebug() << "QHaikuPlatformMenu::insertMenuItem " << menuItem;
-	
     QMutexLocker lock(&m_menuItemsMutex);
     m_menuItems.insert(std::find(m_menuItems.begin(),
                                  m_menuItems.end(),
@@ -99,8 +97,6 @@ void QHaikuPlatformMenu::insertMenuItem(QPlatformMenuItem *menuItem, QPlatformMe
 
 void QHaikuPlatformMenu::removeMenuItem(QPlatformMenuItem *menuItem)
 {
-//	qDebug() << "QHaikuPlatformMenu::removeMenuItem " << menuItem;
-	
     QMutexLocker lock(&m_menuItemsMutex);
     PlatformMenuItemsType::iterator it = std::find(m_menuItems.begin(),
                                                    m_menuItems.end(),
@@ -111,8 +107,6 @@ void QHaikuPlatformMenu::removeMenuItem(QPlatformMenuItem *menuItem)
 
 void QHaikuPlatformMenu::syncMenuItem(QPlatformMenuItem *menuItem)
 {
-//	qDebug() << "QHaikuPlatformMenu::syncMenuItem";
-	
     PlatformMenuItemsType::iterator it;
     for (it = m_menuItems.begin(); it != m_menuItems.end(); ++it) {
         if ((*it)->tag() == menuItem->tag())
@@ -120,7 +114,6 @@ void QHaikuPlatformMenu::syncMenuItem(QPlatformMenuItem *menuItem)
     }
 
     if (it != m_menuItems.end()) {
-// 	qDebug() << "QHaikuPlatformMenu::syncMenuItem: SINKING";
     }
 }
 
@@ -202,7 +195,6 @@ BPopUpMenu* QHaikuPlatformMenu::makeBPopUpMenu(QHaikuPlatformMenu *menu)
     		
     		if(iconPressent) {
 	    		QSize size = (*it)->icon().actualSize(QSize(16, 16));
-	    		qDebug() << text << size;
 	    		QPixmap pm = (*it)->icon().pixmap(size);
 	    		if (!pm.isNull()) {
 				    QImage img = pm.toImage();
