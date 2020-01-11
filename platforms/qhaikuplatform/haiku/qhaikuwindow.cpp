@@ -69,7 +69,7 @@ static uint32 translateKeyCode(uint32 key)
 {
 	uint32 code = Qt::Key_unknown;
 	uint32 i = 0;
-	if (modifiers() && B_NUM_LOCK) {
+	if ( modifiers() & B_NUM_LOCK ) {
 	    while (platformHaikuScanCodes_Numlock[i]) {
 			if ( key == platformHaikuScanCodes_Numlock[i + 1]) {
 				code = platformHaikuScanCodes_Numlock[i];
@@ -77,7 +77,7 @@ static uint32 translateKeyCode(uint32 key)
 			}
 			i += 2;
 		}
-		if(code != Qt::Key_unknown)
+		if (code != Qt::Key_unknown)
 			return code;
 	}
 
@@ -239,7 +239,7 @@ void QtHaikuWindow::MessageReceived(BMessage* msg)
 
 
 void QtHaikuWindow::Zoom(BPoint origin, float w, float h)
-{	
+{
 	fView->PreventMouse();
 	Q_EMIT windowZoomed();
 }
