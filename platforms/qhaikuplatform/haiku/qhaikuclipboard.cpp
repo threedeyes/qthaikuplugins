@@ -129,16 +129,16 @@ void QHaikuClipboard::setMimeData(QMimeData *mimeData, QClipboard::Mode mode)
 
 QMimeData *QHaikuClipboard::mimeData(QClipboard::Mode mode)
 {
-    if (mode != QClipboard::Clipboard)
-        return 0;
+	if (mode != QClipboard::Clipboard)
+		return 0;
 
-    if (m_userMimeData)
-        return m_userMimeData;
+	if (m_userMimeData)
+		return m_userMimeData;
 
-    if (!m_systemMimeData)
-        m_systemMimeData = new QMimeData();
-    else
-        m_systemMimeData->clear();
+	if (!m_systemMimeData)
+		m_systemMimeData = new QMimeData();
+	else
+		m_systemMimeData->clear();
 
 	BMessage* clip = (BMessage *)NULL;
   	if (be_clipboard->Lock()) {

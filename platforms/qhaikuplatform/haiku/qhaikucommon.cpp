@@ -52,10 +52,10 @@
 
 QT_BEGIN_NAMESPACE
 
-QHaikuScreen::QHaikuScreen() 
+QHaikuScreen::QHaikuScreen()
 	: QPlatformScreen()
-	, m_screen(new BScreen(B_MAIN_SCREEN_ID))
     , m_cursor(new QHaikuCursor)
+	, m_screen(new BScreen(B_MAIN_SCREEN_ID))
 {
 	Q_ASSERT(m_screen->IsValid());
 }
@@ -209,14 +209,13 @@ void QHaikuBackingStore::resize(const QSize &size, const QRegion &)
 
 bool QHaikuBackingStore::scroll(const QRegion &area, int dx, int dy)
 {
-    if (m_image.isNull())
-        return false;
+	if (m_image.isNull())
+		return false;
 
-    const QVector<QRect> rects = area.rects();
-    for (int i = 0; i < rects.size(); ++i)
-        qt_scrollRectInImage(m_image, rects.at(i), QPoint(dx, dy));
+	for (const QRect &rect : area)
+		qt_scrollRectInImage(m_image, rect, QPoint(dx, dy));
 
-    return true;
+	return true;
 }
 
 

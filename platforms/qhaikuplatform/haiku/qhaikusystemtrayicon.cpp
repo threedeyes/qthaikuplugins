@@ -97,7 +97,11 @@ QSystemTrayIconLooper::MessageReceived(BMessage* theMessage)
 } 
 
 QHaikuSystemTrayIcon::QHaikuSystemTrayIcon()
-	: looper(0), pulse(0), replicantId(-1), qystrayExist(false), currentMenu(NULL)
+	: looper(NULL)
+	, currentMenu(NULL)
+	, replicantId(-1)
+	, qystrayExist(false)
+	, pulse(NULL)
 {
 	qystrayExist = findTrayExecutable();
 }
@@ -156,12 +160,12 @@ QHaikuSystemTrayIcon::updateIcon(const QIcon &qicon)
     if (scaledPixmap.isNull())
         return;
     QImage image = scaledPixmap.toImage();
-    if(image.isNull())
-    	return;
+	if ( image.isNull() )
+		return;
     	
 	BBitmap *icon = new BBitmap(BRect(0, 0, trayIconSize.width() - 1, trayIconSize.height() - 1), B_RGBA32);
-	if(icon) {
-		icon->SetBits((const void*)image.bits(), image.byteCount(), 0, B_RGBA32);
+	if ( icon ) {
+		icon->SetBits((const void*)image.bits(), image.sizeInBytes(), 0, B_RGBA32);
 
 		installIcon();
 
@@ -232,8 +236,8 @@ QHaikuSystemTrayIcon::showMessage(const QString &title, const QString &msg,
 	BRect rect(0, 0, B_LARGE_ICON - 1, B_LARGE_ICON -1);
 	BBitmap bitmap(rect, B_RGBA32);
 
-	notification_type ntype = (iconType == QSystemTrayIcon::Warning) ? B_IMPORTANT_NOTIFICATION:
-		(iconType==QSystemTrayIcon::Critical) ? B_ERROR_NOTIFICATION : B_INFORMATION_NOTIFICATION;
+	notification_type ntype = (iconType == QPlatformSystemTrayIcon::Warning) ? B_IMPORTANT_NOTIFICATION:
+		(iconType==QPlatformSystemTrayIcon::Critical) ? B_ERROR_NOTIFICATION : B_INFORMATION_NOTIFICATION;
 	BNotification notification(ntype);
 	notification.SetGroup(group);
 	notification.SetTitle(stitle);
@@ -246,7 +250,7 @@ QHaikuSystemTrayIcon::showMessage(const QString &title, const QString &msg,
 	} else {
 		QPixmap pixmap = icon.pixmap(B_LARGE_ICON);
 		QImage image = pixmap.toImage().scaled(B_LARGE_ICON, B_LARGE_ICON);
-		memcpy(bitmap.Bits(), image.bits(), image.byteCount());
+		memcpy(bitmap.Bits(), image.bits(), image.sizeInBytes());
 		notification.SetIcon(&bitmap);
 	}
 
@@ -311,10 +315,9 @@ QHaikuSystemTrayIcon::haikuEvents(BMessage *message)
 						break;
 					}
 					if (buttons == B_SECONDARY_MOUSE_BUTTON) {
-						QPoint gpos = QPoint(point.x,point.y);
 		                if (currentMenu != NULL)
 		                	currentMenu->showPopup(NULL, shelfRect, NULL);
-		                emit activated(QPlatformSystemTrayIcon::Context);		
+		                emit activated(QPlatformSystemTrayIcon::Context);
 						break;
 					}
 				}

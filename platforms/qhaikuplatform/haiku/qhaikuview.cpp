@@ -250,8 +250,6 @@ QHaikuSurfaceView::MouseMoved(BPoint point, uint32 transit, const BMessage *msg)
 		lastLocalMousePoint = localPoint;
 		lastGlobalMousePoint = globalPoint;
 
-		QHaikuWindow *wnd = ((QtHaikuWindow*)Window())->fQWindow;
-
 		if (msg != NULL) {
 			QMimeData *dragData = new QMimeData();
 			QList<QUrl> urls;

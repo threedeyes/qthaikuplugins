@@ -200,10 +200,11 @@ BPopUpMenu* QHaikuPlatformMenu::makeBPopUpMenu(QHaikuPlatformMenu *menu)
 				    QImage img = pm.toImage();
 	    			if(!img.isNull()) {
 						icon = new BBitmap(BRect(0, 0, size.width() - 1, size.height() - 1), B_RGBA32);
-						icon->SetBits((const void*)img.bits(), img.byteCount(), 0, B_RGBA32);    				
+						icon->SetBits((const void*)img.bits(), img.sizeInBytes(), 0, B_RGBA32);    				
 	    			}
 	    		}
     		}
+
 			BMessage *msg = new BMessage('STMI');
 			int64 val = (*it)->tag();
 			msg->AddInt64("tag", val);
@@ -222,6 +223,7 @@ void QHaikuPlatformMenu::showPopup(const QWindow *parentWindow,
 	const QRect &targetRect, const QPlatformMenuItem *item)
 {
     Q_UNUSED(item);
+    Q_UNUSED(parentWindow);
     nativeMenu = makeBPopUpMenu(this);
     QPoint pos =  QPoint(targetRect.left(), targetRect.top() + targetRect.height());
 	nativeMenu->Go(BPoint(pos.x(), pos.y()), true, true, true);

@@ -64,9 +64,9 @@ public:
     bool ownsMode(QClipboard::Mode mode) const override;
 	void clipboardChanged();
 private:
-	bool preventChangedEvent;
     QMimeData *m_systemMimeData;
     QMimeData *m_userMimeData;
+	bool preventChangedEvent;
 };
 
 QT_END_NAMESPACE

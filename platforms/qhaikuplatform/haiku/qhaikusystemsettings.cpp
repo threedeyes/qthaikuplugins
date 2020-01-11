@@ -52,9 +52,9 @@ QT_BEGIN_NAMESPACE
 
 extern status_t _get_system_font_(const char *which, font_family family, font_style style, float *size);
 
-
 QHash<QPlatformTheme::Font, QFont *> qt_haiku_createRoleFonts(QPlatformFontDatabase *fontDatabase)
 {
+	Q_UNUSED(fontDatabase);
 	QFontDatabase db;
 
     font_family plainFontFamily;
