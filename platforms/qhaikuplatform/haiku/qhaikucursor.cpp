@@ -155,6 +155,7 @@ QPoint QHaikuCursor::pos() const
 
 void QHaikuCursor::setPos(const QPoint &pos)
 {
+	Q_UNUSED(pos);
 }
 
 

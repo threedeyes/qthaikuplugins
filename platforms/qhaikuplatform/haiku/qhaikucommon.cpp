@@ -191,8 +191,6 @@ void QHaikuBackingStore::flush(QWindow *window, const QRegion &region, const QPo
 void QHaikuBackingStore::resize(const QSize &size, const QRegion &)
 {
     WId id = window()->winId();
-
-    QImage::Format format = QGuiApplication::primaryScreen()->handle()->format();
     if (m_image.size() != size) {
 		QHaikuSurfaceView *view = QHaikuWindow::viewForWinId(id);
     	if(view->LockLooper()) {

@@ -71,6 +71,9 @@ QT_BEGIN_NAMESPACE
 QHaikuIntegration::QHaikuIntegration(const QStringList &parameters, int &argc, char **argv)
 	: QObject(), QPlatformIntegration()
 {
+	Q_UNUSED(parameters);
+	Q_UNUSED(argc);
+	Q_UNUSED(argv);
 	m_screen = new QHaikuScreen();
 	QWindowSystemInterface::handleScreenAdded(m_screen);
     m_fontDatabase = new QHaikuPlatformFontDatabase();

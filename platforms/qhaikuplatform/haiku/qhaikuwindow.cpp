@@ -240,6 +240,9 @@ void QtHaikuWindow::MessageReceived(BMessage* msg)
 
 void QtHaikuWindow::Zoom(BPoint origin, float w, float h)
 {
+	Q_UNUSED(origin);
+	Q_UNUSED(w);
+	Q_UNUSED(h);
 	fView->PreventMouse();
 	Q_EMIT windowZoomed();
 }
@@ -338,7 +341,9 @@ void QHaikuWindow::setWindowFlags(Qt::WindowFlags flags)
 
 	bool popup = (type == Qt::Popup);
 	bool splash = (type == Qt::SplashScreen);
+#if 0
     bool dialog = ((type == Qt::Dialog) || (type == Qt::Sheet) || (type == Qt::MSWindowsFixedSizeDialogHint));
+#endif
 	bool tool = (type == Qt::Tool || type == Qt::Drawer);
 	bool tooltip = (type == Qt::ToolTip);
 
