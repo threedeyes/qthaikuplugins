@@ -410,11 +410,13 @@ void QHaikuWindow::setWindowFlags(Qt::WindowFlags flags)
 		flags & Qt::FramelessWindowHint &&
 		tool) {
 		wlook = B_NO_BORDER_WINDOW_LOOK;
-		wflag |= B_WILL_ACCEPT_FIRST_CLICK | \
-			B_AVOID_FRONT | \
-			B_AVOID_FOCUS | \
-			B_NO_WORKSPACE_ACTIVATION | \
+		wflag |= B_WILL_ACCEPT_FIRST_CLICK |
+			B_AVOID_FRONT |
+			B_NO_WORKSPACE_ACTIVATION |
 			B_NOT_ANCHORED_ON_ACTIVATE;
+		// Telegram notify hack
+		if (flags & Qt::NoDropShadowWindowHint)
+			wflag |= B_AVOID_FOCUS;
 		wfeel = B_FLOATING_ALL_WINDOW_FEEL;
 	}
 	m_window->SetLook(wlook);
