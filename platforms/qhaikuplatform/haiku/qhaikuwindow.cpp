@@ -276,16 +276,16 @@ bool QtHaikuWindow::QuitRequested()
 
 QHaikuWindow::QHaikuWindow(QWindow *wnd)
     : QPlatformWindow(wnd)
-    , m_positionIncludesFrame(false)
-    , m_visible(false)
-    , m_pendingGeometryChangeOnShow(true)
     , m_window(new QtHaikuWindow(this, BRect(wnd->geometry().left(),
 					wnd->geometry().top(),
 					wnd->geometry().right(),
 					wnd->geometry().bottom()),
 					wnd->title().toUtf8().constData(),
-					B_NO_BORDER_WINDOW_LOOK, B_NORMAL_WINDOW_FEEL, 0))
-	, m_parent(0)
+					B_NO_BORDER_WINDOW_LOOK, B_NORMAL_WINDOW_FEEL, 0))	
+    , m_parent(0)
+    , m_positionIncludesFrame(false)
+    , m_visible(false)
+    , m_pendingGeometryChangeOnShow(true)
 {
 	connect(m_window, SIGNAL(quitRequested()), SLOT(platformWindowQuitRequested()), Qt::BlockingQueuedConnection);
     connect(m_window, SIGNAL(windowMoved(QPoint)), SLOT(platformWindowMoved(QPoint)));
@@ -402,8 +402,9 @@ void QHaikuWindow::setWindowFlags(Qt::WindowFlags flags)
 			wflag |= B_NOT_CLOSABLE;
 	}
 
-    if (flags & Qt::WindowStaysOnTopHint)
+    if (flags & Qt::WindowStaysOnTopHint) {
         wfeel = B_FLOATING_ALL_WINDOW_FEEL;
+    }
 
 	if (flags & Qt::WindowStaysOnTopHint &&
 		flags & Qt::FramelessWindowHint &&
@@ -479,10 +480,14 @@ void QHaikuWindow::propagateSizeHints()
 void QHaikuWindow::setGeometryImpl(const QRect &rect)
 {
     QRect adjusted = rect;
-    if (adjusted.width() <= 0)
+
+    if ( adjusted.width() <= 0 ) {
         adjusted.setWidth(1);
-    if (adjusted.height() <= 0)
+    }
+
+    if ( adjusted.height() <= 0 ) {
         adjusted.setHeight(1);
+    }
 
 	if (window()->parent() == NULL) {
 	    if (m_positionIncludesFrame) {
@@ -534,6 +539,7 @@ void QHaikuWindow::syncDeskBarVisible(void)
 		}
 	}
 }
+
 
 void QHaikuWindow::setVisible(bool visible)
 {
