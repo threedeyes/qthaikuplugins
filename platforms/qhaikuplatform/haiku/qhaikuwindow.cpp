@@ -67,9 +67,9 @@ QT_BEGIN_NAMESPACE
 
 static uint32 translateKeyCode(uint32 key)
 {
-	uint32 code = 0;
+	uint32 code = Qt::Key_unknown;
 	uint32 i = 0;
-	if (modifiers()&&B_NUM_LOCK) {
+	if (modifiers() && B_NUM_LOCK) {
 	    while (platformHaikuScanCodes_Numlock[i]) {
 			if ( key == platformHaikuScanCodes_Numlock[i + 1]) {
 				code = platformHaikuScanCodes_Numlock[i];
@@ -77,7 +77,7 @@ static uint32 translateKeyCode(uint32 key)
 			}
 			i += 2;
 		}
-		if(code>0)
+		if(code != Qt::Key_unknown)
 			return code;
 	}
 
@@ -171,13 +171,13 @@ void QtHaikuWindow::DispatchMessage(BMessage *msg, BHandler *handler)
 				if(msg->FindString("bytes", &bytes) == B_OK)
 					text = QString::fromUtf8(bytes);
 				uint32 qt_keycode = translateKeyCode(key);
-				if (qt_keycode == 0)
+				if (qt_keycode == Qt::Key_Print)
 					break;
-				if ((qt_keycode == Qt::Key_Tab) && (modifiers & B_CONTROL_KEY))
+				if (qt_keycode == Qt::Key_Tab && modifiers & B_CONTROL_KEY)
 					break;
-				if ((qt_keycode == Qt::Key_Q) && (modifiers & B_COMMAND_KEY))
+				if (qt_keycode == Qt::Key_Q && modifiers & B_COMMAND_KEY)
 					break;
-				bool press = (msg->what == B_KEY_DOWN) || (msg->what == B_UNMAPPED_KEY_DOWN);
+				bool press = msg->what == B_KEY_DOWN || msg->what == B_UNMAPPED_KEY_DOWN;
 				Q_EMIT keyEvent(press ? QEvent::KeyPress : QEvent::KeyRelease, qt_keycode, fView->hostToQtModifiers(modifiers), text);
 				break;	
 			}
