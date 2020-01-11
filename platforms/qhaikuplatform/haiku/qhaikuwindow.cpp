@@ -175,6 +175,8 @@ void QtHaikuWindow::DispatchMessage(BMessage *msg, BHandler *handler)
 					break;
 				if (qt_keycode == Qt::Key_Tab && modifiers & B_CONTROL_KEY)
 					break;
+				if (qt_keycode == Qt::Key_Tab && modifiers & B_SHIFT_KEY)
+					qt_keycode = Qt::Key_Backtab;
 				if (qt_keycode == Qt::Key_Q && modifiers & B_COMMAND_KEY)
 					break;
 				bool press = msg->what == B_KEY_DOWN || msg->what == B_UNMAPPED_KEY_DOWN;
