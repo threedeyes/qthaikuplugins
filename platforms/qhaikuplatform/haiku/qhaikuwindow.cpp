@@ -767,8 +767,6 @@ void QHaikuWindow::setWindowState(Qt::WindowStates states)
 
 QHaikuSurfaceView *QHaikuWindow::viewForWinId(WId id)
 {
-	if (id == -1)
-		return NULL;
 	QHaikuWindow *window = m_windowForWinIdHash.value(id, 0);
 	if (window != NULL) {
 		return window->m_window->View();
@@ -907,10 +905,12 @@ void QHaikuWindow::platformDropAction(BMessage *msg)
 
 	const QPlatformDropQtResponse response =
 		QWindowSystemInterface::handleDrop(window(), dragData, m_lastPoint,
-			Qt::CopyAction | Qt::MoveAction | Qt::LinkAction);
+			Qt::CopyAction | Qt::MoveAction | Qt::LinkAction,
+			m_window->View()->hostToQtButtons(buttons),
+			m_window->View()->hostToQtModifiers(modifiers()));
 
 	if (response.isAccepted()) {
-		const Qt::DropAction action = response.acceptedAction();
+		response.acceptedAction();
 	}
 }
 
@@ -975,12 +975,14 @@ void QHaikuWindow::platformWheelEvent(const QPoint &localPosition,
 	Qt::Orientation orientation,
 	Qt::KeyboardModifiers modifiers)
 {
+	const QPoint point = (orientation == Qt::Vertical) ? QPoint(0, delta) : QPoint(delta, 0);
+
 	QWindow *childWindow = childWindowAt(window(), globalPosition);
 	if (childWindow) {
-		QWindowSystemInterface::handleWheelEvent(childWindow, childWindow->mapFromGlobal(globalPosition), globalPosition, delta, orientation, modifiers);
+		QWindowSystemInterface::handleWheelEvent(childWindow, childWindow->mapFromGlobal(globalPosition), globalPosition, QPoint(), point, modifiers);
 		QWindowSystemInterface::handleExposeEvent(window(), QRect(QPoint(0,0), window()->size()));
 	} else
-		QWindowSystemInterface::handleWheelEvent(window(), localPosition, globalPosition, delta, orientation, modifiers);
+        QWindowSystemInterface::handleWheelEvent(window(), localPosition, globalPosition, QPoint(), point, modifiers);
 }
 
 void QHaikuWindow::platformKeyEvent(QEvent::Type type, int key, Qt::KeyboardModifiers modifiers, const QString &text)
