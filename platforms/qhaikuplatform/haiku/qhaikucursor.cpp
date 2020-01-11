@@ -100,7 +100,7 @@ void QHaikuCursor::changeCursor(QCursor *windowCursor, QWindow *window)
 
 	if (windowCursor->shape() == Qt::BitmapCursor || windowCursor->shape() == Qt::CustomCursor) {
 		QPoint hotspot = windowCursor->hotSpot();
-		unsigned char emptyCursor[] = { 16, 1, hotspot.x(), hotspot.y(),
+		unsigned char emptyCursor[] = { 16, 1, (unsigned char)hotspot.x(), (unsigned char)hotspot.y(),
 			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
