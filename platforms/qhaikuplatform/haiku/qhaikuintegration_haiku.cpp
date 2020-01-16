@@ -50,7 +50,6 @@ HQApplication::HQApplication(const char* signature)
 	: QObject()
 	, BApplication(signature)
 {
-	RefHandled = false;
 	fClipboard = NULL;
 }
 
@@ -97,15 +96,11 @@ HQApplication::RefsReceived(BMessage *pmsg)
 
 	entry_ref ref;
 	for (int32 i = 0; i < count; i++) {
-   		if (pmsg->FindRef("refs", i, &ref) == B_OK) {   			
-   			refReceived.SetTo(&ref);
-   			Ref = ref;
-   			if (RefHandled) {
-   				QCoreApplication::postEvent(qApp, new QFileOpenEvent(refReceived.Path()));
-   			}
-   			RefHandled = true;
-   		}
-   	}
+		if (pmsg->FindRef("refs", i, &ref) == B_OK) {
+			refReceived.SetTo(&ref);
+			QCoreApplication::postEvent(QCoreApplication::instance(), new QFileOpenEvent(refReceived.Path()));
+		}
+	}
 }
 
 bool HQApplication::QuitRequested()
@@ -156,7 +151,7 @@ QHaikuIntegration *QHaikuIntegration::createHaikuIntegration(const QStringList& 
 		appSignature = QLatin1String("application/x-vnd.qt5-") +
 			QCoreApplication::applicationName().remove("_x86");
 
-	thread_id my_thread;	
+	thread_id my_thread;
 
 	if (be_app == NULL) {
 		haikuApplication = new HQApplication(appSignature.toUtf8().constData());
@@ -173,19 +168,6 @@ QHaikuIntegration *QHaikuIntegration::createHaikuIntegration(const QStringList& 
 		}
 
 		haikuApplication->UnlockLooper();
-
-		if (argc == 1) {
-			for (int i = 0; i < 100; i++) {
-				if (haikuApplication->RefHandled) {
-					BPath path(&haikuApplication->Ref);
-					argc = 2;
-					argv[1] = strdup(path.Path());
-					argv[2] = 0;
-					break;
-				}
-				snooze(1000);
-			}
-		}
 	}
 
 	// Dirty hack for environment initialisation
