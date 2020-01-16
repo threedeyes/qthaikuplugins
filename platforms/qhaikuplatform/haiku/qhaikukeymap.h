@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2015-2019 Gerasim Troeglazov,
+** Copyright (C) 2015-2020 Gerasim Troeglazov,
 ** Contact: 3dEyes@gmail.com
 **
 ** This file is part of the plugins of the Qt Toolkit.

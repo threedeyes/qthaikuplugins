@@ -19,7 +19,7 @@ INCLUDEPATH += ../../../3rdparty/simplecrypt/
 
 SOURCES =   main.cpp \
             qhaikuintegration.cpp \
-            qhaikuintegration_haiku.cpp \
+            qhaikuapplication.cpp \
             qhaikuwindow.cpp \
             qhaikucommon.cpp \
             qhaikuplatformmenu.cpp \
@@ -38,7 +38,7 @@ SOURCES =   main.cpp \
             ../../../3rdparty/simplecrypt/simplecrypt.cpp
 
 HEADERS =   qhaikuintegration.h \
-			qhaikuintegration_haiku.h \
+			qhaikuapplication.h \
             qhaikuwindow.h \
             qhaikucommon.h \
             qhaikutheme.h \

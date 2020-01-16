@@ -1,6 +1,7 @@
 /****************************************************************************
 **
-** Copyright (C) 2015-2019 Gerasim Troeglazov,
+** Copyright (C) 2017 The Qt Company Ltd.
+** Copyright (C) 2015-2020 Gerasim Troeglazov,
 ** Contact: 3dEyes@gmail.com
 **
 ** This file is part of the plugins of the Qt Toolkit.
@@ -36,26 +37,68 @@
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
-#ifndef _H_HAIKUKILLONEXITAPP_
-#define _H_HAIKUKILLONEXITAPP_
 
-#include <qapplication.h>
-#include <qstring.h>
-#include <qstringlist.h>
+#ifndef QHAIKU_APPLICATION_H
+#define QHAIKU_APPLICATION_H
 
-//It's temporary solution for crash on exit bug
+#include "qhaikuintegration.h"
+#include "qhaikusettings.h"
 
-static QStringList killOnExitMimeTypes = (QStringList() 
-	<< "application/x-vnd.qt5-kolourpaint"
-	<< "application/x-vnd.calligra-stage"
-	<< "application/x-vnd.calligra-sheets"
-	<< "application/x-vnd.calligra-plan"
-	<< "application/x-vnd.calligra-karbon"
-	<< "application/x-vnd.qt5-kate"
-	<< "application/x-vnd.qt5-gwenview"
-	<< "application/x-vnd.kde-ktechlab"
-	<< "application/x-vnd.kde-umbrello"
-	<< "application/x-vnd.kde-okular"
-	);
+#include "simplecrypt.h"
+
+#include <QApplication>
+#include <QProcess>
+#include <QString>
+#include <QStringList>
+#include <QClipboard>
+#include <QEvent>
+#include <QDebug>
+
+#include <private/qguiapplication_p.h>
+
+#include <OS.h>
+#include <Application.h>
+#include <AppFileInfo.h>
+#include <File.h>
+#include <Path.h>
+#include <Entry.h>
+#include <String.h>
+#include <Locale.h>
+#include <LocaleRoster.h>
+#include <Roster.h>
+#include <Clipboard.h>
+#include <Resources.h>
+
+#include <stdio.h>
+
+#define Q_REF_TO_ARGV 	0x01
+#define Q_REF_TO_FORK 	0x02
+#define Q_KILL_ON_EXIT	0x04
+
+class HQApplication : public QObject, public BApplication
+{
+	Q_OBJECT
+public:
+	HQApplication(const char*signature);
+	~HQApplication();
+
+	virtual void MessageReceived(BMessage *message);
+	void	RefsReceived(BMessage *pmsg);
+	virtual bool QuitRequested();
+	virtual void ReadyToRun();
+
+	QStringList openFiles(void) { return openFileList; }
+	uint32 QtFlags(void) { return qtFlags; }
+	void SetQtFlags(uint32 flags) { qtFlags = flags; }
+	void waitForRun(void);
+private:
+	BMessenger  fTrackerMessenger;
+	QHaikuClipboard *fClipboard;
+	QStringList openFileList;
+	sem_id readyForRunSem;
+	uint32 qtFlags;
+Q_SIGNALS:
+	bool applicationQuit();
+};
 
 #endif

@@ -111,6 +111,8 @@ public:
     QPlatformTheme *createPlatformTheme(const QString &name) const; 
 
 private:
+    static int32 haikuApplicationThread(void *data);
+
     QPlatformFontDatabase *m_fontDatabase;
     QSimpleDrag *m_drag;
     QPlatformServices *m_services;

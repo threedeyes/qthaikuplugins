@@ -1,7 +1,7 @@
 /****************************************************************************
 **
 ** Copyright (C) 2017 The Qt Company Ltd.
-** Copyright (C) 2015-2019 Gerasim Troeglazov,
+** Copyright (C) 2015-2020 Gerasim Troeglazov,
 ** Contact: 3dEyes@gmail.com
 **
 ** This file is part of the plugins of the Qt Toolkit.
@@ -38,55 +38,102 @@
 **
 ****************************************************************************/
 
-#ifndef QHAIKUINTEGRATION_APP_H
-#define QHAIKUINTEGRATION_APP_H
-
 #include "qhaikuintegration.h"
+#include "qhaikuapplication.h"
 #include "qhaikusettings.h"
 
-#include "simplecrypt.h"
 
-#include <QApplication>
-#include <QProcess>
-#include <QString>
-#include <QStringList>
-#include <QClipboard>
-#include <QEvent>
-#include <QDebug>
-
-#include <private/qguiapplication_p.h>
-
-#include <Application.h>
-#include <kernel/OS.h>
-#include <Application.h>
-#include <File.h>
-#include <AppFileInfo.h>
-#include <Path.h>
-#include <Entry.h>
-#include <String.h>
-#include <Locale.h>
-#include <LocaleRoster.h>
-#include <Roster.h>
-#include <Clipboard.h>
-
-#include <stdio.h>
-
-class HQApplication : public QObject, public BApplication
+HQApplication::HQApplication(const char* signature)
+	: QObject()
+	, BApplication(signature)
+	, fClipboard(NULL)
+	, qtFlags(0)
 {
-	Q_OBJECT
-public:
-	HQApplication(const char*);
-	~HQApplication();
+	readyForRunSem = create_sem(0, "readyForRunSem");
+}
 
-	virtual void MessageReceived(BMessage *message);
-	void	RefsReceived(BMessage *pmsg);
-	virtual bool QuitRequested();
-private:
-	BPath 	refReceived;
-	BMessenger  fTrackerMessenger;
-	QHaikuClipboard *fClipboard;
-Q_SIGNALS:
-	bool applicationQuit();
-};
+HQApplication::~HQApplication()
+{
+}
 
-#endif
+void HQApplication::waitForRun(void)
+{
+	if (readyForRunSem != B_BAD_SEM_ID) {
+		acquire_sem(readyForRunSem);
+		delete_sem(readyForRunSem);
+		readyForRunSem = B_BAD_SEM_ID;
+	}
+}
+
+void HQApplication::ReadyToRun()
+{
+	if (readyForRunSem != B_BAD_SEM_ID)
+		release_sem(readyForRunSem);
+}
+
+void HQApplication::MessageReceived(BMessage* message)
+{
+	switch (message->what) {
+		case B_SILENT_RELAUNCH:
+			be_roster->ActivateApp(be_app->Team());
+			break;
+		case 'CLIP':
+			{
+			if (message->FindPointer("QHaikuClipboard", (void**)(&fClipboard)) != B_OK)
+				fClipboard = NULL;
+			break;
+			}
+		case B_CLIPBOARD_CHANGED:
+			{
+			if (fClipboard != NULL)
+				fClipboard->clipboardChanged();
+			break;
+			}
+		default:
+			BApplication::MessageReceived(message);
+			break;
+	}
+}
+
+void 
+HQApplication::RefsReceived(BMessage *pmsg)
+{
+	if (pmsg->HasMessenger("TrackerViewToken")) {
+		pmsg->FindMessenger("TrackerViewToken", &fTrackerMessenger);
+	}
+
+	uint32 type;
+	int32 count;
+	status_t ret = pmsg->GetInfo("refs", &type, &count);
+	if (ret != B_OK || type != B_REF_TYPE)
+		return;
+
+	entry_ref ref;
+	BPath refReceived;
+	QStringList refList;
+	for (int32 i = 0; i < count; i++) {
+		if (pmsg->FindRef("refs", i, &ref) == B_OK) {
+			refReceived.SetTo(&ref);
+			refList << refReceived.Path();
+		}
+	}
+
+	if (IsLaunching()) {
+		openFileList = refList;
+		return;
+	} else {
+		if (qtFlags & Q_REF_TO_FORK) {
+			QProcess proc;
+			proc.start("/bin/sh", refList);
+			return;
+		}
+	}
+
+	for ( const auto& refValue : refList )
+		QCoreApplication::postEvent(QCoreApplication::instance(), new QFileOpenEvent(refValue));
+}
+
+bool HQApplication::QuitRequested()
+{
+	return Q_EMIT applicationQuit();
+}
