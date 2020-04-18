@@ -1246,6 +1246,11 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
 				surface.view()->FillRect(bRect);
 				be_control_look->DrawScrollViewFrame(surface.view(), bRect, bRect,
 					BRect(), BRect(), base, border, flags, BControlLook::B_ALL_BORDERS);
+				painter->setClipping(true);
+				QRegion allRegion(rect, QRegion::Rectangle);
+				QRegion excludeRegion(rect.adjusted(4, 4, -4, -4), QRegion::Rectangle);
+				QRegion region=allRegion.subtracted(excludeRegion);
+				painter->setClipRegion(region);
 				painter->drawImage(rect, surface.image());
 			}
 		}
