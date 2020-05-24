@@ -1555,15 +1555,26 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
             bool act = mbi->state & State_Selected && mbi->state & State_Sunken;
             bool dis = !(mbi->state & State_Enabled);
 
+			uint32 flags = 0;
+			if (act)
+				flags |= BControlLook::B_ACTIVATED;
+			if (dis)
+				flags |= BControlLook::B_DISABLED;
+
 			if (be_control_look != NULL) {
 				rgb_color base = ui_color(B_MENU_BACKGROUND_COLOR);
+				rgb_color textColor = ui_color(B_MENU_ITEM_TEXT_COLOR);
 
-				uint32 flags = 0;
-
-				if (act)
-					flags |= BControlLook::B_ACTIVATED;
-				if (dis)
-					flags |= BControlLook::B_DISABLED;
+				if (!dis && act)
+					textColor = ui_color(B_MENU_SELECTED_ITEM_TEXT_COLOR);
+				else if (!dis)
+					textColor = ui_color(B_MENU_ITEM_TEXT_COLOR);
+				else {
+					if (base.red + base.green + base.blue > 128 * 3)
+					textColor = tint_color(base, B_DISABLED_LABEL_TINT);
+				else
+					textColor = tint_color(base, B_LIGHTEN_2_TINT);
+				}
 
 		        BRect bRect(0.0f, 0.0f, option->rect.width() - 1, option->rect.height() - 1);
 				TemporarySurface surface(bRect);
@@ -1575,12 +1586,15 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
 				} else {
 					be_control_look->DrawMenuBarBackground(surface.view(), bRect, bRect, base, flags, 8);
 				}
-				painter->drawImage(option->rect, surface.image());					
-			}
 
-            QPalette::ColorRole textRole = QPalette::Text;
-            uint alignment = Qt::AlignCenter  | Qt::TextHideMnemonic | Qt::TextDontClip | Qt::TextSingleLine;
-            drawItemText(painter, item.rect, alignment, mbi->palette, mbi->state & State_Enabled, mbi->text, textRole);
+				painter->drawImage(option->rect, surface.image());
+
+				if (!mbi->text.isEmpty()) {
+					QColor textQColor(mkQColor(textColor));
+            		painter->setPen(textQColor);
+				    painter->drawText(item.rect, Qt::AlignCenter  | Qt::TextHideMnemonic | Qt::TextDontClip | Qt::TextSingleLine, mbi->text);
+				}								
+			}
         }
         painter->restore();
         break;
