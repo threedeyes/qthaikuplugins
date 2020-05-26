@@ -1634,8 +1634,13 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
 				itemSurface.view()->FillRect(itemBRect);
 			}
             if (menuItem->menuItemType == QStyleOptionMenuItem::SubMenu) {
-				float symbolSize = roundf(itemBRect.Height() * 2 / 3);
-				BRect boundRect(itemBRect);
+            	BRect subRect = itemBRect;
+				if (selected) {
+					subRect.right++;
+					subRect.bottom++;
+				}
+				float symbolSize = roundf(subRect.Height() * 2 / 3);
+				BRect boundRect(subRect);
 				boundRect.left = boundRect.right - symbolSize;
 				BRect symbolRect(0, 0, symbolSize, symbolSize);
 				symbolRect.OffsetTo(BPoint(boundRect.left, itemBRect.top + (itemBRect.Height() - symbolSize) / 2));
