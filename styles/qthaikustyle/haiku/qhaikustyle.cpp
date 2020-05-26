@@ -1602,21 +1602,13 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
         painter->save();
         // Draws one item in a popup menu.
         if (const QStyleOptionMenuItem *menuItem = qstyleoption_cast<const QStyleOptionMenuItem *>(option)) {
-            QColor menuBackground = option->palette.background().color().lighter(104);
-            QColor borderColor = option->palette.background().color().darker(160);
-            QColor alphaCornerColor;
-
-            if (widget) {
-                // ### backgroundrole/foregroundrole should be part of the style option
-                alphaCornerColor = mergedColors(option->palette.color(widget->backgroundRole()), borderColor);
-            } else {
-                alphaCornerColor = mergedColors(option->palette.background().color(), borderColor);
-            }
+            QColor menuBackground = mkQColor(ui_color(B_MENU_BACKGROUND_COLOR));
             if (menuItem->menuItemType == QStyleOptionMenuItem::Separator) {
                 painter->fillRect(menuItem->rect, menuBackground);
                 int w = 0;
                 if (!menuItem->text.isEmpty()) {
                     painter->setFont(menuItem->font);
+                    painter->setPen(mkQColor(ui_color(B_MENU_ITEM_TEXT_COLOR)));
                     proxy()->drawItemText(painter, menuItem->rect.adjusted(5, 0, -5, 0), Qt::AlignLeft | Qt::AlignVCenter,
                                  menuItem->palette, menuItem->state & State_Enabled, menuItem->text,
                                  QPalette::Text);
@@ -1630,17 +1622,27 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
                 break;
             }
             bool selected = menuItem->state & State_Selected && menuItem->state & State_Enabled;
-            if (selected) {
-            	rgb_color base = ui_color(B_MENU_SELECTED_BACKGROUND_COLOR);
-				uint32 flags = BControlLook::B_ACTIVATED;;
-		        BRect bRect(0.0f, 0.0f, option->rect.width() - 1, option->rect.height() - 1);
-				TemporarySurface surface(bRect);
-				surface.view()->SetLowColor(base);
-				be_control_look->DrawMenuItemBackground(surface.view(), bRect, bRect, base, flags);
-				painter->drawImage(option->rect, surface.image());
-            } else {
-                painter->fillRect(option->rect, menuBackground);
-            }
+
+			BRect itemBRect(0.0f, 0.0f, option->rect.width() - 1, option->rect.height() - 1);
+			TemporarySurface itemSurface(itemBRect);
+			if (selected) {
+				itemSurface.view()->SetLowColor(ui_color(B_MENU_SELECTED_BACKGROUND_COLOR));
+				be_control_look->DrawMenuItemBackground(itemSurface.view(), itemBRect, itemBRect,
+					ui_color(B_MENU_SELECTED_BACKGROUND_COLOR), BControlLook::B_ACTIVATED);
+			} else {
+				itemSurface.view()->SetHighColor(ui_color(B_MENU_BACKGROUND_COLOR));
+				itemSurface.view()->FillRect(itemBRect);
+			}
+            if (menuItem->menuItemType == QStyleOptionMenuItem::SubMenu) {
+				float symbolSize = roundf(itemBRect.Height() * 2 / 3);
+				BRect boundRect(itemBRect);
+				boundRect.left = boundRect.right - symbolSize;
+				BRect symbolRect(0, 0, symbolSize, symbolSize);
+				symbolRect.OffsetTo(BPoint(boundRect.left, itemBRect.top + (itemBRect.Height() - symbolSize) / 2));
+				be_control_look->DrawArrowShape(itemSurface.view(), symbolRect, symbolRect,
+					ui_color(selected?B_MENU_SELECTED_ITEM_TEXT_COLOR:B_MENU_ITEM_TEXT_COLOR), BControlLook::B_RIGHT_ARROW, 0, 0.75f);
+			}
+			painter->drawImage(option->rect, itemSurface.image());
 
             bool checkable = menuItem->checkType != QStyleOptionMenuItem::NotCheckable;
             bool checked = menuItem->checked;
@@ -1749,9 +1751,9 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
                 painter->drawPixmap(pmr.topLeft(), pixmap);
             }
             if (selected) {
-                painter->setPen(menuItem->palette.highlightedText().color());
+                painter->setPen(mkQColor(ui_color(B_MENU_SELECTED_ITEM_TEXT_COLOR)));
             } else {
-                painter->setPen(menuItem->palette.text().color());
+                painter->setPen(mkQColor(ui_color(B_MENU_ITEM_TEXT_COLOR)));
             }
             int x, y, w, h;
             menuitem->rect.getRect(&x, &y, &w, &h);
@@ -1804,23 +1806,6 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
                 }
                 p->drawText(vTextRect, text_flags, s.left(t));
                 p->restore();
-            }
-
-            // Arrow
-            if (menuItem->menuItemType == QStyleOptionMenuItem::SubMenu) {// draw sub menu arrow
-                int dim = (menuItem->rect.height() - 4) / 2;
-                PrimitiveElement arrow;
-                arrow = QApplication::isRightToLeft() ? PE_IndicatorArrowLeft : PE_IndicatorArrowRight;
-                int xpos = menuItem->rect.left() + menuItem->rect.width() - 3 - dim;
-                QRect  vSubMenuRect = visualRect(option->direction, menuItem->rect,
-                                                 QRect(xpos, menuItem->rect.top() + menuItem->rect.height() / 2 - dim / 2, dim, dim));
-                QStyleOptionMenuItem newMI = *menuItem;
-                newMI.rect = vSubMenuRect;
-                newMI.state = !enabled ? State_None : State_Enabled;
-                if (selected)
-                    newMI.palette.setColor(QPalette::ButtonText,
-                                           newMI.palette.highlightedText().color());
-                proxy()->drawPrimitive(arrow, &newMI, painter, widget);
             }
         }
         painter->restore();
