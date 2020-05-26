@@ -1697,26 +1697,6 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
 			bool act = menuItem->state & State_Selected;
 			bool selected = menuItem->state & State_Selected && menuItem->state & State_Enabled;
 
-            QColor menuBackground = mkQColor(ui_color(B_MENU_BACKGROUND_COLOR));
-            if (menuItem->menuItemType == QStyleOptionMenuItem::Separator) {
-                painter->fillRect(menuItem->rect, menuBackground);
-                int w = 0;
-                if (!menuItem->text.isEmpty()) {
-                    painter->setFont(menuItem->font);
-                    painter->setPen(mkQColor(ui_color(B_MENU_ITEM_TEXT_COLOR)));
-                    proxy()->drawItemText(painter, menuItem->rect.adjusted(5, 0, -5, 0), Qt::AlignLeft | Qt::AlignVCenter,
-                                 menuItem->palette, menuItem->state & State_Enabled, menuItem->text,
-                                 QPalette::Text);
-                    w = menuItem->fontMetrics.width(menuItem->text) + 5;
-                }
-                painter->setPen(shadow.lighter(106));
-                bool reverse = menuItem->direction == Qt::RightToLeft;
-                painter->drawLine(menuItem->rect.left() + 5 + (reverse ? 0 : w), menuItem->rect.center().y(),
-                                  menuItem->rect.right() - 5 - (reverse ? w : 0), menuItem->rect.center().y());
-                painter->restore();
-                break;
-            }
-            
             QColor discol;
             if (dis) {
                 rgb_color bgColor = ui_color(B_MENU_BACKGROUND_COLOR);
@@ -1737,7 +1717,34 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
 			} else {
 				itemSurface.view()->SetHighColor(ui_color(B_MENU_BACKGROUND_COLOR));
 				itemSurface.view()->FillRect(itemBRect);
+				rgb_color background = tint_color(ui_color(B_MENU_BACKGROUND_COLOR), 0.75);
+				rgb_color bevelLightColor = tint_color(background, 0.6);
+				rgb_color bevelShadowColor = tint_color(background, 1.12);
+				itemSurface.view()->SetHighColor(bevelLightColor);
+				itemSurface.view()->StrokeLine(BPoint(itemBRect.left, itemBRect.top), BPoint(itemBRect.left, itemBRect.bottom));
+				if (menuItem->rect.top() < 2)
+					itemSurface.view()->StrokeLine(BPoint(itemBRect.left, itemBRect.top), BPoint(itemBRect.right, itemBRect.top));
+				itemSurface.view()->SetHighColor(bevelShadowColor);
+				itemSurface.view()->StrokeLine(BPoint(itemBRect.right, itemBRect.top), BPoint(itemBRect.right, itemBRect.bottom));
+				if (widget != NULL) {
+					if (widget->rect().bottom() - menuItem->rect.bottom() < 2)
+						itemSurface.view()->StrokeLine(BPoint(itemBRect.left, itemBRect.bottom), BPoint(itemBRect.right, itemBRect.bottom));
+				}
 			}
+			// Separator item
+            if (menuItem->menuItemType == QStyleOptionMenuItem::Separator) {
+				const float startTop = itemBRect.top + (floor(itemBRect.Height())) / 2;
+				itemSurface.view()->SetHighColor(tint_color(ui_color(B_MENU_BACKGROUND_COLOR), B_DARKEN_1_TINT));
+				itemSurface.view()->StrokeLine(BPoint(itemBRect.left + 1.0f, startTop),
+					BPoint(itemBRect.right - 1.0f, startTop));
+				itemSurface.view()->SetHighColor(tint_color(ui_color(B_MENU_BACKGROUND_COLOR), B_LIGHTEN_2_TINT));
+				itemSurface.view()->StrokeLine(BPoint(itemBRect.left + 1.0f, startTop + 1.0f),
+					BPoint(itemBRect.right - 1.0f, startTop + 1.0f));
+
+				painter->drawImage(option->rect, itemSurface.image());
+                painter->restore();
+                break;
+            }
 			// Submenu arrow
             if (menuItem->menuItemType == QStyleOptionMenuItem::SubMenu) {
 				float symbolSize = roundf(itemBRect.Height() * 2 / 3);
@@ -1934,20 +1941,21 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
             } else {
                 painter->setPen(mkQColor(ui_color(B_MENU_ITEM_TEXT_COLOR)));
             }
+			if (dis)
+				p->setPen(discol);
+
             int x, y, w, h;
             menuitem->rect.getRect(&x, &y, &w, &h);
             int tab = menuitem->tabWidth;
             int xm = windowsItemFrame + checkcol + windowsItemHMargin;
             int xpos = menuitem->rect.x() + xm;
             
-            p->setPen(discol);
 
             QRect textRect(xpos, y + windowsItemVMargin, w - xm - windowsRightBorder - tab + 1, h - 2 * windowsItemVMargin);
             QRect vTextRect = visualRect(opt->direction, menuitem->rect, textRect);
-            QString s = menuitem->text;
-            if (!s.isEmpty()) {                     // draw text
+            if (!menuitem->text.isEmpty()) {
                 p->save();
-                int t = s.indexOf(QLatin1Char('\t'));
+                int tabIdx = menuitem->text.indexOf(QLatin1Char('\t'));
                 int text_flags = Qt::AlignVCenter | Qt::TextShowMnemonic | Qt::TextDontClip | Qt::TextSingleLine;
                 if (!styleHint(SH_UnderlineShortcut, menuitem, widget))
                     text_flags |= Qt::TextHideMnemonic;
@@ -1960,14 +1968,7 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
                     font.setBold(true);
 
                 p->setFont(font);
-#if 0
-                if (dis && !act && proxy()->styleHint(SH_EtchDisabledText, option, widget)) {
-                    p->setPen(menuitem->palette.light().color());
-                    p->drawText(vTextRect.adjusted(1, 1, 1, 1), text_flags, s.left(t));
-                    p->setPen(discol);
-                }
-#endif
-                p->drawText(vTextRect, text_flags, s.left(t));
+                p->drawText(vTextRect, text_flags, menuitem->text.left(tabIdx));
                 p->restore();
             }
         }
@@ -2928,7 +2929,7 @@ int QHaikuStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, con
         ret = 26;
         break;
     case PM_MenuPanelWidth: //menu framewidth
-        ret = 1;
+        ret = 0;
         break;
     case PM_TitleBarHeight:
         ret = 24 + 5;
@@ -3000,9 +3001,11 @@ int QHaikuStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, con
         ret = largeIconsSizeSettings;
         break;
     case PM_MenuVMargin:
+		ret = 1;
+		break;
     case PM_MenuHMargin:
-        ret = 0;
-        break;
+		ret = 1;
+		break;
     case PM_DockWidgetTitleBarButtonMargin:
         ret = 4;
         break;
