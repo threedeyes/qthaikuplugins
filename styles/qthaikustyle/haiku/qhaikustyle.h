@@ -45,6 +45,9 @@
 #include <QtWidgets/qproxystyle.h>
 #include <QtCore/qelapsedtimer.h>
 
+#include <Rect.h>
+#include <Bitmap.h>
+
 QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
@@ -113,6 +116,12 @@ private:
 	int toolbarIconsSizeSettings;
 	int toolbarIconMode;
 	bool showMenuIcon;
+
+	BBitmap *sMenuItemShift;
+	BBitmap *sMenuItemControl;
+	BBitmap *sMenuItemOption;
+	BBitmap *sMenuItemAlt;
+	BBitmap *sMenuItemMenu;
 };
 
 QT_END_NAMESPACE
