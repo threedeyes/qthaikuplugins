@@ -1739,12 +1739,14 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
 				rgb_color bevelShadowColor = tint_color(background, 1.12);
 				itemSurface.view()->SetHighColor(bevelLightColor);
 				itemSurface.view()->StrokeLine(BPoint(itemBRect.left, itemBRect.top), BPoint(itemBRect.left, itemBRect.bottom));
-				if (menuItem->rect.top() < 2)
-					itemSurface.view()->StrokeLine(BPoint(itemBRect.left, itemBRect.top), BPoint(itemBRect.right, itemBRect.top));
 				itemSurface.view()->SetHighColor(bevelShadowColor);
 				itemSurface.view()->StrokeLine(BPoint(itemBRect.right, itemBRect.top), BPoint(itemBRect.right, itemBRect.bottom));
-				if (widget != NULL) {
-					if (widget->rect().bottom() - menuItem->rect.bottom() < 2)
+				if (qobject_cast<const QMenu *>(widget)) {
+					itemSurface.view()->SetHighColor(bevelLightColor);
+					if (menuItem->rect.top() < 2)
+						itemSurface.view()->StrokeLine(BPoint(itemBRect.left, itemBRect.top), BPoint(itemBRect.right, itemBRect.top));
+					itemSurface.view()->SetHighColor(bevelShadowColor);
+					if (fabs(widget->rect().bottom() - menuItem->rect.bottom()) < 2)
 						itemSurface.view()->StrokeLine(BPoint(itemBRect.left, itemBRect.bottom), BPoint(itemBRect.right, itemBRect.bottom));
 				}
 			}
