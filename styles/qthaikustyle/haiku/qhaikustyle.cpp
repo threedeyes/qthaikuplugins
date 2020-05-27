@@ -70,6 +70,7 @@
 #include <qlabel.h>
 #include <qdial.h>
 #include <qsizegrip.h>
+#include <qmenu.h>
 
 #include <QDebug>
 
@@ -1696,6 +1697,12 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
 			bool dis = !(menuItem->state & State_Enabled);
 			bool act = menuItem->state & State_Selected;
 			bool selected = menuItem->state & State_Selected && menuItem->state & State_Enabled;
+            bool ignoreCheckMark = (qobject_cast<const QComboBox*>(widget) != NULL);
+            bool checkable = menuItem->checkType != QStyleOptionMenuItem::NotCheckable;
+            bool checked = menuItem->checked;
+            bool sunken = menuItem->state & State_Sunken;
+            bool enabled = menuItem->state & State_Enabled;
+            int checkcol = qMax(menuItem->maxIconWidth, 20);
 
             QColor discol;
             if (dis) {
@@ -1705,6 +1712,16 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
 				else
 					discol = mkQColor(tint_color(bgColor, B_LIGHTEN_2_TINT));
             }
+
+			bool sub_exist = false;
+			if (const QMenu *menu = qobject_cast<const QMenu *>(widget)){
+				foreach (QAction *action, menu->actions()) {
+					if (action->menu()) {
+						sub_exist = true;
+						break;
+					}
+				}
+			}
 
 			BRect itemBRect(0.0f, 0.0f, option->rect.width() - 1, option->rect.height() - 1);
 			TemporarySurface itemSurface(itemBRect);
@@ -1745,6 +1762,59 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
                 painter->restore();
                 break;
             }
+            // Checkmarks
+			if (!ignoreCheckMark) {
+                if (checkable) {
+					float symbolSize = roundf(itemBRect.Height() * 2 / 3) - 1;
+					BRect boundRect(itemBRect);
+					boundRect.left = boundRect.left + 2;
+					BRect symbolRect(0, 0, symbolSize, symbolSize);
+					symbolRect.OffsetTo(BPoint(boundRect.left, itemBRect.top + (itemBRect.Height() - symbolSize) / 2));
+
+					BPoint center(floorf((symbolRect.left + symbolRect.right) / 2.0),
+					floorf((symbolRect.top + symbolRect.bottom) / 2.0));
+
+					rgb_color markColor = ui_color(selected?B_MENU_SELECTED_ITEM_TEXT_COLOR:B_MENU_ITEM_TEXT_COLOR);
+					if (dis)
+						markColor = mkHaikuColor(discol);
+					itemSurface.view()->SetHighColor(markColor);
+
+					if (menuItem->checkType & QStyleOptionMenuItem::Exclusive) {
+						if (checked || sunken) {
+							float r = (std::min(symbolRect.Height() - 2, symbolRect.Width())) / 5.0;
+							itemSurface.view()->SetDrawingMode(B_OP_OVER);
+							itemSurface.view()->SetPenSize(1.0);
+							itemSurface.view()->SetHighColor(tint_color(markColor, 0.75f));
+							itemSurface.view()->FillEllipse(center, r, r);
+						}
+					} else {
+						float size = std::min(symbolRect.Height() - 2, symbolRect.Width());
+						symbolRect.top = floorf(center.y - size / 2 + 0.5);
+						symbolRect.bottom = floorf(center.y + size / 2 + 0.5);
+						symbolRect.left = floorf(center.x - size / 2 + 0.5);
+						symbolRect.right = floorf(center.x + size / 2 + 0.5);
+
+						BShape arrowShape;
+						center.x += 0.5;
+						center.y += 0.5;
+						size *= 0.3;
+						arrowShape.MoveTo(BPoint(center.x - size, center.y - size * 0.25));
+						arrowShape.LineTo(BPoint(center.x - size * 0.25, center.y + size));
+						arrowShape.LineTo(BPoint(center.x + size, center.y - size));
+
+						itemSurface.view()->SetHighColor(tint_color(markColor, 0.75f));
+						itemSurface.view()->SetDrawingMode(B_OP_OVER);
+						itemSurface.view()->SetPenSize(2.0);
+						itemSurface.view()->MovePenTo(B_ORIGIN);
+						itemSurface.view()->StrokeShape(&arrowShape);
+					}
+                }
+            } else {
+                if (menuItem->icon.isNull() || !showMenuIcon)
+                    checkcol = 0;
+                else
+                    checkcol = menuItem->maxIconWidth;
+            }
 			// Submenu arrow
             if (menuItem->menuItemType == QStyleOptionMenuItem::SubMenu) {
 				float symbolSize = roundf(itemBRect.Height() * 2 / 3);
@@ -1780,9 +1850,11 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
 
 				BPoint where(0, 0);
 				float symbolSize = roundf(itemBRect.Height() * 2 / 3);
-				where.x = itemBRect.right - menuItem->font.pixelSize();
-				where.x -= itemBRect.Height() / 2;
-				where.x -= symbolSize;
+				where.x = (itemBRect.right - 6) - menuItem->font.pixelSize();
+				if (sub_exist)
+					where.x -= symbolSize;
+				else
+					where.x -= itemBRect.Height() / 2;
 
 				BFont bFont(be_plain_font);
 				if (shotcutList.count() > 0) {
@@ -1795,6 +1867,8 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
 						itemSurface.view()->SetHighColor(ui_color(B_MENU_ITEM_TEXT_COLOR));
 					if (dis)
 						itemSurface.view()->SetHighColor(mkHaikuColor(discol));
+					if (shotcutList.last().size() > 1)
+						where.x -= (bFont.StringWidth(shotcutList.last().toUtf8().data()) - bFont.StringWidth("_"));
 					itemSurface.view()->DrawString(shotcutList.last().toUtf8().data(), where);
 					where.x -= 4;
 				}
@@ -1832,66 +1906,6 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
 
 			painter->drawImage(option->rect, itemSurface.image());
 
-            bool checkable = menuItem->checkType != QStyleOptionMenuItem::NotCheckable;
-            bool checked = menuItem->checked;
-            bool sunken = menuItem->state & State_Sunken;
-            bool enabled = menuItem->state & State_Enabled;
-
-            bool ignoreCheckMark = false;
-            int checkcol = qMax(menuItem->maxIconWidth, 20);
-
-#ifndef QT_NO_COMBOBOX
-            if (qobject_cast<const QComboBox*>(widget))
-                ignoreCheckMark = true; //ignore the checkmarks provided by the QComboMenuDelegate
-#endif
-
-            if (!ignoreCheckMark) {
-                // Check
-                QRect checkRect(option->rect.left() + 7, option->rect.center().y() - 6, 13, 13);
-                checkRect = visualRect(menuItem->direction, menuItem->rect, checkRect);
-                if (checkable) {
-                    if (menuItem->checkType & QStyleOptionMenuItem::Exclusive) {
-                        // Radio button
-                        if (checked || sunken) {
-                            painter->setRenderHint(QPainter::Antialiasing);
-                            painter->setPen(Qt::NoPen);
-
-                            QPalette::ColorRole textRole = !enabled ? QPalette::Text:
-                                                        selected ? QPalette::HighlightedText : QPalette::ButtonText;
-                            painter->setBrush(option->palette.brush( option->palette.currentColorGroup(), textRole));
-                            painter->drawEllipse(checkRect.adjusted(4, 4, -4, -4));
-                        }
-                    } else {
-                        // Check box
-                        if (menuItem->icon.isNull() || !showMenuIcon) {
-                            if (checked || sunken) {
-                                QImage image(qt_haiku_menuitem_checkbox_checked);
-                                if (enabled && (menuItem->state & State_Selected)) {
-                                    image.setColor(1, 0x55ffffff);
-                                    image.setColor(2, 0xAAffffff);
-                                    image.setColor(3, 0xBBffffff);
-                                    image.setColor(4, 0xFFffffff);
-                                    image.setColor(5, 0x33ffffff);
-                                } else {
-                                    image.setColor(1, 0x55000000);
-                                    image.setColor(2, 0xAA000000);
-                                    image.setColor(3, 0xBB000000);
-                                    image.setColor(4, 0xFF000000);
-                                    image.setColor(5, 0x33000000);
-                                }
-                                painter->drawImage(QPoint(checkRect.center().x() - image.width() / 2,
-                                                        checkRect.center().y() - image.height() / 2), image);
-                            }
-                        }
-                    }
-                }
-            } else { //ignore checkmark
-                if (menuItem->icon.isNull() || !showMenuIcon)
-                    checkcol = 0;
-                else
-                    checkcol = menuItem->maxIconWidth;
-            }
-
             // Text and icon, ripped from windows style
             const QStyleOption *opt = option;
             const QStyleOptionMenuItem *menuitem = menuItem;
@@ -1908,10 +1922,8 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
 
                 int smallIconSize = proxy()->pixelMetric(PM_SmallIconSize, option, widget);
                 QSize iconSize(smallIconSize, smallIconSize);
-#ifndef QT_NO_COMBOBOX
                 if (const QComboBox *combo = qobject_cast<const QComboBox*>(widget))
                     iconSize = combo->iconSize();
-#endif // QT_NO_COMBOBOX
                 if (checked)
                     pixmap = menuItem->icon.pixmap(iconSize, mode, QIcon::On);
                 else
@@ -1946,12 +1958,10 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
 
             int x, y, w, h;
             menuitem->rect.getRect(&x, &y, &w, &h);
-            int tab = menuitem->tabWidth;
             int xm = windowsItemFrame + checkcol + windowsItemHMargin;
             int xpos = menuitem->rect.x() + xm;
-            
 
-            QRect textRect(xpos, y + windowsItemVMargin, w - xm - windowsRightBorder - tab + 1, h - 2 * windowsItemVMargin);
+            QRect textRect(xpos, y + windowsItemVMargin, w - xm - windowsRightBorder, h - 2 * windowsItemVMargin);
             QRect vTextRect = visualRect(opt->direction, menuitem->rect, textRect);
             if (!menuitem->text.isEmpty()) {
                 p->save();
@@ -3122,22 +3132,54 @@ QSize QHaikuStyle::sizeFromContents(ContentsType type, const QStyleOption *optio
         break;
     case CT_MenuItem:
         if (const QStyleOptionMenuItem *menuItem = qstyleoption_cast<const QStyleOptionMenuItem *>(option)) {
-            if (menuItem->menuItemType == QStyleOptionMenuItem::Separator) {
-                if (!menuItem->text.isEmpty()) {
-                    newSize.setHeight(menuItem->fontMetrics.height());
-                }
-            }
-#ifndef QT_NO_COMBOBOX
-            else if (!menuItem->icon.isNull() && showMenuIcon) {
+			if (!menuItem->icon.isNull() && showMenuIcon) {
                 if (const QComboBox *combo = qobject_cast<const QComboBox*>(widget)) {
                     newSize.setHeight(qMax(combo->iconSize().height() + 2, newSize.height()));
                 }
             }
-#endif // QT_NO_COMBOBOX
-			if (menuItem->menuItemType == QStyleOptionMenuItem::Separator)
+			if (menuItem->menuItemType == QStyleOptionMenuItem::Separator) {
 				newSize += QSize(-2, 8);
-			else
-				newSize += QSize(-2, -4);
+				break;
+			}
+			int width = 20; //margins
+
+            int maxpmw = menuItem->maxIconWidth;
+            int tabIdx = menuItem->text.indexOf(QLatin1Char('\t'));
+            QString itemText = menuItem->text.left(tabIdx);
+            QString shotcutText = tabIdx > 0 ? menuItem->text.mid(tabIdx + 1) : "";
+			width+=maxpmw;
+            QFontMetrics fm(menuItem->font);
+			width+=fm.width(itemText);
+
+			QStringList shotcutList = shotcutText.split('+');
+			if (shotcutText.right(1).contains('+')) {
+				shotcutList.removeAll(QString(""));
+				shotcutList << "+";
+			}
+			shotcutList.last().replace("Return","⏎");
+			shotcutList.last().replace("Left","←");
+			shotcutList.last().replace("Right","→");
+			shotcutList.last().replace("Up","↑");
+			shotcutList.last().replace("Down","↓");
+			shotcutList.last().replace("Tab","↹");
+
+			if (shotcutList.last().size() > 1 && shotcutList.count() > 1)
+				shotcutList.clear();
+
+			if (shotcutList.count() > 0) {
+				if (shotcutList.contains("Ctrl"))
+					width += sMenuItemControl->Bounds().Width() + 1;
+				if (shotcutList.contains("Alt"))
+					width += sMenuItemAlt->Bounds().Width() + 1;
+				if (shotcutList.contains("Meta"))
+					width += sMenuItemOption->Bounds().Width() + 1;
+				if (shotcutList.contains("Shift"))
+					width += sMenuItemShift->Bounds().Width() + 1;
+				width+=fm.width(shotcutList.last()) + 4;
+			}
+
+			newSize.setWidth(qMax(width, 100));
+			newSize.setHeight(fm.height() + 4);
         }
         break;
     case CT_SizeGrip:
@@ -3146,18 +3188,6 @@ QSize QHaikuStyle::sizeFromContents(ContentsType type, const QStyleOption *optio
     case CT_TabBarTab:
         break;
     case CT_MdiControls:
-       /* if (const QStyleOptionComplex *styleOpt = qstyleoption_cast<const QStyleOptionComplex *>(option)) {
-            int width = 0;
-            if (styleOpt->subControls & SC_MdiMinButton)
-                width += 19 + 1;
-            if (styleOpt->subControls & SC_MdiNormalButton)
-                width += 19 + 1;
-            if (styleOpt->subControls & SC_MdiCloseButton)
-                width += 19 + 1;
-            newSize = QSize(width, 19);
-        } else {
-            newSize = QSize(60, 19);
-        }*/
         break;
     default:
         break;
