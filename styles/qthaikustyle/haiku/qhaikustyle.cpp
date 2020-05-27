@@ -3180,8 +3180,9 @@ QSize QHaikuStyle::sizeFromContents(ContentsType type, const QStyleOption *optio
 				width+=fm.width(shotcutList.last()) + 4;
 			}
 
-			newSize.setWidth(qMax(width, 100));
 			newSize.setHeight(fm.height() + 4);
+			width += roundf(newSize.height() * 2 / 3);
+			newSize.setWidth(qMax(width, 100));
         }
         break;
     case CT_SizeGrip:
