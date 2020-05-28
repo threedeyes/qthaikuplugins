@@ -276,21 +276,6 @@ static const char * const workspace_minimize[] = {
     " +@@@@@@@+ ",
     "           "};
 
-static const char * const qt_haiku_menuitem_checkbox_checked[] = {
-    "8 7 6 1",
-    " 	g None",
-    ".	g #959595",
-    "+	g #676767",
-    "@	g #454545",
-    "#	g #1D1D1D",
-    "0	g #101010",
-    "      ..",
-    "     .+ ",
-    "    .+  ",
-    "0  .@   ",
-    "@#++.   ",
-    "  @#    ",
-    "   .    "};
 
 static const unsigned char kShiftBits[] = {
 	0x1d,0x1d,0x1d,0x1d,0x1d,0x1d,0x1d,0x1d,0x1d,0x1d,0x1d,0x1d,0x1d,0x1d,0x1d,0x1d,0x1d,0x1d,0x1d,0x1d,0x1d,0x1d,0x1d,0x14,
@@ -1765,37 +1750,37 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
                 break;
             }
             // Checkmarks
-			if (!ignoreCheckMark) {
-                if (checkable) {
-					float symbolSize = roundf(itemBRect.Height() * 2 / 3) - 1;
-					BRect boundRect(itemBRect);
-					boundRect.left = boundRect.left + 2;
-					BRect symbolRect(0, 0, symbolSize, symbolSize);
-					symbolRect.OffsetTo(BPoint(boundRect.left, itemBRect.top + (itemBRect.Height() - symbolSize) / 2));
+			if (checkable && !ignoreCheckMark) {
+				float symbolSize = roundf(itemBRect.Height() * 2 / 3) - 1;
+				BRect boundRect(itemBRect);
+				boundRect.left = boundRect.left + 2;
+				BRect symbolRect(0, 0, symbolSize, symbolSize);
+				symbolRect.OffsetTo(BPoint(boundRect.left, itemBRect.top + (itemBRect.Height() - symbolSize) / 2));
 
-					BPoint center(floorf((symbolRect.left + symbolRect.right) / 2.0),
-					floorf((symbolRect.top + symbolRect.bottom) / 2.0));
+				BPoint center(floorf((symbolRect.left + symbolRect.right) / 2.0),
+				floorf((symbolRect.top + symbolRect.bottom) / 2.0));
 
-					rgb_color markColor = ui_color(selected?B_MENU_SELECTED_ITEM_TEXT_COLOR:B_MENU_ITEM_TEXT_COLOR);
-					if (dis)
-						markColor = mkHaikuColor(discol);
-					itemSurface.view()->SetHighColor(markColor);
+				rgb_color markColor = ui_color(selected?B_MENU_SELECTED_ITEM_TEXT_COLOR:B_MENU_ITEM_TEXT_COLOR);
+				if (dis)
+					markColor = mkHaikuColor(discol);
+				itemSurface.view()->SetHighColor(markColor);
 
-					if (menuItem->checkType & QStyleOptionMenuItem::Exclusive) {
-						if (checked || sunken) {
-							float r = (std::min(symbolRect.Height() - 2, symbolRect.Width())) / 5.0;
-							itemSurface.view()->SetDrawingMode(B_OP_OVER);
-							itemSurface.view()->SetPenSize(1.0);
-							itemSurface.view()->SetHighColor(tint_color(markColor, 0.75f));
-							itemSurface.view()->FillEllipse(center, r, r);
-						}
-					} else {
+				if (menuItem->checkType & QStyleOptionMenuItem::Exclusive) {
+					if (checked || sunken) {
+						float r = (std::min(symbolRect.Height() - 2, symbolRect.Width())) / 5.0;
+						itemSurface.view()->SetDrawingMode(B_OP_OVER);
+						itemSurface.view()->SetPenSize(1.0);
+						itemSurface.view()->SetHighColor(tint_color(markColor, 0.75f));
+						itemSurface.view()->FillEllipse(center, r, r);
+					}
+				} else {
+					if (checked || sunken) {
 						float size = std::min(symbolRect.Height() - 2, symbolRect.Width());
 						symbolRect.top = floorf(center.y - size / 2 + 0.5);
 						symbolRect.bottom = floorf(center.y + size / 2 + 0.5);
 						symbolRect.left = floorf(center.x - size / 2 + 0.5);
 						symbolRect.right = floorf(center.x + size / 2 + 0.5);
-
+	
 						BShape arrowShape;
 						center.x += 0.5;
 						center.y += 0.5;
@@ -1803,20 +1788,21 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
 						arrowShape.MoveTo(BPoint(center.x - size, center.y - size * 0.25));
 						arrowShape.LineTo(BPoint(center.x - size * 0.25, center.y + size));
 						arrowShape.LineTo(BPoint(center.x + size, center.y - size));
-
+	
 						itemSurface.view()->SetHighColor(tint_color(markColor, 0.75f));
 						itemSurface.view()->SetDrawingMode(B_OP_OVER);
 						itemSurface.view()->SetPenSize(2.0);
 						itemSurface.view()->MovePenTo(B_ORIGIN);
 						itemSurface.view()->StrokeShape(&arrowShape);
 					}
-                }
-            } else {
-                if (menuItem->icon.isNull() || !showMenuIcon)
-                    checkcol = 0;
-                else
-                    checkcol = menuItem->maxIconWidth;
-            }
+				}
+			}
+
+			float leftMargin = roundf(itemBRect.Height() * 2 / 3) - 3;
+			if (menuItem->icon.isNull() || !showMenuIcon)
+				checkcol = leftMargin;
+			else
+				checkcol = leftMargin + menuItem->maxIconWidth;
 			// Submenu arrow
             if (menuItem->menuItemType == QStyleOptionMenuItem::SubMenu) {
 				float symbolSize = roundf(itemBRect.Height() * 2 / 3);
@@ -1852,7 +1838,7 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
 
 				BPoint where(0, 0);
 				float symbolSize = roundf(itemBRect.Height() * 2 / 3);
-				where.x = (itemBRect.right - 6) - menuItem->font.pixelSize();
+				where.x = (itemBRect.right - 8) - menuItem->font.pixelSize();
 				if (sub_exist)
 					where.x -= symbolSize;
 				else
@@ -1931,23 +1917,10 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
                 else
                     pixmap = menuItem->icon.pixmap(iconSize, mode);
 
-                int pixw = pixmap.width();
-                int pixh = pixmap.height();
-
-                QRect pmr(0, 0, pixw, pixh);
+                QRect pmr(0, 0, pixmap.width(), pixmap.height());
                 pmr.moveCenter(vCheckRect.center());
+                pmr.moveRight(checkcol);
                 painter->setPen(menuItem->palette.text().color());
-                if (checkable && checked) {
-                    QStyleOption opt = *option;
-                    if (act) {
-                        QColor activeColor = mergedColors(option->palette.background().color(),
-                                                        option->palette.highlight().color());
-                        opt.palette.setBrush(QPalette::Button, activeColor);
-                    }
-                    opt.state |= State_Sunken;
-                    opt.rect = vCheckRect;
-                    proxy()->drawPrimitive(PE_PanelButtonCommand, &opt, painter, widget);
-                }
                 painter->drawPixmap(pmr.topLeft(), pixmap);
             }
             if (selected) {
