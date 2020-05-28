@@ -272,7 +272,7 @@ int32 QHaikuIntegration::haikuApplicationThread(void *data)
 
 bool QHaikuIntegration::platformAppQuit()
 {
-	if (QGuiApplicationPrivate::instance()->threadData->eventLoops.isEmpty())
+	if (QGuiApplicationPrivate::instance()->threadData.loadRelaxed()->eventLoops.isEmpty())
 		return true;
 	return QWindowSystemInterface::handleApplicationTermination<QWindowSystemInterface::SynchronousDelivery>();
 }

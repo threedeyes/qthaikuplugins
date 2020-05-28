@@ -53,11 +53,85 @@
 #include <Node.h>
 #include <NodeInfo.h>
 #include <Bitmap.h>
+#include <InterfaceKit.h>
 
 QT_BEGIN_NAMESPACE
 
+// convert Haiku rgb_color to QColor
+static QColor mkQColor(rgb_color rgb)
+{
+	return QColor(rgb.red, rgb.green, rgb.blue);
+}
+
+static void nativeColorSettings(QPalette &palette)
+{
+    rgb_color panel_background_color = ui_color(B_PANEL_BACKGROUND_COLOR);
+    rgb_color control_text = ui_color(B_CONTROL_TEXT_COLOR);
+	rgb_color control_text_disabled = control_text;
+	control_text_disabled.red = (uint8)(((int32)panel_background_color.red + control_text_disabled.red + 1) / 2);
+	control_text_disabled.green = (uint8)(((int32)panel_background_color.green + control_text_disabled.green + 1) / 2);
+	control_text_disabled.blue = (uint8)(((int32)panel_background_color.blue + control_text_disabled.blue + 1) / 2);
+
+    palette.setBrush(QPalette::Disabled, QPalette::WindowText, mkQColor(ui_color(B_PANEL_TEXT_COLOR)));
+    palette.setBrush(QPalette::Disabled, QPalette::Button, mkQColor(ui_color(B_CONTROL_BACKGROUND_COLOR)));
+    palette.setBrush(QPalette::Disabled, QPalette::Light, QColor(QRgb(0xffffffff)));
+    palette.setBrush(QPalette::Disabled, QPalette::Midlight, QColor(QRgb(0xffffffff)));
+    palette.setBrush(QPalette::Disabled, QPalette::Dark, QColor(QRgb(0xff555555)));
+    palette.setBrush(QPalette::Disabled, QPalette::Mid, QColor(QRgb(0xffc7c7c7)));
+    palette.setBrush(QPalette::Disabled, QPalette::Text, QColor(QRgb(0xffc7c7c7)));
+    palette.setBrush(QPalette::Disabled, QPalette::BrightText, QColor(QRgb(0xffffffff)));
+    palette.setBrush(QPalette::Disabled, QPalette::ButtonText, mkQColor(control_text_disabled));
+    palette.setBrush(QPalette::Disabled, QPalette::Base, QColor(QRgb(0xffefefef)));
+    palette.setBrush(QPalette::Disabled, QPalette::AlternateBase, palette.color(QPalette::Disabled, QPalette::Base).darker(110));
+    palette.setBrush(QPalette::Disabled, QPalette::Window, mkQColor(panel_background_color));
+    palette.setBrush(QPalette::Disabled, QPalette::Shadow, mkQColor(ui_color(B_SHADOW_COLOR)));
+    palette.setBrush(QPalette::Disabled, QPalette::Highlight, mkQColor(ui_color(B_PANEL_BACKGROUND_COLOR)));
+    palette.setBrush(QPalette::Disabled, QPalette::HighlightedText, mkQColor(ui_color(B_PANEL_TEXT_COLOR)));
+    palette.setBrush(QPalette::Disabled, QPalette::Link, QColor(QRgb(0xff0000ee)));
+    palette.setBrush(QPalette::Disabled, QPalette::LinkVisited, QColor(QRgb(0xff52188b)));
+
+    palette.setBrush(QPalette::Active, QPalette::WindowText, mkQColor(ui_color(B_PANEL_TEXT_COLOR)));
+    palette.setBrush(QPalette::Active, QPalette::Button, mkQColor(ui_color(B_CONTROL_BACKGROUND_COLOR)));
+    palette.setBrush(QPalette::Active, QPalette::Light, mkQColor(ui_color(B_SHINE_COLOR)));
+    palette.setBrush(QPalette::Active, QPalette::Midlight, QColor(QRgb(0xffffffff)));
+    palette.setBrush(QPalette::Active, QPalette::Dark, QColor(QRgb(0xff555555)));
+    palette.setBrush(QPalette::Active, QPalette::Mid, QColor(QRgb(0xffc7c7c7)));
+    palette.setBrush(QPalette::Active, QPalette::Text, mkQColor(ui_color(B_DOCUMENT_TEXT_COLOR)));
+    palette.setBrush(QPalette::Active, QPalette::BrightText, mkQColor(ui_color(B_SHINE_COLOR)));
+    palette.setBrush(QPalette::Active, QPalette::ButtonText, mkQColor(control_text));
+    palette.setBrush(QPalette::Active, QPalette::Base, mkQColor(ui_color(B_LIST_BACKGROUND_COLOR)));
+    palette.setBrush(QPalette::Active, QPalette::AlternateBase, mkQColor(ui_color(B_LIST_BACKGROUND_COLOR)));
+    palette.setBrush(QPalette::Active, QPalette::Window, mkQColor(panel_background_color));
+    palette.setBrush(QPalette::Active, QPalette::Shadow, mkQColor(ui_color(B_SHADOW_COLOR)));
+    palette.setBrush(QPalette::Active, QPalette::Highlight, mkQColor(ui_color(B_LIST_SELECTED_BACKGROUND_COLOR)));
+    palette.setBrush(QPalette::Active, QPalette::HighlightedText, mkQColor(ui_color(B_LIST_SELECTED_ITEM_TEXT_COLOR)));
+    palette.setBrush(QPalette::Active, QPalette::Link, mkQColor(ui_color(B_LINK_TEXT_COLOR)));
+    palette.setBrush(QPalette::Active, QPalette::LinkVisited, mkQColor(ui_color(B_LINK_VISITED_COLOR)));
+    palette.setBrush(QPalette::Active, QPalette::ToolTipBase, mkQColor(ui_color(B_TOOL_TIP_BACKGROUND_COLOR)));
+    palette.setBrush(QPalette::Active, QPalette::ToolTipText, mkQColor(ui_color(B_TOOL_TIP_TEXT_COLOR)));
+
+    palette.setBrush(QPalette::Inactive, QPalette::WindowText, mkQColor(ui_color(B_PANEL_TEXT_COLOR)));
+    palette.setBrush(QPalette::Inactive, QPalette::Button, mkQColor(ui_color(B_CONTROL_BACKGROUND_COLOR)));
+    palette.setBrush(QPalette::Inactive, QPalette::Light, mkQColor(ui_color(B_SHINE_COLOR)));
+    palette.setBrush(QPalette::Inactive, QPalette::Midlight, QColor(QRgb(0xffffffff)));
+    palette.setBrush(QPalette::Inactive, QPalette::Dark, QColor(QRgb(0xff555555)));
+    palette.setBrush(QPalette::Inactive, QPalette::Mid, QColor(QRgb(0xffc7c7c7)));
+    palette.setBrush(QPalette::Inactive, QPalette::Text, mkQColor(ui_color(B_DOCUMENT_TEXT_COLOR)));
+    palette.setBrush(QPalette::Inactive, QPalette::BrightText, mkQColor(ui_color(B_SHINE_COLOR)));
+    palette.setBrush(QPalette::Inactive, QPalette::ButtonText, mkQColor(control_text));
+    palette.setBrush(QPalette::Inactive, QPalette::Base, mkQColor(ui_color(B_LIST_BACKGROUND_COLOR)));
+    palette.setBrush(QPalette::Inactive, QPalette::AlternateBase, mkQColor(ui_color(B_LIST_BACKGROUND_COLOR)));
+    palette.setBrush(QPalette::Inactive, QPalette::Window, mkQColor(panel_background_color));
+    palette.setBrush(QPalette::Inactive, QPalette::Shadow, mkQColor(ui_color(B_SHADOW_COLOR)));
+    palette.setBrush(QPalette::Inactive, QPalette::Highlight, mkQColor(ui_color(B_LIST_SELECTED_BACKGROUND_COLOR)));
+    palette.setBrush(QPalette::Inactive, QPalette::HighlightedText, mkQColor(ui_color(B_LIST_SELECTED_ITEM_TEXT_COLOR)));
+    palette.setBrush(QPalette::Inactive, QPalette::Link, mkQColor(ui_color(B_LINK_TEXT_COLOR)));
+    palette.setBrush(QPalette::Inactive, QPalette::LinkVisited, mkQColor(ui_color(B_LINK_VISITED_COLOR)));
+}
+
 QHaikuTheme::QHaikuTheme(const QHaikuIntegration *integration) : m_integration(integration)
-{	
+{
+	nativeColorSettings(m_defaultPalette);
 }
 
 QHaikuTheme::~QHaikuTheme()
