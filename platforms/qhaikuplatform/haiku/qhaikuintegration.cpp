@@ -77,7 +77,7 @@ QHaikuIntegration::QHaikuIntegration(const QStringList &parameters, int &argc, c
 	Q_UNUSED(argv);
 	m_screen = new QHaikuScreen();
 	QWindowSystemInterface::handleScreenAdded(m_screen);
-    m_fontDatabase = new QHaikuPlatformFontDatabase();
+    m_fontDatabase = new QGenericUnixFontDatabase();
 	m_services = new QHaikuServices();
 	m_clipboard = new QHaikuClipboard();
 	m_haikuSystemLocale = new QHaikuSystemLocale;
@@ -255,6 +255,17 @@ QHaikuIntegration *QHaikuIntegration::createHaikuIntegration(const QStringList& 
 		}
 	}
 	settings.endGroup();
+
+	bool subpixel = false;
+	uint8 hinting = true;
+	get_hinting_mode(&hinting);
+	get_subpixel_antialiasing(&subpixel);
+	QString fontconfigFile = QLatin1String("/system/settings/fonts/fonts_qt_");
+	fontconfigFile += subpixel ? "lcd" : "gray";
+	if (hinting > 0)
+		fontconfigFile += "_hinting";
+	fontconfigFile += ".conf";
+	setenv("FONTCONFIG_FILE", fontconfigFile.toUtf8().data(), 0);
 
     QHaikuIntegration *newHaikuIntegration = new QHaikuIntegration(parameters, argc, argv);
     connect(haikuApplication, SIGNAL(applicationQuit()), newHaikuIntegration, SLOT(platformAppQuit()), Qt::BlockingQueuedConnection);

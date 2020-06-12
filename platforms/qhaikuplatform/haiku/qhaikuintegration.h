@@ -55,6 +55,9 @@
 #include <GLView.h>
 #endif
 
+extern status_t get_subpixel_antialiasing(bool* subpix);
+extern status_t get_hinting_mode(uint8* hinting);
+
 QT_BEGIN_NAMESPACE
 
 class QSimpleDrag;
