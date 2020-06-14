@@ -44,6 +44,9 @@
 #include <QtGui/private/qpixmap_raster_p.h>
 #include <QtGui/private/qguiapplication_p.h>
 #include <private/qsimpledrag_p.h>
+#include <QDir>
+#include <QFile>
+#include <QDirIterator>
 
 #include <qpa/qplatformfontdatabase.h>
 #include <qpa/qplatformservices.h>
@@ -97,6 +100,48 @@ QHaikuIntegration::~QHaikuIntegration()
 	HQApplication *haikuApplication = static_cast<HQApplication*>(be_app);
 	if (haikuApplication->QtFlags() & Q_KILL_ON_EXIT)
 		kill(::getpid(), SIGKILL);
+}
+
+void QHaikuIntegration::setAntialiasingMethod(bool subpixel)
+{
+	if (subpixel) {
+		QDir dir("/system/settings/fonts/conf.d/", {"*sub-pixel*.conf"});
+		for (const QString & filename: dir.entryList()) {
+			if (filename != "10-sub-pixel-rgb.conf")
+				dir.remove(filename);
+		}
+		symlink("/system/data/fontconfig/conf.avail/10-sub-pixel-rgb.conf",
+			"/system/settings/fonts/conf.d/10-sub-pixel-rgb.conf");
+	} else {
+		QDir dir("/system/settings/fonts/conf.d/", {"*sub-pixel*.conf"});
+		for (const QString & filename: dir.entryList()){
+			if (filename != "10-no-sub-pixel.conf")
+				dir.remove(filename);
+		}
+		symlink("/system/data/fontconfig/conf.avail/10-no-sub-pixel.conf",
+			"/system/settings/fonts/conf.d/10-no-sub-pixel.conf");
+	}
+}
+
+void QHaikuIntegration::setHinting(uint8 hinting)
+{
+	if (hinting > 0) {
+		QDir dir("/system/settings/fonts/conf.d/", {"10-hinting-*.conf"});
+		for (const QString & filename: dir.entryList()) {
+			if (filename != "10-hinting-medium.conf")
+				dir.remove(filename);
+		}
+		symlink("/system/data/fontconfig/conf.avail/10-hinting-medium.conf",
+			"/system/settings/fonts/conf.d/10-hinting-medium.conf");
+	} else {
+		QDir dir("/system/settings/fonts/conf.d/", {"10-hinting-*.conf"});
+		for (const QString & filename: dir.entryList()) {
+			if (filename != "10-hinting-none.conf")
+				dir.remove(filename);
+		}
+		symlink("/system/data/fontconfig/conf.avail/10-hinting-none.conf",
+			"/system/settings/fonts/conf.d/10-hinting-none.conf");
+	}
 }
 
 QHaikuIntegration *QHaikuIntegration::createHaikuIntegration(const QStringList& parameters, int &argc, char **argv)
@@ -257,15 +302,12 @@ QHaikuIntegration *QHaikuIntegration::createHaikuIntegration(const QStringList& 
 	settings.endGroup();
 
 	bool subpixel = false;
-	uint8 hinting = true;
+	uint8 hinting = 1;
 	get_hinting_mode(&hinting);
 	get_subpixel_antialiasing(&subpixel);
-	QString fontconfigFile = QLatin1String("/system/settings/fonts/fonts_qt_");
-	fontconfigFile += subpixel ? "lcd" : "gray";
-	if (hinting > 0)
-		fontconfigFile += "_hinting";
-	fontconfigFile += ".conf";
-	setenv("FONTCONFIG_FILE", fontconfigFile.toUtf8().data(), 0);
+	setAntialiasingMethod(subpixel);
+	setHinting(hinting);
+	setenv("FONTCONFIG_PATH", "/system/settings/fonts", 0);
 
     QHaikuIntegration *newHaikuIntegration = new QHaikuIntegration(parameters, argc, argv);
     connect(haikuApplication, SIGNAL(applicationQuit()), newHaikuIntegration, SLOT(platformAppQuit()), Qt::BlockingQueuedConnection);

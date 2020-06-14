@@ -115,6 +115,8 @@ public:
 
 private:
     static int32 haikuApplicationThread(void *data);
+    static void setAntialiasingMethod(bool subpixel);
+    static void setHinting(uint8 hinting);
 
     QPlatformFontDatabase *m_fontDatabase;
     QSimpleDrag *m_drag;
