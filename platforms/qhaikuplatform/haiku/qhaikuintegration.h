@@ -46,7 +46,7 @@
 #include <qscopedpointer.h>
 
 //OpenGL support disabled for now
-#define QT_NO_OPENGL
+//#define QT_NO_OPENGL
 
 #include "qhaikuclipboard.h"
 #include "qhaikucommon.h"
@@ -117,6 +117,7 @@ private:
     static int32 haikuApplicationThread(void *data);
     static void setAntialiasingMethod(bool subpixel);
     static void setHinting(uint8 hinting);
+    static bool isOpenGLEnabled();
 
     QPlatformFontDatabase *m_fontDatabase;
     QSimpleDrag *m_drag;
@@ -124,6 +125,7 @@ private:
     QHaikuSystemLocale *m_haikuSystemLocale;
     QHaikuScreen *m_screen;
     mutable QHaikuClipboard* m_clipboard;
+    bool m_openGlEnabled;
 private Q_SLOTS:
 	bool platformAppQuit();
 };

@@ -85,6 +85,7 @@ QHaikuIntegration::QHaikuIntegration(const QStringList &parameters, int &argc, c
 	m_clipboard = new QHaikuClipboard();
 	m_haikuSystemLocale = new QHaikuSystemLocale;
 	m_drag = new QSimpleDrag();
+	m_openGlEnabled = isOpenGLEnabled();
 }
 
 QHaikuIntegration::~QHaikuIntegration()
@@ -142,6 +143,16 @@ void QHaikuIntegration::setHinting(uint8 hinting)
 		symlink("/system/data/fontconfig/conf.avail/10-hinting-none.conf",
 			"/system/settings/fonts/conf.d/10-hinting-none.conf");
 	}
+}
+
+bool QHaikuIntegration::isOpenGLEnabled()
+{
+	QStringList whiteListApps;
+	whiteListApps 	<< "otter" \
+					<< "dooble" \
+					<< "qutebrowser";
+	QString appName = QCoreApplication::applicationName().remove("_x86");
+	return whiteListApps.contains(appName, Qt::CaseInsensitive);
 }
 
 QHaikuIntegration *QHaikuIntegration::createHaikuIntegration(const QStringList& parameters, int &argc, char **argv)
@@ -334,11 +345,13 @@ bool QHaikuIntegration::hasCapability(QPlatformIntegration::Capability cap) cons
 {
     switch (cap) {
     case ThreadedPixmaps: return true;
-    case OpenGL: return true;
-    case ThreadedOpenGL: return true;
     case MultipleWindows: return true;
-  //  case RasterGLSurface: return true;
-    case AllGLFunctionsQueryable: return true;
+
+    case OpenGL: return m_openGlEnabled;
+    case ThreadedOpenGL: return m_openGlEnabled;
+    case RasterGLSurface: return m_openGlEnabled;
+    case OpenGLOnRasterSurface: return m_openGlEnabled;
+    case AllGLFunctionsQueryable: return m_openGlEnabled;
 
     default: return QPlatformIntegration::hasCapability(cap);
     }
@@ -371,14 +384,9 @@ QPlatformBackingStore *QHaikuIntegration::createPlatformBackingStore(QWindow *wi
 #if !defined(QT_NO_OPENGL)
 QPlatformOpenGLContext *QHaikuIntegration::createPlatformOpenGLContext(QOpenGLContext *context) const
 {
-	// Ugly temporary solution for opengl applications blacklisting
-	QStringList blaskList;
-	blaskList << "qupzilla" << "otter-browser" << "otter" << "browser";
-	QString appName = QCoreApplication::applicationName().remove("_x86");
-   	if (blaskList.contains(appName, Qt::CaseInsensitive))
-   		return NULL;
-
-   	return new QHaikuGLContext(context);
+	if (m_openGlEnabled)
+		return new QHaikuGLContext(context);
+	return nullptr;
 }
 #endif
 
@@ -412,20 +420,17 @@ QHaikuGLContext::QHaikuGLContext(QOpenGLContext *context)
 	: QPlatformOpenGLContext()  
 {
 	d_format = context->format();
-
     if (d_format.renderableType() == QSurfaceFormat::DefaultRenderableType)
         d_format.setRenderableType(QSurfaceFormat::OpenGL);
     if (d_format.renderableType() != QSurfaceFormat::OpenGL)
         return;
 
-	glview = new BGLView(BRect(0,0,640,480), "bglview", B_FOLLOW_NONE, 0, BGL_RGB);
-	qDebug() << "QHaikuGLContext";
+	glview = new BGLView(BRect(0, 0, 1, 1), "bglview",
+		B_FOLLOW_ALL_SIDES, B_WILL_DRAW | B_FRAME_EVENTS, BGL_DOUBLE);
 }
 
 QHaikuGLContext::~QHaikuGLContext()
 {
-	qDebug() << "~QHaikuGLContext";
-//	delete glview;
 }
 
 QFunctionPointer QHaikuGLContext::getProcAddress(const char *procName)
@@ -441,34 +446,31 @@ bool QHaikuGLContext::makeCurrent(QPlatformSurface *surface)
 	QHaikuWindow *window = static_cast<QHaikuWindow *>(surface);
     if (!window)
         return false;
-        	
+
 	if (window->m_window->fGLView == NULL) {
 		window->m_window->fGLView = glview;
 		window->m_window->Lock();
 		window->m_window->AddChild(glview);
-		glview->ResizeTo(size.width(), size.height());
-		glViewport(0, 0, size.width(), size.height());
+		glview->LockGL();
+		glview->ResizeTo(size.width(),size.height());
 		window->m_window->Unlock();
 	}
-	
-//	QPlatformOpenGLContext::makeCurrent(surface);
-//	window->m_window->fGLView->LockGL();
+
 	return true;
 }
 
 void QHaikuGLContext::doneCurrent()
 {
-//	QPlatformOpenGLContext::doneCurrent();
-//	glview->UnlockGL();
 }
 
 void QHaikuGLContext::swapBuffers(QPlatformSurface *surface)
 {
 	QHaikuWindow *window = static_cast<QHaikuWindow *>(surface);
-
-	//window->m_window->fGLView->LockGL();
-	glview->SwapBuffers();
-	//window->m_window->fGLView->UnlockGL();
+	if (window) {
+		glview->UnlockGL();
+		glview->SwapBuffers();
+		glview->LockGL();
+	}
 }
 
 QSurfaceFormat QHaikuGLContext::format() const
