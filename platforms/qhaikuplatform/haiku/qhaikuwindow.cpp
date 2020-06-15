@@ -304,6 +304,8 @@ QHaikuWindow::QHaikuWindow(QWindow *wnd)
 		this, SLOT(platformMouseEvent(QPoint, QPoint, Qt::MouseButtons, Qt::MouseButton, QEvent::Type, Qt::KeyboardModifiers, Qt::MouseEventSource)));
 	connect(m_window->View(), SIGNAL(mouseDragEvent(QPoint, Qt::DropActions, QMimeData*,  Qt::MouseButtons, Qt::KeyboardModifiers)),
 		this, SLOT(platformMouseDragEvent(QPoint, Qt::DropActions, QMimeData*,  Qt::MouseButtons, Qt::KeyboardModifiers)));
+	connect(m_window->View(), SIGNAL(tabletEvent(QPointF, QPointF, int, int, Qt::MouseButtons, float, Qt::KeyboardModifiers)),
+		this, SLOT(platformTabletEvent(QPointF, QPointF, int, int, Qt::MouseButtons, float, Qt::KeyboardModifiers)));
 	connect(m_window->View(), SIGNAL(exposeEvent(QRegion)), this, SLOT(platformExposeEvent(QRegion)));
 
     window()->setProperty("size-grip", false);
@@ -997,6 +999,37 @@ void QHaikuWindow::platformWheelEvent(const QPoint &localPosition,
 	} else
         QWindowSystemInterface::handleWheelEvent(window(), localPosition, globalPosition, QPoint(), point, modifiers);
 }
+
+void QHaikuWindow::platformTabletEvent(const QPointF &localPosition,
+	const QPointF &globalPosition,
+	int device,
+	int pointerType,
+	Qt::MouseButtons buttons,
+	float pressure,
+	Qt::KeyboardModifiers modifiers)
+{
+	QWindow *childWindow = childWindowAt(window(), globalPosition.toPoint());
+	if (childWindow) {
+		QWindowSystemInterface::handleTabletEvent(childWindow, childWindow->mapFromGlobal(globalPosition.toPoint()),
+			globalPosition,	device, pointerType, buttons, pressure, 0, 0, 0.0, 0.0, 0, 0, modifiers);
+		QWindowSystemInterface::handleExposeEvent(window(), QRect(QPoint(0,0), window()->size()));
+	} else {
+		QWindowSystemInterface::handleTabletEvent(window(), localPosition, globalPosition,
+			device, pointerType, buttons, pressure, 0, 0, 0.0, 0.0, 0, 0, modifiers);
+		if (window()->cursor().shape() == Qt::BitmapCursor || window()->cursor().shape() == Qt::CustomCursor) {
+			QPoint hotSpot = window()->cursor().hotSpot();
+			QPoint pos = window()->mapFromGlobal(m_lastMousePos);
+			QRect rect = window()->cursor().bitmap()->rect().translated(pos.x() - hotSpot.x(), pos.y() - hotSpot.y());
+			QWindowSystemInterface::handleExposeEvent(window(), QRegion(rect.adjusted(-1, -1, 1, 1)));
+
+			pos = window()->mapFromGlobal(window()->cursor().pos());
+			rect = window()->cursor().bitmap()->rect().translated(pos.x() - hotSpot.x(), pos.y() - hotSpot.y());
+			QWindowSystemInterface::handleExposeEvent(window(), QRegion(rect.adjusted(-1, -1, 1, 1)));
+		}
+	}
+	m_lastMousePos = globalPosition.toPoint();
+}
+
 
 void QHaikuWindow::platformKeyEvent(QEvent::Type type, int key, Qt::KeyboardModifiers modifiers, const QString &text)
 {

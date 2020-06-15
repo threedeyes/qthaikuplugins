@@ -190,6 +190,13 @@ private Q_SLOTS:
 		int delta,
 		Qt::Orientation orientation,
 		Qt::KeyboardModifiers modifiers);
+    void platformTabletEvent(const QPointF &localPosition,
+		const QPointF &globalPosition,
+		int device,
+		int pointerType,
+		Qt::MouseButtons buttons,
+		float pressure,
+		Qt::KeyboardModifiers modifiers);
 	void platformKeyEvent(QEvent::Type type,
 		int key,
 		Qt::KeyboardModifiers modifiers,

@@ -214,6 +214,8 @@ QHaikuSurfaceView::MouseUp(BPoint point)
 void 
 QHaikuSurfaceView::MouseMoved(BPoint point, uint32 transit, const BMessage *msg)
 {
+	bool isTabletEvent = Window()->CurrentMessage()->HasFloat("be:tablet_x");
+
 	if (system_time() - mousePreventTime < Q_HAIKU_MOUSE_PREVENT_TIME)
 		return;
 
@@ -273,8 +275,22 @@ QHaikuSurfaceView::MouseMoved(BPoint point, uint32 transit, const BMessage *msg)
 			Q_EMIT mouseDragEvent(localPoint, Qt::CopyAction | Qt::MoveAction | Qt::LinkAction, dragData,
 				hostToQtButtons(buttons), hostToQtModifiers(modifiers()));
 		} else {
-			Q_EMIT mouseEvent(localPoint, globalPoint, hostToQtButtons(buttons), Qt::NoButton, QEvent::MouseMove,
-				hostToQtModifiers(modifiers()), Qt::MouseEventNotSynthesized);
+			if (isTabletEvent) {
+				BScreen scr;
+				float x = Window()->CurrentMessage()->FindFloat("be:tablet_x");
+				float y = Window()->CurrentMessage()->FindFloat("be:tablet_y");
+				float pressure = Window()->CurrentMessage()->FindFloat("be:tablet_pressure");
+				int32 eraser = Window()->CurrentMessage()->FindFloat("be:tablet_eraser");
+				QPointF globalTablePoint(x * scr.Frame().Width(), y * scr.Frame().Height());
+				Q_EMIT tabletEvent(QPointF(localPoint), QPointF(globalPoint), QTabletEvent::Stylus,
+					eraser==0 ? QTabletEvent::Pen :  QTabletEvent::Eraser, hostToQtButtons(buttons),
+					pressure, hostToQtModifiers(modifiers()));
+				Q_EMIT mouseEvent(localPoint, globalPoint, Qt::NoButton, Qt::NoButton, QEvent::MouseMove,
+					hostToQtModifiers(modifiers()), Qt::MouseEventNotSynthesized);
+			} else {
+				Q_EMIT mouseEvent(localPoint, globalPoint, hostToQtButtons(buttons), Qt::NoButton, QEvent::MouseMove,
+					hostToQtModifiers(modifiers()), Qt::MouseEventNotSynthesized);
+			}
 		}
 
 		lastMouseMoveTime = timeNow;

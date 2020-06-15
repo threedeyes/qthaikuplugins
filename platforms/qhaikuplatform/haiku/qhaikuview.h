@@ -96,6 +96,13 @@ class QHaikuSurfaceView : public QObject, public BView
 			QMimeData *data,
 			Qt::MouseButtons buttons,
 			Qt::KeyboardModifiers modifiers);
+		void tabletEvent(const QPointF &localPosition,
+			const QPointF &globalPosition,
+			int device,
+			int pointerType,
+			Qt::MouseButtons buttons,
+			float pressure,
+			Qt::KeyboardModifiers modifiers);
 	    void enteredView();
 		void exitedView();
 		void exposeEvent(QRegion region);
