@@ -147,12 +147,15 @@ void QHaikuIntegration::setHinting(uint8 hinting)
 
 bool QHaikuIntegration::isOpenGLEnabled()
 {
-	QStringList whiteListApps;
-	whiteListApps 	<< "otter" \
-					<< "dooble" \
-					<< "qutebrowser";
-	QString appName = QCoreApplication::applicationName().remove("_x86");
-	return whiteListApps.contains(appName, Qt::CaseInsensitive);
+	app_info appInfo;
+	if (be_app->GetAppInfo(&appInfo) == B_OK) {
+		QStringList whiteListApps;
+		whiteListApps 	<< "application/x-vnd.otter-browser" \
+					<< "application/x-vnd.dooble" \
+					<< "application/x-vnd.qutebrowser";
+		return whiteListApps.contains(appInfo.signature, Qt::CaseInsensitive);
+	}
+	return false;
 }
 
 QHaikuIntegration *QHaikuIntegration::createHaikuIntegration(const QStringList& parameters, int &argc, char **argv)
