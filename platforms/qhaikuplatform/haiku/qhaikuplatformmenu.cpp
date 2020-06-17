@@ -197,10 +197,10 @@ BPopUpMenu* QHaikuPlatformMenu::makeBPopUpMenu(QHaikuPlatformMenu *menu)
 	    		QSize size = (*it)->icon().actualSize(QSize(16, 16));
 	    		QPixmap pm = (*it)->icon().pixmap(size);
 	    		if (!pm.isNull()) {
-				    QImage img = pm.toImage();
+				    QImage img = pm.toImage().convertToFormat(QImage::Format_ARGB32);
 	    			if(!img.isNull()) {
-						icon = new BBitmap(BRect(0, 0, size.width() - 1, size.height() - 1), B_RGBA32);
-						icon->SetBits((const void*)img.bits(), img.sizeInBytes(), 0, B_RGBA32);    				
+						icon = new BBitmap(BRect(0, 0, img.width() - 1, img.height() - 1), B_RGBA32);
+						icon->SetBits((const void*)img.bits(), img.sizeInBytes(), 0, B_RGBA32);
 	    			}
 	    		}
     		}
