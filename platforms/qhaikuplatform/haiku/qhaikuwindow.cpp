@@ -1,7 +1,7 @@
 /****************************************************************************
 **
 ** Copyright (C) 2017 The Qt Company Ltd.
-** Copyright (C) 2015-2017 Gerasim Troeglazov,
+** Copyright (C) 2015-2020 Gerasim Troeglazov,
 ** Contact: 3dEyes@gmail.com
 **
 ** This file is part of the plugins of the Qt Toolkit.
@@ -247,6 +247,11 @@ void QtHaikuWindow::Zoom(BPoint origin, float w, float h)
 	Q_EMIT windowZoomed();
 }
 
+void QtHaikuWindow::Minimize(bool minimized)
+{
+	BWindow::Minimize(minimized);
+	Q_EMIT windowMinimized(minimized);
+}
 
 void QtHaikuWindow::FrameResized(float width, float height)
 {
@@ -286,12 +291,14 @@ QHaikuWindow::QHaikuWindow(QWindow *wnd)
     , m_positionIncludesFrame(false)
     , m_visible(false)
     , m_pendingGeometryChangeOnShow(true)
+    , m_systemMoveResizeEnabled(false)
 {
 	connect(m_window, SIGNAL(quitRequested()), SLOT(platformWindowQuitRequested()), Qt::BlockingQueuedConnection);
     connect(m_window, SIGNAL(windowMoved(QPoint)), SLOT(platformWindowMoved(QPoint)));
 	connect(m_window, SIGNAL(windowResized(QSize)), SLOT(platformWindowResized(QSize)));
     connect(m_window, SIGNAL(windowActivated(bool)), SLOT(platformWindowActivated(bool)));
     connect(m_window, SIGNAL(windowZoomed()), SLOT(platformWindowZoomed()));
+    connect(m_window, SIGNAL(windowMinimized(bool)), SLOT(platformWindowMinimized(bool)));
     connect(m_window, SIGNAL(dropAction(BMessage*)), SLOT(platformDropAction(BMessage*)));
 	connect(m_window, SIGNAL(wheelEvent(QPoint, QPoint, int, Qt::Orientation, Qt::KeyboardModifiers)),
 		this, SLOT(platformWheelEvent(QPoint, QPoint, int, Qt::Orientation, Qt::KeyboardModifiers)));
@@ -612,7 +619,7 @@ bool QHaikuWindow::windowEvent(QEvent *event)
 {
 	switch (event->type()) {
 		case QEvent::DynamicPropertyChange:
-			if ( window()->property("size-grip") == true)
+			if ( window()->property("size-grip").toBool() == true)
 				m_window->PostMessage(kSizeGripEnable);
 			else
 				m_window->PostMessage(kSizeGripDisable);
@@ -622,6 +629,24 @@ bool QHaikuWindow::windowEvent(QEvent *event)
 	}
 
     return QPlatformWindow::windowEvent(event);
+}
+
+bool QHaikuWindow::startSystemResize(Qt::Edges edges)
+{
+    if (Q_UNLIKELY(window()->flags().testFlag(Qt::MSWindowsFixedSizeDialogHint)) || edges == 0)
+        return false;
+	m_systemResizeEdges = edges;
+	m_systemMoveWindowGeometry = window()->geometry();
+	m_systemMoveResizeEnabled = true;
+    return true;
+}
+
+bool QHaikuWindow::startSystemMove()
+{
+	m_systemResizeEdges = 0;
+	m_systemMoveWindowGeometry = window()->geometry();
+	m_systemMoveResizeEnabled = true;
+    return true;
 }
 
 
@@ -757,6 +782,9 @@ void QHaikuWindow::setWindowState(Qt::WindowStates states)
     setFrameMarginsEnabled(state != Qt::WindowFullScreen);
     m_positionIncludesFrame = false;
 
+	if (!(states & Qt::WindowMinimized) && m_window->IsMinimized())
+		m_window->Minimize(false);
+
     switch (state) {
     case Qt::WindowFullScreen:
     	m_window->SetLook(B_NO_BORDER_WINDOW_LOOK);
@@ -768,8 +796,11 @@ void QHaikuWindow::setWindowState(Qt::WindowStates states)
 		maximizeWindowRespected(true);
 		break;
     case Qt::WindowMinimized:
-    	setWindowFlags(window()->flags());
-        break;
+		m_normalGeometry = geometry();
+		if (!m_window->IsMinimized())
+			m_window->Minimize(true);
+		setWindowFlags(window()->flags());
+		break;
     case Qt::WindowNoState:
 		setWindowFlags(window()->flags());
         setGeometryImpl(m_normalGeometry);
@@ -860,6 +891,16 @@ void QHaikuWindow::platformWindowZoomed()
 		setWindowState(Qt::WindowNoState);
 	} else {
 		setWindowState(Qt::WindowMaximized);
+	}
+}
+
+void QHaikuWindow::platformWindowMinimized(bool minimized)
+{
+	if (minimized) {
+		m_lastWindowStates = window()->windowStates();
+		setWindowState(Qt::WindowMinimized);
+	} else {
+		setWindowState(m_lastWindowStates);
 	}
 }
 
@@ -956,6 +997,27 @@ void QHaikuWindow::platformMouseEvent(const QPoint &localPosition,
 			globalPosition, state, button, type, modifiers, source);
 			QWindowSystemInterface::handleExposeEvent(window(), QRect(QPoint(0,0), window()->size()));
 	} else {
+		if (type == QEvent::MouseButtonRelease && m_systemMoveResizeEnabled) {
+			m_systemMoveResizeEnabled = false;
+		}
+		if (type == QEvent::MouseMove && m_systemMoveResizeEnabled) {
+			if (m_systemResizeEdges == 0) {
+				window()->setFramePosition(m_systemMoveWindowGeometry.topLeft() + (globalPosition - m_lastMousePos));
+				return;
+			}
+			QRect newGeometry = m_systemMoveWindowGeometry;
+			if (m_systemResizeEdges & Qt::RightEdge)
+				newGeometry.setRight(MAX(globalPosition.x(), m_systemMoveWindowGeometry.x() + window()->minimumSize().width()));
+			if (m_systemResizeEdges & Qt::LeftEdge)
+				newGeometry.setLeft(MIN(globalPosition.x(), m_systemMoveWindowGeometry.x() + window()->minimumSize().width()));
+			if (m_systemResizeEdges & Qt::TopEdge)
+				newGeometry.setTop(MIN(globalPosition.y(), m_systemMoveWindowGeometry.y() + window()->minimumSize().height()));
+			if (m_systemResizeEdges & Qt::BottomEdge)
+				newGeometry.setBottom(MAX(globalPosition.y(), m_systemMoveWindowGeometry.y() + window()->minimumSize().height()));
+			window()->setGeometry(newGeometry.left(), newGeometry.top(), newGeometry.width(), newGeometry.height());
+			QWindowSystemInterface::handleGeometryChange(window(), newGeometry);
+			return;
+		}
 		QWindowSystemInterface::handleMouseEvent(window(),
 			localPosition, globalPosition, state, button, type, modifiers, source);
 		if (window()->cursor().shape() == Qt::BitmapCursor || window()->cursor().shape() == Qt::CustomCursor) {

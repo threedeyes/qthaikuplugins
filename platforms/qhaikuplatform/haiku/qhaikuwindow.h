@@ -86,6 +86,7 @@ public:
 	virtual bool QuitRequested();
 
 	virtual void Zoom(BPoint origin, float w, float h);
+	virtual void Minimize(bool mimimize);
 
 	QHaikuSurfaceView *View(void);
 
@@ -99,6 +100,7 @@ Q_SIGNALS:
     void windowResized(const QSize &size);
     void windowActivated(bool activated);
     void windowZoomed();
+    void windowMinimized(bool minimized);
     void quitRequested();
     void dropAction(BMessage *message);
 	void wheelEvent(const QPoint &localPosition,
@@ -127,6 +129,9 @@ public:
 
 	bool windowEvent(QEvent *event) override;
 
+    bool startSystemResize(Qt::Edges edges) override;
+    bool startSystemMove() override;
+
 	QMargins frameMargins() const;
 
 	void setVisible(bool visible);
@@ -153,6 +158,9 @@ private:
 	void maximizeWindowRespected(bool respected);
 	void syncDeskBarVisible(void);
 
+	bool m_systemMoveResizeEnabled;
+	Qt::Edges m_systemResizeEdges;
+	QRect m_systemMoveWindowGeometry;
 	QPoint m_lastMousePos;
 	QRect m_normalGeometry;
 	QMargins m_margins;
@@ -161,6 +169,7 @@ private:
 	static QHash<WId, QHaikuWindow *> m_windowForWinIdHash;
 
 	Qt::WindowFlags windowFlags;
+	Qt::WindowStates m_lastWindowStates;
 	bool m_positionIncludesFrame;
 	bool m_visible;
 	bool m_pendingGeometryChangeOnShow;
@@ -170,6 +179,7 @@ private Q_SLOTS:
 	void platformWindowResized(const QSize &size);
 	void platformWindowActivated(bool activated);
 	void platformWindowZoomed();
+	void platformWindowMinimized(bool minimized);
 	void platformDropAction(BMessage *message);
 	void platformEnteredView();
 	void platformExitedView();
