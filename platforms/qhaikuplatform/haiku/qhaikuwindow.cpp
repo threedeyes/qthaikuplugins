@@ -179,6 +179,8 @@ void QtHaikuWindow::DispatchMessage(BMessage *msg, BHandler *handler)
 					qt_keycode = Qt::Key_Backtab;
 				if (qt_keycode == Qt::Key_Q && modifiers & B_COMMAND_KEY)
 					break;
+				if (qt_keycode == Qt::Key_M && modifiers & B_COMMAND_KEY && modifiers & B_CONTROL_KEY)
+					break;
 				bool press = msg->what == B_KEY_DOWN || msg->what == B_UNMAPPED_KEY_DOWN;
 				Q_EMIT keyEvent(press ? QEvent::KeyPress : QEvent::KeyRelease, qt_keycode, fView->hostToQtModifiers(modifiers), text);
 				break;	
@@ -898,6 +900,7 @@ void QHaikuWindow::platformWindowMinimized(bool minimized)
 {
 	if (minimized) {
 		m_lastWindowStates = window()->windowStates();
+		m_lastWindowStates &= ~Qt::WindowMinimized;
 		setWindowState(Qt::WindowMinimized);
 	} else {
 		setWindowState(m_lastWindowStates);
