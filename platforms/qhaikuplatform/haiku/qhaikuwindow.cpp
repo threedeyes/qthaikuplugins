@@ -290,10 +290,10 @@ QHaikuWindow::QHaikuWindow(QWindow *wnd)
 					wnd->title().toUtf8().constData(),
 					B_NO_BORDER_WINDOW_LOOK, B_NORMAL_WINDOW_FEEL, 0))	
     , m_parent(0)
+    , m_systemMoveResizeEnabled(false)
     , m_positionIncludesFrame(false)
     , m_visible(false)
     , m_pendingGeometryChangeOnShow(true)
-    , m_systemMoveResizeEnabled(false)
 {
 	connect(m_window, SIGNAL(quitRequested()), SLOT(platformWindowQuitRequested()), Qt::BlockingQueuedConnection);
     connect(m_window, SIGNAL(windowMoved(QPoint)), SLOT(platformWindowMoved(QPoint)));
@@ -639,8 +639,9 @@ bool QHaikuWindow::windowEvent(QEvent *event)
 
 bool QHaikuWindow::startSystemResize(Qt::Edges edges)
 {
-    if (Q_UNLIKELY(window()->flags().testFlag(Qt::MSWindowsFixedSizeDialogHint)) || edges == 0)
+	if (Q_UNLIKELY(window()->flags().testFlag(Qt::MSWindowsFixedSizeDialogHint)) || edges == 0)
         return false;
+
 	m_systemResizeEdges = edges;
 	m_systemMoveWindowGeometry = window()->geometry();
 	m_systemMoveResizeEnabled = true;
