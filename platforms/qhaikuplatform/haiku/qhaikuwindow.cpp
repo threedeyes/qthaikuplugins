@@ -352,9 +352,7 @@ void QHaikuWindow::setWindowFlags(Qt::WindowFlags flags)
 
 	bool popup = (type == Qt::Popup);
 	bool splash = (type == Qt::SplashScreen);
-#if 0
-    bool dialog = ((type == Qt::Dialog) || (type == Qt::Sheet) || (type == Qt::MSWindowsFixedSizeDialogHint));
-#endif
+	bool dialog = ((type == Qt::Dialog) || (type == Qt::Sheet) || (type == Qt::MSWindowsFixedSizeDialogHint));
 	bool tool = (type == Qt::Tool || type == Qt::Drawer);
 	bool tooltip = (type == Qt::ToolTip);
 
@@ -429,6 +427,16 @@ void QHaikuWindow::setWindowFlags(Qt::WindowFlags flags)
 		if (flags & Qt::NoDropShadowWindowHint)
 			wflag |= B_AVOID_FOCUS;
 		wfeel = B_FLOATING_ALL_WINDOW_FEEL;
+	}
+	if (dialog) {
+		if (window()->isModal()) {
+			wfeel = B_MODAL_APP_WINDOW_FEEL;
+		}
+		if (QGuiApplication::modalWindow() != NULL &&
+			window()->type() == Qt::Dialog) {
+			window()->setModality(Qt::ApplicationModal);
+			wfeel = B_MODAL_APP_WINDOW_FEEL;
+		}
 	}
 	m_window->SetLook(wlook);
 	m_window->SetFeel(wfeel);
@@ -562,23 +570,19 @@ void QHaikuWindow::setVisible(bool visible)
 		return;
 
 	m_window->Lock();
-	if (window()->modality() == Qt::WindowModal ||
-		window()->modality() == Qt::ApplicationModal) {
-		m_window->SetFeel(B_MODAL_APP_WINDOW_FEEL);
-	}
-	if (QGuiApplication::modalWindow() != NULL &&
-		window()->type() == Qt::Dialog) {
-		m_window->SetFeel(B_MODAL_APP_WINDOW_FEEL);
-	}
+
 	if (visible) {
 		if (window()->type() == Qt::Popup) {
 			m_window->SetWorkspaces(B_CURRENT_WORKSPACE);
 			m_window->Show();
 			m_window->Activate(true);
-	    } else
+	    } else {
 			m_window->Show();
+			if (window()->isModal() && window()->type() == Qt::Dialog)
+				m_window->SetFeel(B_MODAL_APP_WINDOW_FEEL);
+	    }
     } else {
-    	setWindowFlags(windowFlags);
+		setWindowFlags(window()->flags());
 		m_window->Hide();
     }
     m_window->Unlock();
