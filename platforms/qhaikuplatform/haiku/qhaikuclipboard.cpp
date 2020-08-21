@@ -114,6 +114,47 @@ void QHaikuClipboard::setMimeData(QMimeData *mimeData, QClipboard::Mode mode)
 					QString plainText = QTextDocumentFragment::fromHtml(body).toPlainText();
 					clip->AddData("text/plain", B_MIME_TYPE, plainText.toUtf8().constData(), plainText.toUtf8().count() + 1);
 				}
+				int imageIdx = formats.indexOf(QLatin1String("application/x-qt-image"));
+				if (imageIdx >= 0) {
+					const QImage image = qvariant_cast<QImage>(mimeData->imageData());
+					if(!image.isNull()) {
+						color_space colorSpace = B_NO_COLOR_SPACE;
+						switch (image.format()) {
+							case QImage::Format_RGB32:
+								colorSpace = B_RGB32;
+								break;
+							case QImage::Format_ARGB32:
+								colorSpace = B_RGBA32;
+								break;
+							case QImage::Format_RGB888:
+								colorSpace = B_RGB24;
+								break;
+							case QImage::Format_RGB16:
+								colorSpace = B_RGB16;
+								break;
+							case QImage::Format_Grayscale8:
+								colorSpace = B_GRAY8;
+								break;
+							case QImage::Format_Mono:
+								colorSpace = B_GRAY1;
+								break;
+							default:
+								colorSpace = B_NO_COLOR_SPACE;
+								break;
+						}
+						if (colorSpace != B_NO_COLOR_SPACE) {
+							BBitmap *haikuBitmap = new BBitmap(BRect(0, 0, image.width() - 1, image.height() - 1), colorSpace);
+							if (haikuBitmap != NULL) {
+								memcpy(haikuBitmap->Bits(), image.bits(), image.sizeInBytes());
+								BMessage bitmapArchive;
+								haikuBitmap->Archive(&bitmapArchive);
+								clip->AddMessage("image/bitmap", &bitmapArchive);
+								clip->AddPoint("be:location", BPoint(0,0));
+								delete haikuBitmap;
+							}
+						}
+					}
+				}
 			}
 		}
 
