@@ -48,6 +48,7 @@
 
 #include <QApplication>
 #include <QProcess>
+#include <QSettings>
 #include <QString>
 #include <QStringList>
 #include <QClipboard>

@@ -38,10 +38,15 @@
 **
 ****************************************************************************/
 
-#include "QCoreApplication"
+#include <QCoreApplication>
+#include <QGuiApplication>
+#include <QWindow>
 #include "QDebug"
+#include <QSettings>
 
 #include "qhaikusystemtrayicon.h"
+#include "qhaikusettings.h"
+#include "qhaikuwindow.h"
 
 #include <OS.h>
 #include <Application.h>
@@ -385,6 +390,9 @@ QHaikuSystemTrayIcon::installIcon(void)
 	message.AddString("application_name", app_name);
 
 	sendMessageToReplicant(&message);
+
+	QHaikuWindow::syncDeskBarVisible();
+
 	liveFactor = 0;
 }
 

@@ -145,6 +145,7 @@ public:
 
 	static QHaikuWindow *windowForWinId(WId id);
 	static QHaikuSurfaceView *viewForWinId(WId id);
+	static void syncDeskBarVisible(void);
 
 	void raise();
 	void lower();
@@ -156,7 +157,6 @@ private:
 	void setGeometryImpl(const QRect &rect);
 	void getDecoratorSize(float* borderWidth, float* tabHeight);
 	void maximizeWindowRespected(bool respected);
-	void syncDeskBarVisible(void);
 
 	bool m_systemMoveResizeEnabled;
 	Qt::Edges m_systemResizeEdges;
