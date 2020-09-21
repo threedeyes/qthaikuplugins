@@ -64,6 +64,37 @@ bool QHaikuServices::openUrl(const QUrl &url)
 {
 	QString argument;
 	QString scheme = url.scheme();
+	
+	qDebug() << "openUrl" << url;
+
+    if (scheme == QLatin1String("file")) {
+		const QString nativeFilePath = url.isLocalFile() && !url.hasFragment() && !url.hasQuery()
+        ? QDir::toNativeSeparators(url.toLocalFile())
+        : url.toString(QUrl::FullyEncoded);
+        argument = nativeFilePath;
+    } else
+		argument = url.toString();
+
+    QByteArray urlData = argument.toLocal8Bit();
+    char *rawUrlData = urlData.data();
+
+	entry_ref ref;
+	if (get_ref_for_path("/boot/system/apps/WebPositive", &ref))
+		return false;
+
+	const char* args[] = { "/boot/system/apps/WebPositive", rawUrlData, NULL };
+	if (be_roster->Launch(&ref, 2, args) != B_OK)
+		return false;
+
+    return true;
+}
+
+bool QHaikuServices::openDocument(const QUrl &url)
+{
+	QString argument;
+	QString scheme = url.scheme();
+	
+	qDebug() << "openDocument" << url;
 
     if (scheme == QLatin1String("file")) {
 		const QString nativeFilePath = url.isLocalFile() && !url.hasFragment() && !url.hasQuery()
@@ -85,11 +116,6 @@ bool QHaikuServices::openUrl(const QUrl &url)
 		return false;
 
     return true;
-}
-
-bool QHaikuServices::openDocument(const QUrl &url)
-{
-    return openUrl(url);
 }
 
 QT_END_NAMESPACE

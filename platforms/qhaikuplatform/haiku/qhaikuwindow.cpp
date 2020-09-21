@@ -536,6 +536,11 @@ void QHaikuWindow::setGeometryImpl(const QRect &rect)
 
 void QHaikuWindow::syncDeskBarVisible(void)
 {
+	QSettings settings(QT_SETTINGS_FILENAME, QSettings::NativeFormat);
+	settings.beginGroup("QPA");
+	if (!settings.value("hide_from_deskbar", true).toBool())
+		return;
+
 	app_info appInfo;
 	if (be_app->GetAppInfo(&appInfo) == B_OK) {
 		int visible = 0;
@@ -604,10 +609,7 @@ void QHaikuWindow::setVisible(bool visible)
         QWindowSystemInterface::handleExposeEvent(window(), QRegion());
     }
 
-	QSettings settings(QT_SETTINGS_FILENAME, QSettings::NativeFormat);
-	settings.beginGroup("QPA");
-	if (settings.value("hide_from_deskbar", true).toBool())
-		syncDeskBarVisible();
+	syncDeskBarVisible();
 
     m_visible = visible;
 }
