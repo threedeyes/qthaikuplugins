@@ -147,6 +147,7 @@ void QHaikuIntegration::setHinting(uint8 hinting)
 
 bool QHaikuIntegration::isOpenGLEnabled()
 {
+#ifdef __x86_64
 	app_info appInfo;
 	if (be_app->GetAppInfo(&appInfo) == B_OK) {
 		QStringList whiteListApps;
@@ -155,6 +156,7 @@ bool QHaikuIntegration::isOpenGLEnabled()
 					<< "application/x-vnd.qutebrowser";
 		return whiteListApps.contains(appInfo.signature, Qt::CaseInsensitive);
 	}
+#endif
 	return false;
 }
 
