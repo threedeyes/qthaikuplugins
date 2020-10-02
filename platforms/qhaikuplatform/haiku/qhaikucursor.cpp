@@ -54,6 +54,7 @@
 #include <QDebug>
 
 #include <Application.h>
+#include <WindowScreen.h>
 
 #include "qhaikucursor.h"
 
@@ -155,7 +156,7 @@ QPoint QHaikuCursor::pos() const
 
 void QHaikuCursor::setPos(const QPoint &pos)
 {
-	Q_UNUSED(pos);
+	set_mouse_position (int32 (pos.x()), int32 (pos.y()));
 }
 
 
