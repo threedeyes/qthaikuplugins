@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<svg version="1.1" width="64" height="64" color-interpolation="linearRGB"
+     xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg">
+ <g>
+  <path style="fill:#000000; fill-opacity:0.4"
+        d="M22.98 4C12.5 4 3.99 12.5 3.99 23C3.99 33.47 12.5 42 22.98 42C33.47 42 42 33.47 42 23C42 12.5 33.47 4 22.98 4V4V4z"
+        transform="matrix(1.3332,0,0,1.3333,4.0034,4)"
+  />
+  <path style="fill:none; stroke:#000000; stroke-width:4; stroke-linecap:round; stroke-linejoin:round"
+        d="M20.98 2C10.5 2 1.99 10.5 1.99 21C1.99 31.46 10.5 40 20.98 40C31.46 40 40 31.46 40 21C40 10.5 31.46 2 20.98 2V2V2z"
+        transform="matrix(1.3332,0,0,1.3333,4.0034,4)"
+  />
+  <linearGradient id="gradient0" gradientUnits="userSpaceOnUse" x1="128" y1="1.98" x2="128" y2="39.99">
+   <stop offset="0" stop-color="#808080"/>
+   <stop offset="1" stop-color="#282828"/>
+  </linearGradient>
+  <path style="fill:url(#gradient0)"
+        d="M20.98 2C10.5 2 1.99 10.5 1.99 21C1.99 31.46 10.5 40 20.98 40C31.46 40 40 31.46 40 21C40 10.5 31.46 2 20.98 2V2V2z"
+        transform="matrix(1.3332,0,0,1.3333,4.0034,4)"
+  />
+  <linearGradient id="gradient1" gradientUnits="userSpaceOnUse" x1="128" y1="1.98" x2="128" y2="39.99">
+   <stop offset="0" stop-color="#ffffff"/>
+   <stop offset="1" stop-color="#e5e5e5"/>
+  </linearGradient>
+  <path style="fill:url(#gradient1)"
+        d="M20 10C20 16 20 22 20 28C20.66 28 21.33 28 22 28C22 24.66 22 21.33 22 18C22 18 32 17 28 24C40 12 20 10 20 10V10V10z
+           M16 24C12.68 24 10 25.79 10 28C10 30.2 12.68 32 16 32C19.3 32 22 30.2 22 28C22 25.79 19.3 24 16 24V24V24z"
+        transform="matrix(1.3332,0,0,1.3333,4.0034,4)"
+  />
+  <linearGradient id="gradient2" gradientUnits="userSpaceOnUse" x1="139" y1="3.97" x2="139" y2="41.99">
+   <stop offset="0" stop-color="#ffffff" stop-opacity="0.4941"/>
+   <stop offset="1" stop-color="#e5e5e5" stop-opacity="0"/>
+  </linearGradient>
+  <path style="fill:url(#gradient2)"
+        d="M39 23C42.65 23 46.33 23 50 23C50 28 47.84 32.34 44.56 35.58C42.04 33.04 39.52 30.52 37 28C38.22 26.76 39 25 39 23V23V23V23V23z
+           M25 23C21.32 23 17.65 23 14 23C14 18 16.14 13.64 19.43 10.42C21.95 12.93 24.47 15.47 27 18C25.76 19.21 25 21 25 23V23V23V23V23z"
+        transform="matrix(1.2043,0.4268,-0.427,1.2047,3.282,-8.87)"
+  />
+ </g>
+</svg>
