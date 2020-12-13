@@ -199,6 +199,18 @@ void QtHaikuWindow::MessageReceived(BMessage* msg)
 		return;
 	}
 	switch(msg->what) {
+		case kCloseWindow:
+		{
+			Quit();
+			return;
+		}
+		case kSetTitle:
+		{
+			const char *title = msg->FindString("title");
+			if (title != NULL)
+				SetTitle(title);
+			return;
+		}
 		case kQuitApplication:
 		{
 			be_app->PostMessage(B_QUIT_REQUESTED);
@@ -295,7 +307,7 @@ QHaikuWindow::QHaikuWindow(QWindow *wnd)
     , m_visible(false)
     , m_pendingGeometryChangeOnShow(true)
 {
-	connect(m_window, SIGNAL(quitRequested()), SLOT(platformWindowQuitRequested()), Qt::BlockingQueuedConnection);
+	connect(m_window, SIGNAL(quitRequested()), SLOT(platformWindowQuitRequested()));
     connect(m_window, SIGNAL(windowMoved(QPoint)), SLOT(platformWindowMoved(QPoint)));
 	connect(m_window, SIGNAL(windowResized(QSize)), SLOT(platformWindowResized(QSize)));
     connect(m_window, SIGNAL(windowActivated(bool)), SLOT(platformWindowActivated(bool)));
@@ -331,10 +343,10 @@ QHaikuWindow::QHaikuWindow(QWindow *wnd)
 }
 
 
-QHaikuWindow::~QHaikuWindow()
+void QHaikuWindow::destroy()
 {
-	m_window->Lock();
-	m_window->Quit();
+	m_window->PostMessage(kCloseWindow);
+	m_window = NULL;
 }
 
 
@@ -450,7 +462,9 @@ void QHaikuWindow::setWindowTitle(const QString &title)
 {
 	QString newTitle = QPlatformWindow::formatWindowTitle(title, QStringLiteral(" - "));
 	newTitle = QPlatformTheme::removeMnemonics(newTitle).trimmed();
-	m_window->SetTitle(newTitle.toUtf8().constData());
+	BMessage message(kSetTitle);
+	message.AddString("title", newTitle.toUtf8().constData());
+	m_window->PostMessage(&message);
 }
 
 
@@ -568,8 +582,6 @@ void QHaikuWindow::setVisible(bool visible)
 	if (visible == m_visible)
 		return;
 
-	m_window->Lock();
-
 	if (visible) {
 		if (window()->type() == Qt::Popup) {
 			m_window->SetWorkspaces(B_CURRENT_WORKSPACE);
@@ -584,7 +596,6 @@ void QHaikuWindow::setVisible(bool visible)
 		setWindowFlags(window()->flags());
 		m_window->Hide();
     }
-    m_window->Unlock();
 
 	if (visible) {
 		if (window()->type() != Qt::ToolTip)

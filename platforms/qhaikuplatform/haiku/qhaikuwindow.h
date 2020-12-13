@@ -1,7 +1,7 @@
 /****************************************************************************
 **
 ** Copyright (C) 2017 The Qt Company Ltd.
-** Copyright (C) 2015-2017 Gerasim Troeglazov,
+** Copyright (C) 2015-2020 Gerasim Troeglazov,
 ** Contact: 3dEyes@gmail.com
 **
 ** This file is part of the plugins of the Qt Toolkit.
@@ -65,6 +65,8 @@
 #define kQuitApplication	'QAPP'
 #define kSizeGripEnable		'SGEN'
 #define kSizeGripDisable	'SGDI'
+#define kSetTitle			'TITL'
+#define kCloseWindow		'CLWN'
 
 QT_BEGIN_NAMESPACE
 
@@ -119,7 +121,9 @@ class QHaikuWindow : public QObject, public QPlatformWindow
 	Q_OBJECT
 public:
 	QHaikuWindow(QWindow *window);
-	~QHaikuWindow();
+	~QHaikuWindow() {};
+
+	virtual void destroy();
 
 	void setGeometry(const QRect &rect) override;
 	void setWindowTitle(const QString &title) override;
