@@ -81,7 +81,7 @@ public:
 	void FrameResized(float width, float height);
 	void FrameMoved(BPoint point);
 	void MessageReceived(BMessage* msg);
-	virtual void DispatchMessage(BMessage *, BHandler *);	
+	virtual void DispatchMessage(BMessage *, BHandler *);
 	virtual void WindowActivated(bool active);
 	virtual bool QuitRequested();
 
@@ -136,12 +136,12 @@ public:
 
 	void setVisible(bool visible);
 	void requestActivateWindow();
-    
+
 	bool setKeyboardGrabEnabled(bool) Q_DECL_OVERRIDE { return false; }
 	bool setMouseGrabEnabled(bool) Q_DECL_OVERRIDE { return false; }
 	void propagateSizeHints();
 
-	WId winId() const override { return m_winId; }
+	WId winId() const override;
 
 	static QHaikuWindow *windowForWinId(WId id);
 	static QHaikuSurfaceView *viewForWinId(WId id);
@@ -164,9 +164,6 @@ private:
 	QPoint m_lastMousePos;
 	QRect m_normalGeometry;
 	QMargins m_margins;
-
-	WId m_winId;
-	static QHash<WId, QHaikuWindow *> m_windowForWinIdHash;
 
 	Qt::WindowFlags windowFlags;
 	Qt::WindowStates m_lastWindowStates;

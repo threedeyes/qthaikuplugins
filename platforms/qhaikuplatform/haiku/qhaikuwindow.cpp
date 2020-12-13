@@ -135,7 +135,7 @@ QtHaikuWindow::QtHaikuWindow(QHaikuWindow *qwindow,
 	fView = new QHaikuSurfaceView(Bounds());
 #if !defined(QT_NO_OPENGL)
 	fGLView = NULL;
-#endif	
+#endif
  	AddChild(fView);
  	Qt::WindowType type =  static_cast<Qt::WindowType>(int(qwindow->window()->flags() & Qt::WindowType_Mask));
  	bool dialog = ((type == Qt::Dialog) || (type == Qt::Sheet) || (type == Qt::MSWindowsFixedSizeDialogHint));
@@ -183,7 +183,7 @@ void QtHaikuWindow::DispatchMessage(BMessage *msg, BHandler *handler)
 					break;
 				bool press = msg->what == B_KEY_DOWN || msg->what == B_UNMAPPED_KEY_DOWN;
 				Q_EMIT keyEvent(press ? QEvent::KeyPress : QEvent::KeyRelease, qt_keycode, fView->hostToQtModifiers(modifiers), text);
-				break;	
+				break;
 			}
 		default:
 			break;
@@ -288,7 +288,7 @@ QHaikuWindow::QHaikuWindow(QWindow *wnd)
 					wnd->geometry().right(),
 					wnd->geometry().bottom()),
 					wnd->title().toUtf8().constData(),
-					B_NO_BORDER_WINDOW_LOOK, B_NORMAL_WINDOW_FEEL, 0))	
+					B_NO_BORDER_WINDOW_LOOK, B_NORMAL_WINDOW_FEEL, 0))
     , m_parent(0)
     , m_systemMoveResizeEnabled(false)
     , m_positionIncludesFrame(false)
@@ -327,11 +327,6 @@ QHaikuWindow::QHaikuWindow(QWindow *wnd)
 
     QWindowSystemInterface::flushWindowSystemEvents();
 
-	static WId counter = 0;
-    m_winId = ++counter;
-
-    m_windowForWinIdHash[m_winId] = this;
-
     m_lastMousePos = QPoint(0,0);
 }
 
@@ -340,7 +335,6 @@ QHaikuWindow::~QHaikuWindow()
 {
 	m_window->Lock();
 	m_window->Quit();
-	m_windowForWinIdHash.remove(m_winId);
 }
 
 
@@ -470,7 +464,7 @@ void QHaikuWindow::setGeometry(const QRect &rect)
     setFrameMarginsEnabled(true);
     setGeometryImpl(rect);
 
-    m_normalGeometry = geometry();    
+    m_normalGeometry = geometry();
 }
 
 void QHaikuWindow::propagateSizeHints()
@@ -670,7 +664,7 @@ void QHaikuWindow::raise()
     if (window()->type() != Qt::Desktop) {
         m_window->Activate(true);
         QWindowSystemInterface::handleExposeEvent(window(), window()->geometry());
-    }	
+    }
 }
 
 void QHaikuWindow::lower()
@@ -678,7 +672,7 @@ void QHaikuWindow::lower()
     if (window()->type() != Qt::Desktop) {
         m_window->Activate(false);
         QWindowSystemInterface::handleExposeEvent(window(), window()->geometry());
-    }	
+    }
 }
 
 
@@ -687,7 +681,7 @@ void QHaikuWindow::setFrameMarginsEnabled(bool enabled)
     if (enabled && !(window()->flags() & Qt::FramelessWindowHint)) {
     	BRect frame = m_window->Frame();
     	BRect decoratorFrame = m_window->DecoratorFrame();
-    	    	    	
+
 		int left = frame.left - decoratorFrame.left;
 		int top = frame.top - decoratorFrame.top;
 		int right = decoratorFrame.right - frame.right;
@@ -820,18 +814,25 @@ void QHaikuWindow::setWindowState(Qt::WindowStates states)
     QWindowSystemInterface::handleWindowStateChanged(window(), states);
 }
 
+WId QHaikuWindow::winId() const
+{
+	return reinterpret_cast<WId>(static_cast<BWindow *>(m_window));
+}
+
 QHaikuSurfaceView *QHaikuWindow::viewForWinId(WId id)
 {
-	QHaikuWindow *window = m_windowForWinIdHash.value(id, 0);
-	if (window != NULL) {
+	QHaikuWindow *window = windowForWinId(id);
+	if (window != NULL)
 		return window->m_window->View();
-	}
     return NULL;
 }
 
 QHaikuWindow *QHaikuWindow::windowForWinId(WId id)
 {
-	return m_windowForWinIdHash.value(id, 0);
+	QtHaikuWindow * window = static_cast<QtHaikuWindow *>(reinterpret_cast<BWindow *>(id));
+	if (window != NULL)
+		return window->fQWindow;
+	return NULL;
 }
 
 
@@ -845,7 +846,7 @@ void QHaikuWindow::platformWindowMoved(const QPoint &pos)
 {
 	QRect adjusted = geometry();
 	adjusted.moveTopLeft(pos);
-	
+
     QPlatformWindow::setGeometry(adjusted);
 
 	if (window()->isTopLevel() && window()->type() == Qt::Window) {
@@ -1112,7 +1113,5 @@ void QHaikuWindow::platformExposeEvent(QRegion region)
 {
 	QWindowSystemInterface::handleExposeEvent<QWindowSystemInterface::SynchronousDelivery>(window(), region);
 }
-
-QHash<WId, QHaikuWindow *> QHaikuWindow::m_windowForWinIdHash;
 
 QT_END_NAMESPACE
