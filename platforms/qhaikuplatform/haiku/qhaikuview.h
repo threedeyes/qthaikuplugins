@@ -54,21 +54,18 @@
 #include <Rect.h>
 
 #define Q_HAIKU_MOUSE_EVENTS_TIME 10000
-#define Q_HAIKU_MOUSE_PREVENT_TIME 300000
 
 class QHaikuSurfaceView : public QObject, public BView
 {
 		Q_OBJECT
  public:
 		QHaikuSurfaceView(BRect rect);
-		~QHaikuSurfaceView();
+		~QHaikuSurfaceView() {};
 		
 		virtual void Draw(BRect rect);
 		virtual void MouseDown(BPoint p);
 		virtual void MouseUp(BPoint p);
 		virtual void MouseMoved(BPoint point, uint32 transit, const BMessage *msg);
-
-		void PreventMouse(void);
 
 		Qt::MouseButton hostToQtButton(uint32 buttons) const;
 		Qt::MouseButtons hostToQtButtons(uint32 buttons) const;
@@ -82,7 +79,6 @@ class QHaikuSurfaceView : public QObject, public BView
 		Qt::MouseButtons lastMouseState;
 		Qt::MouseButton lastMouseButton;
 		bigtime_t lastMouseMoveTime;
-		bigtime_t mousePreventTime;
  Q_SIGNALS:
 		void mouseEvent(const QPoint &localPosition,
 			const QPoint &globalPosition,

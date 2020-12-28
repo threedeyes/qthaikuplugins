@@ -75,19 +75,6 @@ QHaikuSurfaceView::QHaikuSurfaceView(BRect rect)
 	SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR));
 
 	lastMouseMoveTime = system_time();
-	mousePreventTime = system_time();
-}
-
-QHaikuSurfaceView::~QHaikuSurfaceView()
-{	
-}
-
-void
-QHaikuSurfaceView::PreventMouse(void)
-{
-	if (Window()->Look() == B_NO_BORDER_WINDOW_LOOK)
-		return;
-	mousePreventTime = system_time();
 }
 
 void
@@ -164,15 +151,12 @@ QHaikuSurfaceView::MouseDown(BPoint point)
 	if (isSizeGripperContains(point))
 		return;
 
-	if (system_time() - mousePreventTime < Q_HAIKU_MOUSE_PREVENT_TIME)
-		return;
-
 	uint32 buttons = Window()->CurrentMessage()->FindInt32("buttons");
 
 	QHaikuWindow *wnd = ((QtHaikuWindow*)Window())->fQWindow;
 
-	SetMouseEventMask(B_POINTER_EVENTS, B_NO_POINTER_HISTORY);
-	
+	SetMouseEventMask(B_POINTER_EVENTS, B_LOCK_WINDOW_FOCUS | B_NO_POINTER_HISTORY);
+
 	if (wnd->window()->flags() & Qt::FramelessWindowHint) {
 		Window()->Activate();
 	}
@@ -182,8 +166,6 @@ QHaikuSurfaceView::MouseDown(BPoint point)
 
 	Q_EMIT mouseEvent(localPoint, globalPoint, lastMouseState, lastMouseButton, QEvent::MouseButtonPress,
 		hostToQtModifiers(modifiers()), Qt::MouseEventNotSynthesized);
-
-	BView::MouseDown(point);
 }
 
 void 
@@ -196,9 +178,6 @@ QHaikuSurfaceView::MouseUp(BPoint point)
 	if (isSizeGripperContains(point))
 		return;
 
-	if (system_time() - mousePreventTime < Q_HAIKU_MOUSE_PREVENT_TIME)
-		return;
-
 	BPoint pointer;
 	uint32 buttons;
 	GetMouse(&pointer, &buttons);
@@ -207,17 +186,12 @@ QHaikuSurfaceView::MouseUp(BPoint point)
 
 	Q_EMIT mouseEvent(localPoint, globalPoint, state, lastMouseButton, QEvent::MouseButtonRelease,
 		hostToQtModifiers(modifiers()), Qt::MouseEventNotSynthesized);
-
-	BView::MouseUp(point);
 }
 
 void 
 QHaikuSurfaceView::MouseMoved(BPoint point, uint32 transit, const BMessage *msg)
 {
 	bool isTabletEvent = Window()->CurrentMessage()->HasFloat("be:tablet_x");
-
-	if (system_time() - mousePreventTime < Q_HAIKU_MOUSE_PREVENT_TIME)
-		return;
 
 	switch (transit) {
 		case B_INSIDE_VIEW:
@@ -295,5 +269,4 @@ QHaikuSurfaceView::MouseMoved(BPoint point, uint32 transit, const BMessage *msg)
 
 		lastMouseMoveTime = timeNow;
 	}
-	BView::MouseMoved(point, transit, msg);
 }

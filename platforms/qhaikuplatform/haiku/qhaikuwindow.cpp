@@ -257,7 +257,6 @@ void QtHaikuWindow::Zoom(BPoint origin, float w, float h)
 	Q_UNUSED(origin);
 	Q_UNUSED(w);
 	Q_UNUSED(h);
-	fView->PreventMouse();
 	Q_EMIT windowZoomed();
 }
 
@@ -269,14 +268,12 @@ void QtHaikuWindow::Minimize(bool minimized)
 
 void QtHaikuWindow::FrameResized(float width, float height)
 {
-	fView->PreventMouse();
 	Q_EMIT windowResized(QSize(static_cast<int>(width), static_cast<int>(height)));
 }
 
 
 void QtHaikuWindow::FrameMoved(BPoint point)
 {
-	fView->PreventMouse();
 	Q_EMIT windowMoved(QPoint(point.x, point.y));
 }
 
@@ -1019,12 +1016,25 @@ void QHaikuWindow::platformMouseEvent(const QPoint &localPosition,
 			globalPosition, state, button, type, modifiers, source);
 			QWindowSystemInterface::handleExposeEvent(window(), QRect(QPoint(0,0), window()->size()));
 	} else {
-		if (type == QEvent::MouseButtonRelease && m_systemMoveResizeEnabled) {
-			m_systemMoveResizeEnabled = false;
+		QWindowSystemInterface::handleMouseEvent(window(),
+			localPosition, globalPosition, state, button, type, modifiers, source);
+		if (window()->cursor().shape() == Qt::BitmapCursor || window()->cursor().shape() == Qt::CustomCursor) {
+			QPoint hotSpot = window()->cursor().hotSpot();
+			QPoint pos = window()->mapFromGlobal(m_lastMousePos);
+			QRect rect = window()->cursor().bitmap()->rect().translated(pos.x() - hotSpot.x(), pos.y() - hotSpot.y());
+			QWindowSystemInterface::handleExposeEvent(window(), QRegion(rect.adjusted(-1, -1, 1, 1)));
+
+			pos = window()->mapFromGlobal(window()->cursor().pos());
+			rect = window()->cursor().bitmap()->rect().translated(pos.x() - hotSpot.x(), pos.y() - hotSpot.y());
+			QWindowSystemInterface::handleExposeEvent(window(), QRegion(rect.adjusted(-1, -1, 1, 1)));
 		}
+		if (type == QEvent::MouseButtonRelease && m_systemMoveResizeEnabled)
+			m_systemMoveResizeEnabled = false;
+
 		if (type == QEvent::MouseMove && m_systemMoveResizeEnabled) {
 			if (m_systemResizeEdges == 0) {
 				window()->setFramePosition(m_systemMoveWindowGeometry.topLeft() + (globalPosition - m_lastMousePos));
+				QWindowSystemInterface::handleGeometryChange(window(), m_systemMoveWindowGeometry);
 				return;
 			}
 			QRect newGeometry = m_systemMoveWindowGeometry;
@@ -1039,18 +1049,6 @@ void QHaikuWindow::platformMouseEvent(const QPoint &localPosition,
 			window()->setGeometry(newGeometry.left(), newGeometry.top(), newGeometry.width(), newGeometry.height());
 			QWindowSystemInterface::handleGeometryChange(window(), newGeometry);
 			return;
-		}
-		QWindowSystemInterface::handleMouseEvent(window(),
-			localPosition, globalPosition, state, button, type, modifiers, source);
-		if (window()->cursor().shape() == Qt::BitmapCursor || window()->cursor().shape() == Qt::CustomCursor) {
-			QPoint hotSpot = window()->cursor().hotSpot();
-			QPoint pos = window()->mapFromGlobal(m_lastMousePos);
-			QRect rect = window()->cursor().bitmap()->rect().translated(pos.x() - hotSpot.x(), pos.y() - hotSpot.y());
-			QWindowSystemInterface::handleExposeEvent(window(), QRegion(rect.adjusted(-1, -1, 1, 1)));
-
-			pos = window()->mapFromGlobal(window()->cursor().pos());
-			rect = window()->cursor().bitmap()->rect().translated(pos.x() - hotSpot.x(), pos.y() - hotSpot.y());
-			QWindowSystemInterface::handleExposeEvent(window(), QRegion(rect.adjusted(-1, -1, 1, 1)));
 		}
 	}
 	m_lastMousePos = globalPosition;
