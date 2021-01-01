@@ -129,11 +129,11 @@ void QHaikuIntegration::setHinting(uint8 hinting)
 	if (hinting > 0) {
 		QDir dir("/system/settings/fonts/conf.d/", {"10-hinting-*.conf"});
 		for (const QString & filename: dir.entryList()) {
-			if (filename != "10-hinting-medium.conf")
+			if (filename != "10-hinting-slight.conf")
 				dir.remove(filename);
 		}
-		symlink("/system/data/fontconfig/conf.avail/10-hinting-medium.conf",
-			"/system/settings/fonts/conf.d/10-hinting-medium.conf");
+		symlink("/system/data/fontconfig/conf.avail/10-hinting-slight.conf",
+			"/system/settings/fonts/conf.d/10-hinting-slight.conf");
 	} else {
 		QDir dir("/system/settings/fonts/conf.d/", {"10-hinting-*.conf"});
 		for (const QString & filename: dir.entryList()) {
