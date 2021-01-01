@@ -116,7 +116,7 @@ public:
 private:
     static int32 haikuApplicationThread(void *data);
     static void setAntialiasingMethod(bool subpixel);
-    static void setHinting(uint8 hinting);
+    static void setHinting(uint8 hinting, bool subpixel);
     static bool isOpenGLEnabled();
 
     QPlatformFontDatabase *m_fontDatabase;

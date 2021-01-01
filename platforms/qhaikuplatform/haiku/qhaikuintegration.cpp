@@ -124,7 +124,7 @@ void QHaikuIntegration::setAntialiasingMethod(bool subpixel)
 	}
 }
 
-void QHaikuIntegration::setHinting(uint8 hinting)
+void QHaikuIntegration::setHinting(uint8 hinting, bool subpixel)
 {
 	if (hinting > 0) {
 		QDir dir("/system/settings/fonts/conf.d/", {"10-hinting-*.conf"});
@@ -132,8 +132,10 @@ void QHaikuIntegration::setHinting(uint8 hinting)
 			if (filename != "10-hinting-slight.conf")
 				dir.remove(filename);
 		}
-		symlink("/system/data/fontconfig/conf.avail/10-hinting-slight.conf",
-			"/system/settings/fonts/conf.d/10-hinting-slight.conf");
+		if (subpixel) {
+			symlink("/system/data/fontconfig/conf.avail/10-hinting-slight.conf",
+				"/system/settings/fonts/conf.d/10-hinting-slight.conf");
+		}
 	} else {
 		QDir dir("/system/settings/fonts/conf.d/", {"10-hinting-*.conf"});
 		for (const QString & filename: dir.entryList()) {
@@ -322,7 +324,7 @@ QHaikuIntegration *QHaikuIntegration::createHaikuIntegration(const QStringList& 
 	get_hinting_mode(&hinting);
 	get_subpixel_antialiasing(&subpixel);
 	setAntialiasingMethod(subpixel);
-	setHinting(hinting);
+	setHinting(hinting, subpixel);
 	setenv("FONTCONFIG_PATH", "/system/settings/fonts", 0);
 
     QHaikuIntegration *newHaikuIntegration = new QHaikuIntegration(parameters, argc, argv);
