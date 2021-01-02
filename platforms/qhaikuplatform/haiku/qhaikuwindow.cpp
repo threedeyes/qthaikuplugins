@@ -138,8 +138,9 @@ QtHaikuWindow::QtHaikuWindow(QHaikuWindow *qwindow,
 #endif
  	AddChild(fView);
  	Qt::WindowType type =  static_cast<Qt::WindowType>(int(qwindow->window()->flags() & Qt::WindowType_Mask));
- 	bool dialog = ((type == Qt::Dialog) || (type == Qt::Sheet) || (type == Qt::MSWindowsFixedSizeDialogHint));
- 	if (!dialog)
+	bool dialog = ((type == Qt::Dialog) || (type == Qt::Sheet) || (type == Qt::MSWindowsFixedSizeDialogHint));
+	bool tool = (type == Qt::Tool || type == Qt::Drawer);
+	if (!dialog && !tool)
 		RemoveShortcut('W', B_COMMAND_KEY);
 	AddShortcut('Q', B_COMMAND_KEY, new BMessage(kQuitApplication));
 }
