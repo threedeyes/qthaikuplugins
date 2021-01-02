@@ -917,9 +917,9 @@ void QHaikuWindow::platformWindowMinimized(bool minimized)
 	if (minimized) {
 		m_lastWindowStates = window()->windowStates();
 		m_lastWindowStates &= ~Qt::WindowMinimized;
-		setWindowState(Qt::WindowMinimized);
+		QWindowSystemInterface::handleWindowStateChanged(window(), Qt::WindowMinimized);
 	} else {
-		setWindowState(m_lastWindowStates);
+		QWindowSystemInterface::handleWindowStateChanged(window(), m_lastWindowStates);
 	}
 }
 
