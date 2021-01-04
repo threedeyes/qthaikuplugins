@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<svg version="1.1" width="64" height="64" color-interpolation="linearRGB"
+     xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg">
+ <g>
+  <path style="fill:#fbff00"
+        d="M0 32C0 34 0 36 0 38C3.66 38 7.33 38 11 38C11 36 11 34 11 32C7.33 32 3.66 32 0 32V32V32z"
+        transform="matrix(1.2729,0,0,1.3003,4,5.9911)"
+  />
+  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:4; stroke-linejoin:round"
+        d="M7 35C8.66 36 10.33 37 12 38C13.33 36.66 14.66 35.33 16 34C14.66 32.66 13.33 31.33 12 30C10.33 31.66 8.66 33.33 7 35V35V35z
+           M11 30C12.66 31.66 14.33 33.33 16 35C17 34 20 32 24 33C25 33 26 32 26 32C22 28 18 24 14 20C14 20 13 21 13 22C14 26 12 29 11 30V30V30z
+           M14 20C18 24 22 28 26 32C31.33 25 36.66 18 42 11C39.66 8.66 37.33 6.33 35 4C28 9.33 21 14.66 14 20V20V20z"
+        transform="matrix(1.2729,0,0,1.3003,4,5.9911)"
+  />
+  <path style="fill:none; stroke:#bf5000; stroke-width:4; stroke-linejoin:round"
+        d="M5 33C6.66 34 8.33 35 10 36C11.33 34.66 12.66 33.33 14 32C12.66 30.66 11.33 29.33 10 28C8.33 29.66 6.66 31.33 5 33V33V33z
+           M9 28C10.66 29.66 12.33 31.33 14 33C15 32 18 30 22 31C23 31 24 30 24 30C20 26 16 22 12 18C12 18 11 19 11 20C12 24 10 27 9 28V28V28z
+           M12 18C16 22 20 26 24 30C29.33 23 34.66 16 40 9C37.66 6.66 35.33 4.33 33 2C26 7.33 19 12.66 12 18V18V18z"
+        transform="matrix(1.2729,0,0,1.3003,4,5.9911)"
+  />
+  <linearGradient id="gradient0" gradientUnits="userSpaceOnUse" x1="128" y1="4" x2="128" y2="31.99">
+   <stop offset="0" stop-color="#ffff80"/>
+   <stop offset="1" stop-color="#ffd400"/>
+  </linearGradient>
+  <path style="fill:url(#gradient0)"
+        d="M12 18C16 22 20 26 24 30C29.33 23 34.66 16 40 9C37.66 6.66 35.33 4.33 33 2C26 7.33 19 12.66 12 18V18V18z"
+        transform="matrix(1.2729,0,0,1.3003,4,5.9911)"
+  />
+  <linearGradient id="gradient1" gradientUnits="userSpaceOnUse" x1="6" y1="-64" x2="14" y2="-64">
+   <stop offset="0" stop-color="#ffff80"/>
+   <stop offset="1" stop-color="#ffd400"/>
+  </linearGradient>
+  <path style="fill:url(#gradient1)"
+        d="M5 33C6.66 34 8.33 35 10 36C11.33 34.66 12.66 33.33 14 32C12.66 30.66 11.33 29.33 10 28C8.33 29.66 6.66 31.33 5 33V33V33z"
+        transform="matrix(1.2729,0,0,1.3003,4,5.9911)"
+  />
+  <path style="fill:#010101"
+        d="M9 28C10.66 29.66 12.33 31.33 14 33C15 32 18 30 22 31C23 31 24 30 24 30C20 26 16 22 12 18C12 18 11 19 11 20C12 24 10 27 9 28V28V28z"
+        transform="matrix(1.2729,0,0,1.3003,4,5.9911)"
+  />
+  <path style="fill:#ffffff; fill-opacity:0.5372"
+        d="M15 18C21 13.33 27 8.66 33 4C34.66 5.66 36.33 7.33 38 9C36.33 8 34.66 7 33 6C27.68 10.7 22.37 15.39 17.05 20.1C16.37 19.39 15.68 18.7 15 18V18V18z"
+        transform="matrix(1.2729,0,0,1.3003,4,5.9911)"
+  />
+  <path style="fill:#ffffff; fill-opacity:0.5372"
+        d="M11 27C11.33 27.33 11.66 27.66 12 28C13 27 14 26 15 25C16.66 26 18.33 27 20 28C17.66 25.66 15.33 23.33 13 21C13 24 12 26 11 27V27V27z"
+        transform="matrix(1.2729,0,0,1.3003,4,5.9911)"
+  />
+ </g>
+</svg>
