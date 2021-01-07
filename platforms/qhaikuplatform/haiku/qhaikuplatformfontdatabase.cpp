@@ -125,7 +125,7 @@ QFontEngine *QHaikuPlatformFontDatabase::fontEngine(const QFontDef &fontDef, voi
 	get_hinting_mode(&hinting);
 
     if (hinting == 1)
-		engine->setDefaultHintStyle(QFontEngine::HintFull);
+		engine->setDefaultHintStyle(QFontEngine::HintMedium);
 
 	return engine;
 }
