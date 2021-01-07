@@ -75,7 +75,7 @@ QHash<QPlatformTheme::Font, QFont *> qt_haiku_createRoleFonts(QPlatformFontDatab
 	menu_info haikuMenuFontInfo;
 	get_menu_info(&haikuMenuFontInfo);
 
-	float kDPI = 70.0 / 96.0;
+	float kDPI = 86.0 / 120.0;
 	float kTitleBold = 0.96;
 
     QFont baseFont = db.font(plainFontFamily, plainFontStyle, haikuPlainFont.Size() * kDPI);
