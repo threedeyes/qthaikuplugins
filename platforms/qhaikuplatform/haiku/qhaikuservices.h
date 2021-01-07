@@ -53,6 +53,7 @@ public:
 
     bool openUrl(const QUrl &url);
     bool openDocument(const QUrl &url);
+    QByteArray desktopEnvironment() const;
 };
 
 QT_END_NAMESPACE

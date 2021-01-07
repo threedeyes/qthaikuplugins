@@ -80,7 +80,7 @@ QHaikuIntegration::QHaikuIntegration(const QStringList &parameters, int &argc, c
 	Q_UNUSED(argv);
 	m_screen = new QHaikuScreen();
 	QWindowSystemInterface::handleScreenAdded(m_screen);
-    m_fontDatabase = new QGenericUnixFontDatabase();
+    m_fontDatabase = new QHaikuPlatformFontDatabase();
 	m_services = new QHaikuServices();
 	m_clipboard = new QHaikuClipboard();
 	m_haikuSystemLocale = new QHaikuSystemLocale;
@@ -101,50 +101,6 @@ QHaikuIntegration::~QHaikuIntegration()
 	HQApplication *haikuApplication = static_cast<HQApplication*>(be_app);
 	if (haikuApplication->QtFlags() & Q_KILL_ON_EXIT)
 		kill(::getpid(), SIGKILL);
-}
-
-void QHaikuIntegration::setAntialiasingMethod(bool subpixel)
-{
-	if (subpixel) {
-		QDir dir("/system/settings/fonts/conf.d/", {"*sub-pixel*.conf"});
-		for (const QString & filename: dir.entryList()) {
-			if (filename != "10-sub-pixel-rgb.conf")
-				dir.remove(filename);
-		}
-		symlink("/system/data/fontconfig/conf.avail/10-sub-pixel-rgb.conf",
-			"/system/settings/fonts/conf.d/10-sub-pixel-rgb.conf");
-	} else {
-		QDir dir("/system/settings/fonts/conf.d/", {"*sub-pixel*.conf"});
-		for (const QString & filename: dir.entryList()){
-			if (filename != "10-no-sub-pixel.conf")
-				dir.remove(filename);
-		}
-		symlink("/system/data/fontconfig/conf.avail/10-no-sub-pixel.conf",
-			"/system/settings/fonts/conf.d/10-no-sub-pixel.conf");
-	}
-}
-
-void QHaikuIntegration::setHinting(uint8 hinting, bool subpixel)
-{
-	if (hinting > 0) {
-		QDir dir("/system/settings/fonts/conf.d/", {"10-hinting-*.conf"});
-		for (const QString & filename: dir.entryList()) {
-			if (filename != "10-hinting-slight.conf")
-				dir.remove(filename);
-		}
-		if (subpixel) {
-			symlink("/system/data/fontconfig/conf.avail/10-hinting-slight.conf",
-				"/system/settings/fonts/conf.d/10-hinting-slight.conf");
-		}
-	} else {
-		QDir dir("/system/settings/fonts/conf.d/", {"10-hinting-*.conf"});
-		for (const QString & filename: dir.entryList()) {
-			if (filename != "10-hinting-none.conf")
-				dir.remove(filename);
-		}
-		symlink("/system/data/fontconfig/conf.avail/10-hinting-none.conf",
-			"/system/settings/fonts/conf.d/10-hinting-none.conf");
-	}
 }
 
 bool QHaikuIntegration::isOpenGLEnabled()
@@ -318,14 +274,6 @@ QHaikuIntegration *QHaikuIntegration::createHaikuIntegration(const QStringList& 
 		}
 	}
 	settings.endGroup();
-
-	bool subpixel = false;
-	uint8 hinting = 1;
-	get_hinting_mode(&hinting);
-	get_subpixel_antialiasing(&subpixel);
-	setAntialiasingMethod(subpixel);
-	setHinting(hinting, subpixel);
-	setenv("FONTCONFIG_PATH", "/system/settings/fonts", 0);
 
     QHaikuIntegration *newHaikuIntegration = new QHaikuIntegration(parameters, argc, argv);
     connect(haikuApplication, SIGNAL(applicationQuit()), newHaikuIntegration, SLOT(platformAppQuit()), Qt::BlockingQueuedConnection);

@@ -572,6 +572,10 @@ void QHaikuWindow::syncDeskBarVisible(void)
 	}
 }
 
+QHaikuScreen *QHaikuWindow::platformScreen() const
+{
+	return static_cast<QHaikuScreen *>(window()->screen()->handle());
+}
 
 void QHaikuWindow::setVisible(bool visible)
 {
@@ -660,13 +664,6 @@ bool QHaikuWindow::startSystemMove()
 	m_systemMoveResizeEnabled = true;
     return true;
 }
-
-
-QMargins QHaikuWindow::frameMargins() const
-{
-    return m_margins;
-}
-
 
 void QHaikuWindow::raise()
 {

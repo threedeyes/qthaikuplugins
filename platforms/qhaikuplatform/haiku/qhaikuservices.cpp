@@ -118,4 +118,9 @@ bool QHaikuServices::openDocument(const QUrl &url)
     return true;
 }
 
+QByteArray QHaikuServices::desktopEnvironment() const
+{
+    return QByteArray("GNOME");
+}
+
 QT_END_NAMESPACE

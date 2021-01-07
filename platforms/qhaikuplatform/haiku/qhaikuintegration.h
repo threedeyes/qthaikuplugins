@@ -104,6 +104,7 @@ public:
 
     QPlatformDrag *drag() const;
     QPlatformServices *services() const;
+    QHaikuScreen *screen() { return m_screen; }
 
     QPlatformFontDatabase *fontDatabase() const;
     QAbstractEventDispatcher *createEventDispatcher() const;
@@ -115,8 +116,6 @@ public:
 
 private:
     static int32 haikuApplicationThread(void *data);
-    static void setAntialiasingMethod(bool subpixel);
-    static void setHinting(uint8 hinting, bool subpixel);
     static bool isOpenGLEnabled();
 
     QPlatformFontDatabase *m_fontDatabase;

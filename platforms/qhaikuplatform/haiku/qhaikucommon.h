@@ -76,6 +76,8 @@ public:
 	
     QPixmap grabWindow(WId window, int x, int y, int width, int height) const;
 
+    QPlatformScreen::SubpixelAntialiasingType subpixelAntialiasingTypeHint() const;
+
 private:    
     QHaikuCursor *m_cursor;
     BScreen *m_screen;

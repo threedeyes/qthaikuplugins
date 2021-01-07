@@ -60,6 +60,7 @@
 
 #include <qhash.h>
 
+#include "qhaikucommon.h"
 #include "qhaikuview.h"
 
 #define kQuitApplication	'QAPP'
@@ -136,7 +137,8 @@ public:
     bool startSystemResize(Qt::Edges edges) override;
     bool startSystemMove() override;
 
-	QMargins frameMargins() const;
+	QMargins frameMargins() const { return m_margins; }
+	QHaikuScreen *platformScreen() const;
 
 	void setVisible(bool visible);
 	void requestActivateWindow();

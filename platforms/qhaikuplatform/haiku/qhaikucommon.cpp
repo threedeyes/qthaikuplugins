@@ -41,6 +41,7 @@
 #include "qhaikucommon.h"
 #include "qhaikuwindow.h"
 #include "qhaikucursor.h"
+#include "qhaikuintegration.h"
 
 #include <QtGui/private/qpixmap_raster_p.h>
 #include <QtGui/private/qguiapplication_p.h>
@@ -114,6 +115,20 @@ QPixmap QHaikuScreen::grabWindow(WId id, int x, int y, int width, int height) co
     return QPixmap();
 }
 
+QPlatformScreen::SubpixelAntialiasingType QHaikuScreen::subpixelAntialiasingTypeHint() const
+{
+    QPlatformScreen::SubpixelAntialiasingType type = QPlatformScreen::subpixelAntialiasingTypeHint();
+
+    if (type == QPlatformScreen::Subpixel_None) {
+		bool subpixel = false;
+		get_subpixel_antialiasing(&subpixel);
+
+		if (subpixel)
+            type = QPlatformScreen::Subpixel_RGB;
+    }
+
+    return type;
+}
 
 QHaikuBackingStore::QHaikuBackingStore(QWindow *window)
     : QPlatformBackingStore(window)

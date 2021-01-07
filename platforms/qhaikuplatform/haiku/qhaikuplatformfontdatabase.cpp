@@ -42,6 +42,7 @@
 #include <QDirIterator>
 #include <QtFontDatabaseSupport/private/qfontengine_ft_p.h>
 
+#include "qhaikuintegration.h"
 #include "qhaikuplatformfontdatabase.h"
 
 #include <Path.h>
@@ -86,14 +87,14 @@ QStringList QHaikuPlatformFontDatabase::fallbacksForFamily(const QString &family
 {
 	QStringList result;
 	if (styleHint == QFont::Monospace || styleHint == QFont::Courier) {
-		result.append(QString::fromLatin1("Noto Mono"));
+		result.append(QString::fromLatin1("Noto Sans Mono"));
 		result.append(QString::fromLatin1("DejaVu Sans Mono"));
 	} else {
 		if (styleHint == QFont::Serif) {
 			result.append(QString::fromLatin1("Noto Serif"));
 			result.append(QString::fromLatin1("DejaVu Serif"));
 		} else {
-			result.append(QString::fromLatin1("Noto Sans"));
+			result.append(QString::fromLatin1("Noto Sans Display"));
 			result.append(QString::fromLatin1("DejaVu Sans"));
 		}
 	}
@@ -103,33 +104,30 @@ QStringList QHaikuPlatformFontDatabase::fallbacksForFamily(const QString &family
 
 QFont QHaikuPlatformFontDatabase::defaultFont() const
 {
-	QFont font(QStringLiteral("Noto Sans"));
+	QFont font(QStringLiteral("Noto Sans Display"));
 	font.setStretch(QFont::SemiExpanded);
     return font;
 }
 
 QFontEngine *QHaikuPlatformFontDatabase::fontEngine(const QFontDef &fontDef, void *handle)
 {
-    if (!handle) // Happens if a font family population failed
-        return 0;
+	if (!handle) // Happens if a font family population failed
+		return 0;
 
     QFontEngine::FaceId faceId;
 	FontFile *fontfile = static_cast<FontFile *>(handle);
 	faceId.filename = fontfile->fileName.toLocal8Bit();
-	faceId.index = fontfile->indexValue;	
+	faceId.index = fontfile->indexValue;
 
-    const bool antialias = !(fontDef.styleStrategy & QFont::NoAntialias);
-    
-    QFontEngineFT::GlyphFormat format = antialias ? QFontEngineFT::Format_A8 : QFontEngineFT::Format_Mono;
-    QFontEngineFT *engine = new QFontEngineFT(fontDef);
-    if (!engine->init(faceId, antialias, format) || engine->invalid()) {
-        delete engine;
-        return 0;
-    }
-    
-    engine->setDefaultHintStyle(QFontEngine::HintFull);
+	QFontEngineFT *engine = QFontEngineFT::create(fontDef, faceId);
 
-    return engine;
+	uint8 hinting = 1;
+	get_hinting_mode(&hinting);
+
+    if (hinting == 1)
+		engine->setDefaultHintStyle(QFontEngine::HintFull);
+
+	return engine;
 }
 
 void QHaikuPlatformFontDatabase::releaseHandle(void *handle)

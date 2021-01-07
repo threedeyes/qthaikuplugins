@@ -27,6 +27,7 @@ SOURCES =   main.cpp \
             qhaikusystemtrayicon.cpp \
             qhaikuclipboard.cpp \
             qhaikuplatformdialoghelpers.cpp \
+            qhaikuplatformfontdatabase.cpp \
             qhaikusystemlocale.cpp \
             qhaikuview.cpp \
             qhaikuservices.cpp \
