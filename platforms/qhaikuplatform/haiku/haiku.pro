@@ -22,8 +22,6 @@ SOURCES =   main.cpp \
             qhaikuapplication.cpp \
             qhaikuwindow.cpp \
             qhaikucommon.cpp \
-            qhaikuplatformmenu.cpp \
-            qhaikuplatformmenuitem.cpp \
             qhaikutheme.cpp \
             qhaikusystemsettings.cpp \
             qhaikusystemtrayicon.cpp \
@@ -41,8 +39,6 @@ HEADERS =   qhaikuintegration.h \
             qhaikuwindow.h \
             qhaikucommon.h \
             qhaikutheme.h \
-            qhaikuplatformmenu.h \
-            qhaikuplatformmenuitem.h \
             qhaikusystemsettings.h \
             qhaikusystemtrayicon.h \
             qhaikuclipboard.h \

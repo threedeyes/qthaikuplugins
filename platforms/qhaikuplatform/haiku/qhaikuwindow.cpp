@@ -552,7 +552,7 @@ void QHaikuWindow::syncDeskBarVisible(void)
 		int visible = 0;
 		const QWindowList windows = QGuiApplication::topLevelWindows();
 		for (int i = 0; i < windows.size(); ++i) {
-			if (windows.at(i)->isVisible())
+			if (windows.at(i)->isVisible() && windows.at(i)->type() != Qt::Popup)
 				++visible;
 		}
 		if (visible == 0) {

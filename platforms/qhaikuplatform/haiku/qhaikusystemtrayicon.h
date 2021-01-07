@@ -1,7 +1,7 @@
 /****************************************************************************
 **
 ** Copyright (C) 2017 The Qt Company Ltd.
-** Copyright (C) 2015-2018 Gerasim Troeglazov,
+** Copyright (C) 2015-2020 Gerasim Troeglazov,
 ** Contact: 3dEyes@gmail.com
 **
 ** This file is part of the plugins of the Qt Toolkit.
@@ -72,6 +72,8 @@ public:
 	thread_id Run(void);
 signals:
 	void sendHaikuMessage(BMessage *);
+private:
+	uint32 lastButtons;
 };
 
 class QHaikuSystemTrayIcon : public QPlatformSystemTrayIcon
@@ -80,18 +82,18 @@ class QHaikuSystemTrayIcon : public QPlatformSystemTrayIcon
 public:
     QHaikuSystemTrayIcon();
 
-    virtual void init();
-    virtual void cleanup();
-    virtual void updateIcon(const QIcon &icon);
-    virtual void updateToolTip(const QString &toolTip);
-    virtual void updateMenu(QPlatformMenu *menu);
-    //QPlatformMenu *createMenu() const;
-    virtual QRect geometry() const;
-    virtual void showMessage(const QString &title, const QString &msg,
-                             const QIcon& icon, MessageIcon iconType, int secs);
+    void init() override;
+    void cleanup() override;
+    void updateIcon(const QIcon &icon) override;
+    void updateToolTip(const QString &tooltip) override;
+	void updateMenu(QPlatformMenu *) override {}
+    QPlatformMenu *createMenu() const override;
+    QRect geometry() const override;
+    void showMessage(const QString &title, const QString &msg,
+                     const QIcon &icon, MessageIcon iconType, int msecs) override;
 
-    virtual bool isSystemTrayAvailable() const;
-    virtual bool supportsMessages() const;
+    bool isSystemTrayAvailable() const override { return true; }
+    bool supportsMessages() const override { return true; }
 
     bool 	findTrayExecutable(void);
     status_t sendMessageToReplicant(BMessage *msg);
@@ -104,7 +106,6 @@ public:
 
 	QIcon 	currentIcon;
 	QString currentToolTip;
-	QPlatformMenu *currentMenu;
 
 public slots:
     void	haikuEvents(BMessage *m);
@@ -121,6 +122,7 @@ private:
 	
 	bool 	ignoreNextMouseRelease;
 	bool	qystrayExist;
+	int32	trayMenuClickCounter;
 
 	BMessageRunner *pulse;
 };

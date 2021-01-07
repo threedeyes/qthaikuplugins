@@ -264,14 +264,4 @@ QPlatformSystemTrayIcon *QHaikuTheme::createPlatformSystemTrayIcon() const
 }
 #endif
 
-QPlatformMenu *QHaikuTheme::createPlatformMenu() const
-{
-    return new QHaikuPlatformMenu;
-}
-
-QPlatformMenuItem *QHaikuTheme::createPlatformMenuItem() const
-{
-    return new QHaikuPlatformMenuItem;
-}
-
 QT_END_NAMESPACE

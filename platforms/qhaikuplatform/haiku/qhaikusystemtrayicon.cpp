@@ -1,7 +1,7 @@
 /****************************************************************************
 **
 ** Copyright (C) 2017 The Qt Company Ltd.
-** Copyright (C) 2015-2018 Gerasim Troeglazov,
+** Copyright (C) 2015-2020 Gerasim Troeglazov,
 ** Contact: 3dEyes@gmail.com
 **
 ** This file is part of the plugins of the Qt Toolkit.
@@ -38,6 +38,7 @@
 **
 ****************************************************************************/
 
+#include <QApplication>
 #include <QCoreApplication>
 #include <QGuiApplication>
 #include <QWindow>
@@ -85,6 +86,7 @@ QSystemTrayIconLooper::QSystemTrayIconLooper() : QObject(), BLooper("QSystemTray
 thread_id 
 QSystemTrayIconLooper::Run(void)
 {
+	lastButtons = 0;
 	thread_id Thread = BLooper::Run();	
 	return Thread;
 }
@@ -92,21 +94,31 @@ QSystemTrayIconLooper::Run(void)
 void 
 QSystemTrayIconLooper::MessageReceived(BMessage* theMessage)
 {
-	if( theMessage->what == 'TRAY' || 
-		theMessage->what == 'PULS' || 
+	if( theMessage->what == 'TRAY' ||
+		theMessage->what == 'PULS' ||
 		theMessage->what == 'LIVE') {
 		BMessage *mes = new BMessage(*theMessage);
 		emit sendHaikuMessage(mes);
+	}
+	if (theMessage->what == 'MOUS') {
+		BPoint point;
+		uint32 buttons;
+		get_mouse(&point, &buttons);
+		if (lastButtons != buttons && buttons == 0) {
+			BMessage *mes = new BMessage(*theMessage);
+			emit sendHaikuMessage(mes);
+		}
+		lastButtons = buttons;
 	}
 	BLooper::MessageReceived(theMessage);
 } 
 
 QHaikuSystemTrayIcon::QHaikuSystemTrayIcon()
 	: looper(NULL)
-	, currentMenu(NULL)
 	, replicantId(-1)
 	, qystrayExist(false)
 	, pulse(NULL)
+	, trayMenuClickCounter(0)
 {
 	qystrayExist = findTrayExecutable();
 }
@@ -121,6 +133,7 @@ QHaikuSystemTrayIcon::init()
 		this, SLOT(haikuEvents(BMessage *)), Qt::QueuedConnection);
 
 	pulse = new BMessageRunner(BMessenger(looper), new BMessage('PULS'), 1000000);
+	pulse = new BMessageRunner(BMessenger(looper), new BMessage('MOUS'), 50000);
 }
 
 void
@@ -144,6 +157,7 @@ QHaikuSystemTrayIcon::cleanup()
 		deskbar.RemoveItem(replicantId);
 		replicantId = -1;
 	}
+	trayMenuClickCounter = 0;
 }
 
 void
@@ -205,20 +219,11 @@ QHaikuSystemTrayIcon::updateToolTip(const QString &tip)
 	sendMessageToReplicant(message);
 }
 
-void
-QHaikuSystemTrayIcon::updateMenu(QPlatformMenu *menu)
-{
-	currentMenu = menu;
-}
-
-#if 0
 QPlatformMenu *
 QHaikuSystemTrayIcon::createMenu() const
 {
-	qDebug() << "QHaikuSystemTrayIcon::createMenu()";
-	return NULL;
+	return nullptr;
 }
-#endif
 
 QRect
 QHaikuSystemTrayIcon::geometry() const
@@ -262,18 +267,6 @@ QHaikuSystemTrayIcon::showMessage(const QString &title, const QString &msg,
 	notification.Send(secs * 1000);
 }
 
-bool
-QHaikuSystemTrayIcon::isSystemTrayAvailable() const
-{
-	return true;
-}
-
-bool
-QHaikuSystemTrayIcon::supportsMessages() const
-{
-	return true;
-}
-
 void
 QHaikuSystemTrayIcon::haikuEvents(BMessage *message)
 {
@@ -288,6 +281,13 @@ QHaikuSystemTrayIcon::haikuEvents(BMessage *message)
 			updateToolTip(currentToolTip);
 		}
 	}
+	if(message->what == 'MOUS' && trayMenuClickCounter > 0) {
+		if (trayMenuClickCounter == 1) {
+			while (QApplication::activePopupWidget())
+				QApplication::activePopupWidget()->close();
+		}
+		trayMenuClickCounter--;
+	}
 	if(message->what == 'LIVE') {
 		liveFactor++;
 		BRect rect;
@@ -299,12 +299,12 @@ QHaikuSystemTrayIcon::haikuEvents(BMessage *message)
 		BPoint point(0, 0);
 		int32 buttons = 0,
 			  clicks = 0;
-	
+
 		message->FindInt32("event", &event);
 		message->FindPoint("point", &point);
 		message->FindInt32("buttons", &buttons);
 		message->FindInt32("clicks", &clicks);
-		
+
 		switch(event) {
 			case TRAY_MOUSEUP:
 				{
@@ -320,9 +320,10 @@ QHaikuSystemTrayIcon::haikuEvents(BMessage *message)
 						break;
 					}
 					if (buttons == B_SECONDARY_MOUSE_BUTTON) {
-		                if (currentMenu != NULL)
-		                	currentMenu->showPopup(NULL, shelfRect, NULL);
+						const QPoint globalPos = QPoint(point.x, point.y);
+						emit contextMenuRequested(globalPos, nullptr);
 		                emit activated(QPlatformSystemTrayIcon::Context);
+		                trayMenuClickCounter = 2;
 						break;
 					}
 				}

@@ -79,8 +79,7 @@ public:
 #ifndef QT_NO_SYSTEMTRAYICON
     QPlatformSystemTrayIcon *createPlatformSystemTrayIcon() const;
 #endif
-    virtual QPlatformMenu *createPlatformMenu() const;
-    virtual QPlatformMenuItem *createPlatformMenuItem() const;
+
 private:
     mutable QHash<QPlatformTheme::Font, QFont*> m_fonts;
     const QHaikuIntegration *m_integration;
