@@ -49,9 +49,6 @@
 #include <QtGui/QColor>
 #include <QtGui/QPalette>
 
-#include "qhaikuplatformmenu.h"
-#include "qhaikuplatformmenuitem.h"
-
 QT_BEGIN_NAMESPACE
 
 class QHaikuIntegration;
