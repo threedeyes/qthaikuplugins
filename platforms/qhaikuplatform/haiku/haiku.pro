@@ -23,7 +23,6 @@ SOURCES =   main.cpp \
             qhaikuwindow.cpp \
             qhaikucommon.cpp \
             qhaikutheme.cpp \
-            qhaikusystemsettings.cpp \
             qhaikusystemtrayicon.cpp \
             qhaikuclipboard.cpp \
             qhaikuplatformdialoghelpers.cpp \
@@ -39,7 +38,6 @@ HEADERS =   qhaikuintegration.h \
             qhaikuwindow.h \
             qhaikucommon.h \
             qhaikutheme.h \
-            qhaikusystemsettings.h \
             qhaikusystemtrayicon.h \
             qhaikuclipboard.h \
             qhaikuplatformdialoghelpers.h \

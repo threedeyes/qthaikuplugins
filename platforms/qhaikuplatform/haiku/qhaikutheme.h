@@ -42,6 +42,7 @@
 #define QHAIKUTHEME_H
 
 #include <qpa/qplatformtheme.h>
+#include <qpa/qplatformfontdatabase.h>
 
 #include <QtGui/qfont.h>
 #include <QtCore/qhash.h>

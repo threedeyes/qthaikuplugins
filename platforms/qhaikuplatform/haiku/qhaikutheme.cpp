@@ -41,7 +41,6 @@
 #include "qhaikutheme.h"
 #include "qhaikusettings.h"
 #include "qhaikuplatformdialoghelpers.h"
-#include "qhaikusystemsettings.h"
 #include "qhaikuintegration.h"
 #include "qhaikusystemtrayicon.h"
 
@@ -216,8 +215,76 @@ const QFont *QHaikuTheme::font(Font type) const
 {
     QPlatformFontDatabase *fontDatabase = m_integration->fontDatabase();
 
-    if (fontDatabase && m_fonts.isEmpty())
-        m_fonts = qt_haiku_createRoleFonts(fontDatabase);
+    if (fontDatabase && m_fonts.isEmpty()) {
+		QFontDatabase db;
+
+	    font_family plainFontFamily;
+	    font_style plainFontStyle;
+		BFont haikuPlainFont = *be_plain_font;
+		haikuPlainFont.GetFamilyAndStyle(&plainFontFamily, &plainFontStyle);
+
+	    font_family boldFontFamily;
+	    font_style boldFontStyle;
+		BFont haikuBoldFont = *be_bold_font;
+		haikuBoldFont.GetFamilyAndStyle(&boldFontFamily, &boldFontStyle);
+
+	    font_family fixedFontFamily;
+	    font_style fixedFontStyle;
+		BFont haikuFixedFont = *be_fixed_font;
+		haikuFixedFont.GetFamilyAndStyle(&fixedFontFamily, &fixedFontStyle);
+
+		menu_info haikuMenuFontInfo;
+		get_menu_info(&haikuMenuFontInfo);
+
+		float kSmallFont = 0.7;
+		float kBold = 0.96;
+
+	    QFont baseFont = db.font(plainFontFamily, plainFontStyle, haikuPlainFont.Size());
+	    if (haikuPlainFont.Size() >= 0)
+			baseFont.setPointSizeF(haikuPlainFont.Size());
+	    baseFont.setStretch(QFont::Unstretched);
+
+	    QFont boldFont = db.font(boldFontFamily, boldFontStyle, haikuBoldFont.Size() * kBold);
+	    if (haikuBoldFont.Size() >= 0)
+			boldFont.setPointSizeF(haikuBoldFont.Size() * kBold);
+	    boldFont.setStretch(QFont::Unstretched);
+
+	    QFont monoFont = db.font(fixedFontFamily, fixedFontStyle, haikuFixedFont.Size());
+	    if (haikuFixedFont.Size() >= 0)
+			monoFont.setPointSizeF(haikuFixedFont.Size());
+	    monoFont.setStretch(QFont::Unstretched);
+
+	    QFont menuFont = db.font(haikuMenuFontInfo.f_family, haikuMenuFontInfo.f_style, haikuMenuFontInfo.font_size);
+	    if (haikuMenuFontInfo.font_size >= 0)
+			menuFont.setPointSizeF(haikuMenuFontInfo.font_size);
+	    menuFont.setStretch(QFont::Unstretched);
+
+	    QHash<QPlatformTheme::Font, QFont *> fonts;
+	    fonts.insert(QPlatformTheme::SystemFont, new QFont(baseFont));
+	    fonts.insert(QPlatformTheme::PushButtonFont, new QFont(baseFont));
+	    fonts.insert(QPlatformTheme::ListViewFont, new QFont(baseFont));
+	    fonts.insert(QPlatformTheme::ListBoxFont, new QFont(baseFont));
+	    fonts.insert(QPlatformTheme::TitleBarFont, new QFont(boldFont));
+	    fonts.insert(QPlatformTheme::GroupBoxTitleFont, new QFont(boldFont));
+	    fonts.insert(QPlatformTheme::MdiSubWindowTitleFont, new QFont(boldFont));
+	    fonts.insert(QPlatformTheme::MenuFont, new QFont(menuFont));
+	    fonts.insert(QPlatformTheme::MenuBarFont, new QFont(menuFont));
+	    fonts.insert(QPlatformTheme::ComboMenuItemFont, new QFont(menuFont));
+	    fonts.insert(QPlatformTheme::HeaderViewFont, new QFont(baseFont));
+	    fonts.insert(QPlatformTheme::TipLabelFont, new QFont(baseFont));
+	    fonts.insert(QPlatformTheme::LabelFont, new QFont(baseFont));
+	    fonts.insert(QPlatformTheme::ToolButtonFont, new QFont(baseFont));
+	    fonts.insert(QPlatformTheme::MenuItemFont, new QFont(menuFont));
+	    fonts.insert(QPlatformTheme::ComboLineEditFont, new QFont(baseFont));
+	    fonts.insert(QPlatformTheme::FixedFont, new QFont(monoFont));
+
+	    QFont smallFont(baseFont);
+	    smallFont.setPointSizeF(haikuPlainFont.Size() * kSmallFont);
+	    fonts.insert(QPlatformTheme::SmallFont, new QFont(smallFont));
+	    fonts.insert(QPlatformTheme::MiniFont, new QFont(smallFont));
+
+	    m_fonts = fonts;
+    }
     return m_fonts.value(type, 0);
 }
 
