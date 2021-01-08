@@ -721,11 +721,11 @@ void QHaikuStyle::drawPrimitive(PrimitiveElement elem,
 			QColor backgroundColor(option->palette.color( QPalette::Normal, QPalette::Window));
 			QColor frameColor(mkQColor(tint_color(base, 1.30)));
             painter->setPen(frameColor);
+
             switch (tbb->shape) {
 
             case QTabBar::RoundedNorth:
-				tabRect = tbb->rect.adjusted(0,1,0,1);
-                painter->drawLine(tabRect.topLeft(), tabRect.topRight());
+                painter->drawLine(tabRect.bottomLeft(), tabRect.bottomRight());
                 break;
 
             case QTabBar::RoundedWest:
@@ -733,9 +733,7 @@ void QHaikuStyle::drawPrimitive(PrimitiveElement elem,
                 break;
 
             case QTabBar::RoundedSouth:
-				tabRect = tbb->rect.adjusted(0,-1,0,-1);
-                painter->drawLine(tbb->rect.left(), tbb->rect.bottom(),
-                                  tabRect.right(), tabRect.bottom());
+                painter->drawLine(tabRect.topLeft(), tabRect.topRight());
                 break;
 
             case QTabBar::RoundedEast:
@@ -1202,23 +1200,20 @@ void QHaikuStyle::drawPrimitive(PrimitiveElement elem,
 		        QColor bevelShadow(mkQColor(tint_color(bgColor, 1.03)));
 		        
 		        QRect frame = option->rect;
-		        
+
 		        switch(twf->shape) {
 		        	case QTabBar::RoundedNorth:
 					case QTabBar::TriangularNorth:
-						frame.adjust(-1,0,1,1);
+					case QTabBar::RoundedWest:
+					case QTabBar::TriangularWest:
 						break;
 					case QTabBar::RoundedSouth:
 					case QTabBar::TriangularSouth:
-						frame.adjust(-1,-1,1,0);
-						break;
-					case QTabBar::RoundedWest:
-					case QTabBar::TriangularWest:
-						frame.adjust(0,-1,1,1);
+						frame.adjust(0,0,0,2);
 						break;
 					case QTabBar::RoundedEast:
 					case QTabBar::TriangularEast:
-						frame.adjust(-1,-1,0,1);
+						frame.adjust(0,0,2,0);
 						break;
 				}
 
@@ -2052,9 +2047,10 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
                                && (tab->shape == QTabBar::RoundedNorth
                                    || tab->shape == QTabBar::RoundedSouth));
             bool selected = tab->state & State_Selected;
+            bool firstTab = ((!rtlHorTabs && tab->position == QStyleOptionTab::Beginning)
+                            || (rtlHorTabs && tab->position == QStyleOptionTab::End));
             bool lastTab = ((!rtlHorTabs && tab->position == QStyleOptionTab::End)
-                            || (rtlHorTabs
-                                && tab->position == QStyleOptionTab::Beginning));
+                            || (rtlHorTabs && tab->position == QStyleOptionTab::Beginning));
             bool previousSelected =
                 ((!rtlHorTabs
                   && tab->selectedPosition == QStyleOptionTab::PreviousIsSelected)
@@ -2083,9 +2079,9 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
 						bRect1.bottom++;
             			side = BControlLook::B_TOP_BORDER;
             			borders = (lastTab?BControlLook::B_RIGHT_BORDER:0) |
-            					  (previousSelected?0:BControlLook::B_LEFT_BORDER) |
-            					  BControlLook::B_TOP_BORDER |
-            					  BControlLook::B_BOTTOM_BORDER;
+								(firstTab?BControlLook::B_LEFT_BORDER:0) |
+								BControlLook::B_TOP_BORDER |
+								BControlLook::B_BOTTOM_BORDER;
             			if (lastTab || selected)
             				bRect1.right++;
             			if(!previousSelected || selected)
@@ -2096,9 +2092,9 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
 						bRect1.top--;
                 		side = BControlLook::B_BOTTOM_BORDER;
             			borders = (lastTab?BControlLook::B_RIGHT_BORDER:0) |
-            					  (previousSelected?0:BControlLook::B_LEFT_BORDER) |
-            					  BControlLook::B_TOP_BORDER |
-            					  BControlLook::B_BOTTOM_BORDER;
+								(firstTab?BControlLook::B_LEFT_BORDER:0) |
+								BControlLook::B_TOP_BORDER |
+								BControlLook::B_BOTTOM_BORDER;
             			if (lastTab || selected)
             				bRect1.right++;
             			if(!previousSelected || selected)
@@ -2109,9 +2105,9 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
 						bRect1.right++;
                 		side = BControlLook::B_LEFT_BORDER;                		
             			borders = (lastTab?BControlLook::B_BOTTOM_BORDER:0) |
-            					  (previousSelected?0:BControlLook::B_TOP_BORDER) |
-            					  BControlLook::B_LEFT_BORDER |
-            					  BControlLook::B_RIGHT_BORDER;
+								(firstTab?BControlLook::B_TOP_BORDER:0) |
+								BControlLook::B_LEFT_BORDER |
+								BControlLook::B_RIGHT_BORDER;
             			if (lastTab || selected)
             				bRect1.bottom++;
             			if(!previousSelected || selected)
@@ -2122,9 +2118,9 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
 						bRect1.left--;
 	                	side = BControlLook::B_RIGHT_BORDER;
             			borders = (lastTab?BControlLook::B_BOTTOM_BORDER:0) |
-            					  (previousSelected?0:BControlLook::B_TOP_BORDER) |
-            					  BControlLook::B_LEFT_BORDER |
-            					  BControlLook::B_RIGHT_BORDER;
+								(firstTab?BControlLook::B_TOP_BORDER:0) |
+								BControlLook::B_LEFT_BORDER |
+								BControlLook::B_RIGHT_BORDER;
             			if (lastTab || selected)
             				bRect1.bottom++;
             			if(!previousSelected || selected)
@@ -3105,7 +3101,7 @@ QSize QHaikuStyle::sizeFromContents(ContentsType type, const QStyleOption *optio
         newSize += QSize(0, 1);
         break;
     case CT_MenuBarItem:
-        newSize += QSize(8, -1);
+        newSize += QSize(7, -1);
         break;
     case CT_MenuItem:
         if (const QStyleOptionMenuItem *menuItem = qstyleoption_cast<const QStyleOptionMenuItem *>(option)) {
@@ -3831,20 +3827,7 @@ QRect QHaikuStyle::subElementRect(SubElement sr, const QStyleOption *opt, const 
 		break;
     case SE_TabWidgetTabBar:
 		if (const QStyleOptionTabWidgetFrame *twf = qstyleoption_cast<const QStyleOptionTabWidgetFrame *>(opt)) {
-			switch(twf->shape) {
-				case QTabBar::RoundedNorth:
-				case QTabBar::TriangularNorth:
-				case QTabBar::RoundedSouth:
-				case QTabBar::TriangularSouth:
-					r.adjust(5, 0, 5, 0);
-					break;
-				case QTabBar::RoundedWest:
-				case QTabBar::TriangularWest:
-				case QTabBar::RoundedEast:
-				case QTabBar::TriangularEast:
-					r.adjust(0, 5, 0, 5);
-					break;
-			}
+			r.adjust(1, 1, 1, 1);
 		}
         break;
     case SE_TabBarTabLeftButton:
