@@ -130,6 +130,44 @@ QPlatformScreen::SubpixelAntialiasingType QHaikuScreen::subpixelAntialiasingType
     return type;
 }
 
+
+QSizeF QHaikuScreen::physicalSize() const
+{
+    int dpi = 100;
+
+	BScreen screen(B_MAIN_SCREEN_ID);
+	monitor_info info;
+
+	if (screen.GetMonitorInfo(&info) == B_OK) {
+		double x = info.width / 2.54;
+		double y = info.height / 2.54;
+		if (x > 0 && y > 0)
+			dpi = (int32)round((screen.Frame().Width() / x + screen.Frame().Height() / y) / 2);
+	}
+
+    return QSizeF(geometry().size()) / dpi * qreal(25.4);
+}
+
+QDpi QHaikuScreen::logicalDpi() const
+{
+    return QDpi(72, 72);
+}
+
+qreal QHaikuScreen::pixelDensity() const
+{
+    return 1.0;
+}
+
+Qt::ScreenOrientation QHaikuScreen::nativeOrientation() const
+{
+    return Qt::PrimaryOrientation;
+}
+
+Qt::ScreenOrientation QHaikuScreen::orientation() const
+{
+    return Qt::PrimaryOrientation;
+}
+
 QHaikuBackingStore::QHaikuBackingStore(QWindow *window)
     : QPlatformBackingStore(window)
 {
