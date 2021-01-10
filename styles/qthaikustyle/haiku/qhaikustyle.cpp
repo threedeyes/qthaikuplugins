@@ -1500,35 +1500,48 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
 #endif // QT_NO_TOOLBAR
 #ifndef QT_NO_DOCKWIDGET
     case CE_DockWidgetTitle:
-        painter->save();
-        if (const QStyleOptionDockWidget *dwOpt = qstyleoption_cast<const QStyleOptionDockWidget *>(option)) {
-            bool verticalTitleBar = dwOpt->verticalTitleBar;
+        if (const QStyleOptionDockWidget *dockWidget = qstyleoption_cast<const QStyleOptionDockWidget *>(option)) {
+            painter->save();
 
+            bool verticalTitleBar = dockWidget->verticalTitleBar;
+
+            int textWidth = option->fontMetrics.width(dockWidget->title);
+            int margin = 4;
             QRect titleRect = subElementRect(SE_DockWidgetTitleBarText, option, widget);
+            QRect rect = dockWidget->rect;
+
             if (verticalTitleBar) {
-                QRect rect = dwOpt->rect;
                 QRect r = rect;
                 QSize s = r.size();
                 s.transpose();
                 r.setSize(s);
+
                 titleRect = QRect(r.left() + rect.bottom()
                                     - titleRect.bottom(),
                                 r.top() + titleRect.left() - rect.left(),
                                 titleRect.height(), titleRect.width());
+
+                painter->translate(r.left(), r.top() + r.width());
+                painter->rotate(-90);
+                painter->translate(-r.left(), -r.top());
+
+                rect = r;
             }
 
-            if (!dwOpt->title.isEmpty()) {
-                QString titleText
-                    = painter->fontMetrics().elidedText(dwOpt->title,
+            QString title = painter->fontMetrics().elidedText(dockWidget->title,
                                             Qt::ElideRight, titleRect.width());
-                proxy()->drawItemText(painter,
-                             titleRect,
-                             Qt::AlignLeft | Qt::AlignVCenter | Qt::TextShowMnemonic, dwOpt->palette,
-                             dwOpt->state & State_Enabled, titleText,
-                             QPalette::WindowText);
-                }
+
+            QFont font = painter->font();
+            font.setPointSize(QFontInfo(font).pointSize() - 1);
+            painter->setFont(font);
+            painter->setPen(dockWidget->palette.windowText().color());
+            painter->drawText(titleRect,
+                              int(Qt::AlignHCenter | Qt::AlignVCenter | Qt::TextShowMnemonic),
+                              title);
+
+            painter->restore();
         }
-        painter->restore();
+
         break;
 #endif // QT_NO_DOCKWIDGET
     case CE_HeaderSection:
@@ -3946,21 +3959,6 @@ QRect QHaikuStyle::subElementRect(SubElement sr, const QStyleOption *opt, const 
     case SE_PushButtonFocusRect:
         r.adjust(0, 1, 0, -1);
         break;
-    case SE_DockWidgetTitleBarText: {
-        const QStyleOptionDockWidget *dwOpt
-            = qstyleoption_cast<const QStyleOptionDockWidget*>(opt);
-        bool verticalTitleBar = dwOpt && dwOpt->verticalTitleBar;
-        if (verticalTitleBar) {
-            r.adjust(0, 0, 0, -4);
-        } else {
-            if (opt->direction == Qt::LeftToRight)
-                r.adjust(4, 0, 0, 0);
-            else
-                r.adjust(0, 0, -4, 0);
-        }
-
-        break;
-    }
     case SE_ProgressBarContents:
         r = subElementRect(SE_ProgressBarGroove, opt, w).adjusted(0,2,0,1);
         break;
