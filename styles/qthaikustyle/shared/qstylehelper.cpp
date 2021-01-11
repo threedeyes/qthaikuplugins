@@ -1,31 +1,37 @@
 /****************************************************************************
 **
-** Copyright (C) 2015 The Qt Company Ltd.
-** Contact: http://www.qt.io/licensing/
+** Copyright (C) 2016 The Qt Company Ltd.
+** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the QtWidgets module of the Qt Toolkit.
 **
-** $QT_BEGIN_LICENSE:LGPL21$
+** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
 ** Licensees holding valid commercial Qt licenses may use this file in
 ** accordance with the commercial license agreement provided with the
 ** Software or, alternatively, in accordance with the terms contained in
 ** a written agreement between you and The Qt Company. For licensing terms
-** and conditions see http://www.qt.io/terms-conditions. For further
-** information use the contact form at http://www.qt.io/contact-us.
+** and conditions see https://www.qt.io/terms-conditions. For further
+** information use the contact form at https://www.qt.io/contact-us.
 **
 ** GNU Lesser General Public License Usage
 ** Alternatively, this file may be used under the terms of the GNU Lesser
-** General Public License version 2.1 or version 3 as published by the Free
-** Software Foundation and appearing in the file LICENSE.LGPLv21 and
-** LICENSE.LGPLv3 included in the packaging of this file. Please review the
-** following information to ensure the GNU Lesser General Public License
-** requirements will be met: https://www.gnu.org/licenses/lgpl.html and
-** http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html.
+** General Public License version 3 as published by the Free Software
+** Foundation and appearing in the file LICENSE.LGPL3 included in the
+** packaging of this file. Please review the following information to
+** ensure the GNU Lesser General Public License version 3 requirements
+** will be met: https://www.gnu.org/licenses/lgpl-3.0.html.
 **
-** As a special exception, The Qt Company gives you certain additional
-** rights. These rights are described in The Qt Company LGPL Exception
-** version 1.1, included in the file LGPL_EXCEPTION.txt in this package.
+** GNU General Public License Usage
+** Alternatively, this file may be used under the terms of the GNU
+** General Public License version 2.0 or (at your option) the GNU General
+** Public license version 3 or any later version approved by the KDE Free
+** Qt Foundation. The licenses are as published by the Free Software
+** Foundation and appearing in the file LICENSE.GPL2 and LICENSE.GPL3
+** included in the packaging of this file. Please review the following
+** information to ensure the GNU General Public License requirements will
+** be met: https://www.gnu.org/licenses/gpl-2.0.html and
+** https://www.gnu.org/licenses/gpl-3.0.html.
 **
 ** $QT_END_LICENSE$
 **
@@ -34,19 +40,24 @@
 #include <qstyleoption.h>
 #include <qpainter.h>
 #include <qpixmapcache.h>
+#include <private/qhighdpiscaling_p.h>
+#include <private/qguiapplication_p.h>
+#include <private/qmath_p.h>
+#include <private/qstyle_p.h>
 #include <qmath.h>
+#if QT_CONFIG(scrollbar)
 #include <qscrollbar.h>
+#endif
 #include <qabstractscrollarea.h>
 #include <qwindow.h>
-#include <qradiobutton.h>
-#include <qcheckbox.h>
-#include "qstylecache_p.h"
+
+#include <qmetaobject.h>
 #include "qstylehelper_p.h"
 #include <qstringbuilder.h>
 
 QT_BEGIN_NAMESPACE
 
-static const qreal Q_PI   = qreal(3.14159265358979323846);   // pi
+Q_GUI_EXPORT int qt_defaultDpiX();
 
 namespace QStyleHelper {
 
@@ -60,14 +71,58 @@ QString uniqueName(const QString &key, const QStyleOption *option, const QSize &
                       % HexString<uint>(size.width())
                       % HexString<uint>(size.height());
 
-#ifndef QT_NO_SPINBOX
+#if QT_CONFIG(spinbox)
     if (const QStyleOptionSpinBox *spinBox = qstyleoption_cast<const QStyleOptionSpinBox *>(option)) {
         tmp = tmp % HexString<uint>(spinBox->buttonSymbols)
                   % HexString<uint>(spinBox->stepEnabled)
                   % QLatin1Char(spinBox->frame ? '1' : '0'); ;
     }
-#endif // QT_NO_SPINBOX
+#endif // QT_CONFIG(spinbox)
+
     return tmp;
+}
+
+#ifdef Q_OS_DARWIN
+static const qreal qstyleBaseDpi = 72;
+#else
+static const qreal qstyleBaseDpi = 96;
+#endif
+
+Q_WIDGETS_EXPORT qreal dpi(const QStyleOption *option)
+{
+#ifndef Q_OS_DARWIN
+    // Prioritize the application override, except for on macOS where
+    // we have historically not supported the AA_Use96Dpi flag.
+    if (QCoreApplication::testAttribute(Qt::AA_Use96Dpi))
+        return 96;
+#endif
+
+    // Expect that QStyleOption::QFontMetrics::QFont has the correct DPI set
+    if (option)
+        return option->fontMetrics.fontDpi();
+
+    // Fall back to historical Qt behavior: hardocded 72 DPI on mac,
+    // primary screen DPI on other platforms.
+#ifdef Q_OS_DARWIN
+    return qstyleBaseDpi;
+#else
+    return qt_defaultDpiX();
+#endif
+}
+
+Q_WIDGETS_EXPORT qreal dpiScaled(qreal value, qreal dpi)
+{
+    return value * dpi / qstyleBaseDpi;
+}
+
+Q_WIDGETS_EXPORT qreal dpiScaled(qreal value, const QPaintDevice *device)
+{
+    return dpiScaled(value, device->logicalDpiX());
+}
+
+Q_WIDGETS_EXPORT qreal dpiScaled(qreal value, const QStyleOption *option)
+{
+    return dpiScaled(value, dpi(option));
 }
 
 #ifndef QT_NO_ACCESSIBILITY
@@ -83,7 +138,7 @@ bool isInstanceOf(QObject *obj, QAccessible::Role role)
 bool hasAncestor(QObject *obj, QAccessible::Role role)
 {
     bool found = false;
-    QObject *parent = obj ? obj->parent() : 0;
+    QObject *parent = obj ? obj->parent() : nullptr;
     while (parent && !found) {
         if (isInstanceOf(parent, role))
             found = true;
@@ -94,7 +149,7 @@ bool hasAncestor(QObject *obj, QAccessible::Role role)
 #endif // QT_NO_ACCESSIBILITY
 
 
-#ifndef QT_NO_DIAL
+#if QT_CONFIG(dial)
 
 int calcBigLineSize(int radius)
 {
@@ -225,6 +280,12 @@ void drawDial(const QStyleOptionSlider *option, QPainter *painter)
         painter->drawLines(QStyleHelper::calcLines(option));
     }
 
+    // setting color before BEGIN_STYLE_PIXMAPCACHE since
+    // otherwise it is not set when the image is in the cache
+    buttonColor.setHsv(buttonColor .hue(),
+                       qMin(140, buttonColor .saturation()),
+                       qMax(180, buttonColor.value()));
+
     // Cache dial background
     BEGIN_STYLE_PIXMAPCACHE(QString::fromLatin1("qdial"));
     p->setRenderHint(QPainter::Antialiasing);
@@ -236,10 +297,6 @@ void drawDial(const QStyleOptionSlider *option, QPainter *painter)
     QRectF br = QRectF(dx + 0.5, dy + 0.5,
                        int(r * 2 - 2 * d_ - 2),
                        int(r * 2 - 2 * d_ - 2));
-    buttonColor.setHsv(buttonColor .hue(),
-                       qMin(140, buttonColor .saturation()),
-                       qMax(180, buttonColor.value()));
-    QColor shadowColor(0, 0, 0, 20);
 
     if (enabled) {
         // Drop shadow
@@ -313,7 +370,7 @@ void drawDial(const QStyleOptionSlider *option, QPainter *painter)
     painter->drawEllipse(dialRect);
     painter->restore();
 }
-#endif //QT_NO_DIAL
+#endif //QT_CONFIG(dial)
 
 void drawBorderPixmap(const QPixmap &pixmap, QPainter *painter, const QRect &rect,
                      int left, int top, int right,
@@ -328,7 +385,7 @@ void drawBorderPixmap(const QPixmap &pixmap, QPainter *painter, const QRect &rec
                             QRect(left, 0, size.width() -right - left, top));
 
         //top-left
-        if (left > 0)
+        if(left > 0)
             painter->drawPixmap(QRect(rect.left(), rect.top(), left, top), pixmap,
                                 QRect(0, 0, left, top));
 
@@ -374,22 +431,35 @@ void drawBorderPixmap(const QPixmap &pixmap, QPainter *painter, const QRect &rec
 
 QColor backgroundColor(const QPalette &pal, const QWidget* widget)
 {
+#if QT_CONFIG(scrollarea)
     if (qobject_cast<const QScrollBar *>(widget) && widget->parent() &&
             qobject_cast<const QAbstractScrollArea *>(widget->parent()->parent()))
         return widget->parentWidget()->parentWidget()->palette().color(QPalette::Base);
-	if (qobject_cast<const QRadioButton *>(widget) && widget->parent())
-		return widget->parentWidget()->palette().color(QPalette::Window);
-	if (qobject_cast<const QCheckBox *>(widget) && widget->parent())
-		return widget->parentWidget()->palette().color(QPalette::Window);
+#else
+    Q_UNUSED(widget);
+#endif
     return pal.color(QPalette::Base);
 }
 
-QWindow *styleObjectWindow(QObject *so)
+WidgetSizePolicy widgetSizePolicy(const QWidget *widget, const QStyleOption *opt)
 {
-    if (so)
-        return so->property("_q_styleObjectWindow").value<QWindow *>();
+    while (widget) {
+        if (widget->testAttribute(Qt::WA_MacMiniSize)) {
+            return SizeMini;
+        } else if (widget->testAttribute(Qt::WA_MacSmallSize)) {
+            return SizeSmall;
+        } else if (widget->testAttribute(Qt::WA_MacNormalSize)) {
+            return SizeLarge;
+        }
+        widget = widget->parentWidget();
+    }
 
-    return 0;
+    if (opt && opt->state & QStyle::State_Mini)
+        return SizeMini;
+    else if (opt && opt->state & QStyle::State_Small)
+        return SizeSmall;
+
+    return SizeDefault;
 }
 
 }
