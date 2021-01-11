@@ -209,23 +209,23 @@ static const char * const qt_haiku_arrow_down_xpm[] = {
 	" 	c None",
 	"x	c #000000",
 	"           ",
-	"  x     x  ",
-	" xxx   xxx ",
+	"           ",
 	"  xxxxxxx  ",
 	"   xxxxx   ",
 	"    xxx    ",
-	"     x     "};
+	"     x     ",
+	"           "};
 
 static const char * const qt_haiku_arrow_up_xpm[] = {
 	"11 7 2 1",
 	" 	c None",
 	"x	c #000000",
+	"           ",
 	"     x     ",
 	"    xxx    ",
 	"   xxxxx   ",
 	"  xxxxxxx  ",
-	" xxx   xxx ",
-	"  x     x  ",
+	"           ",
 	"           "};
 
 static const char * const dock_widget_restore_xpm[] = {
@@ -705,7 +705,7 @@ void QHaikuStyle::drawPrimitive(PrimitiveElement elem,
 			if (!arrow.isNull()) {
 				r.setSize(arrow.size());
 				r.moveCenter(header->rect.center());
-				arrow.setColor(1, header->palette.windowText().color().rgba());
+				arrow.setColor(1, header->palette.dark().color().rgba());
 				painter->drawImage(r, arrow);
 			}
 		}
