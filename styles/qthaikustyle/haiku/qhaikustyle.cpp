@@ -1392,7 +1392,6 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
 		}
 		painter->restore();
 		break;
-#ifndef QT_NO_TOOLBAR
 	case CE_ToolBar:
 		// Reserve the beveled appearance only for mainwindow toolbars
 		if (!(widget && qobject_cast<const QMainWindow*> (widget->parentWidget())))
@@ -1500,8 +1499,6 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
 		}
 		painter->restore();
 		break;
-#endif // QT_NO_TOOLBAR
-#ifndef QT_NO_DOCKWIDGET
 	case CE_DockWidgetTitle:
 		if (const QStyleOptionDockWidget *dockWidget = qstyleoption_cast<const QStyleOptionDockWidget *>(option)) {
 			painter->save();
@@ -1543,7 +1540,6 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
 		}
 
 		break;
-#endif // QT_NO_DOCKWIDGET
 	case CE_HeaderSection:
 		painter->save();
 		if (const QStyleOptionHeader *header = qstyleoption_cast<const QStyleOptionHeader *>(option)) {
@@ -2082,7 +2078,6 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
 		}
 		painter->restore();
 		break;
-#ifndef QT_NO_TABBAR
 	case CE_TabBarTabShape:
 		painter->save();
 		if (const QStyleOptionTab *tab = qstyleoption_cast<const QStyleOptionTab *>(option)) {
@@ -2184,7 +2179,6 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
 		painter->restore();
 		break;
 
-#endif // QT_NO_TABBAR
 	default:
 		QCommonStyle::drawControl(element,option,painter,widget);
 		break;
@@ -2292,7 +2286,6 @@ void QHaikuStyle::drawComplexControl(ComplexControl control, const QStyleOptionC
 	QPalette palette = option->palette;
 
 	switch (control) {
-#ifndef QT_NO_SPINBOX
 	case CC_SpinBox:
 		painter->save();
 		if (const QStyleOptionSpinBox *spinBox = qstyleoption_cast<const QStyleOptionSpinBox *>(option)) {
@@ -2421,7 +2414,6 @@ void QHaikuStyle::drawComplexControl(ComplexControl control, const QStyleOptionC
 	    }
 		painter->restore();
 		break;
-#endif // QT_NO_SPINBOX
 	case CC_TitleBar:
 		painter->save();
 		if (const QStyleOptionTitleBar *titleBar = qstyleoption_cast<const QStyleOptionTitleBar *>(option)) {
@@ -2570,7 +2562,6 @@ void QHaikuStyle::drawComplexControl(ComplexControl control, const QStyleOptionC
 		}
 		painter->restore();
 		break;
-#ifndef QT_NO_SCROLLBAR
 	case CC_ScrollBar:
 		painter->save();
 		if (const QStyleOptionSlider *scrollBar = qstyleoption_cast<const QStyleOptionSlider *>(option)) {
@@ -2752,8 +2743,6 @@ void QHaikuStyle::drawComplexControl(ComplexControl control, const QStyleOptionC
 		}
 		painter->restore();
 		break;
-#endif // QT_NO_SCROLLBAR
-#ifndef QT_NO_COMBOBOX
 	case CC_ComboBox:
 		painter->save();
 		if (const QStyleOptionComboBox *comboBox = qstyleoption_cast<const QStyleOptionComboBox *>(option)) {
@@ -2785,8 +2774,6 @@ void QHaikuStyle::drawComplexControl(ComplexControl control, const QStyleOptionC
 		}
 		painter->restore();
 		break;
-#endif // QT_NO_COMBOBOX
-#ifndef QT_NO_GROUPBOX
 	case CC_GroupBox:
 		painter->save();
 		if (const QStyleOptionGroupBox *groupBox = qstyleoption_cast<const QStyleOptionGroupBox *>(option)) {
@@ -2836,8 +2823,6 @@ void QHaikuStyle::drawComplexControl(ComplexControl control, const QStyleOptionC
 		}
 		painter->restore();
 		break;
-#endif // QT_NO_GROUPBOX
-#ifndef QT_NO_SLIDER
 	case CC_Slider:
    	painter->save();
 		if (const QStyleOptionSlider *slider = qstyleoption_cast<const QStyleOptionSlider *>(option)) {
@@ -2912,8 +2897,6 @@ void QHaikuStyle::drawComplexControl(ComplexControl control, const QStyleOptionC
 			painter->restore();
 		}
 		break;
-#endif // QT_NO_SLIDER
-#ifndef QT_NO_DIAL
 	case CC_Dial:
 		if (const QStyleOptionSlider *dial = qstyleoption_cast<const QStyleOptionSlider *>(option)) {
 			QPalette pal = widget->palette();
@@ -2923,9 +2906,9 @@ void QHaikuStyle::drawComplexControl(ComplexControl control, const QStyleOptionC
 			QStyleHelper::drawDial(dial, painter);
 		}
 		break;
-#endif // QT_NO_DIAL
-		default:
-			QProxyStyle::drawComplexControl(control, option, painter, widget);
+
+	default:
+		QProxyStyle::drawComplexControl(control, option, painter, widget);
 		break;
 	}
 }
@@ -3094,7 +3077,6 @@ QSize QHaikuStyle::sizeFromContents(ContentsType type, const QStyleOption *optio
 				newSize -= QSize(0, 2);
 		}
 		break;
-#ifndef QT_NO_GROUPBOX
 	case CT_GroupBox:
 		// Since we use a bold font we have to recalculate base width
 		if (const QGroupBox *gb = qobject_cast<const QGroupBox*>(widget)) {
@@ -3110,7 +3092,6 @@ QSize QHaikuStyle::sizeFromContents(ContentsType type, const QStyleOption *optio
 		}
 		newSize += QSize(0, 1);
 		break;
-#endif //QT_NO_GROUPBOX
 	case CT_RadioButton:
 		newSize += QSize(1, 1);
 		break;
@@ -3118,10 +3099,8 @@ QSize QHaikuStyle::sizeFromContents(ContentsType type, const QStyleOption *optio
 		newSize += QSize(1, 1);
 		break;
 	case CT_ToolButton:
-#ifndef QT_NO_TOOLBAR
 		if (widget && qobject_cast<QToolBar *>(widget->parentWidget()))
 			newSize += QSize(4, 6);
-#endif // QT_NO_TOOLBAR
 		break;
 	case CT_Slider:
 		if (const QStyleOptionSlider *slider = qstyleoption_cast<const QStyleOptionSlider *>(option)) {
@@ -3229,33 +3208,24 @@ void QHaikuStyle::polish(QWidget *widget)
 {
 	QProxyStyle::polish(widget);
 	if (qobject_cast<QAbstractButton*>(widget)
-#ifndef QT_NO_COMBOBOX
 		|| qobject_cast<QComboBox *>(widget)
-#endif
-#ifndef QT_NO_PROGRESSBAR
 		|| qobject_cast<QProgressBar *>(widget)
-#endif
-#ifndef QT_NO_SCROLLBAR
 		|| qobject_cast<QScrollBar *>(widget)
-#endif
-#ifndef QT_NO_SPLITTER
 		|| qobject_cast<QSplitterHandle *>(widget)
-#endif
 		|| qobject_cast<QAbstractSlider *>(widget)
-#ifndef QT_NO_SPINBOX
 		|| qobject_cast<QAbstractSpinBox *>(widget)
-#endif
 		|| (widget->inherits("QDockSeparator"))
 		|| (widget->inherits("QDockWidgetSeparator"))
 		) {
 		widget->setAttribute(Qt::WA_Hover, true);
 	}
-#ifndef QT_NO_PROGRESSBAR
+
 	if (qobject_cast<QProgressBar *>(widget))
 		widget->installEventFilter(this);
-#endif
+
 	if (qobject_cast<QMdiSubWindow *>(widget))
 		widget->installEventFilter(this);
+
 	if (qobject_cast<QSizeGrip *>(widget))
 		widget->installEventFilter(this);
 }
@@ -3283,33 +3253,23 @@ void QHaikuStyle::unpolish(QWidget *widget)
 {
 	QProxyStyle::unpolish(widget);
 	if (qobject_cast<QAbstractButton*>(widget)
-#ifndef QT_NO_COMBOBOX
 		|| qobject_cast<QComboBox *>(widget)
-#endif
-#ifndef QT_NO_PROGRESSBAR
 		|| qobject_cast<QProgressBar *>(widget)
-#endif
-#ifndef QT_NO_SCROLLBAR
 		|| qobject_cast<QScrollBar *>(widget)
-#endif
-#ifndef QT_NO_SPLITTER
 		|| qobject_cast<QSplitterHandle *>(widget)
-#endif
 		|| qobject_cast<QAbstractSlider *>(widget)
-#ifndef QT_NO_SPINBOX
 		|| qobject_cast<QAbstractSpinBox *>(widget)
-#endif
 		|| (widget->inherits("QDockSeparator"))
 		|| (widget->inherits("QDockWidgetSeparator"))
 		) {
 		widget->setAttribute(Qt::WA_Hover, false);
 	}
-#ifndef QT_NO_PROGRESSBAR
 	if (qobject_cast<QProgressBar *>(widget))
 		widget->removeEventFilter(this);
-#endif
+
 	if (qobject_cast<QMdiSubWindow *>(widget))
 		widget->removeEventFilter(this);
+
 	if (qobject_cast<QSizeGrip *>(widget))
 		widget->removeEventFilter(this);
 }
@@ -3329,7 +3289,6 @@ bool QHaikuStyle::event(QEvent *event)
 {
 	switch (event->type()) {
 	case QEvent::Timer: {
-#ifndef QT_NO_PROGRESSBAR
 		QTimerEvent *timerEvent = reinterpret_cast<QTimerEvent *>(event);
 		if (timerEvent->timerId() == animateTimer) {
 			Q_ASSERT(progressAnimationFps > 0);
@@ -3337,7 +3296,6 @@ bool QHaikuStyle::event(QEvent *event)
 			foreach (QProgressBar *bar, animatedProgressBars)
 				bar->update();
 		}
-#endif // QT_NO_PROGRESSBAR
 		event->ignore();
 	}
 	default:
@@ -3387,14 +3345,12 @@ bool QHaikuStyle::eventFilter(QObject *o, QEvent *e)
 	case QEvent::StyleChange:
 	case QEvent::Paint:
 	case QEvent::Show:
-#ifndef QT_NO_PROGRESSBAR
 		if (QProgressBar *bar = qobject_cast<QProgressBar *>(o)) {
 			if (bar->minimum() == bar->maximum())
 				startProgressAnimation(this, bar);
 			else
 				stopProgressAnimation(this, bar);
 		}
-#endif
 		if (QSizeGrip *grip = qobject_cast<QSizeGrip *>(o)) {
 			if (grip->window()->isTopLevel()) {
 				QWindow *mainwindow = grip->window()->windowHandle();
@@ -3405,9 +3361,7 @@ bool QHaikuStyle::eventFilter(QObject *o, QEvent *e)
 		break;
 	case QEvent::Destroy:
 	case QEvent::Hide:
-#ifndef QT_NO_PROGRESSBAR
 		stopProgressAnimation(this, static_cast<QProgressBar *>(o));
-#endif
 		if (QSizeGrip *grip = qobject_cast<QSizeGrip *>(o)) {
 			if (grip->window()->isTopLevel()) {
 				QWindow *mainwindow = grip->window()->windowHandle();
@@ -3455,7 +3409,6 @@ QRect QHaikuStyle::subControlRect(ComplexControl control, const QStyleOptionComp
 	QRect rect = QProxyStyle::subControlRect(control, option, subControl, widget);
 
 	switch (control) {
-#ifndef QT_NO_SLIDER
 	case CC_Slider:
 		if (const QStyleOptionSlider *slider = qstyleoption_cast<const QStyleOptionSlider *>(option)) {
 			bool ticksAbove = slider->tickPosition & QSlider::TicksAbove;
@@ -3508,9 +3461,6 @@ QRect QHaikuStyle::subControlRect(ComplexControl control, const QStyleOptionComp
 			}
 		}
 		break;
-#endif // QT_NO_SLIDER
-
-#ifndef QT_NO_SPINBOX
 	case CC_SpinBox:
 		if (const QStyleOptionSpinBox *spinbox = qstyleoption_cast<const QStyleOptionSpinBox *>(option)) {
 			int frameWidth = spinbox->frame ? proxy()->pixelMetric(PM_SpinBoxFrameWidth, spinbox, widget) : 0;
@@ -3545,8 +3495,6 @@ QRect QHaikuStyle::subControlRect(ComplexControl control, const QStyleOptionComp
 			rect = visualRect(spinbox->direction, spinbox->rect, rect).adjusted(0, 0, 0, 4);
 		}
 		break;
-#endif // Qt_NO_SPINBOX
-#ifndef QT_NO_GROUPBOX
 	case CC_GroupBox:
 		if (const QStyleOptionGroupBox * groupBox = qstyleoption_cast<const QStyleOptionGroupBox *>(option)) {
 			rect = option->rect;
@@ -3600,7 +3548,6 @@ QRect QHaikuStyle::subControlRect(ComplexControl control, const QStyleOptionComp
 		}
 
 		return rect;
-#ifndef QT_NO_COMBOBOX
 	case CC_ComboBox:
 		switch (subControl) {
 		case SC_ComboBoxArrow:
@@ -3629,9 +3576,7 @@ QRect QHaikuStyle::subControlRect(ComplexControl control, const QStyleOptionComp
 			break;
 		}
 		break;
-#endif // QT_NO_COMBOBOX
-#endif //QT_NO_GROUPBOX
-		case CC_TitleBar:
+	case CC_TitleBar:
 		if (const QStyleOptionTitleBar *tb = qstyleoption_cast<const QStyleOptionTitleBar *>(option)) {
 			SubControl sc = subControl;
 			QRect &ret = rect;
