@@ -1504,6 +1504,11 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
 			painter->save();
 
 			bool verticalTitleBar = dockWidget->verticalTitleBar;
+
+			rgb_color bgColor = mkHaikuColor(option->palette.color( QPalette::Normal, QPalette::Window));
+			QColor backgroundColor(mkQColor(tint_color(bgColor, 1.1)));
+			QColor frameColor(mkQColor(tint_color(bgColor, 1.3)));
+
 			QRect titleRect = subElementRect(SE_DockWidgetTitleBarText, option, widget);
 			QRect rect = dockWidget->rect;
 
@@ -1525,11 +1530,15 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
 				rect = r;
 			}
 
+			painter->setPen(frameColor);
+			painter->fillRect(rect.adjusted(-1, 3, 1, -3), backgroundColor);
+			painter->drawRect(rect.adjusted(-1, 3, 1, -3));
+
 			QString title = painter->fontMetrics().elidedText(dockWidget->title,
 											Qt::ElideRight, titleRect.width());
 
 			QFont font = painter->font();
-			font.setUnderline(true);
+			font.setPointSize(font.pointSize() - 1);
 			painter->setFont(font);
 			painter->setPen(dockWidget->palette.windowText().color());
 			painter->drawText(titleRect,
@@ -1538,7 +1547,6 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
 
 			painter->restore();
 		}
-
 		break;
 	case CE_HeaderSection:
 		painter->save();
@@ -3111,7 +3119,7 @@ QSize QHaikuStyle::sizeFromContents(ContentsType type, const QStyleOption *optio
 		}
 		break;
 	case CT_SpinBox:
-		newSize += QSize(10, 6);
+		newSize = QSize(newSize.width() * 1.3, newSize.height() + 6);
 		break;
 	case CT_ComboBox:
 		newSize = sizeFromContents(CT_PushButton, option, size, widget);
