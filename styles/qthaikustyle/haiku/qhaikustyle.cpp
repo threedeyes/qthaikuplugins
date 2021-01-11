@@ -1,39 +1,38 @@
 /****************************************************************************
 **
-** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
-** Contact: http://www.qt-project.org/legal
+** Copyright (C) 2017 The Qt Company Ltd.
+** Copyright (C) 2017-2020 Gerasim Troeglazov,
+** Contact: 3dEyes@gmail.com
 **
-** This file is part of the QtGui module of the Qt Toolkit.
+** This file is part of the plugins of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
 ** Licensees holding valid commercial Qt licenses may use this file in
 ** accordance with the commercial license agreement provided with the
 ** Software or, alternatively, in accordance with the terms contained in
-** a written agreement between you and Digia.  For licensing terms and
-** conditions see http://qt.digia.com/licensing.  For further information
-** use the contact form at http://qt.digia.com/contact-us.
+** a written agreement between you and The Qt Company. For licensing terms
+** and conditions see https://www.qt.io/terms-conditions. For further
+** information use the contact form at https://www.qt.io/contact-us.
 **
 ** GNU Lesser General Public License Usage
 ** Alternatively, this file may be used under the terms of the GNU Lesser
-** General Public License version 2.1 as published by the Free Software
-** Foundation and appearing in the file LICENSE.LGPL included in the
-** packaging of this file.  Please review the following information to
-** ensure the GNU Lesser General Public License version 2.1 requirements
-** will be met: http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html.
-**
-** In addition, as a special exception, Digia gives you certain additional
-** rights.  These rights are described in the Digia Qt LGPL Exception
-** version 1.1, included in the file LGPL_EXCEPTION.txt in this package.
+** General Public License version 3 as published by the Free Software
+** Foundation and appearing in the file LICENSE.LGPL3 included in the
+** packaging of this file. Please review the following information to
+** ensure the GNU Lesser General Public License version 3 requirements
+** will be met: https://www.gnu.org/licenses/lgpl-3.0.html.
 **
 ** GNU General Public License Usage
 ** Alternatively, this file may be used under the terms of the GNU
-** General Public License version 3.0 as published by the Free Software
-** Foundation and appearing in the file LICENSE.GPL included in the
-** packaging of this file.  Please review the following information to
-** ensure the GNU General Public License version 3.0 requirements will be
-** met: http://www.gnu.org/copyleft/gpl.html.
-**
+** General Public License version 2.0 or (at your option) the GNU General
+** Public license version 3 or any later version approved by the KDE Free
+** Qt Foundation. The licenses are as published by the Free Software
+** Foundation and appearing in the file LICENSE.GPL2 and LICENSE.GPL3
+** included in the packaging of this file. Please review the following
+** information to ensure the GNU General Public License requirements will
+** be met: https://www.gnu.org/licenses/gpl-2.0.html and
+** https://www.gnu.org/licenses/gpl-3.0.html.
 **
 ** $QT_END_LICENSE$
 **
@@ -90,7 +89,6 @@
 #include "../../../platforms/qhaikuplatform/haiku/qhaikusettings.h"
 
 #include "qstylehelper_p.h"
-#include "qstylecache_p.h"
 
 #define _QS_HAIKU_TAB_FIX_WIDTH_
 
@@ -688,7 +686,7 @@ void QHaikuStyle::drawPrimitive(PrimitiveElement elem,
                 qMin(255, (int)(button.value()*0.7)));
 
     switch (elem) {
-    case PE_IndicatorViewItemCheck:
+    case PE_IndicatorItemViewItemCheck:
         {
             QStyleOptionButton button;
             button.QStyleOption::operator=(*option);
@@ -707,7 +705,7 @@ void QHaikuStyle::drawPrimitive(PrimitiveElement elem,
             if (!arrow.isNull()) {
                 r.setSize(arrow.size());
                 r.moveCenter(header->rect.center());
-                arrow.setColor(1, header->palette.foreground().color().rgba());
+                arrow.setColor(1, header->palette.windowText().color().rgba());
                 painter->drawImage(r, arrow);
             }
         }
@@ -777,24 +775,24 @@ void QHaikuStyle::drawPrimitive(PrimitiveElement elem,
             const int margin = 6;
             if (option->state & State_Horizontal) {
                 const int offset = rect.width()/2;
-                painter->setPen(QPen(option->palette.background().color().darker(110)));
+                painter->setPen(QPen(option->palette.window().color().darker(110)));
                 painter->drawLine(rect.bottomLeft().x() + offset,
                             rect.bottomLeft().y() - margin,
                             rect.topLeft().x() + offset,
                             rect.topLeft().y() + margin);
-                painter->setPen(QPen(option->palette.background().color().lighter(110)));
+                painter->setPen(QPen(option->palette.window().color().lighter(110)));
                 painter->drawLine(rect.bottomLeft().x() + offset + 1,
                             rect.bottomLeft().y() - margin,
                             rect.topLeft().x() + offset + 1,
                             rect.topLeft().y() + margin);
             } else { //Draw vertical separator
                 const int offset = rect.height()/2;
-                painter->setPen(QPen(option->palette.background().color().darker(110)));
+                painter->setPen(QPen(option->palette.window().color().darker(110)));
                 painter->drawLine(rect.topLeft().x() + margin ,
                             rect.topLeft().y() + offset,
                             rect.topRight().x() - margin,
                             rect.topRight().y() + offset);
-                painter->setPen(QPen(option->palette.background().color().lighter(110)));
+                painter->setPen(QPen(option->palette.window().color().lighter(110)));
                 painter->drawLine(rect.topLeft().x() + margin ,
                             rect.topLeft().y() + offset + 1,
                             rect.topRight().x() - margin,
@@ -846,8 +844,8 @@ void QHaikuStyle::drawPrimitive(PrimitiveElement elem,
         {
             painter->setPen(QPen(darkOutline, 1));
             painter->drawRect(option->rect.adjusted(0, 0, -1, -1));
-            QColor frameLight = option->palette.background().color().lighter(160);
-            QColor frameShadow = option->palette.background().color().darker(110);
+            QColor frameLight = option->palette.window().color().lighter(160);
+            QColor frameShadow = option->palette.window().color().darker(110);
 
             //paint beveleffect
             QRect frame = option->rect.adjusted(1, 1, -1, -1);
@@ -865,14 +863,14 @@ void QHaikuStyle::drawPrimitive(PrimitiveElement elem,
 
         painter->save();
         {
-            QColor softshadow = option->palette.background().color().darker(120);
+            QColor softshadow = option->palette.window().color().darker(120);
 
             QRect rect= option->rect;
             painter->setPen(softshadow);
             painter->drawRect(option->rect.adjusted(0, 0, -1, -1));
             painter->setPen(QPen(option->palette.light(), 0));
             painter->drawLine(QPoint(rect.left() + 1, rect.top() + 1), QPoint(rect.left() + 1, rect.bottom() - 1));
-            painter->setPen(QPen(option->palette.background().color().darker(120), 0));
+            painter->setPen(QPen(option->palette.window().color().darker(120), 0));
             painter->drawLine(QPoint(rect.left() + 1, rect.bottom() - 1), QPoint(rect.right() - 2, rect.bottom() - 1));
             painter->drawLine(QPoint(rect.right() - 1, rect.top() + 1), QPoint(rect.right() - 1, rect.bottom() - 1));
 
@@ -912,7 +910,7 @@ void QHaikuStyle::drawPrimitive(PrimitiveElement elem,
 				qt_haiku_draw_windows_frame(painter, option->rect, active ? B_WINDOW_BORDER_COLOR : B_WINDOW_INACTIVE_BORDER_COLOR,
 					BControlLook::B_LEFT_BORDER | BControlLook::B_RIGHT_BORDER | BControlLook::B_BOTTOM_BORDER);
 			} else {
-				QColor menuBackground = option->palette.background().color().lighter(104);
+				QColor menuBackground = option->palette.window().color().lighter(104);
 				painter->fillRect(option->rect, menuBackground);
 				proxy()->drawPrimitive(PE_FrameMenu, option, painter, widget);
             }
@@ -986,7 +984,8 @@ void QHaikuStyle::drawPrimitive(PrimitiveElement elem,
         }
         painter->restore();
         break;
-/*    case PE_IndicatorRadioButton:
+#if 0
+    case PE_IndicatorRadioButton:
         painter->save();
         if (const QStyleOptionButton *radiobutton = qstyleoption_cast<const QStyleOptionButton*>(option)) {
             rect = rect.adjusted(1, -1, 3, 1);
@@ -1015,11 +1014,12 @@ void QHaikuStyle::drawPrimitive(PrimitiveElement elem,
 			painter->drawImage(rect, surface.image());
         }
         painter->restore();
-        break;  */
+        break;
+#endif
     case PE_IndicatorRadioButton:
 		painter->save();
         if (const QStyleOptionButton *button = qstyleoption_cast<const QStyleOptionButton *>(option)) {
-            painter->setRenderHint(QPainter::HighQualityAntialiasing);
+            painter->setRenderHint(QPainter::Antialiasing);
 
             bool on = button->state & State_On;
             bool sunken = button->state & State_Sunken;
@@ -1311,7 +1311,7 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
                 qMin(255, (int)(button.saturation()*2.0)),
                 qMin(255, (int)(button.value()*0.6)));
     QRect rect = option->rect;
-    QColor shadow = mergedColors(option->palette.background().color().darker(120),
+    QColor shadow = mergedColors(option->palette.window().color().darker(120),
                                  dark.lighter(130), 60);
 
     /*QColor highlight = option->palette.highlight().color();*/
@@ -1413,9 +1413,11 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
                 case QStyleOptionToolBar::Beginning:
                 case QStyleOptionToolBar::OnlyOne:
                     paintBottomBorder = false;
+                    break;
                 default:
                     break;
                 }
+                break;
             case Qt::TopToolBarArea:
                 switch (toolbar->positionWithinLine) {
                 case QStyleOptionToolBar::Beginning:
@@ -1427,6 +1429,7 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
                 case QStyleOptionToolBar::OnlyOne:
                     paintRightBorder = false;
                     paintLeftBorder = false;
+                    break;
                 default:
                     break;
                 }
@@ -1460,7 +1463,7 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
                 break;
             }
 
-            QColor light = option->palette.background().color().lighter(110);
+            QColor light = option->palette.window().color().lighter(110);
 
             //draw borders
 			if (paintTopBorder) {
@@ -1504,9 +1507,6 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
             painter->save();
 
             bool verticalTitleBar = dockWidget->verticalTitleBar;
-
-            int textWidth = option->fontMetrics.width(dockWidget->title);
-            int margin = 4;
             QRect titleRect = subElementRect(SE_DockWidgetTitleBarText, option, widget);
             QRect rect = dockWidget->rect;
 
@@ -1532,7 +1532,7 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
                                             Qt::ElideRight, titleRect.width());
 
             QFont font = painter->font();
-            font.setPointSize(QFontInfo(font).pointSize() - 1);
+            font.setUnderline(true);
             painter->setFont(font);
             painter->setPen(dockWidget->palette.windowText().color());
             painter->drawText(titleRect,
@@ -1548,8 +1548,7 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
         painter->save();
         if (const QStyleOptionHeader *header = qstyleoption_cast<const QStyleOptionHeader *>(option)) {
         	BRect drawRect;
-        	QRect rect = option->rect;
-			rgb_color borderColor = mix_color(ui_color(B_PANEL_BACKGROUND_COLOR), make_color(0, 0, 0), 128);
+        	QRect rect = header->rect;
 			rgb_color background = mkHaikuColor(option->palette.color( QPalette::Normal, QPalette::Window));
 			rgb_color base = ui_color(B_PANEL_BACKGROUND_COLOR);
 			BRect bRect(0.0f, 0.0f, rect.width() - 1, rect.height() - 1);
@@ -1616,10 +1615,7 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
 			be_control_look->DrawStatusBar(surface.view(), bRect, bRect, base, highlight, progressBarWidth);
 
             if (vertical) {
-                QMatrix matrix;
-				matrix.translate(surface.image().width()/2, surface.image().height()/2);
-				matrix.rotate(inverted?90:-90);
-				QImage dstImg = surface.image().transformed(matrix);
+				QImage dstImg = surface.image().mirrored(false, inverted);				
 				painter->drawImage(rect, dstImg);
             } else {
 				if (indeterminate) {
@@ -1639,8 +1635,8 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
 					fColors[0] = otherColor;
 					fColors[1] = B_TRANSPARENT_COLOR;
 
-					int fNumColors = 2;
-					int fNumStripes = (int32)ceilf((bRect.Width()) / fStripeWidth) + 1 + fNumColors;
+					uint32 fNumColors = 2;
+					uint32 fNumStripes = (int32)ceilf((bRect.Width()) / fStripeWidth) + 1 + fNumColors;
 
 					float fScrollOffset = ((animateStep % progressAnimationFps) * (fStripeWidth * fNumColors) ) / progressAnimationFps;
 					float position = -fStripeWidth * (fNumColors + 0.5) + fScrollOffset;
@@ -1729,7 +1725,9 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
             bool checkable = menuItem->checkType != QStyleOptionMenuItem::NotCheckable;
             bool checked = menuItem->checked;
             bool sunken = menuItem->state & State_Sunken;
+#if 0
             bool enabled = menuItem->state & State_Enabled;
+#endif
             int checkcol = qMax(menuItem->maxIconWidth, 20);
 
             QColor discol;
@@ -2092,8 +2090,10 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
                                && (tab->shape == QTabBar::RoundedNorth
                                    || tab->shape == QTabBar::RoundedSouth));
             bool selected = tab->state & State_Selected;
+#if 0
             bool firstTab = ((!rtlHorTabs && tab->position == QStyleOptionTab::Beginning)
                             || (rtlHorTabs && tab->position == QStyleOptionTab::End));
+#endif
             bool lastTab = ((!rtlHorTabs && tab->position == QStyleOptionTab::End)
                             || (rtlHorTabs && tab->position == QStyleOptionTab::Beginning));
             bool previousSelected =
@@ -2287,7 +2287,7 @@ void QHaikuStyle::drawComplexControl(ComplexControl control, const QStyleOptionC
         // ### backgroundrole/foregroundrole should be part of the style option
         alphaCornerColor = mergedColors(option->palette.color(widget->backgroundRole()), darkOutline);
     } else {
-        alphaCornerColor = mergedColors(option->palette.background().color(), darkOutline);
+        alphaCornerColor = mergedColors(option->palette.window().color(), darkOutline);
     }
     QPalette palette = option->palette;
 
@@ -2436,7 +2436,7 @@ void QHaikuStyle::drawComplexControl(ComplexControl control, const QStyleOptionC
             QColor highlight = option->palette.highlight().color();
 
             QColor titleBarFrameBorder(active ? highlight.darker(180): dark.darker(110));
-            QColor titleBarHighlight(active ? highlight.lighter(120): palette.background().color().lighter(120));
+            QColor titleBarHighlight(active ? highlight.lighter(120): palette.window().color().lighter(120));
             QColor textAlphaColor(active ? 0xffffff : 0xff000000 );
 
             QColor textColorActive(mkQColor(ui_color(B_WINDOW_TEXT_COLOR)));
@@ -3101,7 +3101,7 @@ QSize QHaikuStyle::sizeFromContents(ContentsType type, const QStyleOption *optio
             QFont font = gb->font();
             font.setBold(true);
             QFontMetrics metrics(font);
-            int baseWidth = metrics.width(gb->title()) + metrics.width(QLatin1Char(' '));
+            int baseWidth = metrics.horizontalAdvance(gb->title()) + metrics.horizontalAdvance(QLatin1Char(' '));
             if (gb->isCheckable()) {
                 baseWidth += proxy()->pixelMetric(QStyle::PM_IndicatorWidth, option, widget);
                 baseWidth += proxy()->pixelMetric(QStyle::PM_CheckBoxLabelSpacing, option, widget);
@@ -3165,9 +3165,9 @@ QSize QHaikuStyle::sizeFromContents(ContentsType type, const QStyleOption *optio
             int tabIdx = menuItem->text.indexOf(QLatin1Char('\t'));
             QString itemText = menuItem->text.left(tabIdx);
             QString shotcutText = tabIdx > 0 ? menuItem->text.mid(tabIdx + 1) : "";
-			width+=maxpmw;
+			width += maxpmw;
             QFontMetrics fm(menuItem->font);
-			width+=fm.width(itemText);
+			width += fm.horizontalAdvance(itemText);
 
 			QStringList shotcutList = shotcutText.split('+');
 			if (shotcutText.right(1).contains('+')) {
@@ -3193,7 +3193,7 @@ QSize QHaikuStyle::sizeFromContents(ContentsType type, const QStyleOption *optio
 					width += sMenuItemOption->Bounds().Width() + 1;
 				if (shotcutList.contains("Shift"))
 					width += sMenuItemShift->Bounds().Width() + 1;
-				width+=fm.width(shotcutList.last()) + 4;
+				width += fm.horizontalAdvance(shotcutList.last()) + 4;
 			}
 
 			newSize.setHeight(fm.height() + 4);
@@ -3509,23 +3509,6 @@ QRect QHaikuStyle::subControlRect(ComplexControl control, const QStyleOptionComp
         }
         break;
 #endif // QT_NO_SLIDER
-	/*case CC_ScrollBar:
-    	if (const QStyleOptionSlider *slider = qstyleoption_cast<const QStyleOptionSlider *>(option)) {
-    		int extent = proxy()->pixelMetric(PM_ScrollBarExtent, option, widget);
-    		if (slider->orientation == Qt::Horizontal) {
-    			rect.setHeight(extent);
-    		} else {
-    			rect.setWidth(extent);
-    		}
-    	}
-        break;*/
-
-#ifndef QT_NO_PROGRESSBAR
-    case SE_ProgressBarLabel:
-    case SE_ProgressBarContents:
-    case SE_ProgressBarGroove:
-        return option->rect;
-#endif // QT_NO_PROGRESSBAR
 
 #ifndef QT_NO_SPINBOX
     case CC_SpinBox:
@@ -3805,7 +3788,7 @@ int QHaikuStyle::styleHint(StyleHint hint, const QStyleOption *option, const QWi
         break;
     case SH_Table_GridLineColor:
         if (option) {
-            ret = option->palette.background().color().darker(120).rgb();
+            ret = option->palette.window().color().darker(120).rgb();
         }
         break;
     case SH_ComboBox_Popup:
