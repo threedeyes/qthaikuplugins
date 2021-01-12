@@ -40,7 +40,6 @@
 
 #include <QDir>
 #include <QDirIterator>
-#include <QtFontDatabaseSupport/private/qfontengine_ft_p.h>
 
 #include "qhaikuintegration.h"
 #include "qhaikuplatformfontdatabase.h"
@@ -50,9 +49,51 @@
 #include <String.h>
 #include <StringList.h>
 
+QFontEngineHaikuFT::QFontEngineHaikuFT(const QFontDef &fd)
+    : QFontEngineFT(fd)
+{
+}
+
+QFontEngineHaikuFT *QFontEngineHaikuFT::create(const QFontDef &fontDef, FaceId faceId, const QByteArray &fontData)
+{
+    QFontEngineHaikuFT::GlyphFormat format = QFontEngineHaikuFT::Format_A32;
+
+    QScopedPointer<QFontEngineHaikuFT> engine(new QFontEngineHaikuFT(fontDef));
+
+	bool subpixel = false;
+	get_subpixel_antialiasing(&subpixel);
+
+    if (!subpixel) {
+        format = QFontEngineFT::Format_A8;
+        engine->subpixelType = QFontEngine::Subpixel_None;
+    } else {
+        format = QFontEngineFT::Format_A32;
+        engine->subpixelType = QFontEngine::Subpixel_RGB;
+    }
+
+    if (!engine->init(faceId, true, format, fontData) || engine->invalid()) {
+        qWarning("QFontEngineHaikuFT: Failed to create FreeType font engine");
+        return nullptr;
+    }
+
+	uint8 hinting = 1;
+	get_hinting_mode(&hinting);
+
+	if (hinting == 0)
+		engine->setDefaultHintStyle(QFontEngineHaikuFT::HintNone);
+	else if (hinting == 1)
+		engine->setDefaultHintStyle(QFontEngineHaikuFT::HintFull);
+	else if (hinting == 2 && fontDef.family.contains("Mono"))
+		engine->setDefaultHintStyle(QFontEngineHaikuFT::HintFull);
+
+	engine->default_load_flags = subpixel ? FT_LOAD_TARGET_LCD : FT_LOAD_TARGET_NORMAL;
+
+    return engine.take();
+}
+
 QString QHaikuPlatformFontDatabase::fontDir() const
 {
-    return QLatin1String("/boot/system/data/fonts/ttfonts");
+    return QLatin1String("/system/data/fonts/ttfonts");
 }
 
 void QHaikuPlatformFontDatabase::populateFontDatabase()
@@ -61,7 +102,7 @@ void QHaikuPlatformFontDatabase::populateFontDatabase()
 
     if (!QFile::exists(fontpath)) {
         qFatal("QFontDatabase: Cannot find font directory %s - is Qt installed correctly?",
-               qPrintable(fontpath));
+			qPrintable(fontpath));
     }
 
 	BStringList fontPaths;
@@ -105,7 +146,7 @@ QStringList QHaikuPlatformFontDatabase::fallbacksForFamily(const QString &family
 QFont QHaikuPlatformFontDatabase::defaultFont() const
 {
 	QFont font(QStringLiteral("Noto Sans Display"));
-	font.setStretch(QFont::SemiExpanded);
+	font.setStretch(QFont::Unstretched);
     return font;
 }
 
@@ -119,13 +160,7 @@ QFontEngine *QHaikuPlatformFontDatabase::fontEngine(const QFontDef &fontDef, voi
 	faceId.filename = fontfile->fileName.toLocal8Bit();
 	faceId.index = fontfile->indexValue;
 
-	QFontEngineFT *engine = QFontEngineFT::create(fontDef, faceId);
-
-	uint8 hinting = 1;
-	get_hinting_mode(&hinting);
-
-    if (hinting == 1)
-		engine->setDefaultHintStyle(QFontEngine::HintMedium);
+	QFontEngineHaikuFT *engine = QFontEngineHaikuFT::create(fontDef, faceId);
 
 	return engine;
 }

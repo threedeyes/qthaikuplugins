@@ -38,10 +38,22 @@
 **
 ****************************************************************************/
 
-#ifndef QANDROIDPLATFORMFONTDATABASE_H
-#define QANDROIDPLATFORMFONTDATABASE_H
+#ifndef QHAIKUPLATFORMFONTDATABASE_H
+#define QHAIKUPLATFORMFONTDATABASE_H
 
 #include <QtFontDatabaseSupport/private/qfreetypefontdatabase_p.h>
+#include <QtFontDatabaseSupport/private/qfontengine_ft_p.h>
+
+class QFontEngineFT;
+
+class QFontEngineHaikuFT : public QFontEngineFT
+{
+public:
+    QFontEngineHaikuFT(const QFontDef &fd);
+    virtual ~QFontEngineHaikuFT() { };
+
+	static QFontEngineHaikuFT *create(const QFontDef &fontDef, FaceId faceId, const QByteArray &fontData = QByteArray());
+};
 
 class QHaikuPlatformFontDatabase: public QFreeTypeFontDatabase
 {
@@ -59,4 +71,4 @@ private:
     QHash<QChar::Script, QStringList> m_fallbacks;
 };
 
-#endif // QANDROIDPLATFORMFONTDATABASE_H
+#endif // QHAIKUPLATFORMFONTDATABASE_H
