@@ -1,7 +1,7 @@
 /****************************************************************************
 **
 ** Copyright (C) 2017 The Qt Company Ltd.
-** Copyright (C) 2015-2017 Gerasim Troeglazov,
+** Copyright (C) 2015-2020 Gerasim Troeglazov,
 ** Contact: 3dEyes@gmail.com
 **
 ** This file is part of the plugins of the Qt Toolkit.
@@ -38,8 +38,8 @@
 **
 ****************************************************************************/
 
-#ifndef QHAIKUPLATFORMFONTDATABASE_H
-#define QHAIKUPLATFORMFONTDATABASE_H
+#ifndef	QHAIKUPLATFORMFONTDATABASE_H
+#define	QHAIKUPLATFORMFONTDATABASE_H
 
 #include <QtFontDatabaseSupport/private/qfreetypefontdatabase_p.h>
 #include <QtFontDatabaseSupport/private/qfontengine_ft_p.h>
@@ -49,26 +49,26 @@ class QFontEngineFT;
 class QFontEngineHaikuFT : public QFontEngineFT
 {
 public:
-    QFontEngineHaikuFT(const QFontDef &fd);
-    virtual ~QFontEngineHaikuFT() { };
+	QFontEngineHaikuFT(const QFontDef &fd);
+	virtual ~QFontEngineHaikuFT() { };
 
-	static QFontEngineHaikuFT *create(const QFontDef &fontDef, FaceId faceId, const QByteArray &fontData = QByteArray());
+	static	QFontEngineHaikuFT *create(const QFontDef &fontDef, FaceId faceId, const QByteArray &fontData =	QByteArray());
 };
 
 class QHaikuPlatformFontDatabase: public QFreeTypeFontDatabase
 {
 public:
-    QString fontDir() const;
-    void populateFontDatabase();
-    QFont defaultFont() const Q_DECL_OVERRIDE;
-    QStringList fallbacksForFamily(const QString &family,
-                                           QFont::Style style,
-                                           QFont::StyleHint styleHint,
-                                           QChar::Script script) const;
-    QFontEngine *fontEngine(const QFontDef &fontDef, void *handle) Q_DECL_OVERRIDE;
-    void releaseHandle(void *handle) Q_DECL_OVERRIDE;
+	QString fontDir() const;
+	void populateFontDatabase();
+	QFont defaultFont() const Q_DECL_OVERRIDE;
+	QStringList fallbacksForFamily(const QString &family,
+									QFont::Style style,
+									QFont::StyleHint styleHint,
+									QChar::Script script) const;
+	QFontEngine *fontEngine(const QFontDef &fontDef, void *handle) Q_DECL_OVERRIDE;
+	void releaseHandle(void *handle) Q_DECL_OVERRIDE;
 private:
-    QHash<QChar::Script, QStringList> m_fallbacks;
+	QHash<QChar::Script, QStringList> m_fallbacks;
 };
 
 #endif // QHAIKUPLATFORMFONTDATABASE_H
