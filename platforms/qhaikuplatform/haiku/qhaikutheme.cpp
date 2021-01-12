@@ -236,7 +236,7 @@ const QFont *QHaikuTheme::font(Font type) const
 		menu_info haikuMenuFontInfo;
 		get_menu_info(&haikuMenuFontInfo);
 
-		float kSmallFont = 0.7;
+		float kSmallFont = 0.72;
 		float kBold = 0.96;
 
 	    QFont baseFont = db.font(plainFontFamily, plainFontStyle, haikuPlainFont.Size());
