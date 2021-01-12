@@ -42,6 +42,7 @@
 
 #include <qcombobox.h>
 #include <qpushbutton.h>
+#include <qfontcombobox.h>
 #include <qpainter.h>
 #include <qdir.h>
 #include <qhash.h>
@@ -1319,17 +1320,24 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
 		painter->save();
 		{
 			if (const QStyleOptionFrame *frame = qstyleoption_cast<const QStyleOptionFrame *>(option)) {
+
 				QRect rect = option->rect;
+
 				border_style border = B_NO_BORDER;
 
-				if (frame->frameShape == QFrame::Box)
+				if (widget && qobject_cast<const QFontComboBox*>(widget->parentWidget())) {
+					qt_haiku_draw_windows_frame(painter, rect, B_WINDOW_BORDER_COLOR, BControlLook::B_ALL_BORDERS, false);
+					painter->restore();
+					break;
+				} else if (frame->frameShape == QFrame::Box) {
 					border = B_PLAIN_BORDER;
-				else if (frame->frameShape == QFrame::Panel ||
+				} else if (frame->frameShape == QFrame::Panel ||
 					frame->frameShape == QFrame::StyledPanel ||
 					frame->frameShape == QFrame::WinPanel ||
 					frame->frameShape == QFrame::HLine ||
-					frame->frameShape == QFrame::VLine)
+					frame->frameShape == QFrame::VLine) {
 					border = B_FANCY_BORDER;
+				}
 				if (border == B_NO_BORDER) {
 					painter->restore();
 					break;
@@ -2830,7 +2838,7 @@ void QHaikuStyle::drawComplexControl(ComplexControl control, const QStyleOptionC
 		painter->restore();
 		break;
 	case CC_Slider:
-   	painter->save();
+		painter->save();
 		if (const QStyleOptionSlider *slider = qstyleoption_cast<const QStyleOptionSlider *>(option)) {
 			QRect groove = subControlRect(CC_Slider, option, SC_SliderGroove, widget);
 			QRect handle = subControlRect(CC_Slider, option, SC_SliderHandle, widget);
@@ -2970,7 +2978,11 @@ int QHaikuStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, con
 		ret = 0;
 		break;
 	case PM_DefaultFrameWidth:
-		ret = 2;
+		if (widget && qobject_cast<const QFontComboBox*>(widget->parentWidget())) {
+			ret = 5;
+		} else {
+			ret = 2;
+		}
 		break;
 	case PM_MdiSubWindowFrameWidth:
 		ret = 5;
