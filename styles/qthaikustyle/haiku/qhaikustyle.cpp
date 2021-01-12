@@ -721,10 +721,10 @@ void QHaikuStyle::drawPrimitive(PrimitiveElement elem,
 			painter->setPen(frameColor);
 
 			switch (tbb->shape) {
-	            case QTabBar::RoundedNorth:
-	            case QTabBar::TriangularNorth:
-	            	if (be_control_look != NULL) {
-	            		if (tabRect.height() <= 1)
+				case QTabBar::RoundedNorth:
+				case QTabBar::TriangularNorth:
+					if (be_control_look != NULL) {
+						if (tabRect.height() <= 1)
 							tabRect.setTop(0);
 						else
 	            			tabRect.moveTop(0);
@@ -1206,75 +1206,74 @@ void QHaikuStyle::drawPrimitive(PrimitiveElement elem,
 	     	painter->restore();
 		}
 		break;
-		case PE_FrameTabWidget:
-			painter->save();
-			if (const QStyleOptionTabWidgetFrame *twf = qstyleoption_cast<const QStyleOptionTabWidgetFrame *>(option)) {
-				QRect barRect = subElementRect(SE_TabWidgetTabBar, option, widget);
+	case PE_FrameTabWidget:
+		painter->save();
+		if (const QStyleOptionTabWidgetFrame *twf = qstyleoption_cast<const QStyleOptionTabWidgetFrame *>(option)) {
+			QRect barRect = subElementRect(SE_TabWidgetTabBar, option, widget);
 
-				rgb_color bgColor = mkHaikuColor(option->palette.color( QPalette::Normal, QPalette::Window));
-		        QColor backgroundColor(mkQColor(bgColor));
-		        QColor frameColor(mkQColor(tint_color(bgColor, 1.30)));
-		        QColor bevelLight(mkQColor(tint_color(bgColor, 0.8)));
-		        QColor bevelShadow(mkQColor(tint_color(bgColor, 1.03)));
+			rgb_color bgColor = mkHaikuColor(option->palette.color( QPalette::Normal, QPalette::Window));
+	        QColor backgroundColor(mkQColor(bgColor));
+	        QColor frameColor(mkQColor(tint_color(bgColor, 1.30)));
+	        QColor bevelLight(mkQColor(tint_color(bgColor, 0.8)));
+	        QColor bevelShadow(mkQColor(tint_color(bgColor, 1.03)));
 
-		        QRect frame = option->rect;
+	        QRect frame = option->rect;
 
-		        switch(twf->shape) {
-		        	case QTabBar::RoundedNorth:
-					case QTabBar::TriangularNorth:
-					case QTabBar::RoundedWest:
-					case QTabBar::TriangularWest:
-						break;
-					case QTabBar::RoundedSouth:
-					case QTabBar::TriangularSouth:
-						frame.adjust(0,0,0,2);
-						break;
-					case QTabBar::RoundedEast:
-					case QTabBar::TriangularEast:
-						frame.adjust(0,0,2,0);
-						break;
-				}
-
-		        painter->setPen(bevelShadow);
-		        painter->drawLine(frame.topLeft(), frame.bottomLeft());
-		        painter->drawLine(frame.topLeft(), frame.topRight());
-		        painter->setPen(bevelLight);
-		        painter->drawLine(frame.topRight(), frame.bottomRight());
-		        painter->drawLine(frame.bottomLeft(), frame.bottomRight());
-
-				frame.adjust(1, 1, -1, -1);
-		        painter->setPen(frameColor);
-		        painter->drawLine(frame.topLeft(), frame.bottomLeft());
-		        painter->drawLine(frame.topLeft(), frame.topRight());
-		        painter->drawLine(frame.topRight(), frame.bottomRight());
-		        painter->drawLine(frame.bottomLeft(), frame.bottomRight());
-
-				frame.adjust(1, 1, -1, -1);
-		        painter->setPen(bevelLight);
-		        painter->drawLine(frame.topLeft(), frame.bottomLeft());
-		        painter->drawLine(frame.topLeft(), frame.topRight());
-		        painter->setPen(bevelShadow);
-		        painter->drawLine(frame.topRight(), frame.bottomRight());
-		        painter->drawLine(frame.bottomLeft(), frame.bottomRight());
-
-		        frame = option->rect;
-
-				if (be_control_look != NULL && (twf->shape == QTabBar::RoundedNorth || twf->shape == QTabBar::RoundedSouth)) {
-					QRect r = twf->shape == QTabBar::RoundedNorth ?
-						QRect(QPoint(frame.left(), barRect.top()), QPoint(frame.right(), barRect.bottom())) :
-						QRect(QPoint(frame.left(), frame.bottom()), QPoint(frame.right(), frame.bottom() + barRect.height() - 1));
-					uint32 side = twf->shape == QTabBar::RoundedNorth ? BControlLook::B_TOP_BORDER : BControlLook::B_BOTTOM_BORDER;
-			        BRect bRect(0.0f, 0.0f, r.width() - 1, r.height() - 1);
-			        BRect bRect1 = bRect;
-			        bRect1.bottom++;
-					TemporarySurface surface(bRect);
-					be_control_look->DrawInactiveTab(surface.view(), bRect1, bRect, bgColor, 0, BControlLook::B_ALL_BORDERS, side);
-					painter->drawImage(r, surface.image());
-				}
+	        switch(twf->shape) {
+				case QTabBar::RoundedNorth:
+				case QTabBar::TriangularNorth:
+				case QTabBar::RoundedWest:
+				case QTabBar::TriangularWest:
+					break;
+				case QTabBar::RoundedSouth:
+				case QTabBar::TriangularSouth:
+					frame.adjust(0,0,0,2);
+					break;
+				case QTabBar::RoundedEast:
+				case QTabBar::TriangularEast:
+					frame.adjust(0,0,2,0);
+					break;
 			}
+
+	        painter->setPen(bevelShadow);
+	        painter->drawLine(frame.topLeft(), frame.bottomLeft());
+	        painter->drawLine(frame.topLeft(), frame.topRight());
+	        painter->setPen(bevelLight);
+	        painter->drawLine(frame.topRight(), frame.bottomRight());
+	        painter->drawLine(frame.bottomLeft(), frame.bottomRight());
+
+			frame.adjust(1, 1, -1, -1);
+	        painter->setPen(frameColor);
+	        painter->drawLine(frame.topLeft(), frame.bottomLeft());
+	        painter->drawLine(frame.topLeft(), frame.topRight());
+	        painter->drawLine(frame.topRight(), frame.bottomRight());
+	        painter->drawLine(frame.bottomLeft(), frame.bottomRight());
+
+			frame.adjust(1, 1, -1, -1);
+	        painter->setPen(bevelLight);
+	        painter->drawLine(frame.topLeft(), frame.bottomLeft());
+	        painter->drawLine(frame.topLeft(), frame.topRight());
+	        painter->setPen(bevelShadow);
+	        painter->drawLine(frame.topRight(), frame.bottomRight());
+	        painter->drawLine(frame.bottomLeft(), frame.bottomRight());
+
+	        frame = option->rect;
+
+			if (be_control_look != NULL && (twf->shape == QTabBar::RoundedNorth || twf->shape == QTabBar::RoundedSouth)) {
+				QRect r = twf->shape == QTabBar::RoundedNorth ?
+					QRect(QPoint(frame.left(), barRect.top()), QPoint(frame.right(), barRect.bottom())) :
+					QRect(QPoint(frame.left(), frame.bottom()), QPoint(frame.right(), frame.bottom() + barRect.height() - 1));
+				uint32 side = twf->shape == QTabBar::RoundedNorth ? BControlLook::B_TOP_BORDER : BControlLook::B_BOTTOM_BORDER;
+		        BRect bRect(0.0f, 0.0f, r.width() - 1, r.height() - 1);
+		        BRect bRect1 = bRect;
+		        bRect1.bottom++;
+				TemporarySurface surface(bRect);
+				be_control_look->DrawInactiveTab(surface.view(), bRect1, bRect, bgColor, 0, BControlLook::B_ALL_BORDERS, side);
+				painter->drawImage(r, surface.image());
+			}
+		}
 		painter->restore();
 		break ;
-
 	case PE_FrameStatusBarItem:
 		break;
 	case PE_IndicatorTabClose:
@@ -1288,7 +1287,6 @@ void QHaikuStyle::drawPrimitive(PrimitiveElement elem,
 			proxy()->drawItemPixmap(painter, option->rect, Qt::AlignCenter, pixmap);
 		}
 		break;
-
 	default:
 		QProxyStyle::drawPrimitive(elem, option, painter, widget);
 		break;
@@ -1587,7 +1585,7 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
 		}
 		painter->restore();
 		break;
-   case CE_ProgressBarGroove:
+	case CE_ProgressBarGroove:
 		break;
 	case CE_ProgressBarContents:
 		painter->save();
