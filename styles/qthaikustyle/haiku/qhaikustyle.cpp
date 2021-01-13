@@ -578,6 +578,11 @@ static void qt_haiku_draw_disabled_background(BView *view, BRect area, const rgb
 	}
 }
 
+static QWindow *qt_getWindow(const QWidget *widget)
+{
+	return widget ? widget->window()->windowHandle() : nullptr;
+}
+
 /*!
 	Constructs a QHaikuStyle object.
 */
@@ -616,6 +621,62 @@ QHaikuStyle::~QHaikuStyle()
 	delete sMenuItemOption;
 	delete sMenuItemAlt;
 	delete sMenuItemMenu;
+}
+
+
+void QHaikuStyle::tabLayout(const QStyleOptionTab *opt, const QWidget *widget, QRect *textRect, QRect *iconRect) const
+{
+	Q_ASSERT(textRect);
+	Q_ASSERT(iconRect);
+	QRect tr = opt->rect;
+	bool verticalTabs = opt->shape == QTabBar::RoundedEast || opt->shape == QTabBar::RoundedWest
+		|| opt->shape == QTabBar::TriangularEast || opt->shape == QTabBar::TriangularWest;
+	if (verticalTabs)
+		tr.setRect(0, 0, tr.height(), tr.width()); // 0, 0 as we will have a translate transform
+
+	int verticalShift = proxy()->pixelMetric(QStyle::PM_TabBarTabShiftVertical, opt, widget);
+	int horizontalShift = proxy()->pixelMetric(QStyle::PM_TabBarTabShiftHorizontal, opt, widget);
+	int hpadding = proxy()->pixelMetric(QStyle::PM_TabBarTabHSpace, opt, widget) / 2;
+	int vpadding = proxy()->pixelMetric(QStyle::PM_TabBarTabVSpace, opt, widget) / 2;
+	if (opt->shape == QTabBar::RoundedSouth || opt->shape == QTabBar::TriangularSouth)
+		verticalShift = -verticalShift;
+	tr.adjust(hpadding, verticalShift - vpadding, horizontalShift - hpadding, vpadding);
+	bool selected = opt->state & QStyle::State_Selected;
+	if (selected) {
+		tr.setTop(tr.top() - verticalShift);
+		tr.setRight(tr.right() - horizontalShift);
+	}
+
+	if (!opt->leftButtonSize.isEmpty())
+		tr.setLeft(tr.left() + 4 + (verticalTabs ? opt->leftButtonSize.height() : opt->leftButtonSize.width()));
+
+	if (!opt->rightButtonSize.isEmpty())
+		tr.setRight(tr.right() - 4 - (verticalTabs ? opt->rightButtonSize.height() : opt->rightButtonSize.width()));
+
+	if (!opt->icon.isNull()) {
+		QSize iconSize = opt->iconSize;
+		if (!iconSize.isValid()) {
+			int iconExtent = proxy()->pixelMetric(QStyle::PM_SmallIconSize, opt);
+			iconSize = QSize(iconExtent, iconExtent);
+		}
+		QSize tabIconSize = opt->icon.actualSize(iconSize,
+			(opt->state & QStyle::State_Enabled) ? QIcon::Normal : QIcon::Disabled,
+			(opt->state & QStyle::State_Selected) ? QIcon::On : QIcon::Off);
+
+		tabIconSize = QSize(qMin(tabIconSize.width(), iconSize.width()), qMin(tabIconSize.height(), iconSize.height()));
+
+		const int offsetX = (iconSize.width() - tabIconSize.width()) / 2;
+		*iconRect = QRect(tr.left() + offsetX, tr.center().y() - tabIconSize.height() / 2, tabIconSize.width(), tabIconSize.height());
+
+		if (!verticalTabs)
+			*iconRect = QStyle::visualRect(opt->direction, opt->rect, *iconRect);
+		tr.setLeft(tr.left() + tabIconSize.width() + 4);
+	}
+
+	if (!verticalTabs)
+		tr = QStyle::visualRect(opt->direction, opt->rect, tr);
+
+	*textRect = tr;
 }
 
 /*!
@@ -2193,7 +2254,65 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
 		}
 		painter->restore();
 		break;
+	case CE_TabBarTabLabel:
+		if (const QStyleOptionTab *tab = qstyleoption_cast<const QStyleOptionTab *>(option)) {
+			QRect tr = tab->rect;
+			bool verticalTabs = tab->shape == QTabBar::RoundedEast
+								|| tab->shape == QTabBar::RoundedWest
+								|| tab->shape == QTabBar::TriangularEast
+								|| tab->shape == QTabBar::TriangularWest;
 
+			bool selected = tab->state & State_Selected;
+
+			int alignment = Qt::AlignCenter | Qt::TextShowMnemonic;
+			if (!proxy()->styleHint(SH_UnderlineShortcut, option, widget))
+				alignment |= Qt::TextHideMnemonic;
+
+			if (verticalTabs) {
+				painter->save();
+				int newX, newY, newRot;
+				if (tab->shape == QTabBar::RoundedEast || tab->shape == QTabBar::TriangularEast) {
+					newX = tr.width() + tr.x();
+					newY = tr.y();
+					newRot = 90;
+				} else {
+					newX = tr.x();
+					newY = tr.y() + tr.height();
+					newRot = -90;
+				}
+				QTransform m = QTransform::fromTranslate(newX, newY);
+				m.rotate(newRot);
+				painter->setTransform(m, true);
+			}
+
+			QRect iconRect;
+			tabLayout(tab, widget, &tr, &iconRect);
+			tr = proxy()->subElementRect(SE_TabBarTabText, option, widget);
+			iconRect.translate(0, selected ? 1 : 3);
+
+			if (!tab->icon.isNull()) {
+				QPixmap tabIcon = tab->icon.pixmap(qt_getWindow(widget), tab->iconSize,
+								(tab->state & State_Enabled) ? QIcon::Normal : QIcon::Disabled,
+								(tab->state & State_Selected) ? QIcon::On : QIcon::Off);
+				painter->drawPixmap(iconRect.x(), iconRect.y(), tabIcon);
+			}
+			proxy()->drawItemText(painter, tr, alignment, tab->palette, tab->state & State_Enabled, tab->text, QPalette::WindowText);
+
+			if (verticalTabs)
+				painter->restore();
+
+			if (tab->state & State_HasFocus) {
+				const int OFFSET = 1 + pixelMetric(PM_DefaultFrameWidth);
+				int x1 = tab->rect.left();
+				int x2 = tab->rect.right() - 1;
+
+				QStyleOptionFocusRect fropt;
+				fropt.QStyleOption::operator=(*tab);
+				fropt.rect.setRect(x1 + 1 + OFFSET, tab->rect.y() + OFFSET, x2 - x1 - 2*OFFSET, tab->rect.height() - 2*OFFSET);
+				drawPrimitive(PE_FrameFocusRect, &fropt, painter, widget);
+			}
+		}
+		break;
 	default:
 		QCommonStyle::drawControl(element,option,painter,widget);
 		break;

@@ -43,6 +43,7 @@
 
 #include <QtWidgets/qproxystyle.h>
 #include <QtCore/qelapsedtimer.h>
+#include <qstyleoption.h>
 
 #include <Rect.h>
 #include <Bitmap.h>
@@ -60,6 +61,8 @@ class QHaikuStyle : public QProxyStyle
 public:
     QHaikuStyle();
     ~QHaikuStyle();
+
+	void tabLayout(const QStyleOptionTab *opt, const QWidget *widget, QRect *textRect, QRect *iconRect) const;
 
     QPalette standardPalette () const Q_DECL_OVERRIDE;
     void drawPrimitive(PrimitiveElement elem,
