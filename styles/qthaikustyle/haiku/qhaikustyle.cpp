@@ -2980,7 +2980,7 @@ int QHaikuStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, con
 		break;
 	case PM_DefaultFrameWidth:
 		if (widget && qobject_cast<const QFontComboBox*>(widget->parentWidget())) {
-			ret = 5;
+			ret = 4;
 		} else {
 			ret = 2;
 		}
