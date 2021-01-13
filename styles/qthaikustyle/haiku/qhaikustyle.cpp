@@ -985,7 +985,7 @@ void QHaikuStyle::drawPrimitive(PrimitiveElement elem,
 		if (const QStyleOptionFrame *lineEdit = qstyleoption_cast<const QStyleOptionFrame *>(option)) {
 	        painter->save();
 	        {
-				QRect r = lineEdit->rect;
+				QRect r = lineEdit->rect.adjusted(1, 0, -1, 0);
 			    BRect bRect(0.0f, 0.0f, r.width() - 1, r.height() - 1);
 				TemporarySurface surface(bRect);
 
@@ -2428,9 +2428,9 @@ void QHaikuStyle::drawComplexControl(ComplexControl control, const QStyleOptionC
 			bool upIsActive = (spinBox->activeSubControls == SC_SpinBoxUp);
 			bool downIsActive = (spinBox->activeSubControls == SC_SpinBoxDown);
 
-			QRect rect = option->rect.adjusted(0, 0, 0, 0);
+			QRect rect = option->rect;
 			BRect bRect(0.0f, 0.0f, rect.width() - 1, rect.height() - 1);
-			QRect editRect = proxy()->subControlRect(CC_SpinBox, spinBox, SC_SpinBoxEditField, widget).adjusted(0,0,0,0);
+			QRect editRect = proxy()->subControlRect(CC_SpinBox, spinBox, SC_SpinBoxEditField, widget);
 			QRect upRect = proxy()->subControlRect(CC_SpinBox, spinBox, SC_SpinBoxUp, widget);
 			QRect downRect = proxy()->subControlRect(CC_SpinBox, spinBox, SC_SpinBoxDown, widget);
 		    BRect bEditRect(editRect.left(), editRect.top(), editRect.right(), editRect.bottom());
@@ -3620,9 +3620,9 @@ QRect QHaikuStyle::subControlRect(ComplexControl control, const QStyleOptionComp
 				break;
 			case SC_SpinBoxEditField:
 				if (spinbox->buttonSymbols == QAbstractSpinBox::NoButtons) {
-					rect = frame.adjusted(0, 0, 0, 2);
+					rect = frame.adjusted(1, 0, 0, 2);
 				} else {
-					rect = QRect(frame.left(), frame.top() - 2, (spinbox->rect.width() - buttonSize.width() * 2) - 3, buttonSize.height() - 2);
+					rect = QRect(frame.left() + 1, frame.top() - 2, (spinbox->rect.width() - buttonSize.width() * 2) - 3, buttonSize.height() - 2);
 				}
 				break;
 			case SC_SpinBoxFrame:
