@@ -3128,6 +3128,9 @@ int QHaikuStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, con
 	case PM_ToolBarItemMargin:
 		ret = 1;
 		break;
+	case PM_MenuButtonIndicator:
+		ret = 22;
+		break;
 	case PM_SmallIconSize:
 		ret = smallIconsSizeSettings;
 		break;
@@ -3689,9 +3692,6 @@ QRect QHaikuStyle::subControlRect(ComplexControl control, const QStyleOptionComp
 	case CC_ComboBox:
 		switch (subControl) {
 		case SC_ComboBoxArrow:
-			rect = visualRect(option->direction, option->rect, rect);
-			rect.setRect(rect.right() - 9, rect.top() - 2,
-						 10, rect.height() + 4);
 			rect = visualRect(option->direction, option->rect, rect);
 			break;
 		case SC_ComboBoxEditField: {
