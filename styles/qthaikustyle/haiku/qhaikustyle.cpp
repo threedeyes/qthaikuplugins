@@ -3922,6 +3922,9 @@ int QHaikuStyle::styleHint(StyleHint hint, const QStyleOption *option, const QWi
 	case SH_ToolButtonStyle:
 		ret = toolbarIconMode;
 		break;
+	case SH_BlinkCursorWhenTextSelected:
+		ret = 0;
+		break;
 	default:
 		ret = QProxyStyle::styleHint(hint, option, widget, returnData);
 		break;
