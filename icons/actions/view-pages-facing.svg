@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<svg version="1.1" width="64" height="64" color-interpolation="linearRGB"
+     xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg">
+ <g>
+  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:4.9604; stroke-linecap:round; stroke-linejoin:round"
+        d="M28 16C28 31.55 28 31.44 28 47C15.5 47 18.48 47 6 47C6 31.44 6 31.55 6 16C6 16 15.5 16 28 16z"
+        transform="matrix(1,0,0,1,1,2)"
+  />
+  <path style="fill:none; stroke:#000080; stroke-width:4.9604; stroke-linecap:round; stroke-linejoin:round"
+        d="M28 16C28 31.55 28 31.44 28 47C15.5 47 18.48 47 6 47C6 31.44 6 31.55 6 16C6 16 15.5 16 28 16z"
+        transform="matrix(1,0,0,1,-1,0)"
+  />
+  <linearGradient id="gradient0" gradientUnits="userSpaceOnUse" x1="164.88" y1="7.42" x2="164.88" y2="54.09">
+   <stop offset="0" stop-color="#ffffff"/>
+   <stop offset="1" stop-color="#d9d9ff"/>
+  </linearGradient>
+  <path style="fill:url(#gradient0)"
+        d="M28 16C28 31.55 28 31.44 28 47C15.5 47 18.48 47 6 47C6 31.44 6 31.55 6 16C6 16 15.5 16 28 16z"
+        transform="matrix(1,0,0,1,-1,0)"
+  />
+  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:4.9604; stroke-linecap:round; stroke-linejoin:round"
+        d="M28 16C28 31.55 28 31.44 28 47C15.5 47 18.48 47 6 47C6 31.44 6 31.55 6 16C6 16 15.5 16 28 16z"
+        transform="matrix(1,0,0,1,32,2)"
+  />
+  <path style="fill:none; stroke:#000080; stroke-width:4.9604; stroke-linecap:round; stroke-linejoin:round"
+        d="M28 16C28 31.55 28 31.44 28 47C15.5 47 18.48 47 6 47C6 31.44 6 31.55 6 16C6 16 15.5 16 28 16z"
+        transform="matrix(1,0,0,1,30,0)"
+  />
+  <linearGradient id="gradient1" gradientUnits="userSpaceOnUse" x1="164.88" y1="7.42" x2="164.88" y2="54.09">
+   <stop offset="0" stop-color="#ffffff"/>
+   <stop offset="1" stop-color="#d9d9ff"/>
+  </linearGradient>
+  <path style="fill:url(#gradient1)"
+        d="M28 16C28 31.55 28 31.44 28 47C15.5 47 18.48 47 6 47C6 31.44 6 31.55 6 16C6 16 15.5 16 28 16z"
+        transform="matrix(1,0,0,1,30,0)"
+  />
+ </g>
+</svg>

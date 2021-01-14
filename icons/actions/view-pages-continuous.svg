@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<svg version="1.1" width="64" height="64" color-interpolation="linearRGB"
+     xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg">
+ <g>
+  <path style="fill:#000000; fill-opacity:0.4"
+        d="M52 4C52 19.55 52 12.44 52 28C39.5 28 27.48 28 15 28C15 12.44 15 4 15 4"
+        transform="matrix(1.081,0,0,1.0052,-0.2162,1.7016)"
+  />
+  <path style="fill:none; stroke:#000080; stroke-width:4.9604; stroke-linecap:square; stroke-linejoin:round"
+        d="M52 4C52 19.55 52 12.44 52 28C39.5 28 27.48 28 15 28C15 12.44 15 4 15 4"
+        transform="matrix(1,0,0,0.8521,0,2.3043)"
+  />
+  <linearGradient id="gradient0" gradientUnits="userSpaceOnUse" x1="164.88" y1="7.42" x2="164.88" y2="54.09">
+   <stop offset="0" stop-color="#ffffff"/>
+   <stop offset="1" stop-color="#d9d9ff"/>
+  </linearGradient>
+  <path style="fill:url(#gradient0)"
+        d="M52 4C52 19.55 52 12.44 52 28C39.5 28 27.48 28 15 28C15 12.44 15 4 15 4"
+        transform="matrix(1,0,0,0.8865,0,0.2771)"
+  />
+  <path style="fill:#000000; fill-opacity:0.4"
+        d="M52 4C52 19.55 52 12.44 52 28C39.5 28 27.48 28 15 28C15 12.44 15 4 15 4"
+        transform="matrix(1.054,0,0,-0.9614,0.1891,64.0613)"
+  />
+  <path style="fill:none; stroke:#000080; stroke-width:4.9604; stroke-linecap:square; stroke-linejoin:round"
+        d="M52 4C52 19.55 52 12.44 52 28C39.5 28 27.48 28 15 28C15 12.44 15 4 15 4"
+        transform="matrix(1,0,0,-0.8481,0,59.8278)"
+  />
+  <linearGradient id="gradient1" gradientUnits="userSpaceOnUse" x1="164.88" y1="7.42" x2="164.88" y2="54.09">
+   <stop offset="0" stop-color="#ffffff"/>
+   <stop offset="1" stop-color="#d9d9ff"/>
+  </linearGradient>
+  <path style="fill:url(#gradient1)"
+        d="M52 4C52 19.55 52 12.44 52 28C39.5 28 27.48 28 15 28C15 12.44 15 4 15 4"
+        transform="matrix(1,0,0,-0.8823,0,61.8454)"
+  />
+ </g>
+</svg>
