@@ -132,8 +132,6 @@ public:
 	void setWindowFlags(Qt::WindowFlags flags) override;
 	void setParent(const QPlatformWindow *window) override;
 
-	bool windowEvent(QEvent *event) override;
-
     bool startSystemResize(Qt::Edges edges) override;
     bool startSystemMove() override;
 

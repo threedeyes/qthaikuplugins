@@ -3494,9 +3494,9 @@ bool QHaikuStyle::eventFilter(QObject *o, QEvent *e)
 		}
 		if (QSizeGrip *grip = qobject_cast<QSizeGrip *>(o)) {
 			if (grip->window()->isTopLevel()) {
-				QWindow *mainwindow = grip->window()->windowHandle();
-				if (mainwindow)
-					mainwindow->setProperty("size-grip", true);
+				BWindow *haikuwindow = (BWindow*)(grip->window()->winId());
+				if (haikuwindow)
+					haikuwindow->PostMessage(kSizeGripEnable);
 			}
 		}
 		break;
@@ -3505,9 +3505,9 @@ bool QHaikuStyle::eventFilter(QObject *o, QEvent *e)
 		stopProgressAnimation(this, static_cast<QProgressBar *>(o));
 		if (QSizeGrip *grip = qobject_cast<QSizeGrip *>(o)) {
 			if (grip->window()->isTopLevel()) {
-				QWindow *mainwindow = grip->window()->windowHandle();
-				if (mainwindow)
-					mainwindow->setProperty("size-grip", false);
+				BWindow *haikuwindow = (BWindow*)(grip->window()->winId());
+				if (haikuwindow)
+					haikuwindow->PostMessage(kSizeGripDisable);
 			}
 		}
 		break;

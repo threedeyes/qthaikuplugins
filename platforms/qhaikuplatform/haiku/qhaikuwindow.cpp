@@ -327,8 +327,6 @@ QHaikuWindow::QHaikuWindow(QWindow *wnd)
 		this, SLOT(platformTabletEvent(QPointF, QPointF, int, int, Qt::MouseButtons, float, Qt::KeyboardModifiers)));
 	connect(m_window->View(), SIGNAL(exposeEvent(QRegion)), this, SLOT(platformExposeEvent(QRegion)));
 
-    window()->setProperty("size-grip", false);
-
     setWindowFlags(wnd->flags());
     setWindowState(wnd->windowState());
     handleContentOrientationChange(wnd->contentOrientation());
@@ -629,22 +627,6 @@ void QHaikuWindow::requestActivateWindow()
     QWindowSystemInterface::handleExposeEvent(window(), window()->geometry());
 }
 
-
-bool QHaikuWindow::windowEvent(QEvent *event)
-{
-	switch (event->type()) {
-		case QEvent::DynamicPropertyChange:
-			if ( window()->property("size-grip").toBool() == true)
-				m_window->PostMessage(kSizeGripEnable);
-			else
-				m_window->PostMessage(kSizeGripDisable);
-			break;
-		default:
-			break;
-	}
-
-    return QPlatformWindow::windowEvent(event);
-}
 
 bool QHaikuWindow::startSystemResize(Qt::Edges edges)
 {
