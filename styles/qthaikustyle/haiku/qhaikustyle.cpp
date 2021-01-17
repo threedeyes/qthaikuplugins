@@ -3207,17 +3207,15 @@ QSize QHaikuStyle::sizeFromContents(ContentsType type, const QStyleOption *optio
 {
 	QSize newSize = QProxyStyle::sizeFromContents(type, option, size, widget);
 	switch (type) {
-	case CT_PushButton:
-		if (const QStyleOptionButton *btn = qstyleoption_cast<const QStyleOptionButton *>(option)) {
-			if (!btn->text.isEmpty()) {
-				newSize += QSize(7, 2);
-				if(newSize.width() < 64)
-					newSize.setWidth(64);
-			}
-			if (!btn->icon.isNull() && btn->iconSize.height() > 16)
-				newSize -= QSize(0, 2);
-		}
-		break;
+    case CT_PushButton:
+        if (const QStyleOptionButton *btn = qstyleoption_cast<const QStyleOptionButton *>(option)) {
+            newSize = QCommonStyle::sizeFromContents(type, option, size, widget);
+            if (!btn->text.isEmpty()) {
+				newSize.setWidth(qMax(80, newSize.width()));
+				newSize += QSize(0, 6);
+            }
+        }
+        break;
 	case CT_GroupBox:
 		// Since we use a bold font we have to recalculate base width
 		if (const QGroupBox *gb = qobject_cast<const QGroupBox*>(widget)) {
@@ -3647,9 +3645,8 @@ QRect QHaikuStyle::subControlRect(ComplexControl control, const QStyleOptionComp
 			if (subControl == SC_GroupBoxFrame)
 				return frameRect;
 			else if (subControl == SC_GroupBoxContents) {
-				int margin = 1;
-				int leftMarginExtension = 8;
-				return frameRect.adjusted(leftMarginExtension + margin, margin + topHeight, -margin, -margin);
+				int margin = 10;
+				return frameRect.adjusted(margin, margin, -margin, -margin);
 			}
 
 			QFontMetrics fontMetrics = option->fontMetrics;
