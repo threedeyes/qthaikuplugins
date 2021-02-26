@@ -167,12 +167,9 @@ QHaikuSystemTrayIcon::updateIcon(const QIcon &qicon)
         return;
 
     currentIcon = qicon;
-#ifdef USE_NEW_DESKBAR_API
+
 	BDeskbar deskbar;
 	QSize trayIconSize = QSize(deskbar.MaxItemHeight(), deskbar.MaxItemHeight());
-#else
-	QSize trayIconSize = QSize(16, 16);
-#endif
     QSize size = qicon.actualSize(trayIconSize);
     QPixmap pixmap = qicon.pixmap(size);
     QPixmap scaledPixmap = pixmap.scaled(trayIconSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
