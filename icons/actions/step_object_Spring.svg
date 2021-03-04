@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<svg version="1.1" width="64" height="64" color-interpolation="linearRGB"
+     xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg">
+ <g>
+  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:7; stroke-linecap:round; stroke-linejoin:round"
+        d="M39.61 21.06C46.51 23.14 52 25.77 52 28V28V28V28V28C52 34 12 41 12 34C12 31.06 24.18 32.03 34.93 34.51"
+        transform="matrix(0.9361,0,0,0.9367,2.5423,-12.8827)"
+  />
+  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:7; stroke-linecap:round"
+        d="M39.61 21.06C46.51 23.14 52 25.77 52 28V28V28V28V28C52 34 19 36 13 33"
+        transform="matrix(0.9361,0,0,0.9367,2.5423,27.3963)"
+  />
+  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:7; stroke-linecap:round"
+        d="M39.61 21.06C46.51 23.14 52 25.77 52 28V28V28V28V28C52 34 12 41 12 34C12 31.06 24.18 32.03 34.93 34.51"
+        transform="matrix(0.9361,0,0,0.9367,2.5423,13.3454)"
+  />
+  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:7"
+        d="M39.61 21.06C46.51 23.14 52 25.77 52 28V28V28V28V28C52 34 12 41 12 34C12 31.06 24.18 32.03 34.93 34.51"
+        transform="matrix(0.9361,0,0,0.9367,1.5423,1.2313)"
+  />
+  <path style="fill:none; stroke:#000080; stroke-width:7; stroke-linecap:round"
+        d="M39.61 21.06C46.51 23.14 52 25.77 52 28V28V28V28V28C52 34 19 36 13 33"
+        transform="matrix(0.9361,0,0,0.9367,1.5423,25.3963)"
+  />
+  <linearGradient id="gradient0" gradientUnits="userSpaceOnUse" x1="140.66" y1="21.79" x2="140.66" y2="56.34">
+   <stop offset="0" stop-color="#ffffff"/>
+   <stop offset="1" stop-color="#d9d9ff"/>
+  </linearGradient>
+  <path style="fill:none; stroke:url(#gradient0); stroke-width:2"
+        d="M39.61 21.06C46.51 23.14 52 25.77 52 28V28V28V28V28C52 34 19 36 13 33"
+        transform="matrix(0.9361,0,0,0.9367,1.5423,25.3963)"
+  />
+  <path style="fill:none; stroke:#000080; stroke-width:7; stroke-linecap:round"
+        d="M39.61 21.06C46.51 23.14 52 25.77 52 28V28V28V28V28C52 34 12 41 12 34C12 31.06 24.18 32.03 34.93 34.51"
+        transform="matrix(0.9361,0,0,0.9367,1.5423,11.3454)"
+  />
+  <linearGradient id="gradient1" gradientUnits="userSpaceOnUse" x1="140.66" y1="21.79" x2="140.66" y2="56.34">
+   <stop offset="0" stop-color="#ffffff"/>
+   <stop offset="1" stop-color="#d9d9ff"/>
+  </linearGradient>
+  <path style="fill:none; stroke:url(#gradient1); stroke-width:2"
+        d="M39.61 21.06C46.51 23.14 52 25.77 52 28V28V28V28V28C52 34 12 41 12 34C12 31.06 24.18 32.03 34.93 34.51"
+        transform="matrix(0.9361,0,0,0.9367,1.5423,11.3454)"
+  />
+  <path style="fill:none; stroke:#000080; stroke-width:7"
+        d="M39.61 21.06C46.51 23.14 52 25.77 52 28V28V28V28V28C52 34 12 41 12 34C12 31.06 24.18 32.03 34.93 34.51"
+        transform="matrix(0.9361,0,0,0.9367,1.5423,-1.7686)"
+  />
+  <linearGradient id="gradient2" gradientUnits="userSpaceOnUse" x1="140.66" y1="21.79" x2="140.66" y2="56.34">
+   <stop offset="0" stop-color="#ffffff"/>
+   <stop offset="1" stop-color="#d9d9ff"/>
+  </linearGradient>
+  <path style="fill:none; stroke:url(#gradient2); stroke-width:2"
+        d="M39.61 21.06C46.51 23.14 52 25.77 52 28V28V28V28V28C52 34 12 41 12 34C12 31.06 24.18 32.03 34.93 34.51"
+        transform="matrix(0.9361,0,0,0.9367,1.5423,-1.7686)"
+  />
+  <path style="fill:none; stroke:#000080; stroke-width:7; stroke-linecap:round; stroke-linejoin:round"
+        d="M39.61 21.06C46.51 23.14 52 25.77 52 28V28V28V28V28C52 34 12 41 12 34C12 31.06 24.18 32.03 34.93 34.51"
+        transform="matrix(0.9361,0,0,0.9367,1.5423,-14.8827)"
+  />
+  <linearGradient id="gradient3" gradientUnits="userSpaceOnUse" x1="140.66" y1="21.79" x2="140.66" y2="56.34">
+   <stop offset="0" stop-color="#ffffff"/>
+   <stop offset="1" stop-color="#d9d9ff"/>
+  </linearGradient>
+  <path style="fill:none; stroke:url(#gradient3); stroke-width:2"
+        d="M39.61 21.06C46.51 23.14 52 25.77 52 28V28V28V28V28C52 34 12 41 12 34C12 31.06 24.18 32.03 34.93 34.51"
+        transform="matrix(0.9361,0,0,0.9367,1.5423,-14.8827)"
+  />
+ </g>
+</svg>
