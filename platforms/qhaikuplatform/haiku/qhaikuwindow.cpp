@@ -133,6 +133,7 @@ QtHaikuWindow::QtHaikuWindow(QHaikuWindow *qwindow,
 {
 	fQWindow = qwindow;
 	fView = new QHaikuSurfaceView(Bounds());
+	fView->SetEventMask(0, B_NO_POINTER_HISTORY);
 #if !defined(QT_NO_OPENGL)
 	fGLView = NULL;
 #endif

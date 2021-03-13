@@ -73,8 +73,6 @@ QHaikuSurfaceView::QHaikuSurfaceView(BRect rect)
 
 	SetDrawingMode(B_OP_COPY);
 	SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR));
-
-	lastMouseMoveTime = system_time();
 }
 
 void
@@ -208,65 +206,59 @@ QHaikuSurfaceView::MouseMoved(BPoint point, uint32 transit, const BMessage *msg)
 	QPoint localPoint(point.x, point.y);
 	QPoint globalPoint(s_point.x, s_point.y);
 
-	bigtime_t timeNow = system_time();
-	// 50 events per sec. limit
-	if (timeNow - lastMouseMoveTime > Q_HAIKU_MOUSE_EVENTS_TIME) {
-		BPoint pointer;
-		uint32 buttons;
-		GetMouse(&pointer, &buttons);
+	BPoint pointer;
+	uint32 buttons;
+	GetMouse(&pointer, &buttons);
 
-		if (isSizeGripperContains(point))
-			return;
+	if (isSizeGripperContains(point))
+		return;
 
-		if ( modifiers() & B_CONTROL_KEY
-			&& modifiers() & B_COMMAND_KEY
-			&& buttons & B_SECONDARY_MOUSE_BUTTON)
-			return;
+	if ( modifiers() & B_CONTROL_KEY
+		&& modifiers() & B_COMMAND_KEY
+		&& buttons & B_SECONDARY_MOUSE_BUTTON)
+		return;
 
-		lastLocalMousePoint = localPoint;
-		lastGlobalMousePoint = globalPoint;
+	lastLocalMousePoint = localPoint;
+	lastGlobalMousePoint = globalPoint;
 
-		if (msg != NULL) {
-			QMimeData *dragData = new QMimeData();
-			QList<QUrl> urls;
-			entry_ref aRef;
-			for (int i = 0; msg->FindRef("refs", i, &aRef) == B_OK; i++) {
-				BEntry entry(&aRef);
-				BPath path;
-				entry.GetPath(&path);
-				QUrl url = QUrl::fromLocalFile(path.Path());
-				urls.append(url);
-			}
-			if (urls.count() > 0)
-				dragData->setUrls(urls);
-			ssize_t dataLength = 0;
-			const char* text = NULL;
-			if (msg->FindData("text/plain", B_MIME_TYPE, (const void**)&text, &dataLength) == B_OK) {
-				if (dataLength > 0) {
-					dragData->setText(QString::fromUtf8(text, dataLength));
-				}
-			}
-			Q_EMIT mouseDragEvent(localPoint, Qt::CopyAction | Qt::MoveAction | Qt::LinkAction, dragData,
-				hostToQtButtons(buttons), hostToQtModifiers(modifiers()));
-		} else {
-			if (isTabletEvent) {
-				BScreen scr;
-				float x = Window()->CurrentMessage()->FindFloat("be:tablet_x");
-				float y = Window()->CurrentMessage()->FindFloat("be:tablet_y");
-				float pressure = Window()->CurrentMessage()->FindFloat("be:tablet_pressure");
-				int32 eraser = Window()->CurrentMessage()->FindFloat("be:tablet_eraser");
-				QPointF globalTablePoint(x * scr.Frame().Width(), y * scr.Frame().Height());
-				Q_EMIT tabletEvent(QPointF(localPoint), QPointF(globalPoint), QTabletEvent::Stylus,
-					eraser==0 ? QTabletEvent::Pen :  QTabletEvent::Eraser, hostToQtButtons(buttons),
-					pressure, hostToQtModifiers(modifiers()));
-				Q_EMIT mouseEvent(localPoint, globalPoint, Qt::NoButton, Qt::NoButton, QEvent::MouseMove,
-					hostToQtModifiers(modifiers()), Qt::MouseEventNotSynthesized);
-			} else {
-				Q_EMIT mouseEvent(localPoint, globalPoint, hostToQtButtons(buttons), Qt::NoButton, QEvent::MouseMove,
-					hostToQtModifiers(modifiers()), Qt::MouseEventNotSynthesized);
+	if (msg != NULL) {
+		QMimeData *dragData = new QMimeData();
+		QList<QUrl> urls;
+		entry_ref aRef;
+		for (int i = 0; msg->FindRef("refs", i, &aRef) == B_OK; i++) {
+			BEntry entry(&aRef);
+			BPath path;
+			entry.GetPath(&path);
+			QUrl url = QUrl::fromLocalFile(path.Path());
+			urls.append(url);
+		}
+		if (urls.count() > 0)
+			dragData->setUrls(urls);
+		ssize_t dataLength = 0;
+		const char* text = NULL;
+		if (msg->FindData("text/plain", B_MIME_TYPE, (const void**)&text, &dataLength) == B_OK) {
+			if (dataLength > 0) {
+				dragData->setText(QString::fromUtf8(text, dataLength));
 			}
 		}
-
-		lastMouseMoveTime = timeNow;
+		Q_EMIT mouseDragEvent(localPoint, Qt::CopyAction | Qt::MoveAction | Qt::LinkAction, dragData,
+			hostToQtButtons(buttons), hostToQtModifiers(modifiers()));
+	} else {
+		if (isTabletEvent) {
+			BScreen scr;
+			float x = Window()->CurrentMessage()->FindFloat("be:tablet_x");
+			float y = Window()->CurrentMessage()->FindFloat("be:tablet_y");
+			float pressure = Window()->CurrentMessage()->FindFloat("be:tablet_pressure");
+			int32 eraser = Window()->CurrentMessage()->FindFloat("be:tablet_eraser");
+			QPointF globalTablePoint(x * scr.Frame().Width(), y * scr.Frame().Height());
+			Q_EMIT tabletEvent(QPointF(localPoint), QPointF(globalPoint), QTabletEvent::Stylus,
+				eraser==0 ? QTabletEvent::Pen :  QTabletEvent::Eraser, hostToQtButtons(buttons),
+				pressure, hostToQtModifiers(modifiers()));
+			Q_EMIT mouseEvent(localPoint, globalPoint, Qt::NoButton, Qt::NoButton, QEvent::MouseMove,
+				hostToQtModifiers(modifiers()), Qt::MouseEventNotSynthesized);
+		} else {
+			Q_EMIT mouseEvent(localPoint, globalPoint, hostToQtButtons(buttons), Qt::NoButton, QEvent::MouseMove,
+				hostToQtModifiers(modifiers()), Qt::MouseEventNotSynthesized);
+		}
 	}
 }

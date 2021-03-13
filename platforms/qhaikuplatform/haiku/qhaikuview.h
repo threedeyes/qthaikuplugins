@@ -78,7 +78,6 @@ class QHaikuSurfaceView : public QObject, public BView
 		bool isSizeGripperContains(BPoint);
 		Qt::MouseButtons lastMouseState;
 		Qt::MouseButton lastMouseButton;
-		bigtime_t lastMouseMoveTime;
  Q_SIGNALS:
 		void mouseEvent(const QPoint &localPosition,
 			const QPoint &globalPosition,
