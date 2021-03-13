@@ -81,12 +81,10 @@ QHaikuCursor::QHaikuCursor()
 	m_cursorHash.insert(Qt::ClosedHandCursor, new BCursor(B_CURSOR_ID_GRABBING));
 	m_cursorHash.insert(Qt::WhatsThisCursor, new BCursor(B_CURSOR_ID_HELP));
 	m_cursorHash.insert(Qt::BusyCursor, new BCursor(B_CURSOR_ID_PROGRESS));
-	m_bitmap = NULL;
 }
 
 QHaikuCursor::~QHaikuCursor()
 {
-	removeCurrentCursorBitmap();
 	foreach (BCursor *cursor, m_cursorHash)
 		delete cursor;
 }
@@ -100,14 +98,6 @@ void QHaikuCursor::changeCursor(QCursor *windowCursor, QWindow *window)
 		return;
 
 	if (windowCursor->shape() == Qt::BitmapCursor || windowCursor->shape() == Qt::CustomCursor) {
-		QPoint hotspot = windowCursor->hotSpot();
-		unsigned char emptyCursor[] = { 16, 1, (unsigned char)hotspot.x(), (unsigned char)hotspot.y(),
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-	    be_app->SetCursor(emptyCursor);
-
 		QImage image = windowCursor->pixmap().isNull() ? windowCursor->bitmap()->toImage() : windowCursor->pixmap().toImage();
 		if (windowCursor->pixmap().isNull()) {
 			QImage mask = windowCursor->mask()->toImage();
@@ -116,34 +106,22 @@ void QHaikuCursor::changeCursor(QCursor *windowCursor, QWindow *window)
 			image = maskedBitmap.toImage();
 		}
 		image.convertTo(QImage::Format_ARGB32);
-		removeCurrentCursorBitmap();
-		m_bitmap = new BBitmap(BRect(0, 0, image.width() - 1, image.height() - 1), B_RGBA32);
-   		memcpy(m_bitmap->Bits(), image.bits(), image.sizeInBytes());
-	    return;
+		BPoint hotspot(windowCursor->hotSpot().x(), windowCursor->hotSpot().x());
+		BBitmap *bitmap = new BBitmap(BRect(0, 0, image.width() - 1, image.height() - 1), B_RGBA32);
+		bitmap->SetBits((void*)image.bits(), image.sizeInBytes(), 0, B_RGBA32);
+		BCursor *cursor = new BCursor(bitmap, hotspot);
+		be_app->SetCursor(cursor);
+		delete bitmap;
+		return;
 	}
 
 	BCursor *cursor = m_cursorHash.value(windowCursor->shape(), NULL);
 	if (cursor != NULL) {
 		be_app->SetCursor(cursor);
-		removeCurrentCursorBitmap();
 		return;
 	}
 
 	be_app->SetCursor((BCursor*)B_CURSOR_SYSTEM_DEFAULT);
-	removeCurrentCursorBitmap();
-}
-
-BBitmap *QHaikuCursor::getCurrentCursorBitmap(void)
-{
-	return m_bitmap;
-}
-
-void QHaikuCursor::removeCurrentCursorBitmap(void)
-{
-	if (m_bitmap != NULL) {
-   		delete m_bitmap;
-   		m_bitmap = NULL;
-   	}
 }
 
 QPoint QHaikuCursor::pos() const

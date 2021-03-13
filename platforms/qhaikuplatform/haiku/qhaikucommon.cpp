@@ -218,21 +218,6 @@ void QHaikuBackingStore::flush(QWindow *window, const QRegion &region, const QPo
 		BRect rect(outline.left(), outline.top(), outline.right(), outline.bottom());
 		view->DrawBitmapAsync(m_bitmap, rect, rect);
 
-		if (window->cursor().shape() == Qt::BitmapCursor || window->cursor().shape() == Qt::CustomCursor) {
-			if (QScreen *screen = window->screen())
-				if (const QPlatformScreen *platformScreen = screen->handle())
-					if (QPlatformCursor *cursor = platformScreen->cursor()) {
-						QHaikuCursor *haikuCursor = static_cast<QHaikuCursor *>(cursor);
-						BBitmap *cursorBitmap = haikuCursor->getCurrentCursorBitmap();
-						if (cursorBitmap != NULL) {
-							view->SetDrawingMode(B_OP_ALPHA);
-							QPoint cursorPos = window->mapFromGlobal(window->cursor().pos());
-							view->DrawBitmapAsync(cursorBitmap,
-								BPoint(cursorPos.x() - window->cursor().hotSpot().x(),
-									cursorPos.y() - window->cursor().hotSpot().y()));
-						}
-					}
-		}
 		view->Sync();
     	view->UnlockLooper();
     }

@@ -998,16 +998,6 @@ void QHaikuWindow::platformMouseEvent(const QPoint &localPosition,
 	} else {
 		QWindowSystemInterface::handleMouseEvent(window(),
 			localPosition, globalPosition, state, button, type, modifiers, source);
-		if (window()->cursor().shape() == Qt::BitmapCursor || window()->cursor().shape() == Qt::CustomCursor) {
-			QPoint hotSpot = window()->cursor().hotSpot();
-			QPoint pos = window()->mapFromGlobal(m_lastMousePos);
-			QRect rect = window()->cursor().bitmap()->rect().translated(pos.x() - hotSpot.x(), pos.y() - hotSpot.y());
-			QWindowSystemInterface::handleExposeEvent(window(), QRegion(rect.adjusted(-1, -1, 1, 1)));
-
-			pos = window()->mapFromGlobal(window()->cursor().pos());
-			rect = window()->cursor().bitmap()->rect().translated(pos.x() - hotSpot.x(), pos.y() - hotSpot.y());
-			QWindowSystemInterface::handleExposeEvent(window(), QRegion(rect.adjusted(-1, -1, 1, 1)));
-		}
 		if (type == QEvent::MouseButtonRelease && m_systemMoveResizeEnabled)
 			m_systemMoveResizeEnabled = false;
 
@@ -1078,16 +1068,6 @@ void QHaikuWindow::platformTabletEvent(const QPointF &localPosition,
 	} else {
 		QWindowSystemInterface::handleTabletEvent(window(), localPosition, globalPosition,
 			device, pointerType, buttons, pressure, 0, 0, 0.0, 0.0, 0, 0, modifiers);
-		if (window()->cursor().shape() == Qt::BitmapCursor || window()->cursor().shape() == Qt::CustomCursor) {
-			QPoint hotSpot = window()->cursor().hotSpot();
-			QPoint pos = window()->mapFromGlobal(m_lastMousePos);
-			QRect rect = window()->cursor().bitmap()->rect().translated(pos.x() - hotSpot.x(), pos.y() - hotSpot.y());
-			QWindowSystemInterface::handleExposeEvent(window(), QRegion(rect.adjusted(-1, -1, 1, 1)));
-
-			pos = window()->mapFromGlobal(window()->cursor().pos());
-			rect = window()->cursor().bitmap()->rect().translated(pos.x() - hotSpot.x(), pos.y() - hotSpot.y());
-			QWindowSystemInterface::handleExposeEvent(window(), QRegion(rect.adjusted(-1, -1, 1, 1)));
-		}
 	}
 	m_lastMousePos = globalPosition.toPoint();
 }
