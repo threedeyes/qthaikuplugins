@@ -381,7 +381,7 @@ QHaikuGLContext::QHaikuGLContext(QOpenGLContext *context)
         return;
 
 	glview = new BGLView(BRect(0, 0, 1, 1), "bglview",
-		B_FOLLOW_ALL_SIDES, B_WILL_DRAW | B_FRAME_EVENTS, BGL_DOUBLE);
+		B_FOLLOW_ALL_SIDES, B_WILL_DRAW | B_FRAME_EVENTS, BGL_RGB | BGL_DOUBLE | BGL_DEPTH);
 }
 
 QHaikuGLContext::~QHaikuGLContext()
