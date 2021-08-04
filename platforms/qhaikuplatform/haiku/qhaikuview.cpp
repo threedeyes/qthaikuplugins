@@ -149,16 +149,9 @@ QHaikuSurfaceView::MouseDown(BPoint point)
 	if (isSizeGripperContains(point))
 		return;
 
-	uint32 buttons = Window()->CurrentMessage()->FindInt32("buttons");
-
-	QHaikuWindow *wnd = ((QtHaikuWindow*)Window())->fQWindow;
-
 	SetMouseEventMask(B_POINTER_EVENTS, B_LOCK_WINDOW_FOCUS | B_NO_POINTER_HISTORY);
 
-	if (wnd->window()->flags() & Qt::FramelessWindowHint) {
-		Window()->Activate();
-	}
-
+	uint32 buttons = Window()->CurrentMessage()->FindInt32("buttons");
 	lastMouseState = hostToQtButtons(buttons);
 	lastMouseButton = hostToQtButton(buttons);
 

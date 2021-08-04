@@ -999,8 +999,12 @@ void QHaikuWindow::platformMouseEvent(const QPoint &localPosition,
 	} else {
 		QWindowSystemInterface::handleMouseEvent(window(),
 			localPosition, globalPosition, state, button, type, modifiers, source);
-		if (type == QEvent::MouseButtonRelease && m_systemMoveResizeEnabled)
+		if (type == QEvent::MouseButtonRelease) {
 			m_systemMoveResizeEnabled = false;
+
+			if (window()->flags() & Qt::FramelessWindowHint)
+				m_window->Activate();
+		}
 
 		if (type == QEvent::MouseMove && m_systemMoveResizeEnabled) {
 			if (m_systemResizeEdges == 0) {
