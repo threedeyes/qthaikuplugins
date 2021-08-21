@@ -588,17 +588,15 @@ void QHaikuWindow::setVisible(bool visible)
 			m_window->SetWorkspaces(B_CURRENT_WORKSPACE);
 			m_window->Show();
 			m_window->Activate(true);
-	    } else {
+		} else {
 			m_window->Show();
 			if (window()->isModal() && window()->type() == Qt::Dialog)
 				m_window->SetFeel(B_MODAL_APP_WINDOW_FEEL);
-	    }
-    } else {
-		setWindowFlags(window()->flags());
-		m_window->Hide();
-    }
+		}
 
-	if (visible) {
+		if (window()->type() == Qt::SplashScreen)
+			m_window->CenterOnScreen();
+
 		if (window()->type() != Qt::ToolTip)
 			QWindowSystemInterface::handleWindowActivated(window());
 
@@ -606,14 +604,14 @@ void QHaikuWindow::setVisible(bool visible)
 			m_pendingGeometryChangeOnShow = false;
 			QWindowSystemInterface::handleGeometryChange(window(), geometry());
 		}
-	}
 
-    if (visible) {
-        QRect rect(QPoint(), geometry().size());
-        QWindowSystemInterface::handleExposeEvent(window(), rect);
-    } else {
-        QWindowSystemInterface::handleExposeEvent(window(), QRegion());
-    }
+		QRect rect(QPoint(), geometry().size());
+		QWindowSystemInterface::handleExposeEvent(window(), rect);
+	} else {
+		setWindowFlags(window()->flags());
+		m_window->Hide();
+		QWindowSystemInterface::handleExposeEvent(window(), QRegion());
+	}
 
 	syncDeskBarVisible();
 
