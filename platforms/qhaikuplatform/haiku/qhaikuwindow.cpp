@@ -303,7 +303,8 @@ QHaikuWindow::QHaikuWindow(QWindow *wnd)
     , m_parent(0)
     , m_systemMoveResizeEnabled(false)
     , m_systemResizeEdges(Qt::Edges())
-    , m_lastMousePos(QPoint(0,0))
+    , m_systemMoveWindowPoint(QPoint(0, 0))
+    , m_lastMousePos(QPoint(0, 0))
     , m_positionIncludesFrame(false)
     , m_visible(false)
     , m_pendingGeometryChangeOnShow(true)
@@ -640,6 +641,10 @@ bool QHaikuWindow::startSystemResize(Qt::Edges edges)
 
 bool QHaikuWindow::startSystemMove()
 {
+	BPoint screenWhere;
+	uint32 buttons;
+	get_mouse(&screenWhere, &buttons);
+	m_systemMoveWindowPoint = mapFromGlobal(QPoint(screenWhere.x, screenWhere.y));
 	m_systemResizeEdges = Qt::Edge();
 	m_systemMoveWindowGeometry = window()->geometry();
 	m_systemMoveResizeEnabled = true;
@@ -1005,12 +1010,13 @@ void QHaikuWindow::platformMouseEvent(const QPoint &localPosition,
 		}
 
 		if (type == QEvent::MouseMove && m_systemMoveResizeEnabled) {
+			QRect newGeometry = m_systemMoveWindowGeometry;
 			if (m_systemResizeEdges == Qt::Edge()) {
-				window()->setFramePosition(m_systemMoveWindowGeometry.topLeft() + (globalPosition - m_lastMousePos));
-				QWindowSystemInterface::handleGeometryChange(window(), m_systemMoveWindowGeometry);
+				newGeometry.moveTo(globalPosition - m_systemMoveWindowPoint);
+				window()->setGeometry(newGeometry.left(), newGeometry.top(), newGeometry.width(), newGeometry.height());
+				QWindowSystemInterface::handleGeometryChange(window(), newGeometry);
 				return;
 			}
-			QRect newGeometry = m_systemMoveWindowGeometry;
 			if (m_systemResizeEdges & Qt::RightEdge)
 				newGeometry.setRight(MAX(globalPosition.x(), m_systemMoveWindowGeometry.x() + window()->minimumSize().width()));
 			if (m_systemResizeEdges & Qt::LeftEdge)
@@ -1024,7 +1030,8 @@ void QHaikuWindow::platformMouseEvent(const QPoint &localPosition,
 			return;
 		}
 	}
-	m_lastMousePos = globalPosition;
+	if (!m_systemMoveResizeEnabled)
+		m_lastMousePos = globalPosition;
 }
 
 void QHaikuWindow::platformMouseDragEvent(const QPoint &localPosition,

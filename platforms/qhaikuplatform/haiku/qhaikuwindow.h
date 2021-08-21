@@ -165,6 +165,7 @@ private:
 	bool m_systemMoveResizeEnabled;
 	Qt::Edges m_systemResizeEdges;
 	QRect m_systemMoveWindowGeometry;
+	QPoint m_systemMoveWindowPoint;
 	QPoint m_lastMousePos;
 	QRect m_normalGeometry;
 	QMargins m_margins;
