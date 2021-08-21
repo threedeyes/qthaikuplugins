@@ -1002,14 +1002,13 @@ void QHaikuWindow::platformMouseEvent(const QPoint &localPosition,
 	} else {
 		QWindowSystemInterface::handleMouseEvent(window(),
 			localPosition, globalPosition, state, button, type, modifiers, source);
-		if (type == QEvent::MouseButtonRelease) {
-			m_systemMoveResizeEnabled = false;
 
+		if (type == QEvent::MouseButtonPress) {
 			if (window()->flags() & Qt::FramelessWindowHint)
 				m_window->Activate();
-		}
-
-		if (type == QEvent::MouseMove && m_systemMoveResizeEnabled) {
+		} else if (type == QEvent::MouseButtonRelease) {
+			m_systemMoveResizeEnabled = false;
+		} else if (type == QEvent::MouseMove && m_systemMoveResizeEnabled) {
 			QRect newGeometry = m_systemMoveWindowGeometry;
 			if (m_systemResizeEdges == Qt::Edge()) {
 				newGeometry.moveTo(globalPosition - m_systemMoveWindowPoint);
