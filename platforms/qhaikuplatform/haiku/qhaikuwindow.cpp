@@ -302,6 +302,8 @@ QHaikuWindow::QHaikuWindow(QWindow *wnd)
 					B_NO_BORDER_WINDOW_LOOK, B_NORMAL_WINDOW_FEEL, 0))
     , m_parent(0)
     , m_systemMoveResizeEnabled(false)
+    , m_systemResizeEdges(Qt::Edges())
+    , m_lastMousePos(QPoint(0,0))
     , m_positionIncludesFrame(false)
     , m_visible(false)
     , m_pendingGeometryChangeOnShow(true)
@@ -335,8 +337,6 @@ QHaikuWindow::QHaikuWindow(QWindow *wnd)
     setGeometry(wnd->geometry());
 
     QWindowSystemInterface::flushWindowSystemEvents();
-
-    m_lastMousePos = QPoint(0,0);
 }
 
 
@@ -640,7 +640,7 @@ bool QHaikuWindow::startSystemResize(Qt::Edges edges)
 
 bool QHaikuWindow::startSystemMove()
 {
-	m_systemResizeEdges = 0;
+	m_systemResizeEdges = Qt::Edge();
 	m_systemMoveWindowGeometry = window()->geometry();
 	m_systemMoveResizeEnabled = true;
     return true;
@@ -1005,7 +1005,7 @@ void QHaikuWindow::platformMouseEvent(const QPoint &localPosition,
 		}
 
 		if (type == QEvent::MouseMove && m_systemMoveResizeEnabled) {
-			if (m_systemResizeEdges == 0) {
+			if (m_systemResizeEdges == Qt::Edge()) {
 				window()->setFramePosition(m_systemMoveWindowGeometry.topLeft() + (globalPosition - m_lastMousePos));
 				QWindowSystemInterface::handleGeometryChange(window(), m_systemMoveWindowGeometry);
 				return;
