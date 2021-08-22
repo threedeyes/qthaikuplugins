@@ -1019,9 +1019,9 @@ void QHaikuWindow::platformMouseEvent(const QPoint &localPosition,
 			if (m_systemResizeEdges & Qt::RightEdge)
 				newGeometry.setRight(MAX(globalPosition.x(), m_systemMoveWindowGeometry.x() + window()->minimumSize().width()));
 			if (m_systemResizeEdges & Qt::LeftEdge)
-				newGeometry.setLeft(MIN(globalPosition.x(), m_systemMoveWindowGeometry.x() + window()->minimumSize().width()));
+				newGeometry.setLeft(MIN(globalPosition.x(), m_systemMoveWindowGeometry.right() - window()->minimumSize().width()));
 			if (m_systemResizeEdges & Qt::TopEdge)
-				newGeometry.setTop(MIN(globalPosition.y(), m_systemMoveWindowGeometry.y() + window()->minimumSize().height()));
+				newGeometry.setTop(MIN(globalPosition.y(), m_systemMoveWindowGeometry.bottom() - window()->minimumSize().height()));
 			if (m_systemResizeEdges & Qt::BottomEdge)
 				newGeometry.setBottom(MAX(globalPosition.y(), m_systemMoveWindowGeometry.y() + window()->minimumSize().height()));
 			window()->setGeometry(newGeometry.left(), newGeometry.top(), newGeometry.width(), newGeometry.height());
