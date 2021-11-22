@@ -156,3 +156,9 @@ void SettingsDialog::on_whiteListButton_clicked()
     WhiteListDialog *dlg = new WhiteListDialog(this);
     dlg->show();
 }
+
+void SettingsDialog::on_styleComboBox_currentIndexChanged(int index)
+{
+    QString styleName = ui->styleComboBox->itemText(index);
+    QApplication::setStyle(QStyleFactory::create(styleName));
+}

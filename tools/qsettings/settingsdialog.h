@@ -25,6 +25,8 @@ private slots:
 
     void on_whiteListButton_clicked();
 
+	void on_styleComboBox_currentIndexChanged(int index);
+
 private:
     void writeSettings();
     void readSettings();
