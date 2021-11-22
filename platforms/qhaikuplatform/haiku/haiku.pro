@@ -31,6 +31,7 @@ SOURCES =   main.cpp \
             qhaikuview.cpp \
             qhaikuservices.cpp \
             qhaikucursor.cpp \
+            qhaikunativeinterface.cpp \
             ../../../3rdparty/simplecrypt/simplecrypt.cpp
 
 HEADERS =   qhaikuintegration.h \
@@ -44,6 +45,7 @@ HEADERS =   qhaikuintegration.h \
             qhaikusystemlocale.h \
             qhaikuview.h \
             qhaikuservices.h \
-            qhaikucursor.h
+            qhaikucursor.h \
+            qhaikunativeinterface.h
 
 OTHER_FILES += haiku.json

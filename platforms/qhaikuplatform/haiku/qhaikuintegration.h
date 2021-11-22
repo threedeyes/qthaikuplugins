@@ -50,6 +50,7 @@
 
 #include "qhaikuclipboard.h"
 #include "qhaikucommon.h"
+#include "qhaikunativeinterface.h"
 
 #if !defined(QT_NO_OPENGL)
 #include <GLView.h>
@@ -108,6 +109,7 @@ public:
 
     QPlatformFontDatabase *fontDatabase() const;
     QAbstractEventDispatcher *createEventDispatcher() const;
+    QPlatformNativeInterface *nativeInterface() const { return m_nativeInterface; }
 
     static QHaikuIntegration *createHaikuIntegration(const QStringList& parameters, int &argc, char **argv);
 
@@ -119,6 +121,7 @@ private:
     static bool isOpenGLEnabled();
 
     QPlatformFontDatabase *m_fontDatabase;
+    QHaikuNativeInterface *m_nativeInterface;
     QSimpleDrag *m_drag;
     QPlatformServices *m_services;
     QHaikuSystemLocale *m_haikuSystemLocale;

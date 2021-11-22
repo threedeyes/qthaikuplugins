@@ -81,6 +81,7 @@ QHaikuIntegration::QHaikuIntegration(const QStringList &parameters, int &argc, c
 	m_screen = new QHaikuScreen();
 	QWindowSystemInterface::handleScreenAdded(m_screen);
     m_fontDatabase = new QHaikuPlatformFontDatabase();
+	m_nativeInterface = new QHaikuNativeInterface(this);
 	m_services = new QHaikuServices();
 	m_clipboard = new QHaikuClipboard();
 	m_haikuSystemLocale = new QHaikuSystemLocale;
@@ -90,6 +91,7 @@ QHaikuIntegration::QHaikuIntegration(const QStringList &parameters, int &argc, c
 
 QHaikuIntegration::~QHaikuIntegration()
 {
+	delete m_nativeInterface;
 	delete m_fontDatabase;
 	delete m_haikuSystemLocale;
 	delete m_clipboard;
