@@ -377,10 +377,12 @@ QHaikuGLContext::QHaikuGLContext(QOpenGLContext *context)
 	: QPlatformOpenGLContext()  
 {
 	d_format = context->format();
+
     if (d_format.renderableType() == QSurfaceFormat::DefaultRenderableType)
-        d_format.setRenderableType(QSurfaceFormat::OpenGL);
-    if (d_format.renderableType() != QSurfaceFormat::OpenGL)
-        return;
+		d_format.setRenderableType(QSurfaceFormat::OpenGL);
+
+	if (d_format.renderableType() != QSurfaceFormat::OpenGL)
+		return;
 
 	glview = new BGLView(BRect(0, 0, 1, 1), "bglview",
 		B_FOLLOW_ALL_SIDES, B_WILL_DRAW | B_FRAME_EVENTS, BGL_RGB | BGL_DOUBLE | BGL_DEPTH);
@@ -401,8 +403,8 @@ bool QHaikuGLContext::makeCurrent(QPlatformSurface *surface)
 {
 	QSize size = surface->surface()->size();
 	QHaikuWindow *window = static_cast<QHaikuWindow *>(surface);
-    if (!window)
-        return false;
+	if (!window)
+		return false;
 
 	if (window->m_window->fGLView == NULL) {
 		window->m_window->fGLView = glview;

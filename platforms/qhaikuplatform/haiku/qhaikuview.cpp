@@ -90,7 +90,7 @@ QHaikuSurfaceView::hostToQtButtons(uint32 buttons) const
     if (buttons & B_PRIMARY_MOUSE_BUTTON)
         qtButtons |= Qt::LeftButton;
     if (buttons & B_TERTIARY_MOUSE_BUTTON)
-        qtButtons |= Qt::MidButton;
+        qtButtons |= Qt::MiddleButton;
     if (buttons & B_SECONDARY_MOUSE_BUTTON)
         qtButtons |= Qt::RightButton;
         
@@ -103,7 +103,7 @@ QHaikuSurfaceView::hostToQtButton(uint32 buttons) const
     if (buttons & B_PRIMARY_MOUSE_BUTTON)
         return Qt::LeftButton;
     if (buttons & B_TERTIARY_MOUSE_BUTTON)
-        return Qt::MidButton;
+        return Qt::MiddleButton;
     if (buttons & B_SECONDARY_MOUSE_BUTTON)
         return Qt::RightButton;
     return Qt::NoButton;

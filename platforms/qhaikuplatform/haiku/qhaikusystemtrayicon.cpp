@@ -117,8 +117,8 @@ QHaikuSystemTrayIcon::QHaikuSystemTrayIcon()
 	: looper(NULL)
 	, replicantId(-1)
 	, qystrayExist(false)
-	, pulse(NULL)
 	, trayMenuClickCounter(0)
+	, pulse(NULL)
 {
 	qystrayExist = findTrayExecutable();
 }
