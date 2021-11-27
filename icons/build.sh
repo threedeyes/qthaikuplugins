@@ -11,7 +11,7 @@ cp -f --remove-destination index.theme $dataDir/icons/haiku
 
 echo "Install actions icons"
 cp -f --remove-destination actions/*.svg $dataDir/icons/haiku/actions/22
-rm -rf $dataDir/icons/haiku/actions/{12,16,32,48,64,symbolic}
+rm -rf $dataDir/icons/haiku/actions/{12,16,32,48,64}
 ln -rfs $dataDir/icons/haiku/actions/22 $dataDir/icons/haiku/actions/12
 ln -rfs $dataDir/icons/haiku/actions/22 $dataDir/icons/haiku/actions/16
 ln -rfs $dataDir/icons/haiku/actions/22 $dataDir/icons/haiku/actions/32
