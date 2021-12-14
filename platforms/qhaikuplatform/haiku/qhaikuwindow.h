@@ -122,7 +122,7 @@ class QHaikuWindow : public QObject, public QPlatformWindow
 	Q_OBJECT
 public:
 	QHaikuWindow(QWindow *window);
-	~QHaikuWindow() {};
+	~QHaikuWindow();
 
 	virtual void destroy();
 

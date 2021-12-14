@@ -341,6 +341,13 @@ QHaikuWindow::QHaikuWindow(QWindow *wnd)
 }
 
 
+QHaikuWindow::~QHaikuWindow()
+{
+	if (m_window != NULL)
+		destroy();
+}
+
+
 void QHaikuWindow::destroy()
 {
 	m_window->PostMessage(kCloseWindow);
