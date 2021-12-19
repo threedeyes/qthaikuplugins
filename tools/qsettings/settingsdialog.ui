@@ -88,7 +88,7 @@
               <item>
                <widget class="QCheckBox" name="messagesCheckBox">
                 <property name="enabled">
-                 <bool>false</bool>
+                 <bool>true</bool>
                 </property>
                 <property name="text">
                  <string>Messages</string>
@@ -98,7 +98,7 @@
               <item>
                <widget class="QCheckBox" name="filePanelCheckBox">
                 <property name="enabled">
-                 <bool>false</bool>
+                 <bool>true</bool>
                 </property>
                 <property name="text">
                  <string>File panel</string>

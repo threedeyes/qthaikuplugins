@@ -29,6 +29,10 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
         }
     }
 
+    ui->messagesCheckBox->setHidden(true);
+    ui->colorPickerCheckBox->setHidden(true);
+    ui->OpenGlGroup->setHidden(true);
+
     readSettings();
 }
 
@@ -43,9 +47,9 @@ void SettingsDialog::writeSettings()
  {
     QSettings settings(QT_SETTINGS_FILENAME, QSettings::NativeFormat);
     settings.beginGroup("QPA");
-    settings.setValue("native_messages", ui->messagesCheckBox->isChecked());
-    settings.setValue("native_filepanel", ui->filePanelCheckBox->isChecked());
-    settings.setValue("native_colorpicker", ui->colorPickerCheckBox->isChecked());
+    settings.setValue("messages_native", ui->messagesCheckBox->isChecked());
+    settings.setValue("filepanel_native", ui->filePanelCheckBox->isChecked());
+    settings.setValue("colorpicker_native", ui->colorPickerCheckBox->isChecked());
     settings.setValue("opengl_enabled", ui->openGlCheckBox->isChecked());
     settings.setValue("qml_softwarecontext", ui->softContextCheckBox->isChecked());
     settings.setValue("hide_from_deskbar", ui->deskBarCheckBox->isChecked());
@@ -87,10 +91,9 @@ void SettingsDialog::readSettings()
 {
     QSettings settings(QT_SETTINGS_FILENAME, QSettings::NativeFormat);
     settings.beginGroup("QPA");
-    //ui->messagesCheckBox->setChecked(settings.value("native_messages", true).toBool());
-    ui->messagesCheckBox->setChecked(false);
-    ui->filePanelCheckBox->setChecked(settings.value("native_filepanel", false).toBool());
-    ui->colorPickerCheckBox->setChecked(settings.value("native_colorpicker", false).toBool());
+    ui->messagesCheckBox->setChecked(settings.value("messages_native", true).toBool());
+    ui->filePanelCheckBox->setChecked(settings.value("filepanel_native", true).toBool());
+    ui->colorPickerCheckBox->setChecked(settings.value("colorpicker_native", true).toBool());
     ui->openGlCheckBox->setChecked(settings.value("opengl_enabled", false).toBool());
     ui->softContextCheckBox->setChecked(settings.value("qml_softwarecontext", true).toBool());
     ui->deskBarCheckBox->setChecked(settings.value("hide_from_deskbar", true).toBool());
@@ -132,8 +135,8 @@ void SettingsDialog::readSettings()
 void SettingsDialog::on_defaultsButton_clicked()
 {
     ui->messagesCheckBox->setChecked(true);
-    ui->filePanelCheckBox->setChecked(false);
-    ui->colorPickerCheckBox->setChecked(false);
+    ui->filePanelCheckBox->setChecked(true);
+    ui->colorPickerCheckBox->setChecked(true);
     ui->openGlCheckBox->setChecked(false);
     ui->softContextCheckBox->setChecked(true);
     ui->styleComboBox->setCurrentText("haiku");
