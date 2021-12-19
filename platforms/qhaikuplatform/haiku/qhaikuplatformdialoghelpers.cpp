@@ -1,7 +1,7 @@
 /****************************************************************************
 **
 ** Copyright (C) 2017 The Qt Company Ltd.
-** Copyright (C) 2015-2017 Gerasim Troeglazov,
+** Copyright (C) 2015-2021 Gerasim Troeglazov,
 ** Contact: 3dEyes@gmail.com
 **
 ** This file is part of the plugins of the Qt Toolkit.
@@ -44,21 +44,34 @@
 #include <qpa/qplatformtheme.h>
 #include <QtWidgets/qmessagebox.h>
 #include <QTextDocument>
+#include <QFileDialog>
 #include <QHash>
+#include <QList>
+#include <QUrl>
 
 #include <qdebug.h>
 
 #include <Alert.h>
 #include <TextView.h>
+#include <MenuBar.h>
+#include <MenuItem.h>
 
 #define DISABLE_MSG_NATIVE 1
 
+Q_DECLARE_METATYPE(QList<QUrl>)
+
 namespace QtHaikuDialogHelpers {
+
+enum {
+	kMsgFilter = 'filt',
+	kMsgFilterDisable = 'foff'
+};
 
 QHaikuPlatformMessageDialogHelper::QHaikuPlatformMessageDialogHelper()
     :m_buttonId(-1)
     ,m_shown(false)
 {
+	qRegisterMetaType<QList<QUrl> >();
 }
 
 void QHaikuPlatformMessageDialogHelper::exec()
@@ -169,6 +182,345 @@ bool QHaikuPlatformMessageDialogHelper::show(Qt::WindowFlags, Qt::WindowModality
 void QHaikuPlatformMessageDialogHelper::hide()
 {
     m_shown = false;
+}
+
+
+bool FileRefFilter::Filter(const entry_ref* ref, BNode* node,
+		struct stat_beos* stat, const char* filetype)
+{
+	Q_UNUSED(stat)
+	Q_UNUSED(filetype)
+
+	if (node->IsDirectory() || m_showAll)
+		return true;
+
+	BPath path(ref);
+	QFileInfo info(path.Path());
+	return m_exts.contains("." + info.completeSuffix());
+}
+
+void FileRefFilter::setFilters(const QString &filters)
+{
+	m_exts.clear();
+	m_showAll = false;
+
+	for (const QString &filter : QPlatformFileDialogHelper::cleanFilterList(filters)) {
+		const int offset = (filter.length() > 1 && filter.startsWith(QLatin1Char('*'))) ? 1 : 0;
+		QString suffix = QLatin1String(filter.toUtf8().data() + offset);
+		m_exts << suffix;
+		if (suffix.contains("*"))
+			m_showAll = true;
+	}
+}
+
+
+FilePanelLooper::FilePanelLooper(QHaikuFileDialogHelper *helper)
+	:QObject()
+	,BLooper("PanelLooper")
+	,m_helper(helper)
+	,m_state(B_CANCEL)
+{
+	qRegisterMetaType<QList<QUrl> >();
+}
+
+void FilePanelLooper::MessageReceived(BMessage* message)
+{
+	message->PrintToStream();
+
+	switch (message->what) {
+		case kMsgFilter:
+			{
+				const char *filter = message->FindString("filter");
+				emit selectNameFilter(QString::fromUtf8(filter));
+				break;
+			}
+		case kMsgFilterDisable:
+			{
+				emit selectNameFilter(QString());
+				break;
+			}
+		case B_SAVE_REQUESTED:
+			{
+				entry_ref ref;
+				const char *name;
+				message->FindRef("directory", &ref);
+				BDirectory  dir(&ref);
+				BPath path(&dir, NULL, false);
+				message->FindString("name", &name);
+				path.Append(name);
+
+				m_filename.clear();
+				m_filenames.clear();
+
+				m_filename = QUrl::fromLocalFile(QString::fromUtf8(path.Path()));
+				m_filenames.append(m_filename);
+
+				m_helper->setSelectedFiles(m_filenames);
+
+				emit fileSelected(m_filename);
+				emit accept();
+
+				m_state = B_OK;
+			}
+			break;
+		case B_REFS_RECEIVED:
+			{
+				uint32 type;
+				int32 count;
+
+				m_filename.clear();
+				m_filenames.clear();
+
+				message->GetInfo("refs", &type, &count);
+				if ( type != B_REF_TYPE || count <= 0)
+					return;
+
+				for ( long i = --count; i >= 0; i-- ) {
+					if ( message->FindRef("refs", i, &m_ref) == B_OK ) {
+						BPath path(&m_ref);
+						m_filename = QUrl::fromLocalFile(QString::fromUtf8(path.Path()));
+						m_filenames.append(m_filename);
+					}
+				}
+				m_helper->setSelectedFiles(m_filenames);
+
+				emit filesSelected(m_filenames);
+				emit accept();
+
+				m_state = B_OK;
+			}
+			break;
+		case B_CANCEL:
+			{
+				if ( m_state != B_OK ) {
+					m_state = B_CANCEL;
+					m_filename.clear();
+					m_filenames.clear();
+
+					m_helper->setSelectedFiles(m_filenames);
+
+					emit reject();
+				}
+			}
+			break;
+		default:
+			break;
+	}
+}
+
+QHaikuFileDialogHelper::QHaikuFileDialogHelper()
+    : QPlatformFileDialogHelper(), d_ptr(new QHaikuFileDialogHelperPrivate)
+{
+    Q_D(QHaikuFileDialogHelper);
+
+    d->shown = false;
+    d->m_panelLooper = NULL;
+    d->m_fileRefFilter = NULL;
+    d->m_typeMenu = NULL;
+}
+
+void QHaikuFileDialogHelper::createFilePanel(file_panel_mode mode, uint32 flavors)
+{
+	Q_D(QHaikuFileDialogHelper);
+
+	const QSharedPointer<QFileDialogOptions> dialogOptions = options();
+
+	bool directoryMode = flavors == B_DIRECTORY_NODE;
+
+	d->m_panelLooper = new FilePanelLooper(this);
+
+    connect(d->m_panelLooper, &FilePanelLooper::accept, this, &QPlatformDialogHelper::accept);
+	connect(d->m_panelLooper, &FilePanelLooper::reject, this, &QPlatformDialogHelper::reject);
+	connect(d->m_panelLooper, &FilePanelLooper::fileSelected, this, &QPlatformFileDialogHelper::fileSelected);
+	connect(d->m_panelLooper, &FilePanelLooper::filesSelected, this, &QPlatformFileDialogHelper::filesSelected);
+	connect(d->m_panelLooper, &FilePanelLooper::selectNameFilter, this, &QPlatformFileDialogHelper::selectNameFilter);
+
+	if (!directoryMode)
+		d->m_fileRefFilter = new FileRefFilter();
+
+	d->m_filePanel = new BFilePanel(mode, NULL, NULL, flavors,
+						dialogOptions->fileMode() == QFileDialogOptions::ExistingFiles, NULL,
+						directoryMode ? new DirectoryRefFilter() : NULL, true, false);
+	d->m_filePanel->SetTarget(BMessenger(d->m_panelLooper));
+	d->m_filePanel->Window()->SetTitle(options()->windowTitle().toUtf8().data());
+	d->m_filePanel->SetPanelDirectory(options()->initialDirectory().path().toUtf8().data());
+
+	bool allFilesOnly = false;
+	if (options()->nameFilters().count() == 1) {
+		QStringList filters = QPlatformFileDialogHelper::cleanFilterList(options()->nameFilters().at(0));
+		if (filters.contains("*.*") || filters.contains("*"))
+			allFilesOnly = true;
+	}
+
+	if (!directoryMode && options()->nameFilters().count() > 0 && !allFilesOnly) {
+		BMenuBar *menuBar = dynamic_cast<BMenuBar*>(d->m_filePanel->Window()->ChildAt(0)->FindView("MenuBar"));
+		d->m_typeMenu = new BMenu(QFileDialog::tr("Files of type:").remove(':').toUtf8().data());
+		d->m_typeMenu->SetRadioMode(true);
+		menuBar->AddItem(d->m_typeMenu);
+
+		BMenuItem* item = new BMenuItem(QFileDialog::tr("All files (*)").remove(" (*)").toUtf8().data(),
+							new BMessage(kMsgFilterDisable));
+		item->SetTarget(BMessenger(d->m_panelLooper));
+		d->m_typeMenu->AddItem(item);
+		d->m_typeMenu->AddSeparatorItem();
+
+		const QStringList nameFilters = options()->nameFilters();
+		for (const QString &namedFilter : nameFilters) {
+			const int offset = namedFilter.indexOf(QLatin1String("("));
+			const QString filterTitle = namedFilter.mid(0, offset);
+			BMessage* mess = new BMessage(kMsgFilter);
+			mess->AddString("filter", namedFilter.toUtf8().data());
+			BMenuItem* item = new BMenuItem(filterTitle.toUtf8().data(), mess);
+			item->SetTarget(BMessenger(d->m_panelLooper));
+			d->m_typeMenu->AddItem(item);
+		}
+
+		selectNameFilter(options()->initiallySelectedNameFilter());
+	}
+
+	d->m_panelLooper->Run();
+}
+
+void QHaikuFileDialogHelper::exec()
+{
+    Q_D(QHaikuFileDialogHelper);
+
+    if (!d->shown)
+        show(Qt::Dialog, Qt::ApplicationModal, 0);
+
+    d->m_eventloop.exec(QEventLoop::DialogExec);
+}
+
+bool QHaikuFileDialogHelper::show(Qt::WindowFlags windowFlags, Qt::WindowModality windowModality, QWindow *parent)
+{
+    Q_UNUSED(windowFlags)
+    Q_UNUSED(windowModality)
+    Q_UNUSED(parent)
+    Q_D(QHaikuFileDialogHelper);
+
+	const QSharedPointer<QFileDialogOptions> dialogOptions = options();
+    switch (dialogOptions->acceptMode()) {
+	    default:
+	    case QFileDialogOptions::AcceptOpen:
+	    {
+	        switch (dialogOptions->fileMode())
+	        {
+		        case QFileDialogOptions::Directory:
+		        case QFileDialogOptions::DirectoryOnly:
+		        {
+					createFilePanel(B_OPEN_PANEL, B_DIRECTORY_NODE);
+					d->shown = true;
+					d->m_filePanel->Show();
+					break;
+		        }
+		        case QFileDialogOptions::AnyFile:
+		        case QFileDialogOptions::ExistingFile:
+		        case QFileDialogOptions::ExistingFiles:
+		        {
+					createFilePanel(B_OPEN_PANEL);
+					d->shown = true;
+					d->m_filePanel->Show();
+					break;
+		        }
+	        }
+	        break;
+	    }
+	    case QFileDialogOptions::AcceptSave:
+	    {
+			createFilePanel(B_SAVE_PANEL);
+			d->shown = true;
+			d->m_filePanel->Show();
+			break;
+		}
+    }
+
+    d->shown = true;
+    return true;
+}
+
+void QHaikuFileDialogHelper::hide()
+{
+    Q_D(QHaikuFileDialogHelper);
+
+	if (!d->shown)
+		return;
+
+	if (d->m_eventloop.isRunning())
+		d->m_eventloop.exit();
+
+	delete d->m_filePanel;
+
+	if (d->m_fileRefFilter != NULL)
+		delete d->m_fileRefFilter;
+
+	d->m_panelLooper->Lock();
+	d->m_panelLooper->Quit();
+
+    d->shown = false;
+}
+
+QUrl QHaikuFileDialogHelper::directory() const
+{
+    Q_D(const QHaikuFileDialogHelper);
+
+	if (!d->shown)
+		return QUrl();
+
+	entry_ref panelDirRef;
+	d->m_filePanel->GetPanelDirectory(&panelDirRef);
+	BPath path(&panelDirRef);
+	return QUrl::fromLocalFile(QString::fromUtf8(path.Path()));
+}
+
+void QHaikuFileDialogHelper::setDirectory(const QUrl &directory)
+{
+	Q_D(QHaikuFileDialogHelper);
+
+	if (!d->shown || !directory.isLocalFile())
+		return;
+
+	d->m_filePanel->SetPanelDirectory(directory.toLocalFile().toUtf8().data());
+}
+
+QString QHaikuFileDialogHelper::selectedNameFilter() const
+{
+	Q_D(const QHaikuFileDialogHelper);
+	return d->m_filter;
+}
+
+void QHaikuFileDialogHelper::selectNameFilter(const QString &filter)
+{
+	Q_D(QHaikuFileDialogHelper);
+	d->m_filter = filter;
+
+	if (d->m_fileRefFilter != NULL) {
+		d->m_fileRefFilter->setFilters(d->m_filter);
+	}
+
+	if (filter.isEmpty()) {
+		d->m_typeMenu->ItemAt(0)->SetMarked(true);
+		if (d->m_filePanel->RefFilter() != NULL) {
+			d->m_fileRefFilter->setFilters("All files (*.*)");
+			d->m_filePanel->SetRefFilter(d->m_fileRefFilter);
+		}
+		d->m_filePanel->Refresh();
+		return;
+	}
+
+	d->m_filePanel->SetRefFilter(d->m_fileRefFilter);
+
+	if (d->m_typeMenu != NULL) {
+		for (int32 index = 0; index < d->m_typeMenu->CountItems(); index++) {
+			BMessage *mess = d->m_typeMenu->ItemAt(index)->Message();
+			if (mess != NULL && mess->what == kMsgFilter) {
+				QString itemFilter = QString::fromUtf8(mess->FindString("filter"));
+				if (itemFilter == filter)
+					d->m_typeMenu->ItemAt(index)->SetMarked(true);
+			}
+		}
+	}
+
+	d->m_filePanel->Refresh();
 }
 
 }

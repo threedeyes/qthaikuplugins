@@ -144,12 +144,12 @@ bool QHaikuTheme::usePlatformNativeDialog(DialogType type) const
 	settings.beginGroup("QPA");
 
 	if (type == QPlatformTheme::MessageDialog)
-		return settings.value("native_messages", true).toBool();
+		return settings.value("messages_native", true).toBool();
     if (type == QPlatformTheme::FileDialog)
-        return settings.value("native_filepanel", false).toBool();
+        return settings.value("filepanel_native", true).toBool();
 #if !defined(QT_NO_COLORDIALOG)
     if (type == QPlatformTheme::ColorDialog)
-        return settings.value("native_colorpicker", false).toBool();
+        return settings.value("colorpicker_native", true).toBool();
 #endif
 #if !defined(QT_NO_FONTDIALOG)
     if (type == QPlatformTheme::FontDialog)
@@ -160,10 +160,16 @@ bool QHaikuTheme::usePlatformNativeDialog(DialogType type) const
 
 QPlatformDialogHelper *QHaikuTheme::createPlatformDialogHelper(DialogType type) const
 {
+	QSettings settings(QT_SETTINGS_FILENAME, QSettings::NativeFormat);
+	settings.beginGroup("QPA");
+
     switch (type) {
-	case QPlatformTheme::MessageDialog:
-        return new QtHaikuDialogHelpers::QHaikuPlatformMessageDialogHelper;
     case QPlatformTheme::FileDialog:
+    {
+		if (settings.value("filepanel_native", true).toBool())
+			return new QtHaikuDialogHelpers::QHaikuFileDialogHelper;
+    }
+	case QPlatformTheme::MessageDialog:
     case QPlatformTheme::ColorDialog:
     case QPlatformTheme::FontDialog:
     default:
