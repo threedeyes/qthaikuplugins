@@ -135,6 +135,7 @@ public:
     BMenu *m_typeMenu;
     FileRefFilter *m_fileRefFilter;
     QString m_filter;
+    QString m_saveFileName;
 };
 
 
@@ -153,7 +154,7 @@ public:
     void selectNameFilter(const QString &filter) override;
     void setFilter() override {};
     QList<QUrl> selectedFiles() const override { return m_selectedFile; };
-    void selectFile(const QUrl &file) override { Q_UNUSED(file) };
+    void selectFile(const QUrl &saveFileName) override;
     void setDirectory(const QUrl &directory) override;
     QUrl directory() const override;
     bool defaultNameFilterDisables() const override { return false; };

@@ -409,8 +409,8 @@ bool QHaikuFileDialogHelper::show(Qt::WindowFlags windowFlags, Qt::WindowModalit
 		        case QFileDialogOptions::DirectoryOnly:
 		        {
 					createFilePanel(B_OPEN_PANEL, B_DIRECTORY_NODE);
-					d->shown = true;
 					d->m_filePanel->Show();
+					d->shown = true;
 					break;
 		        }
 		        case QFileDialogOptions::AnyFile:
@@ -418,8 +418,8 @@ bool QHaikuFileDialogHelper::show(Qt::WindowFlags windowFlags, Qt::WindowModalit
 		        case QFileDialogOptions::ExistingFiles:
 		        {
 					createFilePanel(B_OPEN_PANEL);
-					d->shown = true;
 					d->m_filePanel->Show();
+					d->shown = true;
 					break;
 		        }
 	        }
@@ -428,8 +428,10 @@ bool QHaikuFileDialogHelper::show(Qt::WindowFlags windowFlags, Qt::WindowModalit
 	    case QFileDialogOptions::AcceptSave:
 	    {
 			createFilePanel(B_SAVE_PANEL);
-			d->shown = true;
+			d->m_filePanel->SetSaveText(d->m_saveFileName.toUtf8().data());
 			d->m_filePanel->Show();
+			d->m_filePanel->Refresh();
+			d->shown = true;
 			break;
 		}
     }
@@ -521,6 +523,19 @@ void QHaikuFileDialogHelper::selectNameFilter(const QString &filter)
 	}
 
 	d->m_filePanel->Refresh();
+}
+
+void QHaikuFileDialogHelper::selectFile(const QUrl &saveFileName)
+{
+    Q_D(QHaikuFileDialogHelper);
+
+ 	if (saveFileName.isLocalFile())
+		d->m_saveFileName = QFileInfo(saveFileName.toLocalFile()).fileName();
+	else
+		d->m_saveFileName = QString();
+
+	if (d->shown)
+		d->m_filePanel->SetSaveText(d->m_saveFileName.toUtf8().data());
 }
 
 }
