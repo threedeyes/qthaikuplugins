@@ -436,8 +436,10 @@ bool QHaikuFileDialogHelper::show(Qt::WindowFlags windowFlags, Qt::WindowModalit
 		}
     }
 
-    d->shown = true;
-    return true;
+    if (d->shown)
+		selectNameFilter(d->m_filter);
+
+    return d->shown;
 }
 
 void QHaikuFileDialogHelper::hide()
@@ -495,29 +497,29 @@ void QHaikuFileDialogHelper::selectNameFilter(const QString &filter)
 	Q_D(QHaikuFileDialogHelper);
 	d->m_filter = filter;
 
-	if (d->m_fileRefFilter != NULL) {
-		d->m_fileRefFilter->setFilters(d->m_filter);
-	}
-
-	if (filter.isEmpty()) {
-		d->m_typeMenu->ItemAt(0)->SetMarked(true);
-		if (d->m_filePanel->RefFilter() != NULL) {
-			d->m_fileRefFilter->setFilters("All files (*.*)");
-			d->m_filePanel->SetRefFilter(d->m_fileRefFilter);
-		}
-		d->m_filePanel->Refresh();
+	if (!d->shown)
 		return;
-	}
 
-	d->m_filePanel->SetRefFilter(d->m_fileRefFilter);
+	if (d->m_fileRefFilter != NULL) {
+		if (filter.isEmpty()) {
+			d->m_fileRefFilter->setFilters("All files (*.*)");
+		} else {
+			d->m_fileRefFilter->setFilters(d->m_filter);
+		}
+		d->m_filePanel->SetRefFilter(d->m_fileRefFilter);
+	}
 
 	if (d->m_typeMenu != NULL) {
-		for (int32 index = 0; index < d->m_typeMenu->CountItems(); index++) {
-			BMessage *mess = d->m_typeMenu->ItemAt(index)->Message();
-			if (mess != NULL && mess->what == kMsgFilter) {
-				QString itemFilter = QString::fromUtf8(mess->FindString("filter"));
-				if (itemFilter == filter)
-					d->m_typeMenu->ItemAt(index)->SetMarked(true);
+		if (filter.isEmpty()) {
+			d->m_typeMenu->ItemAt(0)->SetMarked(true);
+		} else {
+			for (int32 index = 0; index < d->m_typeMenu->CountItems(); index++) {
+				BMessage *mess = d->m_typeMenu->ItemAt(index)->Message();
+				if (mess != NULL && mess->what == kMsgFilter) {
+					QString itemFilter = QString::fromUtf8(mess->FindString("filter"));
+					if (itemFilter == filter)
+						d->m_typeMenu->ItemAt(index)->SetMarked(true);
+				}
 			}
 		}
 	}
