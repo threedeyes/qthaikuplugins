@@ -342,8 +342,10 @@ void QHaikuFileDialogHelper::createFilePanel(file_panel_mode mode, uint32 flavor
 						dialogOptions->fileMode() == QFileDialogOptions::ExistingFiles, NULL,
 						directoryMode ? new DirectoryRefFilter() : NULL, true, false);
 	d->m_filePanel->SetTarget(BMessenger(d->m_panelLooper));
-	d->m_filePanel->Window()->SetTitle(options()->windowTitle().toUtf8().data());
 	d->m_filePanel->SetPanelDirectory(options()->initialDirectory().path().toUtf8().data());
+
+	if (!options()->windowTitle().isEmpty())
+		d->m_filePanel->Window()->SetTitle(options()->windowTitle().toUtf8().data());
 
 	bool allFilesOnly = false;
 	if (options()->nameFilters().count() == 1) {
@@ -429,8 +431,21 @@ bool QHaikuFileDialogHelper::show(Qt::WindowFlags windowFlags, Qt::WindowModalit
 	    {
 			createFilePanel(B_SAVE_PANEL);
 			d->m_filePanel->SetSaveText(d->m_saveFileName.toUtf8().data());
+
+			BView* textControl = dynamic_cast<BView*>(d->m_filePanel->Window()->ChildAt(0)->FindView("text view"));
+			BView* buttonControl = dynamic_cast<BView*>(d->m_filePanel->Window()->ChildAt(0)->FindView("cancel button"));
+
+			if (textControl != NULL && buttonControl != NULL) {
+				textControl->Window()->LockLooper();
+				float shift = (buttonControl->Frame().left - textControl->Frame().right) - textControl->Frame().left;
+				textControl->ResizeBy(shift, 0);
+				textControl->SetResizingMode(B_FOLLOW_LEFT_RIGHT | B_FOLLOW_BOTTOM);
+				textControl->Window()->UnlockLooper();
+			}
+
 			d->m_filePanel->Show();
 			d->m_filePanel->Refresh();
+
 			d->shown = true;
 			break;
 		}
@@ -461,6 +476,10 @@ void QHaikuFileDialogHelper::hide()
 	d->m_panelLooper->Quit();
 
     d->shown = false;
+
+	d->m_fileRefFilter = NULL;
+	d->m_filePanel = NULL;
+	d->m_typeMenu = NULL;
 }
 
 QUrl QHaikuFileDialogHelper::directory() const
