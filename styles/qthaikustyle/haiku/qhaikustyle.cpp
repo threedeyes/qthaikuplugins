@@ -2077,6 +2077,65 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
 		break;
 	case CE_MenuEmptyArea:
 		break;
+	case CE_ToolButtonLabel:
+		if (const QStyleOptionToolButton *button = qstyleoption_cast<const QStyleOptionToolButton *>(option)) {
+			QRect ir = button->rect;
+			uint tf = Qt::AlignVCenter;
+			if (styleHint(SH_UnderlineShortcut, button, widget))
+				tf |= Qt::TextShowMnemonic;
+			else
+			   tf |= Qt::TextHideMnemonic;
+
+			bool isDown = (option->state & State_Sunken) || (option->state & State_On);
+
+			if (!button->icon.isNull()) {
+				//Center both icon and text
+				QPoint point;
+
+				QIcon::Mode mode = button->state & State_Enabled ? QIcon::Normal
+															  : QIcon::Disabled;
+				if (mode == QIcon::Normal && button->state & State_HasFocus)
+					mode = QIcon::Active;
+				QIcon::State state = QIcon::Off;
+				if (button->state & State_On)
+					state = QIcon::On;
+
+				QPixmap pixmap = button->icon.pixmap(button->iconSize, mode, state);
+				int w = pixmap.width();
+				int h = pixmap.height();
+
+				if (!button->text.isEmpty())
+					w += button->fontMetrics.boundingRect(option->rect, tf, button->text).width() + 2;
+
+				point = QPoint(ir.x() + ir.width() / 2 - w / 2,
+							   ir.y() + ir.height() / 2 - h / 2);
+
+				if (button->direction == Qt::RightToLeft)
+					point.rx() += pixmap.width();
+
+				painter->drawPixmap(visualPos(button->direction, button->rect, point), pixmap);
+
+				if (button->direction == Qt::RightToLeft)
+					ir.translate(-point.x() - 2, 0);
+				else
+					ir.translate(point.x() + pixmap.width() + 2, 0);
+
+				// left-align text if there is
+				if (!button->text.isEmpty())
+					tf |= Qt::AlignLeft;
+
+			} else {
+				tf |= Qt::AlignHCenter;
+			}
+
+			if (button->features & QStyleOptionButton::HasMenu)
+				ir = ir.adjusted(0, 0, -proxy()->pixelMetric(PM_MenuButtonIndicator, button, widget), 0);
+			if (isDown)
+				ir.adjust(1, 1, 1, 1);
+			proxy()->drawItemText(painter, ir, tf, button->palette, (button->state & State_Enabled),
+						 button->text, QPalette::ButtonText);
+		}
+		break;
 	case CE_PushButtonLabel:
 		if (const QStyleOptionButton *button = qstyleoption_cast<const QStyleOptionButton *>(option)) {
 			QRect ir = button->rect;
