@@ -3212,7 +3212,7 @@ QSize QHaikuStyle::sizeFromContents(ContentsType type, const QStyleOption *optio
             newSize = QCommonStyle::sizeFromContents(type, option, size, widget);
             if (!btn->text.isEmpty()) {
 				newSize.setWidth(qMax(80, newSize.width()));
-				newSize += QSize(0, 6);
+				newSize += QSize(6, 6);
             }
         }
         break;
@@ -3238,8 +3238,7 @@ QSize QHaikuStyle::sizeFromContents(ContentsType type, const QStyleOption *optio
 		newSize += QSize(1, 1);
 		break;
 	case CT_ToolButton:
-		if (widget && qobject_cast<QToolBar *>(widget->parentWidget()))
-			newSize += QSize(4, 6);
+		newSize += QSize(6, 6);
 		break;
 	case CT_Slider:
 		if (const QStyleOptionSlider *slider = qstyleoption_cast<const QStyleOptionSlider *>(option)) {
