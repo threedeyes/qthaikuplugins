@@ -2079,7 +2079,8 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
 		break;
 	case CE_ToolButtonLabel:
 		if (const QStyleOptionToolButton *toolbutton = qstyleoption_cast<const QStyleOptionToolButton *>(option)) {
-			if (toolbutton->toolButtonStyle == Qt::ToolButtonTextUnderIcon) {
+			if (toolbutton->toolButtonStyle == Qt::ToolButtonTextUnderIcon ||
+					toolbutton->toolButtonStyle == Qt::ToolButtonIconOnly) {
 				QCommonStyle::drawControl(element,option,painter,widget);
 				break;
 			}
