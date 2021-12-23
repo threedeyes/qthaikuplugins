@@ -1616,6 +1616,40 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
 			painter->restore();
 		}
 		break;
+    case CE_HeaderLabel:
+        if (const QStyleOptionHeader *header = qstyleoption_cast<const QStyleOptionHeader *>(option)) {
+            const int margin = proxy()->pixelMetric(QStyle::PM_HeaderMargin, option, widget);
+            const int shift = margin * 2;
+			QRect rect = (header->direction == Qt::LeftToRight) ? header->rect.adjusted(margin + shift, 0, -margin, -margin) : header->rect.adjusted(-margin, margin + shift, 0, -margin);
+            if (!header->icon.isNull()) {
+                int iconExtent = proxy()->pixelMetric(PM_SmallIconSize, option);
+                QPixmap pixmap
+                    = header->icon.pixmap(qt_getWindow(widget), QSize(iconExtent, iconExtent), (header->state & State_Enabled) ? QIcon::Normal : QIcon::Disabled);
+                int pixw = pixmap.width() / pixmap.devicePixelRatio();
+
+                QRect aligned = alignedRect(header->direction, QFlag(header->iconAlignment), pixmap.size() / pixmap.devicePixelRatio(), rect);
+                QRect inter = aligned.intersected(rect);
+                painter->drawPixmap(inter.x(), inter.y(), pixmap,
+                              inter.x() - aligned.x(), inter.y() - aligned.y(),
+                              aligned.width() * pixmap.devicePixelRatio(),
+                              pixmap.height() * pixmap.devicePixelRatio());
+
+                if (header->direction == Qt::LeftToRight)
+                    rect.setLeft(rect.left() + pixw + margin);
+                else
+                    rect.setRight(rect.right() - pixw - margin);
+            }
+
+            QFont fnt = painter->font();
+            fnt.setPointSize(fnt.pointSize() - 2);
+            if (header->state & QStyle::State_On)
+                fnt.setBold(true);
+            painter->setFont(fnt);
+
+            proxy()->drawItemText(painter, rect, header->textAlignment, header->palette,
+                         (header->state & State_Enabled), header->text, QPalette::ButtonText);
+        }
+        break;
 	case CE_HeaderSection:
 		painter->save();
 		if (const QStyleOptionHeader *header = qstyleoption_cast<const QStyleOptionHeader *>(option)) {
@@ -3251,7 +3285,7 @@ int QHaikuStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, con
 	case PM_ExclusiveIndicatorHeight:
 		return 17;
 	case PM_HeaderMargin:
-		return 1;
+		return 2;
 	case PM_TabBarTabOverlap:
 		return 16;
 //    case PM_TabBarBaseOverlap:
@@ -3382,6 +3416,24 @@ QSize QHaikuStyle::sizeFromContents(ContentsType type, const QStyleOption *optio
 			newSize.setWidth(qMax(width, 100));
 		}
 		break;
+    case CT_HeaderSection:
+        if (const QStyleOptionHeader *hdr = qstyleoption_cast<const QStyleOptionHeader *>(option)) {
+            bool nullIcon = hdr->icon.isNull();
+            int margin = proxy()->pixelMetric(QStyle::PM_HeaderMargin, hdr, widget);
+            int iconSize = nullIcon ? 0 : proxy()->pixelMetric(QStyle::PM_SmallIconSize, hdr, widget);
+            QSize txt = hdr->fontMetrics.size(0, hdr->text);
+            newSize.setHeight(margin + qMax(iconSize, txt.height()));
+            newSize.setWidth((nullIcon ? 0 : margin) + iconSize
+                        + (hdr->text.isNull() ? 0 : margin) + txt.width() + margin);
+            if (hdr->sortIndicator != QStyleOptionHeader::None) {
+                int margin = proxy()->pixelMetric(QStyle::PM_HeaderMargin, hdr, widget);
+                if (hdr->orientation == Qt::Horizontal)
+                    newSize.rwidth() += newSize.height() + margin;
+                else
+                    newSize.rheight() += newSize.width() + margin;
+            }
+        }
+        break;
 	case CT_SizeGrip:
 		newSize = QSize(15, 15);
 		break;
