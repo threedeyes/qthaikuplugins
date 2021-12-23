@@ -3276,7 +3276,7 @@ QSize QHaikuStyle::sizeFromContents(ContentsType type, const QStyleOption *optio
             newSize = QCommonStyle::sizeFromContents(type, option, size, widget);
             if (!btn->text.isEmpty()) {
 				newSize.setWidth(qMax(80, newSize.width()));
-				newSize += QSize(6, 6);
+				newSize += QSize(5, 5);
             }
         }
         break;
