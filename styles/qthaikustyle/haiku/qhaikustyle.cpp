@@ -3172,7 +3172,7 @@ int QHaikuStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, con
 		ret = 5;
 		break;
 	case PM_SpinBoxFrameWidth:
-		ret = 2;
+		ret = 3;
 		break;
 	case PM_MenuBarItemSpacing:
 		ret = 0;
@@ -3669,7 +3669,7 @@ QRect QHaikuStyle::subControlRect(ComplexControl control, const QStyleOptionComp
 			if(option->rect.height()-(frameWidth*2) < 16)
 				frameWidth = -(16 - option->rect.height()) / 2;
 			QRect frame = spinbox->rect.adjusted(0, frameWidth, 0, -frameWidth);
-			QSize buttonSize = QSize(frame.height() * 0.6, frame.height() - 2);
+			QSize buttonSize = QSize(frame.height() * 0.55, frame.height() - 2);
 
 			switch (subControl) {
 			case SC_SpinBoxUp:
