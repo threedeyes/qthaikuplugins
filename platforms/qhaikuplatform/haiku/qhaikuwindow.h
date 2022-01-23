@@ -157,8 +157,6 @@ public:
 		return m_openGLBufferBitmap != NULL ? m_openGLBufferBitmap->Bits() : NULL;
 	}
 
-	QtHaikuWindow *m_window;
-	QHaikuWindow *m_parent;
 private:
 	void setFrameMarginsEnabled(bool enabled);
 	void setGeometryImpl(const QRect &rect);
@@ -178,6 +176,9 @@ private:
 	bool m_positionIncludesFrame;
 	bool m_visible;
 	bool m_pendingGeometryChangeOnShow;
+
+	QtHaikuWindow *m_window;
+	QHaikuWindow *m_parent;
 
 	BBitmap *m_openGLBufferBitmap;
 private Q_SLOTS:

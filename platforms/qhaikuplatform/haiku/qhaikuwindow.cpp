@@ -291,13 +291,6 @@ bool QtHaikuWindow::QuitRequested()
 
 QHaikuWindow::QHaikuWindow(QWindow *wnd)
     : QPlatformWindow(wnd)
-    , m_window(new QtHaikuWindow(this, BRect(wnd->geometry().left(),
-					wnd->geometry().top(),
-					wnd->geometry().right(),
-					wnd->geometry().bottom()),
-					wnd->title().toUtf8().constData(),
-					B_NO_BORDER_WINDOW_LOOK, B_NORMAL_WINDOW_FEEL, 0))
-    , m_parent(0)
     , m_systemMoveResizeEnabled(false)
     , m_systemResizeEdges(Qt::Edges())
     , m_systemMoveWindowPoint(QPoint(0, 0))
@@ -305,8 +298,17 @@ QHaikuWindow::QHaikuWindow(QWindow *wnd)
     , m_positionIncludesFrame(false)
     , m_visible(false)
     , m_pendingGeometryChangeOnShow(true)
+    , m_window(NULL)
+    , m_parent(NULL)
     , m_openGLBufferBitmap(NULL)
 {
+	m_window = new QtHaikuWindow(this, BRect(wnd->geometry().left(),
+		wnd->geometry().top(),
+		wnd->geometry().right(),
+		wnd->geometry().bottom()),
+		wnd->title().toUtf8().constData(),
+		B_NO_BORDER_WINDOW_LOOK, B_NORMAL_WINDOW_FEEL, 0);
+
 	connect(m_window, SIGNAL(quitRequested()), SLOT(platformWindowQuitRequested()));
     connect(m_window, SIGNAL(windowMoved(QPoint)), SLOT(platformWindowMoved(QPoint)));
 	connect(m_window, SIGNAL(windowResized(QSize)), SLOT(platformWindowResized(QSize)));
