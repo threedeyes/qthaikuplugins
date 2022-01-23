@@ -97,17 +97,14 @@ QHaikuIntegration::~QHaikuIntegration()
 
 bool QHaikuIntegration::isOpenGLEnabled()
 {
-#ifdef __x86_64
 	app_info appInfo;
 	if (be_app->GetAppInfo(&appInfo) == B_OK) {
-		QStringList whiteListApps;
-		whiteListApps 	<< "application/x-vnd.otter-browser" \
-					<< "application/x-vnd.dooble" \
-					<< "application/x-vnd.qutebrowser";
-		return whiteListApps.contains(appInfo.signature, Qt::CaseInsensitive);
+		QStringList disabledListApps;
+		disabledListApps << "application/x-vnd.falkon" \
+					<< "application/x-vnd.openshot" ;
+		return !disabledListApps.contains(appInfo.signature, Qt::CaseInsensitive);
 	}
-#endif
-	return false;
+	return true;
 }
 
 QHaikuIntegration *QHaikuIntegration::createHaikuIntegration(const QStringList& parameters, int &argc, char **argv)
