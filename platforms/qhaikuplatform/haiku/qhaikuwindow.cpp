@@ -586,22 +586,22 @@ QHaikuScreen *QHaikuWindow::platformScreen() const
 
 void QHaikuWindow::setVisible(bool visible)
 {
-	if (window()->parent())
-		return;
 	if (visible == m_visible)
 		return;
 
 	if (visible) {
-		if (window()->type() == Qt::Popup) {
-			m_window->SetWorkspaces(B_CURRENT_WORKSPACE);
-			if (m_window->IsHidden())
-				m_window->Show();
-			m_window->Activate(true);
-		} else {
-			if (m_window->IsHidden())
-				m_window->Show();
-			if (window()->isModal() && window()->type() == Qt::Dialog)
-				m_window->SetFeel(B_MODAL_APP_WINDOW_FEEL);
+		if (!window()->parent()) {
+			if (window()->type() == Qt::Popup) {
+				m_window->SetWorkspaces(B_CURRENT_WORKSPACE);
+				if (m_window->IsHidden())
+					m_window->Show();
+				m_window->Activate(true);
+			} else {
+				if (m_window->IsHidden())
+					m_window->Show();
+				if (window()->isModal() && window()->type() == Qt::Dialog)
+					m_window->SetFeel(B_MODAL_APP_WINDOW_FEEL);
+			}
 		}
 
 		if (window()->type() == Qt::SplashScreen)
@@ -619,7 +619,7 @@ void QHaikuWindow::setVisible(bool visible)
 		QWindowSystemInterface::handleExposeEvent(window(), rect);
 	} else {
 		setWindowFlags(window()->flags());
-		if (!m_window->IsHidden())
+		if (!m_window->IsHidden() && !window()->parent())
 			m_window->Hide();
 		QWindowSystemInterface::handleExposeEvent(window(), QRegion());
 	}
