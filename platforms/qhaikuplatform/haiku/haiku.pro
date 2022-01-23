@@ -17,41 +17,42 @@ QMAKE_USE_PRIVATE += freetype
 
 INCLUDEPATH += ../../../3rdparty/simplecrypt/
 
-SOURCES =   main.cpp \
-            qhaikuintegration.cpp \
-            qhaikuapplication.cpp \
-            qhaikuglcontext.cpp \
-            qhaikuwindow.cpp \
-            qhaikubackingstore.cpp \
-            qhaikutheme.cpp \
-            qhaikusystemtrayicon.cpp \
-            qhaikuclipboard.cpp \
-            qhaikuoffscreensurface.cpp \
-            qhaikuplatformdialoghelpers.cpp \
-            qhaikuplatformfontdatabase.cpp \
-            qhaikusystemlocale.cpp \
-            qhaikuview.cpp \
-            qhaikuscreen.cpp \
-            qhaikuservices.cpp \
-            qhaikucursor.cpp \
-            qhaikunativeinterface.cpp \
-            ../../../3rdparty/simplecrypt/simplecrypt.cpp
+SOURCES =	main.cpp \
+			qhaikuapplication.cpp \
+			qhaikubackingstore.cpp \
+			qhaikuclipboard.cpp \
+			qhaikucursor.cpp \
+			qhaikuglcontext.cpp \
+			qhaikuintegration.cpp \
+			qhaikunativeinterface.cpp \
+			qhaikuoffscreensurface.cpp \
+			qhaikuplatformdialoghelpers.cpp \
+			qhaikuplatformfontdatabase.cpp \
+			qhaikuscreen.cpp \
+			qhaikuservices.cpp \
+			qhaikusystemlocale.cpp \
+			qhaikusystemtrayicon.cpp \
+			qhaikutheme.cpp \
+			qhaikuview.cpp \
+			qhaikuwindow.cpp \
+			../../../3rdparty/simplecrypt/simplecrypt.cpp
 
-HEADERS =   qhaikuintegration.h \
-			qhaikuapplication.h \
+HEADERS =	qhaikuapplication.h \
+			qhaikubackingstore.h \
+			qhaikuclipboard.h \
+			qhaikucursor.h \
 			qhaikuglcontext.h \
-            qhaikuwindow.h \
-            qhaikubackingstore.h \
-            qhaikutheme.h \
-            qhaikusystemtrayicon.h \
-            qhaikuclipboard.h \
+			qhaikuintegration.h \
+			qhaikunativeinterface.h \
 			qhaikuoffscreensurface.h \
-            qhaikuplatformdialoghelpers.h \
-            qhaikusystemlocale.h \
-            qhaikuview.h \
-            qhaikuscreen.h \
-            qhaikuservices.h \
-            qhaikucursor.h \
-            qhaikunativeinterface.h
+			qhaikuplatformdialoghelpers.h \
+			qhaikuplatformfontdatabase.h \
+			qhaikuscreen.h \
+			qhaikuservices.h \
+			qhaikusystemlocale.h \
+			qhaikusystemtrayicon.h \
+			qhaikutheme.h \
+			qhaikuview.h \
+			qhaikuwindow.h
 
 OTHER_FILES += haiku.json
