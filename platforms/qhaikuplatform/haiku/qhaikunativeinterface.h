@@ -53,10 +53,7 @@ public:
     void *nativeResourceForWindow(const QByteArray &resource, QWindow *window) override;
     void *nativeResourceForScreen(const QByteArray &resource, QScreen *screen) override;
     void *nativeResourceForIntegration(const QByteArray &resource) override;
-
-#if !defined(QT_NO_OPENGL)
     void *nativeResourceForContext(const QByteArray &resource, QOpenGLContext *context) override;
-#endif
 
     void setWindowProperty(QPlatformWindow *window, const QString &name, const QVariant &value) override;
     NativeResourceForIntegrationFunction nativeResourceFunctionForIntegration(const QByteArray &resource) override;

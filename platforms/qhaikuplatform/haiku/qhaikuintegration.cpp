@@ -54,9 +54,7 @@
 
 #include "qhaikuintegration.h"
 
-#if !defined(QT_NO_OPENGL)
 #include <GLView.h>
-#endif
 
 QT_BEGIN_INCLUDE_NAMESPACE
 extern char **environ;
@@ -330,14 +328,12 @@ QPlatformBackingStore *QHaikuIntegration::createPlatformBackingStore(QWindow *wi
     return new QHaikuBackingStore(window);
 }
 
-#if !defined(QT_NO_OPENGL)
 QPlatformOpenGLContext *QHaikuIntegration::createPlatformOpenGLContext(QOpenGLContext *context) const
 {
 	if (m_openGlEnabled)
 		return new QHaikuGLContext(context);
 	return nullptr;
 }
-#endif
 
 QAbstractEventDispatcher *QHaikuIntegration::createEventDispatcher() const
 {

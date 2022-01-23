@@ -43,9 +43,7 @@
 #include "qhaikuwindow.h"
 #include "qhaikuintegration.h"
 
-#if !defined(QT_NO_OPENGL)
 #include <QtGui/QOpenGLContext>
-#endif
 
 #include <QtGui/QScreen>
 #include <QtGui/QWindow>
@@ -78,14 +76,12 @@ void *QHaikuNativeInterface::nativeResourceForIntegration(const QByteArray &reso
     return 0;
 }
 
-#if !defined(QT_NO_OPENGL)
 void *QHaikuNativeInterface::nativeResourceForContext(const QByteArray &resource, QOpenGLContext *context)
 {
 	Q_UNUSED(resource)
 	Q_UNUSED(context)
     return 0;
 }
-#endif
 
 void QHaikuNativeInterface::setWindowProperty(QPlatformWindow *window, const QString &name, const QVariant &value)
 {

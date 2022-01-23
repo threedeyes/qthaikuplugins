@@ -54,9 +54,7 @@
 #include <Deskbar.h>
 #include <Roster.h>
 
-#if !defined(QT_NO_OPENGL)
 #include <GLView.h>
-#endif
 
 #include <qhash.h>
 
@@ -95,9 +93,7 @@ public:
 	QHaikuSurfaceView *View(void);
 
 	QHaikuSurfaceView *fView;
-#if !defined(QT_NO_OPENGL)
 	BGLView *fGLView;
-#endif
 	QHaikuWindow *fQWindow;
 Q_SIGNALS:
     void windowMoved(const QPoint &pos);

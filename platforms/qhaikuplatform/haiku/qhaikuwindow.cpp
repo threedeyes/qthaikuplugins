@@ -133,9 +133,7 @@ QtHaikuWindow::QtHaikuWindow(QHaikuWindow *qwindow,
 	fQWindow = qwindow;
 	fView = new QHaikuSurfaceView(Bounds());
 	fView->SetEventMask(0, B_NO_POINTER_HISTORY);
-#if !defined(QT_NO_OPENGL)
 	fGLView = NULL;
-#endif
  	AddChild(fView);
  	Qt::WindowType type =  static_cast<Qt::WindowType>(int(qwindow->window()->flags() & Qt::WindowType_Mask));
 	bool dialog = ((type == Qt::Dialog) || (type == Qt::Sheet) || (type == Qt::MSWindowsFixedSizeDialogHint));

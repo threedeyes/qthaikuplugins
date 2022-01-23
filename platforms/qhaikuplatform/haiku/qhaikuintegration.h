@@ -77,9 +77,7 @@ public:
 
     QPlatformWindow *createPlatformWindow(QWindow *window) const;
     QPlatformBackingStore *createPlatformBackingStore(QWindow *window) const;
-#if !defined(QT_NO_OPENGL)    
     QPlatformOpenGLContext *createPlatformOpenGLContext(QOpenGLContext *context) const;
-#endif    
     
     QPlatformClipboard *clipboard() const;
 
