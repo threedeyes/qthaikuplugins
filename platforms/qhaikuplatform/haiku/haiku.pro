@@ -8,7 +8,7 @@ QT += \
 	eventdispatcher_support-private fontdatabase_support-private \
 	theme_support-private
 
-LIBS += -lbe -lroot -ltracker -lgame
+LIBS += -lbe -lroot -ltracker -lgame -lOSMesa -lGL -lGLU
 
 CONFIG += link_pkgconfig
 PKGCONFIG += freetype2
