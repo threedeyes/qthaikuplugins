@@ -74,10 +74,14 @@ public:
     QHaikuBackingStore(QWindow *window);
     ~QHaikuBackingStore();
 
-    QPaintDevice *paintDevice();
-    void flush(QWindow *window, const QRegion &region, const QPoint &offset);
+    QPaintDevice *paintDevice() override;
+    void flush(QWindow *window, const QRegion &region, const QPoint &offset) override;
     void resize(const QSize &size, const QRegion &staticContents);
-    bool scroll(const QRegion &area, int dx, int dy);
+    bool scroll(const QRegion &area, int dx, int dy) override;
+    void composeAndFlush(QWindow *window, const QRegion &region, const QPoint &offset,
+                                       QPlatformTextureList *textures,
+                                       bool translucentBackground) override;
+	QImage toImage() const override { return m_image; }
 
     QPixmap grabWindow(WId window, const QRect &rect) const;
 

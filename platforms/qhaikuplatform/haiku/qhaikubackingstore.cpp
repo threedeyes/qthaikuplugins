@@ -97,7 +97,7 @@ void QHaikuBackingStore::flush(QWindow *window, const QRegion &region, const QPo
 
     QRect outline = region.boundingRect();
 
-	if(view->LockLooper()) {
+	if (view->LockLooperWithTimeout(1000) == B_OK) {
 		view->SetDrawingMode(B_OP_COPY);
 
 		BRect rect(outline.left(), outline.top(), outline.right(), outline.bottom());
@@ -108,6 +108,14 @@ void QHaikuBackingStore::flush(QWindow *window, const QRegion &region, const QPo
     }
     m_windowAreaHash[id] = bounds;
     m_backingStoreForWinIdHash[id] = this;
+}
+
+
+void QHaikuBackingStore::composeAndFlush(QWindow *window, const QRegion &region, const QPoint &offset,
+                                       QPlatformTextureList *textures,
+                                       bool translucentBackground)
+{
+    QPlatformBackingStore::composeAndFlush(window, region, offset, textures, translucentBackground);
 }
 
 

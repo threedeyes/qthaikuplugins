@@ -102,16 +102,19 @@ QHaikuGLContext::QHaikuGLContext(QOpenGLContext *context)
 	qCWarning(lcQpaOpenGLContext).verbosity(3) << "Created" << this << "based on requested" << context->format();
 }
 
+
 QHaikuGLContext::~QHaikuGLContext()
 {
 	if (m_mesaContext)
 		OSMesaDestroyContext(m_mesaContext);
 }
 
+
 QFunctionPointer QHaikuGLContext::getProcAddress(const char *procName)
 {
 	return (QFunctionPointer)OSMesaGetProcAddress(procName);
 }
+
 
 bool QHaikuGLContext::makeCurrent(QPlatformSurface *surface)
 {
@@ -146,10 +149,12 @@ bool QHaikuGLContext::makeCurrent(QPlatformSurface *surface)
 	return true;
 }
 
+
 void QHaikuGLContext::doneCurrent()
 {
 	OSMesaMakeCurrent(NULL, NULL, GL_UNSIGNED_BYTE, 0, 0);
 }
+
 
 void QHaikuGLContext::swapBuffers(QPlatformSurface *surface)
 {
@@ -161,19 +166,32 @@ void QHaikuGLContext::swapBuffers(QPlatformSurface *surface)
 	QHaikuWindow *window = dynamic_cast<QHaikuWindow *>(surface);
 	if (window == NULL)
 		return;
-	
-//	glFinish();
+
+	glFinish();
+
+	QHaikuSurfaceView *view = QHaikuWindow::viewForWinId(window->window()->winId());
+
+	if (window->openGLBitmap() != NULL) {
+		if (view->LockLooperWithTimeout(10000) == B_OK) {
+			view->SetDrawingMode(B_OP_COPY);
+			view->DrawBitmap(window->openGLBitmap());
+			view->UnlockLooper();
+	    }
+	}
 }
+
 
 QSurfaceFormat QHaikuGLContext::format() const
 {
     return d_format;
 }
 
+
 bool QHaikuGLContext::isSharing() const
 {
     return m_shareContext != NULL;
 }
+
 
 bool QHaikuGLContext::isValid() const
 {
