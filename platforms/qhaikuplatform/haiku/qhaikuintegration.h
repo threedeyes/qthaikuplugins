@@ -45,12 +45,10 @@
 #include <qpa/qplatformopenglcontext.h>
 #include <qscopedpointer.h>
 
-//OpenGL support disabled for now
-//#define QT_NO_OPENGL
-
 #include "qhaikuapplication.h"
 #include "qhaikuwindow.h"
 #include "qhaikubackingstore.h"
+#include "qhaikuglcontext.h"
 #include "qhaikuscreen.h"
 #include "qhaikutheme.h"
 #include "qhaikuclipboard.h"
@@ -58,10 +56,6 @@
 #include "qhaikuplatformfontdatabase.h"
 #include "qhaikusystemlocale.h"
 #include "qhaikunativeinterface.h"
-
-#if !defined(QT_NO_OPENGL)
-#include <GLView.h>
-#endif
 
 extern status_t get_subpixel_antialiasing(bool* subpix);
 extern status_t get_hinting_mode(uint8* hinting);
@@ -71,27 +65,6 @@ QT_BEGIN_NAMESPACE
 class QSimpleDrag;
 class QHaikuBackendData;
 class QHaikuSystemLocale;
-
-#if !defined(QT_NO_OPENGL)
-class QHaikuGLContext : public QPlatformOpenGLContext
-{
-public:
-    QHaikuGLContext(QOpenGLContext *context);
-    ~QHaikuGLContext();
-
-    bool makeCurrent(QPlatformSurface *surface) override;
-    void doneCurrent() override;
-    void swapBuffers(QPlatformSurface *surface) override;
-    QFunctionPointer getProcAddress(const char *procName) override;
-
-    QSurfaceFormat format() const override;
-    bool isSharing() const override;
-    bool isValid() const override;
-private:
-	QSurfaceFormat d_format;
-	BGLView *glview;
-};
-#endif
 
 class QHaikuIntegration : public QObject, public QPlatformIntegration
 {
