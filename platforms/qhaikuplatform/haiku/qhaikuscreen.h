@@ -1,7 +1,7 @@
 /****************************************************************************
 **
 ** Copyright (C) 2017 The Qt Company Ltd.
-** Copyright (C) 2015-2017 Gerasim Troeglazov,
+** Copyright (C) 2015-2022 Gerasim Troeglazov,
 ** Contact: 3dEyes@gmail.com
 **
 ** This file is part of the plugins of the Qt Toolkit.
@@ -38,52 +38,51 @@
 **
 ****************************************************************************/
 
-#ifndef QHAIKUTHEME_H
-#define QHAIKUTHEME_H
+#ifndef QHAIKUSCREEN_H
+#define QHAIKUSCREEN_H
 
-#include <qpa/qplatformtheme.h>
-#include <qpa/qplatformfontdatabase.h>
+#include "qhaikucursor.h"
 
-#include <QtGui/qfont.h>
-#include <QtCore/qhash.h>
-#include <QtCore/qstring.h>
-#include <QtGui/QColor>
-#include <QtGui/QPalette>
+#include <qpa/qplatformintegration.h>
+#include <qpa/qplatformscreen.h>
+#include <qpa/qplatformwindow.h>
+
+#include <qscopedpointer.h>
+#include <qimage.h>
+#include <qbitmap.h>
+
+#include <Screen.h>
+#include <View.h>
+#include <Bitmap.h>
 
 QT_BEGIN_NAMESPACE
 
-class QHaikuIntegration;
-
-class QHaikuTheme : public QPlatformTheme
+class QHaikuScreen : public QPlatformScreen
 {
 public:
-    explicit QHaikuTheme(const QHaikuIntegration *);
-    ~QHaikuTheme();
+    QHaikuScreen();
+    ~QHaikuScreen();
 
-    static QString name() { return QStringLiteral("haiku"); }
+    QRect geometry() const;
+    int depth() const { return 32; }
+    QImage::Format format() const { return QImage::Format_RGB32; }
+	QPlatformCursor *cursor() const;
+	
+    QPixmap grabWindow(WId window, int x, int y, int width, int height) const;
 
-    bool usePlatformNativeDialog(DialogType type) const;
-    QPlatformDialogHelper *createPlatformDialogHelper(DialogType type) const;
-    
-    virtual QVariant themeHint(ThemeHint hint) const;
+    QPlatformScreen::SubpixelAntialiasingType subpixelAntialiasingTypeHint() const;
 
-    const QFont *font(Font type = SystemFont) const;
-
-    const QPalette *palette(Palette type = SystemPalette) const;
-
-    virtual QPixmap standardPixmap(StandardPixmap sp, const QSizeF &size) const;
-    virtual QIcon fileIcon(const QFileInfo &fileInfo, QPlatformTheme::IconOptions iconOptions = { }) const;
-
-#ifndef QT_NO_SYSTEMTRAYICON
-    QPlatformSystemTrayIcon *createPlatformSystemTrayIcon() const;
-#endif
+    QSizeF physicalSize() const override;
+    QDpi logicalDpi() const override;
+    qreal pixelDensity() const override;
+    Qt::ScreenOrientation nativeOrientation() const override;
+    Qt::ScreenOrientation orientation() const override;
 
 private:
-    mutable QHash<QPlatformTheme::Font, QFont*> m_fonts;
-    const QHaikuIntegration *m_integration;
-    QPalette m_defaultPalette;
+    QHaikuCursor *m_cursor;
+    BScreen *m_screen;
 };
 
 QT_END_NAMESPACE
 
-#endif // QHAIKUTHEME_H
+#endif // QHAIKUSCREEN_H

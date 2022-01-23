@@ -46,7 +46,6 @@
 #include <qpa/qplatformbackingstore.h>
 #include <qpa/qplatformdrag.h>
 #include <qpa/qplatformintegration.h>
-#include <qpa/qplatformscreen.h>
 #include <qpa/qplatformwindow.h>
 
 #include <qscopedpointer.h>
@@ -55,7 +54,6 @@
 #include <qpainter.h>
 #include <qhash.h>
 
-#include <Screen.h>
 #include <View.h>
 #include <Bitmap.h>
 
@@ -63,40 +61,12 @@ extern void qt_scrollRectInImage(QImage &img, const QRect &rect, const QPoint &o
 
 QT_BEGIN_NAMESPACE
 
-class QHaikuScreen : public QPlatformScreen
-{
-public:
-    QHaikuScreen();
-    ~QHaikuScreen();
-
-    QRect geometry() const;
-    int depth() const { return 32; }
-    QImage::Format format() const { return QImage::Format_RGB32; }
-	QPlatformCursor *cursor() const;
-	
-    QPixmap grabWindow(WId window, int x, int y, int width, int height) const;
-
-    QPlatformScreen::SubpixelAntialiasingType subpixelAntialiasingTypeHint() const;
-
-    QSizeF physicalSize() const override;
-    QDpi logicalDpi() const override;
-    qreal pixelDensity() const override;
-    Qt::ScreenOrientation nativeOrientation() const override;
-    Qt::ScreenOrientation orientation() const override;
-
-private:
-    QHaikuCursor *m_cursor;
-    BScreen *m_screen;
-};
-
-//#ifndef QT_NO_DRAGANDDROP
 class QHaikuDrag : public QPlatformDrag
 {
 public:
     QMimeData *platformDropData() { return 0; }
     Qt::DropAction drag(QDrag *) { return Qt::IgnoreAction; }
 };
-//#endif
 
 class QHaikuBackingStore : public QPlatformBackingStore
 {
@@ -126,4 +96,4 @@ private:
 
 QT_END_NAMESPACE
 
-#endif
+#endif // QHAIKUCOMMON_H

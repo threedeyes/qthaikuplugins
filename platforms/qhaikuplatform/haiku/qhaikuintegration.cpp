@@ -53,14 +53,6 @@
 #include <qpa/qplatformopenglcontext.h>
 
 #include "qhaikuintegration.h"
-#include "qhaikuapplication.h"
-#include "qhaikuwindow.h"
-#include "qhaikucommon.h"
-#include "qhaikutheme.h"
-#include "qhaikuclipboard.h"
-#include "qhaikuservices.h"
-#include "qhaikuplatformfontdatabase.h"
-#include "qhaikusystemlocale.h"
 
 #if !defined(QT_NO_OPENGL)
 #include <GLView.h>

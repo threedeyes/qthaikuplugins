@@ -43,6 +43,7 @@
 
 #include "qhaikuintegration.h"
 #include "qhaikusettings.h"
+#include "qhaikuclipboard.h"
 
 #include "simplecrypt.h"
 

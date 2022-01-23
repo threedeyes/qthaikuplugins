@@ -48,8 +48,15 @@
 //OpenGL support disabled for now
 //#define QT_NO_OPENGL
 
-#include "qhaikuclipboard.h"
+#include "qhaikuapplication.h"
+#include "qhaikuwindow.h"
 #include "qhaikucommon.h"
+#include "qhaikuscreen.h"
+#include "qhaikutheme.h"
+#include "qhaikuclipboard.h"
+#include "qhaikuservices.h"
+#include "qhaikuplatformfontdatabase.h"
+#include "qhaikusystemlocale.h"
 #include "qhaikunativeinterface.h"
 
 #if !defined(QT_NO_OPENGL)

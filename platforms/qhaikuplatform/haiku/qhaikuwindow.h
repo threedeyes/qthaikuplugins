@@ -61,6 +61,7 @@
 #include <qhash.h>
 
 #include "qhaikucommon.h"
+#include "qhaikuscreen.h"
 #include "qhaikuview.h"
 
 #define kQuitApplication	'QAPP'

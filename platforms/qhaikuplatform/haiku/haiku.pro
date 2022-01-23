@@ -29,6 +29,7 @@ SOURCES =   main.cpp \
             qhaikuplatformfontdatabase.cpp \
             qhaikusystemlocale.cpp \
             qhaikuview.cpp \
+            qhaikuscreen.cpp \
             qhaikuservices.cpp \
             qhaikucursor.cpp \
             qhaikunativeinterface.cpp \
@@ -44,6 +45,7 @@ HEADERS =   qhaikuintegration.h \
             qhaikuplatformdialoghelpers.h \
             qhaikusystemlocale.h \
             qhaikuview.h \
+            qhaikuscreen.h \
             qhaikuservices.h \
             qhaikucursor.h \
             qhaikunativeinterface.h
