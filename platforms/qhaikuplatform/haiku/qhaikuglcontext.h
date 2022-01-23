@@ -45,12 +45,32 @@
 #include "qhaikubackingstore.h"
 #include "qhaikuscreen.h"
 
+#include "GL/gl.h"
+#include "GL/glu.h"
+#include "GL/osmesa.h"
+
 #include <GLView.h>
 
 #ifndef QHAIKUGLCONTEXT_H
 #define QHAIKUGLCONTEXT_H
 
 QT_BEGIN_NAMESPACE
+
+struct QHaikuNativeGLContext
+{
+    QHaikuNativeGLContext()
+        : m_context(0)
+    { }
+
+    QHaikuNativeGLContext(OSMesaContext ctx)
+        : m_context(ctx)
+    { }
+
+    OSMesaContext context() const { return m_context; }
+
+private:
+    OSMesaContext m_context;
+};
 
 class QHaikuGLContext : public QPlatformOpenGLContext
 {
@@ -70,6 +90,8 @@ private:
 	QSurfaceFormat d_format;
 	BGLView *glview;
 };
+
+Q_DECLARE_METATYPE(QHaikuNativeGLContext)
 
 QT_END_NAMESPACE
 
