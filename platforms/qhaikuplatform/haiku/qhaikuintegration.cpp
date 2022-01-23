@@ -264,6 +264,9 @@ QHaikuIntegration *QHaikuIntegration::createHaikuIntegration(const QStringList& 
 	}
 	settings.endGroup();
 
+	setenv("MESA_GL_VERSION_OVERRIDE","4.6", 0);
+	setenv("MESA_GLSL_VERSION_OVERRIDE","460", 0);
+
     QHaikuIntegration *newHaikuIntegration = new QHaikuIntegration(parameters, argc, argv);
     connect(haikuApplication, SIGNAL(applicationQuit()), newHaikuIntegration, SLOT(platformAppQuit()), Qt::BlockingQueuedConnection);
 
