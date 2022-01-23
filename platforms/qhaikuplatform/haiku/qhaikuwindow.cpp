@@ -591,10 +591,12 @@ void QHaikuWindow::setVisible(bool visible)
 	if (visible) {
 		if (window()->type() == Qt::Popup) {
 			m_window->SetWorkspaces(B_CURRENT_WORKSPACE);
-			m_window->Show();
+			if (m_window->IsHidden())
+				m_window->Show();
 			m_window->Activate(true);
 		} else {
-			m_window->Show();
+			if (m_window->IsHidden())
+				m_window->Show();
 			if (window()->isModal() && window()->type() == Qt::Dialog)
 				m_window->SetFeel(B_MODAL_APP_WINDOW_FEEL);
 		}
@@ -614,7 +616,8 @@ void QHaikuWindow::setVisible(bool visible)
 		QWindowSystemInterface::handleExposeEvent(window(), rect);
 	} else {
 		setWindowFlags(window()->flags());
-		m_window->Hide();
+		if (!m_window->IsHidden())
+			m_window->Hide();
 		QWindowSystemInterface::handleExposeEvent(window(), QRegion());
 	}
 
