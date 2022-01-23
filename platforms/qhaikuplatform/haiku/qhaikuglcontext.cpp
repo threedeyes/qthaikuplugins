@@ -38,7 +38,7 @@
 **
 ****************************************************************************/
 
-#include <qhaikuglcontext.h>
+#include "qhaikuglcontext.h"
 
 QT_BEGIN_NAMESPACE
 
