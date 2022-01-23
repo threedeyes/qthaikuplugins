@@ -39,7 +39,7 @@
 
 #include "qhaikunativeinterface.h"
 
-#include "qhaikucommon.h"
+#include "qhaikubackingstore.h"
 #include "qhaikuwindow.h"
 #include "qhaikuintegration.h"
 

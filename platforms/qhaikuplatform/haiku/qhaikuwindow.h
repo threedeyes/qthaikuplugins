@@ -60,7 +60,7 @@
 
 #include <qhash.h>
 
-#include "qhaikucommon.h"
+#include "qhaikubackingstore.h"
 #include "qhaikuscreen.h"
 #include "qhaikuview.h"
 

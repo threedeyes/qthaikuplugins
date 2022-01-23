@@ -38,7 +38,6 @@
 **
 ****************************************************************************/
 
-#include "qhaikucommon.h"
 #include "qhaikuwindow.h"
 #include "qhaikucursor.h"
 #include "qhaikuintegration.h"

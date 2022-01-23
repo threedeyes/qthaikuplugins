@@ -39,7 +39,6 @@
 ****************************************************************************/
 
 #include "qhaikuwindow.h"
-#include "qhaikucommon.h"
 #include "qhaikukeymap.h"
 #include "qhaikusettings.h"
 

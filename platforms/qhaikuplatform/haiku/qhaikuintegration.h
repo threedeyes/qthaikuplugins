@@ -50,7 +50,7 @@
 
 #include "qhaikuapplication.h"
 #include "qhaikuwindow.h"
-#include "qhaikucommon.h"
+#include "qhaikubackingstore.h"
 #include "qhaikuscreen.h"
 #include "qhaikutheme.h"
 #include "qhaikuclipboard.h"

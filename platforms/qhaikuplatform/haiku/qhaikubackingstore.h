@@ -38,8 +38,8 @@
 **
 ****************************************************************************/
 
-#ifndef QHAIKUCOMMON_H
-#define QHAIKUCOMMON_H
+#ifndef QHAIKUBACKINGSTORE_H
+#define QHAIKUBACKINGSTORE_H
 
 #include "qhaikucursor.h"
 
@@ -96,4 +96,4 @@ private:
 
 QT_END_NAMESPACE
 
-#endif // QHAIKUCOMMON_H
+#endif // QHAIKUBACKINGSTORE_H
