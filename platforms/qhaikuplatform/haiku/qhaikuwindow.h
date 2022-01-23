@@ -150,6 +150,12 @@ public:
 
 	void raise();
 	void lower();
+	
+	bool allocateGLBuffer();
+	BBitmap *openGLBitmap() { return m_openGLBufferBitmap; }
+	void *openGLBuffer() {
+		return m_openGLBufferBitmap != NULL ? m_openGLBufferBitmap->Bits() : NULL;
+	}
 
 	QtHaikuWindow *m_window;
 	QHaikuWindow *m_parent;
@@ -172,6 +178,8 @@ private:
 	bool m_positionIncludesFrame;
 	bool m_visible;
 	bool m_pendingGeometryChangeOnShow;
+
+	BBitmap *m_openGLBufferBitmap;
 private Q_SLOTS:
 	void platformWindowQuitRequested();
 	void platformWindowMoved(const QPoint &pos);

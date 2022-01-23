@@ -305,6 +305,7 @@ QHaikuWindow::QHaikuWindow(QWindow *wnd)
     , m_positionIncludesFrame(false)
     , m_visible(false)
     , m_pendingGeometryChangeOnShow(true)
+    , m_openGLBufferBitmap(NULL)
 {
 	connect(m_window, SIGNAL(quitRequested()), SLOT(platformWindowQuitRequested()));
     connect(m_window, SIGNAL(windowMoved(QPoint)), SLOT(platformWindowMoved(QPoint)));
@@ -834,6 +835,21 @@ QHaikuWindow *QHaikuWindow::windowForWinId(WId id)
 	return NULL;
 }
 
+bool QHaikuWindow::allocateGLBuffer()
+{
+	if (m_openGLBufferBitmap != NULL) {
+		if (window()->size().width() != m_openGLBufferBitmap->Bounds().IntegerWidth() + 1 ||
+			window()->size().height() != m_openGLBufferBitmap->Bounds().IntegerHeight() + 1) {
+				delete m_openGLBufferBitmap;
+				m_openGLBufferBitmap = NULL;
+		}
+	}
+	if (m_openGLBufferBitmap == NULL) {
+		BRect rect(0, 0, window()->size().width() - 1, window()->size().height() - 1);
+		m_openGLBufferBitmap = new BBitmap(rect, B_RGB32);
+	}
+	return m_openGLBufferBitmap != NULL;
+}
 
 void QHaikuWindow::platformWindowQuitRequested()
 {

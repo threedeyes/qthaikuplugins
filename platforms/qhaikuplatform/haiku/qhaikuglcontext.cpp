@@ -42,63 +42,127 @@
 
 QT_BEGIN_NAMESPACE
 
+Q_LOGGING_CATEGORY(lcQpaOpenGLContext, "qt.qpa.openglcontext", QtWarningMsg);
+
 QHaikuGLContext::QHaikuGLContext(QOpenGLContext *context)
-	: QPlatformOpenGLContext()  
+	: QPlatformOpenGLContext()
+	, m_mesaContext(NULL)
+	, m_shareContext(NULL)
 {
+    QVariant nativeHandle = context->nativeHandle();
+
 	d_format = context->format();
+	d_format.setDepthBufferSize(16);
+	d_format.setStencilBufferSize(8);
+	d_format.setRedBufferSize(8);
+	d_format.setGreenBufferSize(8);
+	d_format.setBlueBufferSize(8);
+
+    if (!nativeHandle.isNull()) {
+        if (!nativeHandle.canConvert<QHaikuNativeGLContext>()) {
+            qWarning(lcQpaOpenGLContext, "QOpenGLContext native handle must be a QHaikuNativeContext");
+            return;
+        }
+        m_mesaContext = nativeHandle.value<QHaikuNativeGLContext>().context();
+        if (!m_mesaContext) {
+            qCWarning(lcQpaOpenGLContext, "QHaikuNativeContext's OSMesaContext cannot be null");
+            return;
+        }
+
+        if (QPlatformOpenGLContext *shareContext = context->shareHandle())
+            m_shareContext = static_cast<QHaikuGLContext *>(shareContext)->nativeContext();
+
+        return;
+    }
 
     if (d_format.renderableType() == QSurfaceFormat::DefaultRenderableType)
 		d_format.setRenderableType(QSurfaceFormat::OpenGL);
-
 	if (d_format.renderableType() != QSurfaceFormat::OpenGL)
 		return;
 
-	glview = new BGLView(BRect(0, 0, 1, 1), "bglview",
-		B_FOLLOW_ALL_SIDES, B_WILL_DRAW | B_FRAME_EVENTS, BGL_RGB | BGL_DOUBLE | BGL_DEPTH);
+	if (QPlatformOpenGLContext *shareHandle = context->shareHandle())
+		m_shareContext = static_cast<QHaikuGLContext *>(shareHandle)->m_mesaContext;
+
+	m_mesaContext = OSMesaCreateContextExt(OSMESA_BGRA, 16, 8, 0, m_shareContext);
+
+    if (!m_mesaContext && m_shareContext) {
+        qCWarning(lcQpaOpenGLContext, "Could not create OSMesaContext with shared context, "
+            "falling back to unshared context.");
+        m_mesaContext = OSMesaCreateContextExt(OSMESA_BGRA, 16, 8, 0, NULL);
+        m_shareContext = NULL;
+    }
+
+    if (!m_mesaContext) {
+        qCWarning(lcQpaOpenGLContext, "Failed to create OSMesaContext");
+        return;
+    }
+
+	context->setNativeHandle(QVariant::fromValue<QHaikuNativeGLContext>(m_mesaContext));
+
+	qCWarning(lcQpaOpenGLContext).verbosity(3) << "Created" << this << "based on requested" << context->format();
 }
 
 QHaikuGLContext::~QHaikuGLContext()
 {
+	if (m_mesaContext)
+		OSMesaDestroyContext(m_mesaContext);
 }
 
 QFunctionPointer QHaikuGLContext::getProcAddress(const char *procName)
 {
-	void *ptr = glview->GetGLProcAddress(procName);
-	return (QFunctionPointer)ptr;
+	return (QFunctionPointer)OSMesaGetProcAddress(procName);
 }
-
 
 bool QHaikuGLContext::makeCurrent(QPlatformSurface *surface)
 {
-	QSize size = surface->surface()->size();
-	QHaikuWindow *window = static_cast<QHaikuWindow *>(surface);
-	if (!window)
+	if (!surface->surface()->supportsOpenGL())
 		return false;
 
-	if (window->m_window->fGLView == NULL) {
-		window->m_window->fGLView = glview;
-		window->m_window->Lock();
-		window->m_window->AddChild(glview);
-		glview->LockGL();
-		glview->ResizeTo(size.width(),size.height());
-		window->m_window->Unlock();
+	QSurface::SurfaceClass surfaceClass = surface->surface()->surfaceClass();
+	QSize size = surface->surface()->size();
+
+	void *pixelBuffer = NULL;
+
+	if (surfaceClass == QSurface::Window) {
+		QHaikuWindow *window = dynamic_cast<QHaikuWindow *>(surface);
+		if (window->allocateGLBuffer())
+			pixelBuffer = window->openGLBuffer();
+	} else {
+		QHaikuOffscreenSurface *offscreenSurface = dynamic_cast<QHaikuOffscreenSurface *>(surface);
+		if (offscreenSurface->isValid())
+			pixelBuffer = offscreenSurface->openGLBuffer();
 	}
+
+	if (pixelBuffer == NULL)
+		return false;
+
+	if (!OSMesaMakeCurrent( m_mesaContext, pixelBuffer, GL_UNSIGNED_BYTE, size.width(), size.height()))
+		return false;
+
+	OSMesaPixelStore(OSMESA_Y_UP, 0);
+
+	glViewport(0, 0, size.width(), size.height());
 
 	return true;
 }
 
 void QHaikuGLContext::doneCurrent()
 {
+	OSMesaMakeCurrent(NULL, NULL, GL_UNSIGNED_BYTE, 0, 0);
 }
 
 void QHaikuGLContext::swapBuffers(QPlatformSurface *surface)
 {
-	QHaikuWindow *window = static_cast<QHaikuWindow *>(surface);
-	if (window) {
-		glview->UnlockGL();
-		glview->SwapBuffers();
-		glview->LockGL();
-	}
+	QSurface::SurfaceClass surfaceClass = surface->surface()->surfaceClass();
+
+	if (surfaceClass != QSurface::Window)
+		return;
+
+	QHaikuWindow *window = dynamic_cast<QHaikuWindow *>(surface);
+	if (window == NULL)
+		return;
+	
+//	glFinish();
 }
 
 QSurfaceFormat QHaikuGLContext::format() const
@@ -108,12 +172,12 @@ QSurfaceFormat QHaikuGLContext::format() const
 
 bool QHaikuGLContext::isSharing() const
 {
-    return false;
+    return m_shareContext != NULL;
 }
 
 bool QHaikuGLContext::isValid() const
 {
-    return true;
+    return m_mesaContext != NULL;
 }
 
 QT_END_NAMESPACE
