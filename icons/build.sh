@@ -65,3 +65,6 @@ cp -f --remove-destination apps/*.svg $dataDir/icons/haiku/apps/22
 cp -f --remove-destination apps/*.svg $dataDir/icons/haiku/apps/32
 cp -f --remove-destination apps/*.svg $dataDir/icons/haiku/apps/48
 cp -f --remove-destination apps/*.svg $dataDir/icons/haiku/apps/64
+
+echo "Install emotes icons"
+cp -f --remove-destination emotes/*.svg $dataDir/icons/haiku/emotes/22
