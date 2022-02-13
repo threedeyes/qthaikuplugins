@@ -331,8 +331,12 @@ QHaikuWindow::QHaikuWindow(QWindow *wnd)
 		this, SLOT(platformTabletEvent(QPointF, QPointF, int, int, Qt::MouseButtons, float, Qt::KeyboardModifiers)));
 	connect(m_window->View(), SIGNAL(exposeEvent(QRegion)), this, SLOT(platformExposeEvent(QRegion)));
 
+	if (wnd->title().isEmpty())
+		setWindowTitle(QCoreApplication::applicationName());
+
     setWindowFlags(wnd->flags());
     setWindowState(wnd->windowState());
+
     handleContentOrientationChange(wnd->contentOrientation());
 
     setGeometry(wnd->geometry());
