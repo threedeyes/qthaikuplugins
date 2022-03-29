@@ -163,7 +163,7 @@ public:
 
 private:
 	void createFilePanel(file_panel_mode mode = B_OPEN_PANEL,
-		uint32 flavors = B_FILE_NODE | B_DIRECTORY_NODE | B_SYMLINK_NODE);
+		uint32 flavors = B_FILE_NODE | B_SYMLINK_NODE);
 
     QScopedPointer<QHaikuFileDialogHelperPrivate> d_ptr;
 
