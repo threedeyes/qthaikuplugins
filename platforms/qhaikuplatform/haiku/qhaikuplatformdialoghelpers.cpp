@@ -225,8 +225,6 @@ FilePanelLooper::FilePanelLooper(QHaikuFileDialogHelper *helper)
 
 void FilePanelLooper::MessageReceived(BMessage* message)
 {
-	message->PrintToStream();
-
 	switch (message->what) {
 		case kMsgFilter:
 			{
