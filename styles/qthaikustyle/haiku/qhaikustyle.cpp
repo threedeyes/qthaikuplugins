@@ -1331,6 +1331,8 @@ void QHaikuStyle::drawPrimitive(PrimitiveElement elem,
 		        BRect bRect1 = bRect;
 		        bRect1.bottom++;
 				TemporarySurface surface(bRect);
+				surface.view()->SetHighColor(bgColor);
+				surface.view()->FillRect(bRect);
 				be_control_look->DrawInactiveTab(surface.view(), bRect1, bRect, bgColor, 0, BControlLook::B_ALL_BORDERS, side);
 				painter->drawImage(r, surface.image());
 			}
@@ -2272,10 +2274,6 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
 					 && tab->selectedPosition == QStyleOptionTab::NextIsSelected));
 
 			rgb_color base = mkHaikuColor(option->palette.color( QPalette::Normal, QPalette::Window));
-			QColor backgroundColor(option->palette.color( QPalette::Normal, QPalette::Window));
-			QColor frameColor(mkQColor(tint_color(base, 1.30)));
-			QColor bevelLight(mkQColor(tint_color(base, 0.8)));
-			QColor bevelShadow(mkQColor(tint_color(base, 1.03)));
 
 			if (be_control_look != NULL) {
 				QRect r = option->rect;
@@ -2286,6 +2284,8 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
 				TemporarySurface surface(bRect);
 
 				BRect bRect1 = bRect;
+				surface.view()->SetHighColor(base);
+				surface.view()->FillRect(bRect);
 
 				switch (tab->shape) {
 					case QTabBar::TriangularNorth:
