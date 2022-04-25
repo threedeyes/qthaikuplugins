@@ -51,7 +51,7 @@ void SettingsDialog::writeSettings()
     settings.setValue("filepanel_native", ui->filePanelCheckBox->isChecked());
     settings.setValue("colorpicker_native", ui->colorPickerCheckBox->isChecked());
     settings.setValue("opengl_enabled", ui->openGlCheckBox->isChecked());
-    settings.setValue("qml_softwarecontext", ui->softContextCheckBox->isChecked());
+    settings.setValue("qml_software_render", ui->softContextCheckBox->isChecked());
     settings.setValue("hide_from_deskbar", ui->deskBarCheckBox->isChecked());
     settings.endGroup();
     settings.beginGroup("Style");
@@ -95,7 +95,7 @@ void SettingsDialog::readSettings()
     ui->filePanelCheckBox->setChecked(settings.value("filepanel_native", true).toBool());
     ui->colorPickerCheckBox->setChecked(settings.value("colorpicker_native", true).toBool());
     ui->openGlCheckBox->setChecked(settings.value("opengl_enabled", false).toBool());
-    ui->softContextCheckBox->setChecked(settings.value("qml_softwarecontext", true).toBool());
+    ui->softContextCheckBox->setChecked(settings.value("qml_software_render", false).toBool());
     ui->deskBarCheckBox->setChecked(settings.value("hide_from_deskbar", true).toBool());
     settings.endGroup();
     settings.beginGroup("Style");
@@ -138,7 +138,7 @@ void SettingsDialog::on_defaultsButton_clicked()
     ui->filePanelCheckBox->setChecked(true);
     ui->colorPickerCheckBox->setChecked(true);
     ui->openGlCheckBox->setChecked(false);
-    ui->softContextCheckBox->setChecked(true);
+    ui->softContextCheckBox->setChecked(false);
     ui->styleComboBox->setCurrentText("haiku");
     ui->iconSetComboBox->setCurrentText("haiku");
     ui->smallIconSizeSpinBox->setValue(16);

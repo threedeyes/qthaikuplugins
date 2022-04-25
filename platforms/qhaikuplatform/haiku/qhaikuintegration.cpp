@@ -214,7 +214,7 @@ QHaikuIntegration *QHaikuIntegration::createHaikuIntegration(const QStringList& 
 	}
 
 	// Enable software rendering for QML
-	if (settings.value("qml_softwarecontext", true).toBool())
+	if (settings.value("qml_software_render", false).toBool())
 		setenv("QMLSCENE_DEVICE", "softwarecontext", 0);
 	settings.endGroup();
 
