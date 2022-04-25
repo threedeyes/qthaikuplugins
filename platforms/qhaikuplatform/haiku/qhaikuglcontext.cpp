@@ -57,45 +57,78 @@ QHaikuGLContext::QHaikuGLContext(QOpenGLContext *context)
 	d_format.setRedBufferSize(8);
 	d_format.setGreenBufferSize(8);
 	d_format.setBlueBufferSize(8);
+	d_format.setOption(QSurfaceFormat::DebugContext, false);
+	d_format.setOption(QSurfaceFormat::StereoBuffers, false);
+	d_format.setSwapBehavior(QSurfaceFormat::DoubleBuffer);
 
-    if (!nativeHandle.isNull()) {
-        if (!nativeHandle.canConvert<QHaikuNativeGLContext>()) {
-            qWarning(lcQpaOpenGLContext, "QOpenGLContext native handle must be a QHaikuNativeContext");
-            return;
-        }
-        m_mesaContext = nativeHandle.value<QHaikuNativeGLContext>().context();
-        if (!m_mesaContext) {
-            qCWarning(lcQpaOpenGLContext, "QHaikuNativeContext's OSMesaContext cannot be null");
-            return;
-        }
+	if (!nativeHandle.isNull()) {
+		if (!nativeHandle.canConvert<QHaikuNativeGLContext>()) {
+			qWarning(lcQpaOpenGLContext, "QOpenGLContext native handle must be a QHaikuNativeContext");
+			return;
+		}
+		m_mesaContext = nativeHandle.value<QHaikuNativeGLContext>().context();
+		if (!m_mesaContext) {
+			qCWarning(lcQpaOpenGLContext, "QHaikuNativeContext's OSMesaContext cannot be null");
+			return;
+		}
 
-        if (QPlatformOpenGLContext *shareContext = context->shareHandle())
-            m_shareContext = static_cast<QHaikuGLContext *>(shareContext)->nativeContext();
+		if (QPlatformOpenGLContext *shareContext = context->shareHandle())
+			m_shareContext = static_cast<QHaikuGLContext *>(shareContext)->nativeContext();
 
-        return;
-    }
+		return;
+	}
 
-    if (d_format.renderableType() == QSurfaceFormat::DefaultRenderableType)
+	if (d_format.renderableType() == QSurfaceFormat::DefaultRenderableType)
 		d_format.setRenderableType(QSurfaceFormat::OpenGL);
+
 	if (d_format.renderableType() != QSurfaceFormat::OpenGL)
 		return;
 
 	if (QPlatformOpenGLContext *shareHandle = context->shareHandle())
 		m_shareContext = static_cast<QHaikuGLContext *>(shareHandle)->m_mesaContext;
 
-	m_mesaContext = OSMesaCreateContextExt(OSMESA_BGRA, 16, 8, 0, m_shareContext);
+	const int requestedVersion = (d_format.majorVersion() << 8) + d_format.minorVersion();
+	int mesaProfile = OSMESA_COMPAT_PROFILE;
+	if (requestedVersion >= 0x0302) {
+		switch (d_format.profile()) {
+		case QSurfaceFormat::NoProfile:
+			break;
+		case QSurfaceFormat::CoreProfile:
+			mesaProfile = OSMESA_CORE_PROFILE;
+			break;
+		case QSurfaceFormat::CompatibilityProfile:
+			mesaProfile = OSMESA_COMPAT_PROFILE;
+			break;
+		}
+	}
 
-    if (!m_mesaContext && m_shareContext) {
-        qCWarning(lcQpaOpenGLContext, "Could not create OSMesaContext with shared context, "
-            "falling back to unshared context.");
-        m_mesaContext = OSMesaCreateContextExt(OSMESA_BGRA, 16, 8, 0, NULL);
-        m_shareContext = NULL;
+	const int attribs[] = {
+		OSMESA_FORMAT, OSMESA_BGRA,
+		OSMESA_DEPTH_BITS, 16,
+		OSMESA_STENCIL_BITS, 8,
+		OSMESA_ACCUM_BITS, 0,
+		OSMESA_PROFILE, mesaProfile,
+		OSMESA_CONTEXT_MAJOR_VERSION, d_format.majorVersion(),
+		OSMESA_CONTEXT_MINOR_VERSION, d_format.minorVersion(),
+		0, 0
+	};
+
+	m_mesaContext = OSMesaCreateContextAttribs(attribs, m_shareContext);
+
+	if (m_mesaContext == NULL)
+		m_mesaContext = OSMesaCreateContextExt(OSMESA_BGRA, 16, 8, 0, m_shareContext);
+
+	if (!m_mesaContext && m_shareContext) {
+		qCWarning(lcQpaOpenGLContext, "Could not create OSMesaContext with shared context, "
+			"falling back to unshared context.");
+		m_mesaContext = OSMesaCreateContextExt(OSMESA_BGRA, 16, 8, 0, NULL);
+		m_shareContext = NULL;
     }
 
-    if (!m_mesaContext) {
-        qCWarning(lcQpaOpenGLContext, "Failed to create OSMesaContext");
-        return;
-    }
+	if (!m_mesaContext) {
+		qCWarning(lcQpaOpenGLContext, "Failed to create OSMesaContext");
+		return;
+	}
 
 	context->setNativeHandle(QVariant::fromValue<QHaikuNativeGLContext>(m_mesaContext));
 
@@ -128,7 +161,7 @@ bool QHaikuGLContext::makeCurrent(QPlatformSurface *surface)
 
 	if (surfaceClass == QSurface::Window) {
 		QHaikuWindow *window = dynamic_cast<QHaikuWindow *>(surface);
-		if (window->allocateGLBuffer())
+		if (window->makeCurrent())
 			pixelBuffer = window->openGLBuffer();
 	} else {
 		QHaikuOffscreenSurface *offscreenSurface = dynamic_cast<QHaikuOffscreenSurface *>(surface);
@@ -170,13 +203,40 @@ void QHaikuGLContext::swapBuffers(QPlatformSurface *surface)
 	glFinish();
 
 	QHaikuSurfaceView *view = QHaikuWindow::viewForWinId(window->window()->winId());
+	window->swapBuffers();
 
 	if (window->openGLBitmap() != NULL) {
-		if (view->LockLooperWithTimeout(10000) == B_OK) {
-			view->SetDrawingMode(B_OP_COPY);
-			view->DrawBitmap(window->openGLBitmap());
-			view->UnlockLooper();
-	    }
+		if (window->window()->isTopLevel()) {
+			if (view->LockLooperWithTimeout(1000) == B_OK) {
+				QHaikuWindow *topHaikuWin = QHaikuWindow::windowForWinId(window->topLevelWindow()->winId());
+
+				view->SetDrawingMode(B_OP_COPY);
+				BRegion region = topHaikuWin->getClippingRegion();
+				view->ConstrainClippingRegion(&region);
+				view->DrawBitmapAsync(window->openGLBitmap());
+				BRegion allregion(BRect(0, 0, window->window()->width(), window->window()->height()));
+				allregion.Exclude(&region);
+				view->ConstrainClippingRegion(&allregion);
+
+				for (int i = 0; i < topHaikuWin->fakeChildList()->size(); ++i) {
+					QHaikuWindow *win = topHaikuWin->fakeChildList()->at(i);
+					if (!win->window()->isTopLevel() && win->window()->isVisible()) {
+						QPoint origin = win->mapToGlobal(QPoint()) - topHaikuWin->mapToGlobal(QPoint());
+						view->DrawBitmapAsync(win->openGLBitmap(), BPoint(origin.x(), origin.y()));
+					}
+				}
+
+				view->Sync();
+				view->UnlockLooper();
+		    }
+		} else {
+			QHaikuWindow *topWindow = QHaikuWindow::windowForWinId(window->topLevelWindow()->winId());
+			view = QHaikuWindow::viewForWinId(window->topLevelWindow()->winId());
+
+			QPoint origin = window->window()->mapToGlobal(QPoint()) - topWindow->window()->mapToGlobal(QPoint());
+			QRect invalidateRect(origin.x(), origin.y(), window->window()->width(), window->window()->height());
+			QWindowSystemInterface::handleExposeEvent(topWindow->window(), invalidateRect);
+		}
 	}
 }
 

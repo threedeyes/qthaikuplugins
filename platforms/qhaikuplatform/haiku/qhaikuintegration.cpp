@@ -97,13 +97,15 @@ QHaikuIntegration::~QHaikuIntegration()
 
 bool QHaikuIntegration::isOpenGLEnabled()
 {
-	app_info appInfo;
-	if (be_app->GetAppInfo(&appInfo) == B_OK) {
-		QStringList disabledListApps;
-		disabledListApps << "application/x-vnd.falkon" \
-					<< "application/x-vnd.openshot" ;
-		return !disabledListApps.contains(appInfo.signature, Qt::CaseInsensitive);
+	image_info imgInfo;
+	int32 cookie = 0;
+
+	while (get_next_image_info(0, &cookie, &imgInfo) == B_OK) {
+		BString name(imgInfo.name);
+		if (name.IFindFirst("libQt5WebEngineCore") != B_ERROR)
+			return false;
 	}
+
 	return true;
 }
 
@@ -133,7 +135,7 @@ QHaikuIntegration *QHaikuIntegration::createHaikuIntegration(const QStringList& 
 		appSignature = QLatin1String(signature);
 	else
 		appSignature = QLatin1String("application/x-vnd.qt5-") +
-			QCoreApplication::applicationName().remove("_x86");
+			QCoreApplication::applicationName().replace(' ', '_').remove("_x86");
 
 	// Inject system environment (hack for QuickLaunch)
 	QProcess proc;
@@ -264,7 +266,8 @@ QHaikuIntegration *QHaikuIntegration::createHaikuIntegration(const QStringList& 
 	}
 	settings.endGroup();
 
-	setenv("MESA_GL_VERSION_OVERRIDE","4.6", 0);
+	// Override OpenGL/GLSL versions
+	setenv("MESA_GL_VERSION_OVERRIDE","2.1", 0);
 	setenv("MESA_GLSL_VERSION_OVERRIDE","460", 0);
 
     QHaikuIntegration *newHaikuIntegration = new QHaikuIntegration(parameters, argc, argv);

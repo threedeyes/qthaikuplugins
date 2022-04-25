@@ -133,7 +133,6 @@ QtHaikuWindow::QtHaikuWindow(QHaikuWindow *qwindow,
 	fQWindow = qwindow;
 	fView = new QHaikuSurfaceView(Bounds());
 	fView->SetEventMask(0, B_NO_POINTER_HISTORY);
-	fGLView = NULL;
  	AddChild(fView);
  	Qt::WindowType type =  static_cast<Qt::WindowType>(int(qwindow->window()->flags() & Qt::WindowType_Mask));
 	bool dialog = ((type == Qt::Dialog) || (type == Qt::Sheet) || (type == Qt::MSWindowsFixedSizeDialogHint));
@@ -300,8 +299,17 @@ QHaikuWindow::QHaikuWindow(QWindow *wnd)
     , m_pendingGeometryChangeOnShow(true)
     , m_window(NULL)
     , m_parent(NULL)
+    , m_topLevel(NULL)
     , m_openGLBufferBitmap(NULL)
+    , m_openGLRenderBitmap(NULL)
 {
+	m_fakeChildWindow.clear();
+
+	if (wnd->parent())
+		m_topLevel = ((QHaikuWindow*)QPlatformWindow::parent())->topLevelWindow();
+	else
+		m_topLevel = this;
+
 	m_window = new QtHaikuWindow(this, BRect(wnd->geometry().left(),
 		wnd->geometry().top(),
 		wnd->geometry().right(),
@@ -347,8 +355,19 @@ QHaikuWindow::QHaikuWindow(QWindow *wnd)
 
 QHaikuWindow::~QHaikuWindow()
 {
-	if (m_window != NULL)
-		destroy();
+	if (m_window != NULL) {
+		m_window->Lock();
+		m_window->Quit();
+	}
+
+	if (m_openGLBufferBitmap != NULL)
+		delete m_openGLBufferBitmap;
+
+	if (m_openGLRenderBitmap != NULL)
+		delete m_openGLRenderBitmap;
+
+	if (!window()->isTopLevel())
+		topLevelWindow()->fakeChildList()->removeAll(this);
 }
 
 
@@ -459,10 +478,14 @@ void QHaikuWindow::setWindowFlags(Qt::WindowFlags flags)
 }
 
 
-void QHaikuWindow::setParent(const QPlatformWindow *window)
+void QHaikuWindow::setParent(const QPlatformWindow *win)
 {
-	if (m_parent != (QHaikuWindow*)window) {
-		m_parent = (QHaikuWindow*)window;
+	if (m_parent != (QHaikuWindow*)win) {
+		m_parent = (QHaikuWindow*)win;
+		m_topLevel = (QHaikuWindow*)win;
+		QHaikuWindow *topWin = ((QHaikuWindow*)win)->topLevelWindow();
+		if (!topWin->fakeChildList()->contains(this))
+			topWin->fakeChildList()->append(this);
 	}
 }
 
@@ -653,6 +676,7 @@ bool QHaikuWindow::startSystemResize(Qt::Edges edges)
     return true;
 }
 
+
 bool QHaikuWindow::startSystemMove()
 {
 	BPoint screenWhere;
@@ -665,20 +689,30 @@ bool QHaikuWindow::startSystemMove()
     return true;
 }
 
+
 void QHaikuWindow::raise()
 {
-    if (window()->type() != Qt::Desktop) {
-        m_window->Activate(true);
-        QWindowSystemInterface::handleExposeEvent(window(), window()->geometry());
-    }
+	if (window()->isTopLevel()) {
+	    if (window()->type() != Qt::Desktop) {
+	        m_window->Activate(true);
+	        QWindowSystemInterface::handleExposeEvent(window(), window()->geometry());
+	    }
+	} else {
+		QWindowSystemInterface::handleExposeEvent(topLevelWindow()->window(), topLevelWindow()->window()->geometry());
+	}
 }
+
 
 void QHaikuWindow::lower()
 {
-    if (window()->type() != Qt::Desktop) {
-        m_window->Activate(false);
-        QWindowSystemInterface::handleExposeEvent(window(), window()->geometry());
-    }
+	if (window()->isTopLevel()) {
+	    if (window()->type() != Qt::Desktop) {
+	        m_window->Activate(false);
+	        QWindowSystemInterface::handleExposeEvent(window(), window()->geometry());
+	    }
+	} else {
+		QWindowSystemInterface::handleExposeEvent(topLevelWindow()->window(), topLevelWindow()->window()->geometry());
+	}
 }
 
 
@@ -697,6 +731,7 @@ void QHaikuWindow::setFrameMarginsEnabled(bool enabled)
     } else
         m_margins = QMargins(0, 0, 0, 0);
 }
+
 
 void QHaikuWindow::getDecoratorSize(float* borderWidth, float* tabHeight)
 {
@@ -720,6 +755,7 @@ void QHaikuWindow::getDecoratorSize(float* borderWidth, float* tabHeight)
 	if (tabHeight != NULL)
 		*tabHeight = tabHeightDef;
 }
+
 
 void QHaikuWindow::maximizeWindowRespected(bool respected)
 {
@@ -778,6 +814,7 @@ void QHaikuWindow::maximizeWindowRespected(bool respected)
 	setGeometryImpl(QRect(zoomArea.left, zoomArea.top, zoomArea.Width() + 1, zoomArea.Height() + 1));
 }
 
+
 void QHaikuWindow::setWindowState(Qt::WindowStates states)
 {
     Qt::WindowState state = Qt::WindowNoState;
@@ -820,10 +857,12 @@ void QHaikuWindow::setWindowState(Qt::WindowStates states)
     QWindowSystemInterface::handleWindowStateChanged(window(), states);
 }
 
+
 WId QHaikuWindow::winId() const
 {
 	return reinterpret_cast<WId>(static_cast<BWindow *>(m_window));
 }
+
 
 QHaikuSurfaceView *QHaikuWindow::viewForWinId(WId id)
 {
@@ -833,6 +872,7 @@ QHaikuSurfaceView *QHaikuWindow::viewForWinId(WId id)
     return NULL;
 }
 
+
 QHaikuWindow *QHaikuWindow::windowForWinId(WId id)
 {
 	QtHaikuWindow * window = static_cast<QtHaikuWindow *>(reinterpret_cast<BWindow *>(id));
@@ -841,21 +881,67 @@ QHaikuWindow *QHaikuWindow::windowForWinId(WId id)
 	return NULL;
 }
 
-bool QHaikuWindow::allocateGLBuffer()
+
+bool QHaikuWindow::makeCurrent()
 {
-	if (m_openGLBufferBitmap != NULL) {
-		if (window()->size().width() != m_openGLBufferBitmap->Bounds().IntegerWidth() + 1 ||
-			window()->size().height() != m_openGLBufferBitmap->Bounds().IntegerHeight() + 1) {
-				delete m_openGLBufferBitmap;
-				m_openGLBufferBitmap = NULL;
+	if (!topLevelWindow()->fakeChildList()->contains(this)) {
+		topLevelWindow()->fakeChildList()->append(this);
+	}
+
+	if (m_openGLRenderBitmap != NULL) {
+		if (window()->size().width() != m_openGLRenderBitmap->Bounds().IntegerWidth() + 1 ||
+				window()->size().height() != m_openGLRenderBitmap->Bounds().IntegerHeight() + 1) {
+			delete m_openGLRenderBitmap;
+			m_openGLRenderBitmap = NULL;
 		}
 	}
-	if (m_openGLBufferBitmap == NULL) {
-		BRect rect(0, 0, window()->size().width() - 1, window()->size().height() - 1);
-		m_openGLBufferBitmap = new BBitmap(rect, B_RGB32);
+
+	if (m_openGLRenderBitmap == NULL) {
+		m_openGLRenderBitmap = new BBitmap(BRect(0, 0, window()->size().width() - 1, window()->size().height() - 1), B_RGB32);
+		memset(m_openGLRenderBitmap->Bits(), 0, m_openGLRenderBitmap->BitsLength());
 	}
-	return m_openGLBufferBitmap != NULL;
+
+	return m_openGLRenderBitmap != NULL;
 }
+
+void QHaikuWindow::swapBuffers()
+{
+	if (m_openGLBufferBitmap != NULL) {
+		if (m_openGLRenderBitmap->Bounds().IntegerWidth() != m_openGLBufferBitmap->Bounds().IntegerWidth() ||
+				m_openGLRenderBitmap->Bounds().IntegerHeight() != m_openGLBufferBitmap->Bounds().IntegerHeight()) {
+			delete m_openGLBufferBitmap;
+			m_openGLBufferBitmap = NULL;
+		}
+	}
+
+	if (m_openGLBufferBitmap == NULL)
+		m_openGLBufferBitmap = new BBitmap(m_openGLRenderBitmap->Bounds(), B_RGB32);
+
+	memcpy(m_openGLBufferBitmap->Bits(), m_openGLRenderBitmap->Bits(), m_openGLRenderBitmap->BitsLength());
+}
+
+
+BRegion QHaikuWindow::getClippingRegion()
+{
+	BRegion region(BRect(0, 0, window()->width(), window()->height()));
+
+	if (!window()->isTopLevel())
+		return region;
+
+	for (int i = 0; i < topLevelWindow()->fakeChildList()->size(); ++i) {
+		QHaikuWindow *win = topLevelWindow()->fakeChildList()->at(i);
+		if (!win->window()->isTopLevel() && win->window()->isVisible()) {
+			QPoint origin = win->mapToGlobal(QPoint()) - topLevelWindow()->mapToGlobal(QPoint());
+			QRect wg = win->geometry();
+			wg.moveTo(origin);
+			BRect rect(wg.left(), wg.top(), wg.right(), wg.bottom());
+			region.Exclude(rect);
+		}
+	}
+
+	return region;
+}
+
 
 void QHaikuWindow::platformWindowQuitRequested()
 {

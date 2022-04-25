@@ -77,9 +77,24 @@ QPaintDevice *QHaikuBackingStore::paintDevice()
 }
 
 
+void QHaikuBackingStore::drawChildWindows(QWindow *topwin)
+{
+	QHaikuWindow *topHaikuWin = QHaikuWindow::windowForWinId(topwin->winId());
+
+	for (int i = 0; i < topHaikuWin->fakeChildList()->size(); ++i) {
+		QHaikuWindow *win = topHaikuWin->fakeChildList()->at(i);
+		if (!win->window()->isTopLevel() && win->window()->isVisible()) {
+			QHaikuSurfaceView *view = QHaikuWindow::viewForWinId(topwin->winId());
+			QPoint origin = win->mapToGlobal(QPoint()) - topwin->mapToGlobal(QPoint());
+			view->DrawBitmapAsync(win->openGLBitmap(), BPoint(origin.x(), origin.y()));
+		}
+	}
+}
+
+
 void QHaikuBackingStore::flush(QWindow *window, const QRegion &region, const QPoint &offset)
 {
-    if (m_image.size().isEmpty())
+    if (m_image.size().isEmpty())// && !window->isTopLevel())
         return;
 
     QSize imageSize = m_image.size();
@@ -100,9 +115,16 @@ void QHaikuBackingStore::flush(QWindow *window, const QRegion &region, const QPo
 	if (view->LockLooperWithTimeout(1000) == B_OK) {
 		view->SetDrawingMode(B_OP_COPY);
 
-		BRect rect(outline.left(), outline.top(), outline.right(), outline.bottom());
-		view->DrawBitmapAsync(m_bitmap, rect, rect);
+		QHaikuWindow *topHaikuWin = QHaikuWindow::windowForWinId(id)->topLevelWindow();
 
+		BRect rect(outline.left(), outline.top(), outline.right(), outline.bottom());
+		BRegion winregion(rect);
+		BRegion region = topHaikuWin->getClippingRegion();
+		view->ConstrainClippingRegion(&region);
+		view->DrawBitmapAsync(m_bitmap, rect, rect);
+		winregion.Exclude(&region);
+		view->ConstrainClippingRegion(&winregion);
+		drawChildWindows(window);
 		view->Sync();
     	view->UnlockLooper();
     }

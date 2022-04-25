@@ -56,6 +56,8 @@
 
 #include <View.h>
 #include <Bitmap.h>
+#include <Rect.h>
+#include <Region.h>
 
 extern void qt_scrollRectInImage(QImage &img, const QRect &rect, const QPoint &offset);
 
@@ -86,6 +88,7 @@ public:
     QPixmap grabWindow(WId window, const QRect &rect) const;
 
     static QHaikuBackingStore *backingStoreForWinId(WId id);
+    void drawChildWindows(QWindow *topwin);
 
 private:
     void clearHash();
