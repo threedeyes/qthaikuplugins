@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<svg version="1.1" width="64" height="64" color-interpolation="linearRGB"
+     xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg">
+ <g>
+  <path style="fill:#010101; fill-opacity:0.4196"
+        d="M52 49L55.57 57.83L60 56L72 61L63 75L38.49 70.75"
+        transform="matrix(0.8187,0,0,0.8872,1.8796,-6.225)"
+  />
+  <path style="fill:#010101; fill-opacity:0.4196"
+        d="M15.68 59.38L37.22 65.67L35.06 43.06L21.22 37.99"
+        transform="matrix(0.8652,0,0,0.9233,0.1511,-6.597)"
+  />
+  <path style="fill:none; stroke:#000000; stroke-width:6"
+        d="M11.84 10.13L22.5 13.55L24.99 22.28L33.54 16.78L44.4 19.82L46.87 29.5L54.87 23.23L65.52 26.65L51.24 52.64L40 63L31 40L17 54L3.08 14.49L11.84 10.13z"
+        transform="matrix(0.847,0,0,0.9198,0.8986,-6.449)"
+  />
+  <linearGradient id="gradient0" gradientUnits="userSpaceOnUse" x1="52.88" y1="87.46" x2="62.48" y2="87.46">
+   <stop offset="0" stop-color="#8d8d8d"/>
+   <stop offset="1" stop-color="#797979"/>
+  </linearGradient>
+  <path style="fill:url(#gradient0)"
+        d="M22.56 12.48L28.9 28.07L19.85 37.9L13.31 15.16L22.56 12.48z"
+        transform="matrix(0.8187,0,0,0.8872,1.8796,-5.225)"
+  />
+  <linearGradient id="gradient1" gradientUnits="userSpaceOnUse" x1="52.88" y1="87.46" x2="62.48" y2="87.46">
+   <stop offset="0" stop-color="#8d8d8d"/>
+   <stop offset="1" stop-color="#797979"/>
+  </linearGradient>
+  <path style="fill:url(#gradient1)"
+        d="M44.9 19.03L47.98 34.45L33.33 47.53L36.43 18.64L44.9 19.03z"
+        transform="matrix(0.8187,0,0,0.8872,1.8796,-5.225)"
+  />
+  <path style="fill:#353535"
+        d="M53.54 50.62L66.08 26.36L56.06 31.37L40.05 66.21L53.54 50.62z"
+        transform="matrix(0.8187,0,0,0.8872,1.8796,-5.225)"
+  />
+  <linearGradient id="gradient2" gradientUnits="userSpaceOnUse" x1="52.88" y1="87.46" x2="62.48" y2="87.46">
+   <stop offset="0" stop-color="#8d8d8d"/>
+   <stop offset="1" stop-color="#797979"/>
+  </linearGradient>
+  <path style="fill:url(#gradient2)"
+        d="M17.14 55.42L36.6 35.39L26.98 30.38L17.14 55.42z"
+        transform="matrix(0.8187,0,0,0.8872,1.8796,-5.225)"
+  />
+  <path style="fill:#f8f8f8"
+        d="M2.17 13.72L11.52 8.84L22.68 12.55L14.22 17.94L2.17 13.72z"
+        transform="matrix(0.8187,0,0,0.8872,1.8796,-5.225)"
+  />
+  <path style="fill:#f8f8f8"
+        d="M23.57 22.81L33.96 15.5L44.73 18.97L35.37 26.01C31.18 24.77 27.76 24.05 23.57 22.81z"
+        transform="matrix(0.8187,0,0,0.8872,1.8796,-5.225)"
+  />
+  <path style="fill:#f8f8f8"
+        d="M59.46 33.7L66.86 26.3L54.91 22.5L46.14 28.97L59.46 33.7z"
+        transform="matrix(0.8187,0,0,0.8872,1.8796,-5.225)"
+  />
+  <linearGradient id="gradient3" gradientUnits="userSpaceOnUse" x1="8.49" y1="-19.56" x2="62.03" y2="0.56">
+   <stop offset="0" stop-color="#77aff5"/>
+   <stop offset="1" stop-color="#1379eb"/>
+  </linearGradient>
+  <path style="fill:url(#gradient3)"
+        d="M13 18L18 33L25 22L35 25C35 25 38.86 40.03 40 40C40.53 39.97 46.28 30.52 47 30C47.7 29.46 59 32 59 32L39 68L27 33L26.55 32.14L17 57L2 14L13 18z"
+        transform="matrix(0.8187,0,0,0.8872,1.8796,-5.225)"
+  />
+  <path style="fill:none; stroke:#000000; stroke-width:2"
+        d="M1.65 13.45L13.97 18.19L18.06 31.27L24 22L35 25L39.22 40.11L46.27 29.09L59.47 33.32L38.96 67.8L27 34L16.4 57.03L1.14 13.71C1.14 13.71 1.32 13.62 1.65 13.45z"
+        transform="matrix(0.8187,0,0,0.8872,1.8796,-5.225)"
+  />
+  <path style="fill:none; stroke:#000000; stroke-width:1"
+        d="M14.22 17.68L23.32 11.92H23.45"
+        transform="matrix(0.8187,0,0,0.8872,1.8796,-5.225)"
+  />
+  <path style="fill:none; stroke:#000000; stroke-width:1"
+        d="M23.19 22.55L33.06 14.6"
+        transform="matrix(0.8187,0,0,0.8872,1.8796,-5.225)"
+  />
+  <path style="fill:none; stroke:#000000; stroke-width:1"
+        d="M34.35 26.27L44.86 18.06"
+        transform="matrix(0.8187,0,0,0.8872,1.8796,-5.225)"
+  />
+  <path style="fill:none; stroke:#000000; stroke-width:1"
+        d="M46.14 28.97L54.73 21.01"
+        transform="matrix(0.8187,0,0,0.8872,1.8796,-5.225)"
+  />
+  <path style="fill:none; stroke:#000000; stroke-width:1"
+        d="M59.21 33.06L67.54 25.89"
+        transform="matrix(0.8187,0,0,0.8872,1.8796,-5.225)"
+  />
+ </g>
+</svg>

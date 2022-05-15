@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<svg version="1.1" width="64" height="64" color-interpolation="linearRGB"
+     xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg">
+ <g>
+  <path style="fill:#ffffff"
+        d="M6.7 6.7H72.81V72.81H6.7V6.7z"
+        transform="matrix(0.8442,0,0,0.8442,-1.3074,-1.3074)"
+  />
+  <path style="fill:#000000"
+        d="M4.97 4.97H74.55V74.55H4.97V4.97z"
+        transform="matrix(0.8716,0,0,0.8716,-2.3956,-2.3956)"
+  />
+  <linearGradient id="gradient0" gradientUnits="userSpaceOnUse" x1="9.09" y1="-294.91" x2="47.84" y2="-294.91">
+   <stop offset="0" stop-color="#3889e9"/>
+   <stop offset="1" stop-color="#5ea5fb"/>
+  </linearGradient>
+  <path style="fill:url(#gradient0)"
+        d="M4.97 4.97H74.55V74.55H4.97V4.97z"
+        transform="matrix(0.8442,0,0,0.8442,-1.3074,-1.3074)"
+  />
+  <path style="fill:#ffffff; fill-opacity:0.2"
+        d="M6.62 6.62V72.9H72.9V6.62H6.62z
+           M9.94 9.94H69.58V69.58H9.94V9.94z"
+        transform="matrix(0.8442,0,0,0.8442,-1.3074,-1.3074)"
+  />
+  <linearGradient id="gradient1" gradientUnits="userSpaceOnUse" x1="32.03" y1="17.35" x2="58.38" y2="17.35">
+   <stop offset="0" stop-color="#292c2f" stop-opacity="0.149"/>
+   <stop offset="1" stop-color="#000000" stop-opacity="0"/>
+  </linearGradient>
+  <path style="fill:url(#gradient1)"
+        d="M19.88 49.7L49.7 9.94L69.58 29.82V69.58H39.76L19.88 49.7z"
+        transform="matrix(0.8442,0,0,0.8442,-1.3074,-1.3074)"
+  />
+  <path style="fill:none; stroke:#000000; stroke-width:0"
+        d="M19.88 49.7L49.7 9.94L69.58 29.82V69.58H39.76L19.88 49.7z"
+        transform="matrix(0.8442,0,0,0.8442,-1.3074,-1.3074)"
+  />
+  <path style="fill:#000000"
+        d="M35.46 9.94L19.88 49.64L43.43 41.13L41.69 58.14L37 54L40.2 69.58L50 57L44.12 58.43L54.51 30.35L32.69 38.57L49.7 9.94H35.46z"
+        transform="matrix(0.8442,0,0,0.8442,-1.3074,-1.3074)"
+  />
+  <path style="fill:#ffcc00"
+        d="M35.46 9.94L19.88 49.64L43.43 41.13L41.69 58.14L36.85 54.74L40.2 69.58L50 57.01L44.12 58.43L54.51 30.35L32.69 38.57L49.7 9.94H35.46z"
+        transform="matrix(0.8442,0,0,0.8442,-1.3074,-1.3074)"
+  />
+ </g>
+</svg>
