@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<svg version="1.1" width="64" height="64" color-interpolation="linearRGB"
+     xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg">
+ <g>
+  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:10.5271; stroke-linejoin:round"
+        d="M55.93 33.34C42.31 33.4 28.71 33.47 15.1 33.52C21.89 26.25 28.7 18.98 35.5 11.71C42.31 18.93 49.11 26.13 55.93 33.34V33.34V33.34V33.34V33.34z"
+  />
+  <path style="fill:none; stroke:#005900; stroke-width:10.5271; stroke-linejoin:round"
+        d="M52.83 30.83C39.24 30.88 25.64 30.95 12.06 31.02C18.84 23.75 25.61 16.47 32.38 9.2C39.2 16.42 46.02 23.61 52.83 30.83V30.83V30.83V30.83V30.83z"
+  />
+  <linearGradient id="gradient0" gradientUnits="userSpaceOnUse" x1="-17.42" y1="9.27" x2="-19.98" y2="33.71">
+   <stop offset="0" stop-color="#80ff80"/>
+   <stop offset="1" stop-color="#00b200"/>
+  </linearGradient>
+  <path style="fill:url(#gradient0)"
+        d="M54.83 31.77C39.9 31.84 24.97 31.91 10.06 31.99C17.5 23.75 24.94 15.5 32.38 7.26C39.86 15.43 47.34 23.59 54.83 31.77V31.77V31.77V31.77V31.77z"
+  />
+  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:10.5271; stroke-linejoin:round"
+        d="M55.93 54.34C42.31 54.4 28.71 54.47 15.1 54.52C21.89 47.25 28.7 39.98 35.5 32.72C42.31 39.93 49.11 47.13 55.93 54.34V54.34V54.34V54.34V54.34z"
+  />
+  <path style="fill:none; stroke:#005900; stroke-width:10.5271; stroke-linejoin:round"
+        d="M52.83 51.83C39.24 51.88 25.64 51.95 12.06 52.02C18.84 44.75 25.61 37.47 32.38 30.2C39.2 37.41 46.02 44.61 52.83 51.83V51.83V51.83V51.83V51.83z"
+  />
+  <linearGradient id="gradient1" gradientUnits="userSpaceOnUse" x1="-209.78" y1="38.58" x2="-209.05" y2="63.15">
+   <stop offset="0" stop-color="#80ff80"/>
+   <stop offset="1" stop-color="#00b200"/>
+  </linearGradient>
+  <path style="fill:url(#gradient1)"
+        d="M54.83 52.77C39.9 52.84 24.97 52.91 10.06 52.99C17.5 44.75 24.94 36.5 32.38 28.26C39.86 36.43 47.34 44.59 54.83 52.77V52.77V52.77V52.77V52.77z"
+  />
+ </g>
+</svg>
