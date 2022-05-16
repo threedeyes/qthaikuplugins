@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<svg version="1.1" width="64" height="64" color-interpolation="linearRGB"
+     xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg">
+ <g>
+  <path style="fill:none; stroke:#bf5000; stroke-width:5; stroke-linecap:square"
+        d="M33 11C33 14.87 33 20.12 33 24C27.18 24 14 24 14 24V11H33z"
+        transform="matrix(1.1702,0,0,1.1914,-5.4468,-5.6276)"
+  />
+  <path style="fill:none; stroke:#005900; stroke-width:5; stroke-linecap:square"
+        d="M43 43H53V53H43V43z"
+        transform="matrix(1.1702,0,0,1.1914,-5.4468,-5.6276)"
+  />
+  <path style="fill:none; stroke:#bf5000; stroke-width:5; stroke-linecap:square"
+        d="M11 40H24V53H11V40z"
+        transform="matrix(1.1702,0,0,1.1914,-5.4468,-5.6276)"
+  />
+  <path style="fill:#bf5000"
+        d="M33 11C33 14.87 33 20.12 33 24C27.18 24 14 24 14 24V11H33z"
+        transform="matrix(1.1702,0,0,1.1914,-5.4468,-5.6276)"
+  />
+  <linearGradient id="gradient0" gradientUnits="userSpaceOnUse" x1="141.94" y1="17.61" x2="141.94" y2="44.63">
+   <stop offset="0" stop-color="#ffff80"/>
+   <stop offset="1" stop-color="#ffd400"/>
+  </linearGradient>
+  <path style="fill:url(#gradient0)"
+        d="M11 40H24V53H11V40z
+           M33 11C33 14.87 33 20.12 33 24C27.18 24 14 24 14 24V11H33z"
+        transform="matrix(1.1702,0,0,1.1914,-5.4468,-5.6276)"
+  />
+  <linearGradient id="gradient1" gradientUnits="userSpaceOnUse" x1="162.2" y1="11.48" x2="162.2" y2="48.99">
+   <stop offset="0" stop-color="#80ff80"/>
+   <stop offset="1" stop-color="#00b300"/>
+  </linearGradient>
+  <path style="fill:url(#gradient1)"
+        d="M43 43H53V53H43V43z"
+        transform="matrix(1.1702,0,0,1.1914,-5.4468,-5.6276)"
+  />
+  <path style="fill:none; stroke:#bf5000; stroke-width:2; stroke-linecap:round; stroke-linejoin:round"
+        d="M36 18C36 18 45.02 13.54 48 19C51.02 24.54 48 40 48 40L47 32L48 40L51 32
+           M18 26V38L16 31L18 38L20 31"
+        transform="matrix(1.1702,0,0,1.1914,-5.4468,-5.6276)"
+  />
+ </g>
+</svg>
