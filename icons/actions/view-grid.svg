@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<svg version="1.1" width="64" height="64" color-interpolation="linearRGB"
+     xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg">
+ <g>
+  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:8; stroke-linecap:round"
+        d="M52 57V8
+           M38 57V8
+           M24 57V8
+           M10 57V8
+           M6 12H56
+           M6 26H56
+           M6 40H56
+           M6 54H57"
+        transform="matrix(1,0,0,1,2,2)"
+  />
+  <path style="fill:none; stroke:#272727; stroke-width:8; stroke-linecap:round"
+        d="M52 57V8
+           M38 57V8
+           M24 57V8
+           M10 57V8
+           M6 12H56
+           M6 26H56
+           M6 40H56
+           M6 54H57"
+  />
+  <linearGradient id="gradient0" gradientUnits="userSpaceOnUse" x1="44.13" y1="12.17" x2="44.13" y2="38.7">
+   <stop offset="0" stop-color="#e2e2e2"/>
+   <stop offset="1" stop-color="#848484"/>
+  </linearGradient>
+  <path style="fill:none; stroke:url(#gradient0); stroke-width:2.5; stroke-linecap:round; stroke-linejoin:round"
+        d="M52 57V8
+           M38 57V8
+           M24 57V8
+           M10 57V8
+           M6 12H56
+           M6 26H56
+           M6 40H56
+           M6 54H57"
+  />
+ </g>
+</svg>
