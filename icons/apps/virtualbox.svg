@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<svg version="1.1" width="64" height="64" color-interpolation="linearRGB"
+     xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg">
+ <g>
+  <path style="fill:#010101; fill-opacity:0.4235"
+        d="M30 62C35.33 62 40.66 62 46 62C52 54.66 58 47.33 64 40C60 38.66 56 37.33 52 36C44.66 44.66 37.33 53.33 30 62V62V62z"
+  />
+  <path style="fill:none; stroke:#000000; stroke-width:4"
+        d="M2 17C2 26.66 2 36.33 2 46C11.33 50.66 20.66 55.33 30 60C36.66 53.33 43.33 46.66 50 40C50 31 50 22 50 13C41 10.66 32 8.33 23 6C16 9.66 9 13.33 2 17V17V17z"
+  />
+  <linearGradient id="gradient0" gradientUnits="userSpaceOnUse" x1="62.31" y1="-22.67" x2="89" y2="15.11">
+   <stop offset="0" stop-color="#0eb3b5"/>
+   <stop offset="1" stop-color="#003bff"/>
+  </linearGradient>
+  <path style="fill:url(#gradient0)"
+        d="M2 17C2 26.66 2 36.33 2 46C11.33 50.66 20.66 55.33 30 60C30 48.66 30 37.33 30 26C20.66 23 11.33 20 2 17V17V17z"
+  />
+  <linearGradient id="gradient1" gradientUnits="userSpaceOnUse" x1="-12.06" y1="-18.78" x2="33.2" y2="-36.27">
+   <stop offset="0" stop-color="#00fbff"/>
+   <stop offset="1" stop-color="#0000ff"/>
+  </linearGradient>
+  <path style="fill:url(#gradient1)"
+        d="M2 17C11.33 20 20.66 23 30 26C36.66 21.66 43.33 17.33 50 13C41 10.66 32 8.33 23 6C16 9.66 9 13.33 2 17V17V17z"
+  />
+  <linearGradient id="gradient2" gradientUnits="userSpaceOnUse" x1="59.27" y1="-39.09" x2="94.37" y2="-20.82">
+   <stop offset="0" stop-color="#00aaff"/>
+   <stop offset="1" stop-color="#0537c7"/>
+  </linearGradient>
+  <path style="fill:url(#gradient2)"
+        d="M30 60C36.66 53.33 43.33 46.66 50 40C50 31 50 22 50 13C43.33 17.33 36.66 21.66 30 26C30 37.33 30 48.66 30 60V60V60z"
+  />
+  <path style="fill:none; stroke:#ffffff; stroke-width:1.6361"
+        d="M4.99 23.27C12.36 25.72 19.72 28.18 27.08 30.63C27.08 38.26 27.08 45.9 27.08 53.54C19.72 50.26 12.36 46.99 4.99 43.72C4.99 36.9 4.99 30.08 4.99 23.27V23.27V23.27z
+           M4.99 33.08C6.08 33.36 7.17 33.63 8.27 33.9C9.08 36.36 9.9 38.81 10.72 41.26C12.36 37.99 13.99 34.72 15.63 31.45C16.17 33.9 16.72 36.36 17.26 38.81C18.63 36.9 19.99 34.99 21.36 33.08C21.9 35.81 22.45 38.54 22.99 41.26C24.08 41.81 25.17 42.36 26.26 42.9"
+  />
+ </g>
+</svg>
