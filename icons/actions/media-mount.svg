@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<svg version="1.1" width="64" height="64" color-interpolation="linearRGB"
+     xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg">
+ <g>
+  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:4.9092; stroke-linecap:round; stroke-linejoin:round"
+        d="M7.89 35.88C23.44 35.88 38.98 35.88 54.52 35.88C46.75 26.88 38.98 17.88 31.2 8.88C23.43 17.88 15.67 26.88 7.89 35.88V35.88V35.88z"
+        transform="matrix(-0.9999,0.0016,-0.0016,-0.9999,62.4661,44.8193)"
+  />
+  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:4.9092; stroke-linecap:round; stroke-linejoin:round"
+        d="M54.52 55.52C54.52 52.24 54.52 48.97 54.52 45.7C38.98 45.7 23.44 45.7 7.89 45.7C7.89 48.97 7.89 52.24 7.89 55.52C23.44 55.52 38.98 55.52 54.52 55.52V55.52V55.52z"
+  />
+  <path style="fill:none; stroke:#000000; stroke-width:4.9092; stroke-linecap:round; stroke-linejoin:round"
+        d="M7.44 34.43C22.98 34.43 38.53 34.43 54.08 34.43C46.3 25.43 38.53 16.43 30.76 7.42C22.98 16.43 15.21 25.43 7.44 34.43V34.43V34.43z"
+        transform="matrix(-0.9999,-0.0068,0.0068,-0.9999,61.3759,42.1795)"
+  />
+  <linearGradient id="gradient0" gradientUnits="userSpaceOnUse" x1="25.03" y1="28.31" x2="23.78" y2="-18.31">
+   <stop offset="0" stop-color="#808080"/>
+   <stop offset="1" stop-color="#282828"/>
+  </linearGradient>
+  <path style="fill:url(#gradient0)"
+        d="M7.44 34.43C22.98 34.43 38.53 34.43 54.08 34.43C46.3 25.43 38.53 16.43 30.76 7.42C22.98 16.43 15.21 25.43 7.44 34.43V34.43V34.43z"
+        transform="matrix(-0.9999,-0.0068,0.0068,-0.9999,61.3759,42.1795)"
+  />
+  <path style="fill:none; stroke:#000000; stroke-width:4.9092; stroke-linecap:round; stroke-linejoin:round"
+        d="M54.08 54.06C54.08 50.79 54.08 47.52 54.08 44.25C38.53 44.25 22.98 44.25 7.44 44.25C7.44 47.52 7.44 50.79 7.44 54.06C22.98 54.06 38.53 54.06 54.08 54.06V54.06V54.06z"
+  />
+  <linearGradient id="gradient1" gradientUnits="userSpaceOnUse" x1="135.05" y1="37.42" x2="135.05" y2="60.07">
+   <stop offset="0" stop-color="#808080"/>
+   <stop offset="1" stop-color="#282828"/>
+  </linearGradient>
+  <path style="fill:url(#gradient1)"
+        d="M54.08 54.06C54.08 50.79 54.08 47.52 54.08 44.25C38.53 44.25 22.98 44.25 7.44 44.25C7.44 47.52 7.44 50.79 7.44 54.06C22.98 54.06 38.53 54.06 54.08 54.06V54.06V54.06z"
+  />
+ </g>
+</svg>
