@@ -1619,7 +1619,8 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
 		}
 		break;
     case CE_HeaderLabel:
-        if (const QStyleOptionHeader *header = qstyleoption_cast<const QStyleOptionHeader *>(option)) {
+		if (const QStyleOptionHeader *header = qstyleoption_cast<const QStyleOptionHeader *>(option)) {
+			painter->save();
             const int margin = proxy()->pixelMetric(QStyle::PM_HeaderMargin, option, widget);
             const int shift = margin * 2;
 			QRect rect = (header->direction == Qt::LeftToRight) ? header->rect.adjusted(margin + shift, 0, -margin, -margin) : header->rect.adjusted(-margin, margin + shift, 0, -margin);
@@ -1650,6 +1651,7 @@ void QHaikuStyle::drawControl(ControlElement element, const QStyleOption *option
 
             proxy()->drawItemText(painter, rect, header->textAlignment, header->palette,
                          (header->state & State_Enabled), header->text, QPalette::ButtonText);
+			painter->restore();
         }
         break;
 	case CE_HeaderSection:
