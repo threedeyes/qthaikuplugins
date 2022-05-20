@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<svg version="1.1" width="64" height="64" color-interpolation="linearRGB"
+     xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg">
+ <g>
+  <path style="fill:#000000"
+        d="
+           M32 16C23.15 16 16 23.15 16 32C16 40.83 23.15 48 32 48C40.83 48 48 40.83 48 32C48 23.15 40.83 16 32 16z"
+        transform="matrix(0.9179,0,0,0.9101,-11.9375,-11.5624)"
+  />
+  <radialGradient id="gradient0" gradientUnits="userSpaceOnUse" cx="0" cy="0" r="64" gradientTransform="matrix(0.4902,0,0,0.5058,27.25,21.875)">
+   <stop offset="0" stop-color="#ceeeff"/>
+   <stop offset="0.7019" stop-color="#00337f"/>
+  </radialGradient>
+  <path style="fill:url(#gradient0)"
+        d="M32 16C23.15 16 16 23.15 16 32C16 40.83 23.15 48 32 48C40.83 48 48 40.83 48 32C48 23.15 40.83 16 32 16z"
+        transform="matrix(0.8467,0,0,0.8432,-9.6903,-9.5191)"
+  />
+  <path style="fill:#000000"
+        d="
+           M32 16C23.15 16 16 23.15 16 32C16 40.83 23.15 48 32 48C40.83 48 48 40.83 48 32C48 23.15 40.83 16 32 16z"
+        transform="matrix(0.9179,0,0,0.9101,16.0623,16.4375)"
+  />
+  <radialGradient id="gradient1" gradientUnits="userSpaceOnUse" cx="0" cy="0" r="64" gradientTransform="matrix(0.4902,0,0,0.5058,27.25,21.875)">
+   <stop offset="0" stop-color="#ceeeff"/>
+   <stop offset="0.7019" stop-color="#00337f"/>
+  </radialGradient>
+  <path style="fill:url(#gradient1)"
+        d="M32 16C23.15 16 16 23.15 16 32C16 40.83 23.15 48 32 48C40.83 48 48 40.83 48 32C48 23.15 40.83 16 32 16z"
+        transform="matrix(0.8467,0,0,0.8432,18.3095,18.4807)"
+  />
+ </g>
+</svg>

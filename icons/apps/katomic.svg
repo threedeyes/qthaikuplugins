@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<svg version="1.1" width="64" height="64" color-interpolation="linearRGB"
+     xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg">
+ <g>
+  <path style="fill:#010101; fill-opacity:0.3411"
+        d="M32 16C23.15 16 16 23.15 16 32C16 40.83 23.15 48 32 48C40.83 48 48 40.83 48 32C48 23.15 40.83 16 32 16z"
+        transform="matrix(1.4375,0,0,0.7187,-4,23.5)"
+  />
+  <path style="fill:#000000"
+        d="
+           M32 16C23.12 16 16 23.12 16 32C16 40.8 23.12 48 32 48C40.8 48 48 40.8 48 32C48 23.12 40.8 16 32 16z"
+        transform="matrix(0.9751,0,0,0.9958,-6.7659,7.1946)"
+  />
+  <radialGradient id="gradient0" gradientUnits="userSpaceOnUse" cx="0" cy="0" r="64" gradientTransform="matrix(0.3808,0,0,0.3339,25.25,22.875)">
+   <stop offset="0" stop-color="#ffffff"/>
+   <stop offset="0.2274" stop-color="#ec9393"/>
+   <stop offset="1" stop-color="#7f0000"/>
+  </radialGradient>
+  <path style="fill:url(#gradient0)"
+        d="M32 16C23.12 16 16 23.12 16 32C16 40.8 23.12 48 32 48C40.8 48 48 40.8 48 32C48 23.12 40.8 16 32 16z"
+        transform="matrix(0.8994,0,0,0.9226,-4.379,9.4304)"
+  />
+  <path style="fill:#000000"
+        d="
+           M32 16C23.12 16 16 23.12 16 32C16 40.8 23.12 48 32 48C40.8 48 48 40.8 48 32C48 23.12 40.8 16 32 16z"
+        transform="matrix(0.7751,0,0,0.7958,-7.866,-4.9053)"
+  />
+  <radialGradient id="gradient1" gradientUnits="userSpaceOnUse" cx="0" cy="0" r="64" gradientTransform="matrix(0.5839,0,0,0.5839,24.25,22.875)">
+   <stop offset="0" stop-color="#ffffff"/>
+   <stop offset="0.1843" stop-color="#00a0f4"/>
+   <stop offset="0.6549" stop-color="#00337f"/>
+  </radialGradient>
+  <path style="fill:url(#gradient1)"
+        d="M32 16C23.12 16 16 23.12 16 32C16 40.8 23.12 48 32 48C40.8 48 48 40.8 48 32C48 23.12 40.8 16 32 16z"
+        transform="matrix(0.7149,0,0,0.7373,-5.9686,-3.1185)"
+  />
+  <path style="fill:#000000"
+        d="
+           M32 16C23.12 16 16 23.12 16 32C16 40.8 23.12 48 32 48C40.8 48 48 40.8 48 32C48 23.12 40.8 16 32 16z"
+        transform="matrix(0.7751,0,0,0.7958,19.1337,19.0946)"
+  />
+  <radialGradient id="gradient2" gradientUnits="userSpaceOnUse" cx="0" cy="0" r="64" gradientTransform="matrix(0.5839,0,0,0.5839,24.25,22.875)">
+   <stop offset="0" stop-color="#ffffff"/>
+   <stop offset="0.1843" stop-color="#00a0f4"/>
+   <stop offset="0.6549" stop-color="#00337f"/>
+  </radialGradient>
+  <path style="fill:url(#gradient2)"
+        d="M32 16C23.12 16 16 23.12 16 32C16 40.8 23.12 48 32 48C40.8 48 48 40.8 48 32C48 23.12 40.8 16 32 16z"
+        transform="matrix(0.7149,0,0,0.7373,21.0312,20.8813)"
+  />
+  <path style="fill:#000000"
+        d="
+           M32 16C23.12 16 16 23.12 16 32C16 40.8 23.12 48 32 48C40.8 48 48 40.8 48 32C48 23.12 40.8 16 32 16z"
+        transform="matrix(1.0036,0,0,1.0244,6.8195,-9.2194)"
+  />
+  <radialGradient id="gradient3" gradientUnits="userSpaceOnUse" cx="0" cy="0" r="64" gradientTransform="matrix(0.3808,0,0,0.3339,25.25,22.875)">
+   <stop offset="0" stop-color="#ffffff"/>
+   <stop offset="0.2274" stop-color="#ec9393"/>
+   <stop offset="1" stop-color="#7f0000"/>
+  </radialGradient>
+  <path style="fill:url(#gradient3)"
+        d="M32 16C23.12 16 16 23.12 16 32C16 40.8 23.12 48 32 48C40.8 48 48 40.8 48 32C48 23.12 40.8 16 32 16z"
+        transform="matrix(0.9257,0,0,0.9491,9.2765,-6.9196)"
+  />
+ </g>
+</svg>
