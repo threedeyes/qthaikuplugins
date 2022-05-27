@@ -112,7 +112,7 @@ void QHaikuBackingStore::flush(QWindow *window, const QRegion &region, const QPo
 
     QRect outline = region.boundingRect();
 
-	if (view->LockLooperWithTimeout(1000) == B_OK) {
+	if (view->LockLooperWithTimeout(10000) == B_OK) {
 		view->SetDrawingMode(B_OP_COPY);
 
 		QHaikuWindow *topHaikuWin = QHaikuWindow::windowForWinId(id)->topLevelWindow();
@@ -146,7 +146,7 @@ void QHaikuBackingStore::resize(const QSize &size, const QRegion &)
     WId id = window()->winId();
     if (m_image.size() != size) {
 		QHaikuSurfaceView *view = QHaikuWindow::viewForWinId(id);
-    	if(view->LockLooper()) {
+		if (view->LockLooperWithTimeout(10000) == B_OK) {
     		m_image = QImage();
 	        delete m_bitmap;
 

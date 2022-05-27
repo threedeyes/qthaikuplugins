@@ -207,7 +207,7 @@ void QHaikuGLContext::swapBuffers(QPlatformSurface *surface)
 
 	if (window->openGLBitmap() != NULL) {
 		if (window->window()->isTopLevel()) {
-			if (view->LockLooperWithTimeout(1000) == B_OK) {
+			if (view->LockLooperWithTimeout(10000) == B_OK) {
 				QHaikuWindow *topHaikuWin = QHaikuWindow::windowForWinId(window->topLevelWindow()->winId());
 
 				view->SetDrawingMode(B_OP_COPY);
