@@ -53,6 +53,7 @@
 #include <qpa/qplatformopenglcontext.h>
 
 #include "qhaikuintegration.h"
+#include "qhaikudrag.h"
 
 #include <GLView.h>
 
@@ -75,7 +76,7 @@ QHaikuIntegration::QHaikuIntegration(const QStringList &parameters, int &argc, c
 	m_services = new QHaikuServices();
 	m_clipboard = new QHaikuClipboard();
 	m_haikuSystemLocale = new QHaikuSystemLocale;
-	m_drag = new QSimpleDrag();
+	m_drag = new QHaikuDrag();
 	m_openGlEnabled = isOpenGLEnabled();
 }
 

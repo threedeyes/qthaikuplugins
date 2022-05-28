@@ -215,26 +215,74 @@ QHaikuSurfaceView::MouseMoved(BPoint point, uint32 transit, const BMessage *msg)
 	lastGlobalMousePoint = globalPoint;
 
 	if (msg != NULL) {
-		QMimeData *dragData = new QMimeData();
-		QList<QUrl> urls;
-		entry_ref aRef;
-		for (int i = 0; msg->FindRef("refs", i, &aRef) == B_OK; i++) {
-			BEntry entry(&aRef);
-			BPath path;
-			entry.GetPath(&path);
-			QUrl url = QUrl::fromLocalFile(path.Path());
-			urls.append(url);
+		if (msg->HasInt32("buttons")) {
+			buttons = msg->FindInt32("buttons");
 		}
-		if (urls.count() > 0)
-			dragData->setUrls(urls);
-		ssize_t dataLength = 0;
-		const char* text = NULL;
-		if (msg->FindData("text/plain", B_MIME_TYPE, (const void**)&text, &dataLength) == B_OK) {
-			if (dataLength > 0) {
-				dragData->setText(QString::fromUtf8(text, dataLength));
+
+		QMimeData *dragData = new QMimeData();
+
+		if (msg->HasInt32("qt:pid")) {
+				char *format;
+				uint32 type;
+				int32 count;
+				for(int32 i=0; msg->GetInfo(B_MIME_TYPE, i, &format, &type, &count) == B_OK; i++) {
+					ssize_t dataLength = 0;
+					const char* data = NULL;
+					if (msg->FindData(format, B_MIME_TYPE, (const void**)&data, &dataLength) == B_OK) {
+						QByteArray dataArray(data, dataLength);
+						dragData->setData(format, dataArray);
+					}
+			}
+		} else {
+			QList<QUrl> urls;
+
+			entry_ref aRef;
+
+			for (int i = 0; msg->FindRef("refs", i, &aRef) == B_OK; i++) {
+				BEntry entry(&aRef);
+				BPath path;
+				entry.GetPath(&path);
+				QUrl url = QUrl::fromLocalFile(path.Path());
+				urls.append(url);
+			}
+
+			if (urls.count() > 0)
+				dragData->setUrls(urls);
+
+			ssize_t dataLength = 0;
+			const char* text = NULL;
+			if (msg->FindData("text/plain", B_MIME_TYPE, (const void**)&text, &dataLength) == B_OK) {
+				if (dataLength > 0) {
+					dragData->setText(QString::fromUtf8(text, dataLength));
+				} else
+					return;
 			}
 		}
-		Q_EMIT mouseDragEvent(localPoint, Qt::CopyAction | Qt::MoveAction | Qt::LinkAction, dragData,
+
+		Qt::DropActions actions = Qt::IgnoreAction;
+
+		if (msg->HasInt32("be:actions")) {
+			int32 action;
+			for (int32 index = 0;
+				msg->FindInt32("be:actions", index, &action) == B_OK;
+				index++) {
+				switch (action) {
+					case B_MOVE_TARGET:
+						actions |= Qt::MoveAction;
+						break;
+					case B_COPY_TARGET:
+						actions |= Qt::CopyAction;
+						break;
+					case B_LINK_TARGET:
+						actions |= Qt::LinkAction;
+						break;
+				}
+			}
+		} else {
+			actions = Qt::CopyAction;
+		}
+
+		Q_EMIT mouseDragEvent(localPoint, actions, dragData,
 			hostToQtButtons(buttons), hostToQtModifiers(modifiers()));
 	} else {
 		if (isTabletEvent) {

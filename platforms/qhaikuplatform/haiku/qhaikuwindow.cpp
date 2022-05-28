@@ -642,8 +642,7 @@ void QHaikuWindow::setVisible(bool visible)
 			QWindowSystemInterface::handleGeometryChange(window(), geometry());
 		}
 
-		QRect rect(QPoint(), geometry().size());
-		QWindowSystemInterface::handleExposeEvent(window(), rect);
+		QWindowSystemInterface::handleExposeEvent(window(), QRect(QPoint(0, 0), window()->geometry().size()));
 	} else {
 		setWindowFlags(window()->flags());
 		if (!m_window->IsHidden() && !window()->parent())
@@ -661,7 +660,7 @@ void QHaikuWindow::requestActivateWindow()
 {
     if (window()->type() != Qt::Desktop)
 		m_window->Activate(true);
-    QWindowSystemInterface::handleExposeEvent(window(), window()->geometry());
+    QWindowSystemInterface::handleExposeEvent(window(), QRect(QPoint(0, 0), window()->geometry().size()));
 }
 
 
@@ -695,10 +694,10 @@ void QHaikuWindow::raise()
 	if (window()->isTopLevel()) {
 	    if (window()->type() != Qt::Desktop) {
 	        m_window->Activate(true);
-	        QWindowSystemInterface::handleExposeEvent(window(), window()->geometry());
+	        QWindowSystemInterface::handleExposeEvent(window(), QRect(QPoint(0, 0), window()->geometry().size()));
 	    }
 	} else {
-		QWindowSystemInterface::handleExposeEvent(topLevelWindow()->window(), topLevelWindow()->window()->geometry());
+		QWindowSystemInterface::handleExposeEvent(topLevelWindow()->window(), QRect(QPoint(0,0), topLevelWindow()->window()->geometry().size()));
 	}
 }
 
@@ -708,10 +707,10 @@ void QHaikuWindow::lower()
 	if (window()->isTopLevel()) {
 	    if (window()->type() != Qt::Desktop) {
 	        m_window->Activate(false);
-	        QWindowSystemInterface::handleExposeEvent(window(), window()->geometry());
+	        QWindowSystemInterface::handleExposeEvent(window(), QRect(QPoint(0, 0), window()->geometry().size()));
 	    }
 	} else {
-		QWindowSystemInterface::handleExposeEvent(topLevelWindow()->window(), topLevelWindow()->window()->geometry());
+		QWindowSystemInterface::handleExposeEvent(topLevelWindow()->window(), QRect(QPoint(0,0), topLevelWindow()->window()->geometry().size()));
 	}
 }
 
@@ -1035,51 +1034,100 @@ void QHaikuWindow::platformDropAction(BMessage *msg)
 
 	QMimeData *dragData = new QMimeData();
 
-	QList<QUrl> urls;
+	bool qtData = msg->HasInt32("qt:pid");
 
-	entry_ref aRef;
-
-	for (int i = 0; msg->FindRef("refs", i, &aRef) == B_OK; i++) {
-		BEntry entry(&aRef);
-		BPath path;
-		entry.GetPath(&path);
-		QUrl url = QUrl::fromLocalFile(path.Path());
-		urls.append(url);
-	}
-
-	if (urls.count() > 0)
-		dragData->setUrls(urls);
-
-	ssize_t dataLength = 0;
-	const char* text = NULL;
-	if (msg->FindData("text/plain", B_MIME_TYPE, (const void**)&text, &dataLength) == B_OK) {
-		if (dataLength > 0) {
-			dragData->setText(QString::fromUtf8(text, dataLength));
-		} else
+	if (qtData) {
+		if (msg->FindInt32("qt:pid") == getpid())
 			return;
 	}
 
-	BPoint pointer;
-	uint32 buttons;
-	if (m_window->View()->LockLooper()) {
-		m_window->View()->GetMouse(&pointer, &buttons);
-		m_window->View()->UnlockLooper();
+	if (qtData) {
+			char *format;
+			uint32 type;
+			int32 count;
+			for(int32 i=0; msg->GetInfo(B_MIME_TYPE, i, &format, &type, &count) == B_OK; i++) {
+				ssize_t dataLength = 0;
+				const char* data = NULL;
+				if (msg->FindData(format, B_MIME_TYPE, (const void**)&data, &dataLength) == B_OK) {
+					QByteArray dataArray(data, dataLength);
+					dragData->setData(format, dataArray);
+				}
+		}
+	} else {
+		QList<QUrl> urls;
+
+		entry_ref aRef;
+
+		for (int i = 0; msg->FindRef("refs", i, &aRef) == B_OK; i++) {
+			BEntry entry(&aRef);
+			BPath path;
+			entry.GetPath(&path);
+			QUrl url = QUrl::fromLocalFile(path.Path());
+			urls.append(url);
+		}
+
+		if (urls.count() > 0)
+			dragData->setUrls(urls);
+
+		ssize_t dataLength = 0;
+		const char* text = NULL;
+		if (msg->FindData("text/plain", B_MIME_TYPE, (const void**)&text, &dataLength) == B_OK) {
+			if (dataLength > 0) {
+				dragData->setText(QString::fromUtf8(text, dataLength));
+			} else
+				return;
+		}
+	}
+
+	Qt::DropActions actions = Qt::IgnoreAction;
+
+	if (msg->HasInt32("be:actions")) {
+		int32 action;
+		for (int32 index = 0;
+			msg->FindInt32("be:actions", index, &action) == B_OK;
+			index++) {
+			switch (action) {
+				case B_MOVE_TARGET:
+					actions |= Qt::MoveAction;
+					break;
+				case B_COPY_TARGET:
+					actions |= Qt::CopyAction;
+					break;
+				case B_LINK_TARGET:
+					actions |= Qt::LinkAction;
+					break;
+			}
+		}
+	} else {
+		actions = Qt::CopyAction;
+	}
+
+	uint32 buttons = 0;
+	if (msg->HasInt32("buttons")) {
+		buttons = msg->FindInt32("buttons");
+	} else {
+		BPoint pointer;
+		if (m_window->View()->LockLooperWithTimeout(10000)) {
+			m_window->View()->GetMouse(&pointer, &buttons);
+			m_window->View()->UnlockLooper();
+		}
 	}
 
 	QDragMoveEvent dmEvent(m_lastPoint,
-                    Qt::CopyAction | Qt::MoveAction | Qt::LinkAction,
+                    actions,
                     dragData,
                     m_window->View()->hostToQtButtons(buttons),
                     m_window->View()->hostToQtModifiers(modifiers()));
 
-    dmEvent.setDropAction(Qt::CopyAction);
+	dmEvent.setDropAction(Qt::CopyAction);
+
     dmEvent.accept();
 
     QGuiApplication::sendEvent(window(), &dmEvent);
 
 	const QPlatformDropQtResponse response =
 		QWindowSystemInterface::handleDrop(window(), dragData, m_lastPoint,
-			Qt::CopyAction | Qt::MoveAction | Qt::LinkAction,
+			actions,
 			m_window->View()->hostToQtButtons(buttons),
 			m_window->View()->hostToQtModifiers(modifiers()));
 
@@ -1097,7 +1145,7 @@ void QHaikuWindow::platformEnteredView()
 void QHaikuWindow::platformExitedView()
 {
     QWindowSystemInterface::handleLeaveEvent(window());
-    QWindowSystemInterface::handleExposeEvent(window(), QRect(QPoint(0,0), window()->size()));
+    QWindowSystemInterface::handleExposeEvent(window(), QRect(QPoint(0, 0), window()->geometry().size()));
 }
 
 void QHaikuWindow::platformMouseEvent(const QPoint &localPosition,
@@ -1113,7 +1161,7 @@ void QHaikuWindow::platformMouseEvent(const QPoint &localPosition,
 		QWindowSystemInterface::handleMouseEvent(childWindow,
 			childWindow->mapFromGlobal(globalPosition),
 			globalPosition, state, button, type, modifiers, source);
-			QWindowSystemInterface::handleExposeEvent(window(), QRect(QPoint(0,0), window()->size()));
+			QWindowSystemInterface::handleExposeEvent(window(), QRect(QPoint(0, 0), window()->geometry().size()));
 	} else {
 		QWindowSystemInterface::handleMouseEvent(window(),
 			localPosition, globalPosition, state, button, type, modifiers, source);
@@ -1171,7 +1219,7 @@ void QHaikuWindow::platformWheelEvent(const QPoint &localPosition,
 	QWindow *childWindow = childWindowAt(window(), globalPosition);
 	if (childWindow) {
 		QWindowSystemInterface::handleWheelEvent(childWindow, childWindow->mapFromGlobal(globalPosition), globalPosition, QPoint(), point, modifiers);
-		QWindowSystemInterface::handleExposeEvent(window(), QRect(QPoint(0,0), window()->size()));
+		QWindowSystemInterface::handleExposeEvent(window(), QRect(QPoint(0, 0), window()->geometry().size()));
 	} else
         QWindowSystemInterface::handleWheelEvent(window(), localPosition, globalPosition, QPoint(), point, modifiers);
 }
@@ -1188,7 +1236,7 @@ void QHaikuWindow::platformTabletEvent(const QPointF &localPosition,
 	if (childWindow) {
 		QWindowSystemInterface::handleTabletEvent(childWindow, childWindow->mapFromGlobal(globalPosition.toPoint()),
 			globalPosition,	device, pointerType, buttons, pressure, 0, 0, 0.0, 0.0, 0, 0, modifiers);
-		QWindowSystemInterface::handleExposeEvent(window(), QRect(QPoint(0,0), window()->size()));
+		QWindowSystemInterface::handleExposeEvent(window(), QRect(QPoint(0, 0), window()->geometry().size()));
 	} else {
 		QWindowSystemInterface::handleTabletEvent(window(), localPosition, globalPosition,
 			device, pointerType, buttons, pressure, 0, 0, 0.0, 0.0, 0, 0, modifiers);

@@ -11,6 +11,7 @@ QT += \
 LIBS += -lbe -lroot -ltracker -lgame -lOSMesa -lGL -lGLU
 
 CONFIG += link_pkgconfig
+
 PKGCONFIG += freetype2
 
 QMAKE_USE_PRIVATE += freetype
@@ -22,6 +23,7 @@ SOURCES =	main.cpp \
 			qhaikubackingstore.cpp \
 			qhaikuclipboard.cpp \
 			qhaikucursor.cpp \
+			qhaikudrag.cpp \
 			qhaikuglcontext.cpp \
 			qhaikuintegration.cpp \
 			qhaikunativeinterface.cpp \
@@ -41,6 +43,7 @@ HEADERS =	qhaikuapplication.h \
 			qhaikubackingstore.h \
 			qhaikuclipboard.h \
 			qhaikucursor.h \
+			qhaikudrag.h \
 			qhaikuglcontext.h \
 			qhaikuintegration.h \
 			qhaikunativeinterface.h \

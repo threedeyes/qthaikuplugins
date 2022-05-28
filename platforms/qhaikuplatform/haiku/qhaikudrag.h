@@ -1,7 +1,7 @@
 /****************************************************************************
 **
 ** Copyright (C) 2017 The Qt Company Ltd.
-** Copyright (C) 2015-2017 Gerasim Troeglazov,
+** Copyright (C) 2015-2022 Gerasim Troeglazov,
 ** Contact: 3dEyes@gmail.com
 **
 ** This file is part of the plugins of the Qt Toolkit.
@@ -38,15 +38,20 @@
 **
 ****************************************************************************/
 
-#ifndef QHAIKUBACKINGSTORE_H
-#define QHAIKUBACKINGSTORE_H
+#ifndef QHAIKUDRAGSTORE_H
+#define QHAIKUDRAGSTORE_H
 
 #include "qhaikucursor.h"
+#include "qhaikuwindow.h"
 
 #include <qpa/qplatformbackingstore.h>
 #include <qpa/qplatformdrag.h>
 #include <qpa/qplatformintegration.h>
 #include <qpa/qplatformwindow.h>
+#include <qpa/qplatformdrag.h>
+
+#include <QtGui/private/qsimpledrag_p.h>
+#include <private/qdnd_p.h>
 
 #include <qscopedpointer.h>
 #include <qimage.h>
@@ -59,41 +64,20 @@
 #include <Rect.h>
 #include <Region.h>
 
-extern void qt_scrollRectInImage(QImage &img, const QRect &rect, const QPoint &offset);
-
 QT_BEGIN_NAMESPACE
 
-class QHaikuBackingStore : public QPlatformBackingStore
+class QShapedPixmapWindow;
+
+class QHaikuDrag : public QSimpleDrag
 {
 public:
-    QHaikuBackingStore(QWindow *window);
-    ~QHaikuBackingStore();
+    QHaikuDrag() {};
 
-    QPaintDevice *paintDevice() override;
-    void flush(QWindow *window, const QRegion &region, const QPoint &offset) override;
-    void resize(const QSize &size, const QRegion &staticContents);
-    bool scroll(const QRegion &area, int dx, int dy) override;
-    void composeAndFlush(QWindow *window, const QRegion &region, const QPoint &offset,
-                                       QPlatformTextureList *textures,
-                                       bool translucentBackground) override;
-	QImage toImage() const override { return m_image; }
-
-    QPixmap grabWindow(WId window, const QRect &rect) const;
-
-    static QHaikuBackingStore *backingStoreForWinId(WId id);
-    void drawChildWindows(QWindow *topwin);
-
-private:
-    void clearHash();
-
-    QImage m_image;
-    BBitmap *m_bitmap;
-    
-    QHash<WId, QRect> m_windowAreaHash;
-
-    static QHash<WId, QHaikuBackingStore *> m_backingStoreForWinIdHash;
+protected:
+	virtual void startDrag() override;
+	virtual void move(const QPoint &globalPos, Qt::MouseButtons b, Qt::KeyboardModifiers mods) override;
 };
 
 QT_END_NAMESPACE
 
-#endif // QHAIKUBACKINGSTORE_H
+#endif // QHAIKUDRAGSTORE_H

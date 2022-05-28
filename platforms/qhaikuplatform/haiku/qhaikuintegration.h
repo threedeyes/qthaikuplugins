@@ -62,7 +62,7 @@ extern status_t get_hinting_mode(uint8* hinting);
 
 QT_BEGIN_NAMESPACE
 
-class QSimpleDrag;
+class QHaikuDrag;
 class QHaikuBackendData;
 class QHaikuSystemLocale;
 
@@ -100,7 +100,7 @@ private:
 
     QPlatformFontDatabase *m_fontDatabase;
     QHaikuNativeInterface *m_nativeInterface;
-    QSimpleDrag *m_drag;
+    QHaikuDrag *m_drag;
     QPlatformServices *m_services;
     QHaikuSystemLocale *m_haikuSystemLocale;
     QHaikuScreen *m_screen;
