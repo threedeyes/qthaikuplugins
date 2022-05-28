@@ -100,8 +100,8 @@ void QHaikuDrag::startDrag()
 
 	if (view->LockLooperWithTimeout(10000)==B_OK) {
 		be_app->SetCursor(B_CURSOR_SYSTEM_DEFAULT);
-		if (drag()->pixmap().isNull()) {
-			QPoint pos= QCursor::pos() + drag()->hotSpot();
+		if (drag()->pixmap().isNull() && drag()->mimeData()->hasText()) {
+			QPoint pos= QCursor::pos() - drag()->hotSpot();
 			BRect r = BRect(pos.x(), pos.y(), pos.x() + 80, pos.y() + 24);
 			view->SetMouseEventMask(B_POINTER_EVENTS);
 			view->DragMessage(&dragMessage, view->ConvertFromScreen(r), view->Window());
