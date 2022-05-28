@@ -99,7 +99,7 @@ void QHaikuDrag::startDrag()
 	}
 
 	if (view->LockLooperWithTimeout(10000)==B_OK) {
-		view->SetViewCursor(B_CURSOR_SYSTEM_DEFAULT);
+		be_app->SetCursor(B_CURSOR_SYSTEM_DEFAULT);
 		if (drag()->pixmap().isNull()) {
 			QPoint pos= QCursor::pos() + drag()->hotSpot();
 			BRect r = BRect(pos.x(), pos.y(), pos.x() + 80, pos.y() + 24);
