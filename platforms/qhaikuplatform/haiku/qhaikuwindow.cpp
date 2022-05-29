@@ -463,7 +463,7 @@ void QHaikuWindow::setWindowFlags(Qt::WindowFlags flags)
 		wfeel = B_FLOATING_ALL_WINDOW_FEEL;
 	}
 	if (dialog && window()->isModal()) {
-		wfeel = B_FLOATING_APP_WINDOW_FEEL;
+		wfeel = B_FLOATING_ALL_WINDOW_FEEL;
 	}
 	m_window->SetLook(wlook);
 	m_window->SetFeel(wfeel);
@@ -620,7 +620,7 @@ void QHaikuWindow::setVisible(bool visible)
 				if (m_window->IsHidden())
 					m_window->Show();
 				if (window()->isModal() && window()->type() == Qt::Dialog)
-					m_window->SetFeel(B_FLOATING_APP_WINDOW_FEEL);
+					m_window->SetFeel(B_FLOATING_ALL_WINDOW_FEEL);
 			}
 		}
 
