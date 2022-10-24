@@ -2,43 +2,36 @@
 <svg version="1.1" width="64" height="64" color-interpolation="linearRGB"
      xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg">
  <g>
-  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:5.7191; stroke-linecap:round; stroke-linejoin:round"
-        d="M9.44 58.09H57.36L54.54 8.8H43.27L40.45 14.6H12.26L9.44 58.09z
-           M9.43 58.09L6.61 34.9H60.18L57.36 58.09H9.43z
-           M9.44 32V20.39H57.36V32"
-        transform="matrix(0.8711,0,0,0.8618,4.1236,4.4199)"
+  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:4.9553; stroke-linecap:round; stroke-linejoin:round"
+        d="M12.34 31.99C12.34 28.66 12.34 25.32 12.34 21.99C26.26 21.99 40.17 21.99 54.08 21.99C54.08 25.32 54.08 28.66 54.08 31.99
+           M12.33 54.48C11.51 47.82 10.7 41.15 9.88 34.49C25.43 34.49 40.99 34.49 56.54 34.49C55.72 41.15 54.9 47.82 54.08 54.48C40.17 54.48 26.25 54.48 12.33 54.48V54.48V54.48z
+           M12.34 54.48C26.26 54.48 40.17 54.48 54.08 54.48C53.27 40.32 52.45 26.16 51.63 12C48.36 12 45.08 12 41.81 12C40.99 13.66 40.17 15.33 39.35 17C31.17 17 22.98 17 14.8 17C13.98 29.49 13.16 41.98 12.34 54.48V54.48V54.48z"
   />
-  <path style="fill:none; stroke:#bf5000; stroke-width:5.7191; stroke-linecap:round; stroke-linejoin:round"
-        d="M6.63 55.19H54.54L51.72 5.89H40.45L37.63 11.69H9.44L6.63 55.19z"
-        transform="matrix(0.8711,0,0,0.8618,4.1236,4.4199)"
+  <path style="fill:none; stroke:#bf5000; stroke-width:4.9553; stroke-linecap:round; stroke-linejoin:round"
+        d="M9.89 51.98C23.81 51.98 37.72 51.98 51.63 51.98C50.81 37.82 49.99 23.65 49.17 9.49C45.9 9.49 42.63 9.49 39.35 9.49C38.54 11.16 37.72 12.82 36.9 14.49C28.71 14.49 20.53 14.49 12.34 14.49C11.53 26.99 10.71 39.48 9.89 51.98V51.98V51.98z"
   />
   <path style="fill:#ffc800"
-        d="M6.63 55.19H54.54L51.72 5.89H40.45L37.63 11.69H9.44L6.63 55.19z"
-        transform="matrix(0.8711,0,0,0.8618,4.1236,4.4199)"
+        d="M9.89 51.98C23.81 51.98 37.72 51.98 51.63 51.98C50.81 37.82 49.99 23.65 49.17 9.49C45.9 9.49 42.63 9.49 39.35 9.49C38.54 11.16 37.72 12.82 36.9 14.49C28.71 14.49 20.53 14.49 12.34 14.49C11.53 26.99 10.71 39.48 9.89 51.98V51.98V51.98z"
   />
-  <path style="fill:none; stroke:#000080; stroke-width:5.7191; stroke-linecap:round; stroke-linejoin:round"
-        d="M6.63 29.09V17.49H54.54V29.09"
-        transform="matrix(0.8711,0,0,0.8618,4.1236,4.4199)"
+  <path style="fill:none; stroke:#000080; stroke-width:4.9553; stroke-linecap:round; stroke-linejoin:round"
+        d="M9.89 29.48C9.89 26.15 9.89 22.82 9.89 19.49C23.81 19.49 37.72 19.49 51.63 19.49C51.63 22.82 51.63 26.15 51.63 29.48"
   />
-  <linearGradient id="gradient0" gradientUnits="userSpaceOnUse" x1="181.38" y1="17.49" x2="181.38" y2="29.09">
+  <linearGradient id="gradient0" gradientUnits="userSpaceOnUse" x1="162.12" y1="19.49" x2="162.12" y2="29.48">
    <stop offset="0" stop-color="#ffffff"/>
    <stop offset="1" stop-color="#d9d9ff"/>
   </linearGradient>
   <path style="fill:url(#gradient0)"
-        d="M6.63 29.09V17.49H54.54V29.09"
-        transform="matrix(0.8711,0,0,0.8618,4.1236,4.4199)"
+        d="M9.89 29.48C9.89 26.15 9.89 22.82 9.89 19.49C23.81 19.49 37.72 19.49 51.63 19.49C51.63 22.82 51.63 26.15 51.63 29.48"
   />
-  <path style="fill:none; stroke:#bf5000; stroke-width:5.7191; stroke-linecap:round; stroke-linejoin:round"
-        d="M6.61 55.19L3.79 31.99H57.36L54.54 55.19H6.61z"
-        transform="matrix(0.8711,0,0,0.8618,4.1236,4.4199)"
+  <path style="fill:none; stroke:#bf5000; stroke-width:4.9553; stroke-linecap:round; stroke-linejoin:round"
+        d="M9.88 51.98C9.06 45.31 8.24 38.65 7.42 31.98C22.98 31.98 38.53 31.98 54.08 31.98C53.27 38.65 52.45 45.31 51.63 51.98C37.71 51.98 23.79 51.98 9.88 51.98V51.98V51.98z"
   />
-  <linearGradient id="gradient1" gradientUnits="userSpaceOnUse" x1="181.38" y1="31.99" x2="181.38" y2="55.19">
+  <linearGradient id="gradient1" gradientUnits="userSpaceOnUse" x1="162.12" y1="31.98" x2="162.12" y2="51.98">
    <stop offset="0" stop-color="#ffea80"/>
    <stop offset="1" stop-color="#ffbb00"/>
   </linearGradient>
   <path style="fill:url(#gradient1)"
-        d="M6.61 55.19L3.79 31.99H57.36L54.54 55.19H6.61z"
-        transform="matrix(0.8711,0,0,0.8618,4.1236,4.4199)"
+        d="M9.88 51.98C9.06 45.31 8.24 38.65 7.42 31.98C22.98 31.98 38.53 31.98 54.08 31.98C53.27 38.65 52.45 45.31 51.63 51.98C37.71 51.98 23.79 51.98 9.88 51.98V51.98V51.98z"
   />
  </g>
 </svg>
