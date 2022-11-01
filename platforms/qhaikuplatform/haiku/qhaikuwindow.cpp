@@ -44,7 +44,6 @@
 
 #include <private/qguiapplication_p.h>
 #include <private/qwindow_p.h>
-#include <private/qhighdpiscaling_p.h>
 
 #include <qpa/qplatformscreen.h>
 #include <qpa/qwindowsysteminterface.h>
@@ -916,7 +915,7 @@ void QHaikuWindow::swapBuffers()
 
 BRegion QHaikuWindow::getClippingRegion()
 {
-	const QSize nativeSize = QHighDpi::toNativePixels(window()->size(), window());
+	const QSize nativeSize = windowGeometry().size();
 	BRegion region(BRect(0, 0, nativeSize.width(), nativeSize.height()));
 
 	if (!window()->isTopLevel())

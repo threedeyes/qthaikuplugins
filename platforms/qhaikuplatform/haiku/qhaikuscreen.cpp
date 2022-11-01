@@ -75,7 +75,7 @@ QPlatformCursor *QHaikuScreen::cursor() const
 
 
 QRect QHaikuScreen::geometry() const
-{	
+{
 	const BRect frame = m_screen->Frame();
     return QRect(frame.left, frame.top, frame.Width() + 1, frame.Height() + 1);
 }
@@ -84,7 +84,7 @@ QRect QHaikuScreen::geometry() const
 QPixmap QHaikuScreen::grabWindow(WId id, int x, int y, int width, int height) const
 {
     QRect rect(x, y, width, height);
-	
+
     QHaikuWindow *window = QHaikuWindow::windowForWinId(id);
 
     if (!window || window->window()->type() == Qt::Desktop) {
@@ -148,6 +148,12 @@ QSizeF QHaikuScreen::physicalSize() const
 }
 
 QDpi QHaikuScreen::logicalDpi() const
+{
+	const float factor = std::max(1.0f, be_plain_font->Size() / 12.0f);
+    return QDpi(72 * factor, 72 * factor);
+}
+
+QDpi QHaikuScreen::logicalBaseDpi() const
 {
     return QDpi(72, 72);
 }
