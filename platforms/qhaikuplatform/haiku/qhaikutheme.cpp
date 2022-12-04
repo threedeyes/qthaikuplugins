@@ -213,13 +213,20 @@ QVariant QHaikuTheme::themeHint(ThemeHint hint) const
         return QVariant(false);
     default:
         return QPlatformTheme::themeHint(hint);
-    }	
+    }
 }
 
 
 const QFont *QHaikuTheme::font(Font type) const
 {
     QPlatformFontDatabase *fontDatabase = m_integration->fontDatabase();
+
+	auto convertFontSize = [](float haikuFontSize) -> float {
+		// All fonts will be scaled by the per-display devicePixelRatio.
+		if (haikuFontSize <= 12.0f)
+			return haikuFontSize;
+		return haikuFontSize - (be_plain_font->Size() - 12.0f);
+	};
 
     if (fontDatabase && m_fonts.isEmpty()) {
 		QFontDatabase db;
@@ -247,22 +254,22 @@ const QFont *QHaikuTheme::font(Font type) const
 
 	    QFont baseFont = db.font(plainFontFamily, plainFontStyle, haikuPlainFont.Size());
 	    if (haikuPlainFont.Size() >= 0)
-			baseFont.setPointSizeF(haikuPlainFont.Size());
+			baseFont.setPointSizeF(convertFontSize(haikuPlainFont.Size()));
 	    baseFont.setStretch(QFont::Unstretched);
 
 	    QFont boldFont = db.font(boldFontFamily, boldFontStyle, haikuBoldFont.Size() * kBold);
 	    if (haikuBoldFont.Size() >= 0)
-			boldFont.setPointSizeF(haikuBoldFont.Size() * kBold);
+			boldFont.setPointSizeF(convertFontSize(haikuBoldFont.Size()) * kBold);
 	    boldFont.setStretch(QFont::Unstretched);
 
 	    QFont monoFont = db.font(fixedFontFamily, fixedFontStyle, haikuFixedFont.Size());
 	    if (haikuFixedFont.Size() >= 0)
-			monoFont.setPointSizeF(haikuFixedFont.Size());
+			monoFont.setPointSizeF(convertFontSize(haikuFixedFont.Size()));
 	    monoFont.setStretch(QFont::Unstretched);
 
 	    QFont menuFont = db.font(haikuMenuFontInfo.f_family, haikuMenuFontInfo.f_style, haikuMenuFontInfo.font_size);
 	    if (haikuMenuFontInfo.font_size >= 0)
-			menuFont.setPointSizeF(haikuMenuFontInfo.font_size);
+			menuFont.setPointSizeF(convertFontSize(haikuMenuFontInfo.font_size));
 	    menuFont.setStretch(QFont::Unstretched);
 
 	    QHash<QPlatformTheme::Font, QFont *> fonts;
@@ -285,7 +292,7 @@ const QFont *QHaikuTheme::font(Font type) const
 	    fonts.insert(QPlatformTheme::FixedFont, new QFont(monoFont));
 
 	    QFont smallFont(baseFont);
-	    smallFont.setPointSizeF(haikuPlainFont.Size() * kSmallFont);
+	    smallFont.setPointSizeF(convertFontSize(haikuPlainFont.Size()) * kSmallFont);
 	    fonts.insert(QPlatformTheme::SmallFont, new QFont(smallFont));
 	    fonts.insert(QPlatformTheme::MiniFont, new QFont(smallFont));
 
@@ -311,10 +318,10 @@ QPixmap QHaikuTheme::standardPixmap(StandardPixmap sp, const QSizeF &size) const
 QIcon QHaikuTheme::fileIcon(const QFileInfo &fileInfo, QPlatformTheme::IconOptions iconOptions) const
 {
 	QString filename = fileInfo.filePath();
-	
+
 	if (filename == "/")
 		filename = "/boot/system/servers/mount_server";
-		
+
 	BFile file(filename.toUtf8().constData(), O_RDONLY);
 	BNodeInfo nodeInfo(&file);
 	icon_size iconSize = B_LARGE_ICON;

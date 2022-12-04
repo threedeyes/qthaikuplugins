@@ -915,7 +915,8 @@ void QHaikuWindow::swapBuffers()
 
 BRegion QHaikuWindow::getClippingRegion()
 {
-	BRegion region(BRect(0, 0, window()->width(), window()->height()));
+	const QSize nativeSize = windowGeometry().size();
+	BRegion region(BRect(0, 0, nativeSize.width(), nativeSize.height()));
 
 	if (!window()->isTopLevel())
 		return region;

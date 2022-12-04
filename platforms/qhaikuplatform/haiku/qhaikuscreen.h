@@ -67,13 +67,14 @@ public:
     int depth() const { return 32; }
     QImage::Format format() const { return QImage::Format_RGB32; }
 	QPlatformCursor *cursor() const;
-	
+
     QPixmap grabWindow(WId window, int x, int y, int width, int height) const;
 
     QPlatformScreen::SubpixelAntialiasingType subpixelAntialiasingTypeHint() const;
 
     QSizeF physicalSize() const override;
     QDpi logicalDpi() const override;
+    QDpi logicalBaseDpi() const override;
     qreal pixelDensity() const override;
     Qt::ScreenOrientation nativeOrientation() const override;
     Qt::ScreenOrientation orientation() const override;
