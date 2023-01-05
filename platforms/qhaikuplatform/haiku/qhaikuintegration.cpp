@@ -152,13 +152,6 @@ QHaikuIntegration *QHaikuIntegration::createHaikuIntegration(const QStringList& 
 		proc.waitForFinished();
 		QString resultUserEnv(proc.readAllStandardOutput());
 		envList << resultUserEnv.split("\n");
-
-		// Set XDG variables
-		envList << "XDG_CONFIG_HOME=/boot/home/config/settings";
-		envList << "XDG_CONFIG_DIRS=/boot/system/settings";
-		envList << "XDG_CACHE_HOME=/boot/home/config/cache";
-		envList << "XDG_DATA_HOME=/boot/home/config/non-packaged/data";
-		envList << "XDG_DATA_DIRS=/boot/system/non-packaged/data:/boot/system/data";
 	}
 
 	thread_id my_thread;
