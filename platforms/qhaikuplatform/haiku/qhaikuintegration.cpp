@@ -268,8 +268,11 @@ QHaikuIntegration *QHaikuIntegration::createHaikuIntegration(const QStringList& 
 	settings.endGroup();
 
 	// Override OpenGL/GLSL versions
-	setenv("MESA_GL_VERSION_OVERRIDE","2.1", 0);
-	setenv("MESA_GLSL_VERSION_OVERRIDE","460", 0);
+	setenv("MESA_GL_VERSION_OVERRIDE"," 2.1", 0);
+	setenv("MESA_GLSL_VERSION_OVERRIDE", "460", 0);
+
+	// Prevent double scaling for HighDPI apps
+	setenv("QT_AUTO_SCREEN_SCALE_FACTOR", "0", 0);
 
     QHaikuIntegration *newHaikuIntegration = new QHaikuIntegration(parameters, argc, argv);
     connect(haikuApplication, SIGNAL(applicationQuit()), newHaikuIntegration, SLOT(platformAppQuit()), Qt::BlockingQueuedConnection);
