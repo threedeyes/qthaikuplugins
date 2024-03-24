@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<svg version="1.1" width="64" height="64" color-interpolation="linearRGB"
+     xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg">
+ <g>
+  <path style="fill:none; stroke:#000000; stroke-opacity:0.4; stroke-width:4.9083; stroke-linecap:round; stroke-linejoin:round"
+        d="M33.21 9.9C20.33 9.9 9.9 20.33 9.9 33.21C9.9 46.08 20.33 56.53 33.21 56.53C46.08 56.53 56.53 46.08 56.53 33.21C56.53 20.33 46.08 9.9 33.21 9.9V9.9V9.9z"
+  />
+  <path style="fill:none; stroke:#800000; stroke-width:4.9083"
+        d="M30.76 7.44C17.88 7.44 7.44 17.88 7.44 30.76C7.44 43.62 17.88 54.08 30.76 54.08C43.62 54.08 54.08 43.62 54.08 30.76C54.08 17.88 43.62 7.44 30.76 7.44V7.44V7.44z"
+  />
+  <linearGradient id="gradient0" gradientUnits="userSpaceOnUse" x1="162.06" y1="7.43" x2="162.06" y2="54.08">
+   <stop offset="0" stop-color="#ffabab"/>
+   <stop offset="1" stop-color="#d90000"/>
+  </linearGradient>
+  <path style="fill:url(#gradient0)"
+        d="M30.76 7.44C17.88 7.44 7.44 17.88 7.44 30.76C7.44 43.62 17.88 54.08 30.76 54.08C43.62 54.08 54.08 43.62 54.08 30.76C54.08 17.88 43.62 7.44 30.76 7.44V7.44V7.44z"
+  />
+  <path style="fill:none; stroke:#800000; stroke-width:4.9298; stroke-linecap:round; stroke-linejoin:round"
+        d="M41 32C37.71 32 33.28 32 30 32C30 27.89 30 19.1 30 15"
+  />
+ </g>
+</svg>
