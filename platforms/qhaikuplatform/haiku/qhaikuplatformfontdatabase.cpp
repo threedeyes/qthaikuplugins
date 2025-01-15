@@ -119,6 +119,15 @@ void QHaikuPlatformFontDatabase::populateFontDatabase()
 			QStringList families = addTTFile(QByteArray(), file);
 		}
 	}
+
+	// Register aliases for generic names
+	registerAliasToFontFamily("Noto Sans", "Sans Serif");
+	registerAliasToFontFamily("Noto Serif", "Serif");
+
+	font_family fixedFontFamily;
+	font_style fixedFontStyle;
+	be_fixed_font->GetFamilyAndStyle(&fixedFontFamily, &fixedFontStyle);
+	registerAliasToFontFamily(fixedFontFamily, "Monospace");
 }
 
 QStringList	QHaikuPlatformFontDatabase::fallbacksForFamily(const QString &family,
@@ -129,24 +138,38 @@ QStringList	QHaikuPlatformFontDatabase::fallbacksForFamily(const QString &family
 	QStringList result;
 	if (styleHint == QFont::Monospace || styleHint	== QFont::Courier) {
 		result.append(QString::fromLatin1("Noto Sans Mono"));
-		result.append(QString::fromLatin1("DejaVu	Sans Mono"));
+		result.append(QString::fromLatin1("Noto Sans CJK JP"));
+		result.append(QString::fromLatin1("Noto Sans Thai"));
+		result.append(QString::fromLatin1("DejaVu Sans Mono"));
 	} else {
 		if (styleHint	== QFont::Serif) {
 			result.append(QString::fromLatin1("Noto Serif"));
+			result.append(QString::fromLatin1("Noto Serif CJK JP"));
+			result.append(QString::fromLatin1("Noto Serif Thai"));
 			result.append(QString::fromLatin1("DejaVu Serif"));
 		} else {
-			result.append(QString::fromLatin1("Noto Sans	Display"));
+			result.append(QString::fromLatin1("Noto Sans"));
+			result.append(QString::fromLatin1("Noto Sans CJK JP"));
+			result.append(QString::fromLatin1("Noto Sans Thai"));
 			result.append(QString::fromLatin1("DejaVu Sans"));
 		}
 	}
+
+	result.append(QString::fromLatin1("Noto Sans Symbols"));
+	result.append(QString::fromLatin1("Noto Sans Symbols 2"));
+	result.append(QString::fromLatin1("Noto Sans Emoji"));
+
 	result.append(QFreeTypeFontDatabase::fallbacksForFamily(family, style,	styleHint, script));
 	return	result;
 }
 
 QFont QHaikuPlatformFontDatabase::defaultFont()	const
 {
-	QFont font(QStringLiteral("Noto Sans Display"));
-	font.setStretch(QFont::Unstretched);
+	font_family fontFamily;
+	font_style fontStyle;
+	be_plain_font->GetFamilyAndStyle(&fontFamily, &fontStyle);
+	QFont font(fontFamily);
+	font.setStyleName(fontStyle);
 	return	font;
 }
 
