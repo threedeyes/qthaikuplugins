@@ -41,6 +41,8 @@
 #ifndef QHAIKUGLCONTEXT_H
 #define QHAIKUGLCONTEXT_H
 
+#include "osmesa_bgl.h"
+
 #include <qpa/qplatformopenglcontext.h>
 
 #include "qhaikuapplication.h"
@@ -48,10 +50,6 @@
 #include "qhaikubackingstore.h"
 #include "qhaikuoffscreensurface.h"
 #include "qhaikuscreen.h"
-
-#include "GL/gl.h"
-#include "GL/glu.h"
-#include "GL/osmesa.h"
 
 QT_BEGIN_NAMESPACE
 

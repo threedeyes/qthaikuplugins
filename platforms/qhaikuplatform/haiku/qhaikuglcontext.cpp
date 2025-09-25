@@ -38,6 +38,7 @@
 **
 ****************************************************************************/
 
+#define OSMESA_BGL_IMPLEMENTATION
 #include "qhaikuglcontext.h"
 
 QT_BEGIN_NAMESPACE
@@ -175,7 +176,7 @@ bool QHaikuGLContext::makeCurrent(QPlatformSurface *surface)
 	if (!OSMesaMakeCurrent( m_mesaContext, pixelBuffer, GL_UNSIGNED_BYTE, size.width(), size.height()))
 		return false;
 
-	OSMesaPixelStore(OSMESA_Y_UP, 0);
+	OSMesaPixelStore(OSMESA_Y_UP, 1);
 
 	glViewport(0, 0, size.width(), size.height());
 
@@ -201,6 +202,8 @@ void QHaikuGLContext::swapBuffers(QPlatformSurface *surface)
 		return;
 
 	glFinish();
+
+	OSMesaSwapBuffers(m_mesaContext);
 
 	QHaikuSurfaceView *view = QHaikuWindow::viewForWinId(window->window()->winId());
 	window->swapBuffers();
